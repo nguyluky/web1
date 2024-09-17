@@ -51,27 +51,48 @@ header.header {
     display: flex;
     border: 1px solid #DDDDE3;
     border-radius: 8px;
-    padding: 10px 10px;
     width: 100%;
 }
 
 .ct-input .icon_input {
     color: #DDDDE3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+
 }
 
 .ct-input input {
     color: #27272A;
-    margin-left: 10px;
     flex: 1;
     border: none;
     background: none;
     outline: none;
 }
 
+.ct-input .input_text::after {
+    content: '';
+    position: absolute;
+    height: 24px;
+    width: 1px;
+    background: #DDDDE3;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
 .ct-input .input_text {
-    border-left: 1px solid #DDDDE3;
-    padding-left: 5px;
+    position: relative;
+    padding: 0 10px;
     color: #0A68F4;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+}
+
+.ct-input .input_text:hover {
+    background-color: rgba(from #0A68F4 r g b / 10%);
 }
 
 .button_1 {
@@ -95,6 +116,10 @@ header.header {
 
 .button_1:hover {
     background: #EFEFEF;
+}
+
+.button_1:active {
+    transform: scale(0.98);
 }
 
 .button_1.primary {
