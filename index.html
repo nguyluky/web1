@@ -1,27 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sinh viên</title>
+    <script type="module" src="./access/js/index.js"></script>
+    <link rel="stylesheet" href="./access/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
-    <header>
-        <div class="left"></div>
-        <div class="center"></div>
-        <div class="right"></div>
+    <header class="header">
+        <div class="header_wrapper">
+            <div class="left">
+                <h1>Sách</h1>
+            </div>
+            <div class="center">
+                <label class="ct-input search">
+                    <div class="icon_input">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <input type="text" placeholder="tìm kiếm">
+                    <div class="input_text">
+                        Tìm kiếm
+                    </div>
+                </label>
+            </div>
+            <div class="right">
+                <button class="button_1">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>TP.Hồ Chí Minh</span>
+                </button>
+                <button class="button_1">
+                    <i class="fa-regular fa-face-smile-wink"></i>
+                    <span>Tài khoản</span>
+                </button>
+                <div class="line"></div>
+                <button class="button_1 cart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </button>
+            </div>
+        </div>
     </header>
-    <nav></nav>
-    <main>
-        <aside>
+    <nav class="nav">
+        <div class="nav_wrapper">
+            <span>Home > </span>
+            <span class="nav_curr">Search</span>
+        </div>
+    </nav>
+    <main class="main">
+        <div class="main_wapper">
 
-        </aside>
-        <article>
-            
-        </article>
+            <aside class="aside">
+                
+            </aside>
+            <article>
+                
+            </article>
+        </div>
     </main>
-    <footer>
-
+    <footer class="footer">
+        <div class="footer_wrapper">
+            <div class="footer_box box1">Bản quyền</div>
+            <div class="footer_box box2">Thông tin liện</div>
+            <div class="footer_box box3">Thành viên</div>
+        </div>
     </footer>
 </body>
+
 </html>
