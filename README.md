@@ -12,8 +12,8 @@ vscode extenstion:
 - `htmltagwrap` thêm phím tắt alt + w để bao bọc thẻ
 
 # thông tin
-`jsconfig.json`: congif check error read time  
-`.prettierrc`: config format
-`web1.code-profile` profile vscode
+- `jsconfig.json`: congif check error read time  
+- `.prettierrc`: config format  
+- `web1.code-profile` profile vscode
 
 
