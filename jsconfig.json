@@ -2,6 +2,8 @@
     "compilerOptions": {
         "module": "CommonJS",
         "target": "ES2023",
+        "moduleResolution": "Classic",
+        "allowJs": true,
         "allowImportingTsExtensions": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,

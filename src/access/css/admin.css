@@ -18,6 +18,13 @@ main.main {
     height: calc(100% - 60px - 20px);
 }
 
+aside.aside {
+    height: 100%;
+    width: fit-content;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
 footer.footer {
     width: 100%;
     height: 20px;
@@ -25,4 +32,75 @@ footer.footer {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.account__btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    cursor: pointer;
+    width: 100px;
+}
+
+.account__btn-icon {
+    height: 24px;
+    width: 24px;
+    color: #808089;
+}
+
+.fa-regular {
+    font-size: 24px;
+}
+
+.account__btn-text {
+    /* font-size: 16px; */
+    border: none;
+    background: none;
+}
+
+.left-sidebar {
+    box-sizing: border-box;
+    height: 100%;
+    width: 200px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.left-sidebar__btn {
+    box-sizing: border-box;
+    height: 40px;
+    width: 180px;
+    display: flex;
+    align-items: center;
+    background: none;
+    border-radius: 8px;
+    padding: 10px 8px;
+    cursor: pointer;
+}
+
+.left-sidebar i {
+    font-size: 20px;
+    width: 25px;
+    margin-right: 10px;
+}
+
+.left-sidebar__btn:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.container input:checked ~ .left-sidebar__btn {
+    color: #ffffff;
+    background-color: #808089;
+}
+
+input[type='radio'] {
+    display: none;
+}
+
+.container {
+    display: block;
+    width: 180px;
 }

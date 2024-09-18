@@ -333,3 +333,6 @@ class FackDatabase {
         cache.cart[index].status = status;
     }
 }
+
+const fackDatabase = new FackDatabase();
+export default fackDatabase;
