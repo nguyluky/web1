@@ -15,5 +15,3 @@ vscode extenstion:
 - `jsconfig.json`: congif check error read time  
 - `.prettierrc`: config format  
 - `web1.code-profile` profile vscode
-
-
