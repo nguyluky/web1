@@ -1,0 +1,4 @@
+{
+    "name": "web1",
+    "extensions": "[{\"identifier\":{\"id\":\"bradgashler.htmltagwrap\",\"uuid\":\"c16f95f6-9b42-4a24-9bf4-245d4ea54fc5\"}},{\"identifier\":{\"id\":\"dbaeumer.vscode-eslint\",\"uuid\":\"583b2b34-2c1e-4634-8c0b-0b82e283ea3a\"},\"displayName\":\"ESLint\"},{\"identifier\":{\"id\":\"esbenp.prettier-vscode\",\"uuid\":\"96fa4707-6983-4489-b7c5-d5ffdfdcce90\"},\"displayName\":\"Prettier - Code formatter\"},{\"identifier\":{\"id\":\"formulahendry.auto-rename-tag\",\"uuid\":\"6e440e71-8ed9-4f25-bb78-4b13096b8a03\"},\"displayName\":\"Auto Rename Tag\"},{\"identifier\":{\"id\":\"ms-vscode.live-server\",\"uuid\":\"4eae7368-ec63-429d-8449-57a7df5e2117\"},\"displayName\":\"Live Preview\"}]"
+}
