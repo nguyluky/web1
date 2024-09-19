@@ -16,6 +16,7 @@ header.header {
 
 main.main {
     height: calc(100% - 60px - 20px);
+    display: flex;
 }
 
 aside.aside {
@@ -23,6 +24,11 @@ aside.aside {
     width: fit-content;
     padding: 16px;
     box-sizing: border-box;
+}
+
+.article {
+    padding: 16px 16px 16px 0;
+    width: 100%;
 }
 
 footer.footer {
@@ -63,10 +69,6 @@ footer.footer {
     box-sizing: border-box;
     height: 100%;
     width: 200px;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #ffffff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .left-sidebar__btn {
@@ -103,4 +105,20 @@ input[type='radio'] {
 .container {
     display: block;
     width: 180px;
+}
+
+.table .table-title {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.table .table-title .button_1 {
+    height: 30px;
+}
+
+.right-wrapper {
+    display: flex;
+    gap: 5px;
 }
