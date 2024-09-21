@@ -139,8 +139,12 @@ input[type='radio'] {
 .table-conten-wrapper {
     max-height: calc(100% - 40px);
     overflow: auto;
+    border-radius: 10px;
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
 #content_table {
     border-collapse: collapse;
     border-radius: 8px;
@@ -167,12 +171,28 @@ input[type='radio'] {
 
 td,
 th {
-    position: sticky;
     top: 0;
     padding: 10px;
     text-align: left;
 }
 
+th {
+    position: sticky;
+}
+
 body {
     height: auto;
+}
+
+.search-box {
+    background: #fff;
+    border-radius: 4px;
+}
+
+.search-box > input {
+    border: none;
+    background: none;
+    height: 30px;
+    width: 350px;
+    padding: 0 10px;
 }
