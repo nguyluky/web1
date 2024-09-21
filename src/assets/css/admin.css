@@ -136,31 +136,39 @@ input[type='radio'] {
     gap: 5px;
 }
 
-#user_table {
+.table-conten-wrapper {
+    max-height: calc(100% - 40px);
+    overflow: auto;
+}
+
+#content_table {
     border-collapse: collapse;
     border-radius: 8px;
     width: 100%;
 }
 
-#user_table th {
+#content_table th {
     background: #0a68f4;
+    z-index: 1;
     color: #fff;
 }
 
-#user_table th i {
+#content_table th i {
     margin-left: 5px;
 }
 
-#user_table #row-0 {
+#content_table #row-0 {
     background: #fff;
 }
 
-#user_table #row-1 {
+#content_table #row-1 {
     background: #f5f5fa;
 }
 
 td,
 th {
+    position: sticky;
+    top: 0;
     padding: 10px;
     text-align: left;
 }
