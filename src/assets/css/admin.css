@@ -107,14 +107,24 @@ input[type='radio'] {
     width: 180px;
 }
 
-.table .table-title {
+.table-wrapper {
+    height: 100%;
+}
+
+.table-wrapper .table-title {
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.table .table-title .button_1 {
+.table-content {
+    height: calc(100% - 40px);
+    overflow: auto;
+    position: relative;
+}
+
+.table-wrapper .table-title .button_1 {
     height: 30px;
 }
 
