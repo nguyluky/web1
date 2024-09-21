@@ -15,7 +15,7 @@ header.header {
 }
 
 main.main {
-    height: calc(100% - 60px - 20px);
+    height: calc(100vh - 60px - 20px);
     display: flex;
 }
 
@@ -27,8 +27,11 @@ aside.aside {
 }
 
 .article {
+    box-sizing: border-box;
     padding: 16px 16px 16px 0;
     width: 100%;
+    height: 100%;
+    overflow-y: scroll;
 }
 
 footer.footer {
@@ -131,4 +134,37 @@ input[type='radio'] {
 .right-wrapper {
     display: flex;
     gap: 5px;
+}
+
+#user_table {
+    border-collapse: collapse;
+    border-radius: 8px;
+    width: 100%;
+}
+
+#user_table th {
+    background: #0a68f4;
+    color: #fff;
+}
+
+#user_table th i {
+    margin-left: 5px;
+}
+
+#user_table #row-0 {
+    background: #fff;
+}
+
+#user_table #row-1 {
+    background: #f5f5fa;
+}
+
+td,
+th {
+    padding: 10px;
+    text-align: left;
+}
+
+body {
+    height: auto;
 }
