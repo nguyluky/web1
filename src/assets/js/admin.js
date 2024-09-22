@@ -1,9 +1,9 @@
 import fackDatabase from './db/fakeDb.js';
+import renderCart from './render/cart_table.js';
 import renderUser from './render/user_info_table.js';
 
-const records_user = fackDatabase.getAllUserInfo();
-
 function searchUser() {
+    const records_user = fackDatabase.getAllUserInfo();
     // NOTE: WTF
     const searchInput = /**@type {HTMLInputElement}*/ (document.getElementById('search-input'));
     if (!searchInput) return [];
@@ -23,4 +23,15 @@ function searchUser() {
 let input = document.getElementById('search-input');
 if (input) input.oninput = searchUser;
 
-renderUser(records_user);
+document.getElementsByName('tab-selestion').forEach((e) => {
+    e.onchange = (event) => {
+        const value = /**@type {HTMLInputElement} */ (event.target).value;
+        if (value == 'user') {
+            renderUser(fackDatabase.getAllUserInfo());
+        } else if (value == 'cart') {
+            renderCart(fackDatabase.getALlCart());
+        }
+    };
+});
+
+renderUser(fackDatabase.getAllUserInfo());

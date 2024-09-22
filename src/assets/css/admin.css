@@ -161,11 +161,11 @@ input[type='radio'] {
     margin-left: 5px;
 }
 
-#content_table #row-0 {
+#content_table tr:nth-child(odd) {
     background: #fff;
 }
 
-#content_table #row-1 {
+#content_table tr:nth-child(even) {
     background: #f5f5fa;
 }
 
@@ -195,4 +195,13 @@ body {
     height: 30px;
     width: 350px;
     padding: 0 10px;
+}
+
+#popup-wrapper {
+    height: 0px;
+    width: 0px;
+}
+
+.table-check-box {
+    margin-left: 10px;
 }
