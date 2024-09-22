@@ -4,7 +4,7 @@
  * @param {{[key in keyof T]?: T[key]}} filter
  * @returns {T[]}
  */
-function search(data, filter) {
+function searchAll(data, filter) {
     return data.filter((e) => {
         let rl = true;
         Object.keys(filter).forEach((key) => {
@@ -16,4 +16,4 @@ function search(data, filter) {
     });
 }
 
-export default search;
+export default searchAll;

@@ -535,6 +535,14 @@ class FackDatabase {
         const index = cache.cart.findIndex((e) => e.id == cart_id);
         cache.cart[index].status = status;
     }
+
+    /**
+     *
+     * @returns {Category[]}
+     */
+    getAllCategory() {
+        return cache.category;
+    }
 }
 
 const fackDatabase = new FackDatabase();

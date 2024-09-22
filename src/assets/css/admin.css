@@ -203,5 +203,7 @@ body {
 }
 
 .table-check-box {
+    height: 20px;
+    width: 20px;
     margin-left: 10px;
 }

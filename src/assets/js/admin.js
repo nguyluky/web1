@@ -1,5 +1,7 @@
 import fackDatabase from './db/fakeDb.js';
 import renderCart from './render/cart_table.js';
+import renderCategory from './render/category_table.js';
+import renderSach from './render/sach_table.js';
 import renderUser from './render/user_info_table.js';
 
 function searchUser() {
@@ -25,11 +27,20 @@ if (input) input.oninput = searchUser;
 
 document.getElementsByName('tab-selestion').forEach((e) => {
     e.onchange = (event) => {
-        const value = /**@type {HTMLInputElement} */ (event.target).value;
-        if (value == 'user') {
+        const tab = /**@type {HTMLInputElement} */ (event.target).value;
+        const title = document.getElementById('table-title-header');
+        if (tab == 'user') {
             renderUser(fackDatabase.getAllUserInfo());
-        } else if (value == 'cart') {
+            if (title) title.textContent = 'User';
+        } else if (tab == 'cart') {
             renderCart(fackDatabase.getALlCart());
+            if (title) title.textContent = 'Cart';
+        } else if (tab == 'sach') {
+            renderSach(fackDatabase.getAllSach());
+            if (title) title.textContent = 'Sách';
+        } else if (tab == 'category') {
+            renderCategory(fackDatabase.getAllCategory());
+            if (title) title.textContent = 'category';
         }
     };
 });
