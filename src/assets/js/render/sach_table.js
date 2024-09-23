@@ -14,8 +14,8 @@ function renderSach(list) {
         details: 'Details',
         thumbnal: 'Thumbnal',
         base_price: 'Price',
-        category: 'category',
-        opstion: 'opstion',
+        category: 'Category',
+        option: 'Option',
     });
 }
 

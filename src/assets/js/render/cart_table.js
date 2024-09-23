@@ -11,10 +11,10 @@ function renderCart(list) {
     renderTable(list, table, {
         id: 'Id',
         user_id: 'User id',
-        sach: 'Sach id',
+        sach: 'Sách id',
         quantity: 'Số lượng',
-        opstion_id: 'opstion',
-        status: 'trạng thái',
+        option_id: 'Option',
+        status: 'Trạng thái',
     });
 }
 

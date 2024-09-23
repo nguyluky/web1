@@ -7,7 +7,7 @@
  *  thumbnal: string;
  *  base_price: number;
  *  category: string[];
- *  opstion?: Opstion
+ *  option?: Option
  * }} Sach
  *
  * @typedef {{
@@ -15,7 +15,7 @@
  *   short_name: string;
  *   long_name: string;
  *   price: number
- *  }} Opstion
+ *  }} Option
  *
  * @typedef {{
  *  id: string;
@@ -27,7 +27,7 @@
  *  id: number;
  *  user_id: number;
  *  sach: number;
- *  opstion_id?: number;
+ *  option_id?: number;
  *  quantity: number;
  *  status: "suly" | "doixacnhan" | "thanhcong";
  * }} Cart
@@ -285,7 +285,7 @@ const cache = {
         },
         {
             id: 'VD',
-            name: 'Khoa Văn hóa và Du lịch',
+            name: 'Khoa Văn hoá và Du lịch',
         },
         {
             id: 'KT',
@@ -466,9 +466,9 @@ class FackDatabase {
      * @param {string} thumbnal
      * @param {number} base_price
      * @param {string[]} category
-     * @param {Opstion} opstion
+     * @param {Option} option
      */
-    addSach(title, details, thumbnal, base_price, category, opstion) {
+    addSach(title, details, thumbnal, base_price, category, option) {
         const sach_id = cache.sach[cache.sach.length - 1].id + 1;
         cache.sach.push({
             id: sach_id,
@@ -477,7 +477,7 @@ class FackDatabase {
             thumbnal,
             base_price,
             category,
-            opstion,
+            option,
         });
     }
 
@@ -488,9 +488,9 @@ class FackDatabase {
      * @param {string} thumbnal
      * @param {number} base_price
      * @param {string[]} category
-     * @param {Opstion} opstion
+     * @param {Option} option
      */
-    updateSach(id, title, details, thumbnal, base_price, category, opstion) {
+    updateSach(id, title, details, thumbnal, base_price, category, option) {
         const new_sach = {
             id,
             title,
@@ -498,7 +498,7 @@ class FackDatabase {
             thumbnal,
             base_price,
             category,
-            opstion,
+            option,
         };
 
         console.log(new_sach);
