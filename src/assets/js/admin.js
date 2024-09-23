@@ -1,38 +1,13 @@
 import fackDatabase from './db/fakeDb.js';
-import renderCart from './render/cart_table.js';
-import renderCategory from './render/category_table.js';
-import renderSach from './render/sach_table.js';
 import renderUser from './render/user_table.js';
+import renderCart from './render/cart_table.js';
+import renderSach from './render/sach_table.js';
+import renderCategory from './render/category_table.js';
 import searchUser from './render/search_user.js';
 import searchCart from './render/search_cart.js';
-import searchCategory from './render/search_category.js';
 import searchSach from './render/search_sach.js';
+import searchCategory from './render/search_category.js';
 
-document.getElementsByName('tab-selestion').forEach((e) => {
-    e.onchange = (event) => {
-        const tab = /**@type {HTMLInputElement} */ (event.target).value;
-        let input = document.getElementById('search-input');
-        if (input)
-            switch (tab) {
-                case 'user': {
-                    input.oninput = searchUser;
-                    break;
-                }
-                case 'cart': {
-                    input.oninput = searchCart;
-                    break;
-                }
-                case 'sach': {
-                    input.oninput = searchUser;
-                    break;
-                }
-                case 'category': {
-                    input.oninput = searchCategory;
-                    break;
-                }
-            }
-    };
-});
 console.log('Success');
 document.getElementsByName('tab-selestion').forEach((e) => {
     e.onchange = (event) => {

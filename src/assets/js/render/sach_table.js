@@ -1,4 +1,4 @@
-import renderTable from './reader_table.js';
+import { renderTable } from './reader_table.js';
 
 /**
  *

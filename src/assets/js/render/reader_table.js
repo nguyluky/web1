@@ -6,7 +6,7 @@ import text2htmlElement from '../until/text2htmlElement.js';
  * @param {HTMLTableElement} table
  * @param {{[key in keyof T]: string}} cols
  */
-export default function renderTable(values, table, cols) {
+function renderTable(values, table, cols) {
     table.innerHTML = '';
 
     const tableHeader = document.createElement('tr');
@@ -50,3 +50,21 @@ export default function renderTable(values, table, cols) {
         table.appendChild(row);
     });
 }
+
+function searchList(values, cols) {
+    const searchInput = /**@type {HTMLInputElement}*/ (document.getElementById('search-input'));
+    if (!searchInput) return;
+    let valueSearchInput = searchInput.value;
+    let result = values.filter((e) => {
+        return Object.keys(cols).some((key) => {
+            if (e[key] === undefined) return false;
+            return e[key].toUpperCase().includes(valueSearchInput.toUpperCase());
+        });
+    });
+    let table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    if (!table) return;
+    renderTable(result, table, cols);
+    console.log(Math.random);
+}
+
+export { searchList, renderTable };
