@@ -51,6 +51,11 @@ function renderTable(values, table, cols) {
     });
 }
 
+/**
+ * @template T
+ * @param {T[]} values
+ * @param {{[key in keyof T]: string}} cols
+ */
 function searchList(values, cols) {
     const searchInput = /**@type {HTMLInputElement}*/ (document.getElementById('search-input'));
     if (!searchInput) return;

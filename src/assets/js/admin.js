@@ -1,12 +1,8 @@
 import fackDatabase from './db/fakeDb.js';
-import renderUser from './render/user_table.js';
-import renderCart from './render/cart_table.js';
-import renderSach from './render/sach_table.js';
-import renderCategory from './render/category_table.js';
-import searchUser from './render/search_user.js';
-import searchCart from './render/search_cart.js';
-import searchSach from './render/search_sach.js';
-import searchCategory from './render/search_category.js';
+import { renderUser, searchUser } from './render/user_table.js';
+import { renderCart, searchCart } from './render/cart_table.js';
+import { renderSach, searchSach } from './render/sach_table.js';
+import { renderCategory, searchCategory } from './render/category_table.js';
 
 document.getElementsByName('tab-selestion').forEach((e) => {
     e.onchange = (event) => {
@@ -16,19 +12,19 @@ document.getElementsByName('tab-selestion').forEach((e) => {
         if (input) input.value = '';
         if (tab == 'user') {
             renderUser(fackDatabase.getAllUserInfo());
-            if (input) input.oninput = searchUser;
+            if (input) input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
             if (title) title.textContent = 'User';
         } else if (tab == 'cart') {
             renderCart(fackDatabase.getALlCart());
-            if (input) input.oninput = searchCart;
+            if (input) input.oninput = () => searchCart(fackDatabase.getALlCart());
             if (title) title.textContent = 'Cart';
         } else if (tab == 'sach') {
             renderSach(fackDatabase.getAllSach());
-            if (input) input.oninput = searchSach;
+            if (input) input.oninput = () => searchSach(fackDatabase.getAllSach());
             if (title) title.textContent = 'Sách';
         } else if (tab == 'category') {
             renderCategory(fackDatabase.getAllCategory());
-            if (input) input.oninput = searchCategory;
+            if (input) input.oninput = () => searchCategory(fackDatabase.getAllCategory());
             if (title) title.textContent = 'Category';
         }
     };
@@ -36,4 +32,4 @@ document.getElementsByName('tab-selestion').forEach((e) => {
 
 renderUser(fackDatabase.getAllUserInfo());
 const input = document.getElementById('search-input');
-if (input) input.oninput = searchUser;
+if (input) input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
