@@ -8,7 +8,6 @@ import searchCart from './render/search_cart.js';
 import searchSach from './render/search_sach.js';
 import searchCategory from './render/search_category.js';
 
-console.log('Success');
 document.getElementsByName('tab-selestion').forEach((e) => {
     e.onchange = (event) => {
         const tab = /**@type {HTMLInputElement} */ (event.target).value;

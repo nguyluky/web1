@@ -64,7 +64,6 @@ function searchList(values, cols) {
     let table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
     renderTable(result, table, cols);
-    console.log(Math.random);
 }
 
 export { searchList, renderTable };
