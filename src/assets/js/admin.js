@@ -52,10 +52,9 @@ if (btnDelete)
             showPopup(
                 popupWrapper,
                 'Xác nhận xóa',
-                'Bạn có muốn xóa vĩnh viên 20 dòng hay không.',
+                'Bạn có muốn xóa vĩnh viên các dòng hay không.',
                 () => {
                     // todo
-
                     alert('chưa làm hàm xóa');
                     console.log('ok');
                 },
