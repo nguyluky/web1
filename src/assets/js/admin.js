@@ -1,5 +1,5 @@
 import fackDatabase from './db/fakeDb.js';
-import { renderUser, searchUser } from './render/user_table.js';
+import { renderUser, searchUser, userDoSave } from './render/user_table.js';
 import { renderCart, searchCart } from './render/cart_table.js';
 import { renderSach, searchSach } from './render/sach_table.js';
 import { renderCategory, searchCategory } from './render/category_table.js';
@@ -9,23 +9,25 @@ document.getElementsByName('tab-selestion').forEach((e) => {
         const tab = /**@type {HTMLInputElement} */ (event.target).value;
         const title = document.getElementById('table-title-header');
         const input = /**@type {HTMLInputElement} */ (document.getElementById('search-input'));
-        if (input) input.value = '';
+        input.value = '';
+        if (!title || !input) return;
+
         if (tab == 'user') {
             renderUser(fackDatabase.getAllUserInfo());
-            if (input) input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
-            if (title) title.textContent = 'User';
+            input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
+            title.textContent = 'User';
         } else if (tab == 'cart') {
             renderCart(fackDatabase.getALlCart());
-            if (input) input.oninput = () => searchCart(fackDatabase.getALlCart());
-            if (title) title.textContent = 'Cart';
+            input.oninput = () => searchCart(fackDatabase.getALlCart());
+            title.textContent = 'Cart';
         } else if (tab == 'sach') {
             renderSach(fackDatabase.getAllSach());
-            if (input) input.oninput = () => searchSach(fackDatabase.getAllSach());
-            if (title) title.textContent = 'Sách';
+            input.oninput = () => searchSach(fackDatabase.getAllSach());
+            title.textContent = 'Sách';
         } else if (tab == 'category') {
             renderCategory(fackDatabase.getAllCategory());
-            if (input) input.oninput = () => searchCategory(fackDatabase.getAllCategory());
-            if (title) title.textContent = 'Category';
+            input.oninput = () => searchCategory(fackDatabase.getAllCategory());
+            title.textContent = 'Category';
         }
     };
 });
@@ -33,3 +35,18 @@ document.getElementsByName('tab-selestion').forEach((e) => {
 renderUser(fackDatabase.getAllUserInfo());
 const input = document.getElementById('search-input');
 if (input) input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
+
+const btnDelete = document.getElementById('delete-btn');
+if (btnDelete)
+    btnDelete.onclick = (event) => {
+        let a = document.querySelectorAll('#content_table input[type=checkbox]');
+        a.forEach((e) => {
+            console.log(e.getAttribute('value'));
+        });
+    };
+
+const btnSave = document.getElementById('save-btn');
+if (btnSave)
+    btnSave.onclick = () => {
+        userDoSave();
+    };

@@ -1,7 +1,7 @@
 /**
  *
  * @typedef {{
- *  id: number;
+ *  id: string;
  *  title: string;
  *  details: string;
  *  thumbnal: string;
@@ -11,7 +11,7 @@
  * }} Sach
  *
  * @typedef {{
- *   opstion_id: number;
+ *   id: string;
  *   short_name: string;
  *   long_name: string;
  *   price: number
@@ -24,8 +24,8 @@
  * }} Category
  *
  * @typedef {{
- *  id: number;
- *  user_id: number;
+ *  id: string;
+ *  user_id: string;
  *  sach: number;
  *  option_id?: number;
  *  quantity: number;
@@ -41,8 +41,10 @@
  *  rule?: 'admin' | 'user';
  * }} UserInfo
  *
- *
+
  */
+
+import uuidv4 from '../until/uuid.js';
 
 /**
  *
@@ -360,6 +362,14 @@ const cache = {
     sach: [],
 };
 
+/**
+ * lấy
+ * lấy tất cả
+ * delete
+ * update
+ * thêm
+ */
+
 class FackDatabase {
     /**
      *
@@ -380,6 +390,15 @@ class FackDatabase {
 
     /**
      *
+     * @param {string} user_id
+     */
+    deleteUserById(user_id) {
+        const index = cache.user_info.findIndex((e) => e.id == user_id);
+        cache.user_info.splice(index, 1);
+    }
+
+    /**
+     *
      * @param {string} email
      * @param {string} password
      * @returns {UserInfo | undefined}
@@ -396,8 +415,8 @@ class FackDatabase {
      * @param {string} std
      * @param {string} email
      */
-    createUser(password, display_name, std, email) {
-        const user_id = cache.user_info[cache.user_info.length - 1].id + 1;
+    createUserInfo(password, display_name, std, email) {
+        const user_id = uuidv4();
         cache.user_info.push({
             id: user_id,
             name: display_name,
@@ -410,6 +429,29 @@ class FackDatabase {
 
     /**
      *
+     * @param {string} id
+     * @param {string} email
+     * @param {string} name
+     * @param {string} passwd
+     * @param {string} phone_num
+     * @param {"user" | "admin"| undefined} rule
+     */
+    updateUserInfo(id, email, name, passwd, phone_num, rule) {
+        const newUser = {
+            id,
+            email,
+            name,
+            passwd,
+            phone_num,
+            rule,
+        };
+
+        const index = cache.user_info.findIndex((e) => e.id === id);
+        cache.user_info[index] = newUser;
+    }
+
+    /**
+     *
      * @returns {Sach[]}
      */
     getAllSach() {
@@ -418,41 +460,7 @@ class FackDatabase {
 
     /**
      *
-     * @param {string} search
-     * @param {string} category
-     * @param {number} price_from
-     * @param {number} price_to
-     * @returns {Sach[]}
-     */
-    getSachWithFilter(search, category, price_from, price_to) {
-        let relust = this.getAllSach();
-
-        if (search) {
-            relust = relust.filter(
-                (e) =>
-                    e.title.toLowerCase().includes(search.toLowerCase()) ||
-                    e.details.toLowerCase().includes(search.toLowerCase()),
-            );
-        }
-
-        if (category) {
-            relust = relust.filter((e) => e.category.includes(category));
-        }
-
-        if (price_from) {
-            relust = relust.filter((e) => e.base_price < price_from);
-        }
-
-        if (price_to) {
-            relust = relust.filter((e) => e.base_price > price_to);
-        }
-
-        return relust;
-    }
-
-    /**
-     *
-     * @param {number} sach_id
+     * @param {string} sach_id
      * @returns {Sach | undefined}
      */
     getSachById(sach_id) {
@@ -469,7 +477,7 @@ class FackDatabase {
      * @param {Option} option
      */
     addSach(title, details, thumbnal, base_price, category, option) {
-        const sach_id = cache.sach[cache.sach.length - 1].id + 1;
+        const sach_id = uuidv4();
         cache.sach.push({
             id: sach_id,
             title,
@@ -482,7 +490,7 @@ class FackDatabase {
     }
 
     /**
-     * @param {number} id
+     * @param {string} id
      * @param {string} title
      * @param {string} details
      * @param {string} thumbnal
@@ -501,25 +509,30 @@ class FackDatabase {
             option,
         };
 
-        console.log(new_sach);
+        const index = cache.sach.findIndex((e) => e.id == id);
+        cache.sach[index] = new_sach;
     }
 
     /**
      *
-     * @param {number} sach_id
+     * @param {string} sach_id
      */
     deleteSachById(sach_id) {
         const index = cache.sach.findIndex((e) => e.id == sach_id);
         cache.sach.splice(index, 1);
     }
 
+    /**
+     *
+     * @returns {Cart[]}
+     */
     getALlCart() {
         return cache.cart;
     }
 
     /**
      *
-     * @param {number} user_id
+     * @param {string} user_id
      * @returns {Cart[]}
      */
     getCartByUserId(user_id) {
@@ -528,10 +541,10 @@ class FackDatabase {
 
     /**
      *
-     * @param {number} cart_id
+     * @param {string} cart_id
      * @param {"suly" | "doixacnhan" | "thanhcong"} status
      */
-    updateStatus(cart_id, status) {
+    updateCartStatus(cart_id, status) {
         const index = cache.cart.findIndex((e) => e.id == cart_id);
         cache.cart[index].status = status;
     }
