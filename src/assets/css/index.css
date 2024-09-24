@@ -116,3 +116,12 @@ footer.footer .footer_wrapper .footer_box {
         --width-header: 700px;
     }
 }
+
+.left {
+    height: 50px;
+    margin-right: 20px;
+}
+
+.left img {
+    height: 100%;
+}
