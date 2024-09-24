@@ -11,23 +11,30 @@ document.getElementsByName('tab-selestion').forEach((e) => {
         const input = /**@type {HTMLInputElement} */ (document.getElementById('search-input'));
         input.value = '';
         if (!title || !input) return;
-
-        if (tab == 'user') {
-            renderUser(fackDatabase.getAllUserInfo());
-            input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
-            title.textContent = 'User';
-        } else if (tab == 'cart') {
-            renderCart(fackDatabase.getALlCart());
-            input.oninput = () => searchCart(fackDatabase.getALlCart());
-            title.textContent = 'Cart';
-        } else if (tab == 'sach') {
-            renderSach(fackDatabase.getAllSach());
-            input.oninput = () => searchSach(fackDatabase.getAllSach());
-            title.textContent = 'Sách';
-        } else if (tab == 'category') {
-            renderCategory(fackDatabase.getAllCategory());
-            input.oninput = () => searchCategory(fackDatabase.getAllCategory());
-            title.textContent = 'Category';
+        switch (tab) {
+            case 'user': {
+                renderUser(fackDatabase.getAllUserInfo());
+                input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
+                title.textContent = 'User';
+                break;
+            }
+            case 'cart': {
+                renderCart(fackDatabase.getALlCart());
+                input.oninput = () => searchCart(fackDatabase.getALlCart());
+                title.textContent = 'Cart';
+                break;
+            }
+            case 'sach': {
+                renderSach(fackDatabase.getAllSach());
+                input.oninput = () => searchSach(fackDatabase.getAllSach());
+                title.textContent = 'Sách';
+                break;
+            }
+            case 'category': {
+                renderCategory(fackDatabase.getAllCategory());
+                input.oninput = () => searchCategory(fackDatabase.getAllCategory());
+                title.textContent = 'Category';
+            }
         }
     };
 });
