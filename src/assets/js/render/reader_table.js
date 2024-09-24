@@ -12,7 +12,7 @@ import text2htmlElement from '../until/text2htmlElement.js';
  * @param {{[key in keyof T]: string}} cols
  * @param {OnChange<T>?} onchange
  */
-function renderTable(values, table, cols, onchange) {
+function renderTable(values, table, cols, onchange = null) {
     table.innerHTML = '';
 
     const tableHeader = document.createElement('tr');
