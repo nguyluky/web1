@@ -1,4 +1,5 @@
 import fackDatabase from './db/fakeDb.js';
+import { showPopup } from './render/reader_table.js';
 import { renderUser, searchUser, userDoSave } from './render/user_table.js';
 import { renderCart, searchCart } from './render/cart_table.js';
 import { renderSach, searchSach } from './render/sach_table.js';
@@ -46,10 +47,21 @@ if (input) input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
 const btnDelete = document.getElementById('delete-btn');
 if (btnDelete)
     btnDelete.onclick = (event) => {
-        let a = document.querySelectorAll('#content_table input[type=checkbox]');
-        a.forEach((e) => {
-            console.log(e.getAttribute('value'));
-        });
+        const popupWrapper = document.getElementById('popup-wrapper');
+        if (popupWrapper) {
+            showPopup(
+                popupWrapper,
+                'Xác nhận xóa',
+                'Bạn có muốn xóa vĩnh viên 20 dòng hay không.',
+                () => {
+                    // todo
+
+                    alert('chưa làm hàm xóa');
+                    console.log('ok');
+                },
+                null,
+            );
+        }
     };
 
 const btnSave = document.getElementById('save-btn');

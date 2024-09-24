@@ -171,6 +171,7 @@ input[type='radio'] {
 
 td,
 th {
+    outline: none;
     top: 0;
     padding: 10px;
     text-align: left;
@@ -197,9 +198,45 @@ body {
     padding: 0 10px;
 }
 
-#popup-wrapper {
-    height: 0px;
-    width: 0px;
+#popup-wrapper:has(.popup) {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pupop-context {
+    min-height: 70px;
+    padding: 10px;
+}
+
+.popup-footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 10px;
+}
+
+.popup-footer > button {
+    width: 70px;
+    height: 35px;
 }
 
 .table-check-box {
