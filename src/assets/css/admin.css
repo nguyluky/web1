@@ -244,3 +244,7 @@ body {
     width: 20px;
     margin-left: 10px;
 }
+
+.table-title .button_1 > i {
+    font-size: 15px;
+}

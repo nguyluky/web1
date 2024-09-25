@@ -5,9 +5,14 @@ import { renderCart, searchCart } from './render/cart_table.js';
 import { renderSach, searchSach } from './render/sach_table.js';
 import { renderCategory, searchCategory } from './render/category_table.js';
 
+/**
+ * @type {string}
+ */
+let tab;
+
 document.getElementsByName('tab-selestion').forEach((e) => {
     e.onchange = (event) => {
-        const tab = /**@type {HTMLInputElement} */ (event.target).value;
+        tab = /**@type {HTMLInputElement} */ (event.target).value;
         const title = document.getElementById('table-title-header');
         const input = /**@type {HTMLInputElement} */ (document.getElementById('search-input'));
         input.value = '';
@@ -63,8 +68,40 @@ if (btnDelete)
         }
     };
 
+let canEdit = false;
 const btnSave = document.getElementById('save-btn');
 if (btnSave)
     btnSave.onclick = () => {
-        userDoSave();
+        if (!canEdit) {
+            btnSave.innerHTML = '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
+            document.querySelectorAll('#content_table td[key]').forEach((td) => {
+                td.setAttribute('contenteditable', 'true');
+            });
+            canEdit = !canEdit;
+
+            return;
+        }
+
+        canEdit = !canEdit;
+
+        btnSave.innerHTML = '<i class="fa-solid fa-pen"></i><span>Edit</span>';
+        document.querySelectorAll('#content_table td[key]').forEach((td) => {
+            td.setAttribute('contenteditable', 'false');
+        });
+
+        switch (tab) {
+            case 'user': {
+                userDoSave();
+                break;
+            }
+            case 'cart': {
+                break;
+            }
+            case 'sach': {
+                break;
+            }
+            case 'category': {
+                break;
+            }
+        }
     };

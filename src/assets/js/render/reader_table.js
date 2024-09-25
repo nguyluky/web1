@@ -59,7 +59,7 @@ function renderTable(values, table, cols, onchange = null) {
                         /**@type {HTMLTableCellElement}*/ (event.target).textContent,
                     );
             };
-            col.setAttribute('contenteditable', 'true');
+            // col.setAttribute('contenteditable', 'true');
             col.setAttribute('key', key);
 
             col.insertAdjacentHTML('beforeend', value[key]);
