@@ -1,3 +1,42 @@
+/**
+ * 
+ * @typedef {{
+ *     Id:        string;
+ *     Name:      string;
+ *     Districts: District[];
+ * }} Address 
+ * @typedef {{
+ *     Id:    string;
+ *     Name:  string;
+ *     Wards: Ward[];
+ * }} District
+ * @typedef {{
+ *     Id?:    string;
+ *     Name?:  string;
+ *     Level: Level;
+ * }} Ward
+
+export enum Level {
+    Phường = "Phường",
+    ThịTrấn = "Thị trấn",
+    Xã = "Xã",
+}
+
+ */
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+const Level = {
+    Phuong: 'Phường',
+    ThiTran: 'Thị trấn',
+    Xa: 'Xã',
+};
+
+/**
+ * @type {Address[]}
+ */
 const address = [
     {
         Id: '01',
@@ -8407,7 +8446,7 @@ const address = [
             {
                 Id: '318',
                 Name: 'Huyện Bạch Long Vĩ',
-                Wards: [{ Level: 'Huyện' }],
+                Wards: [],
             },
         ],
     },
@@ -12982,7 +13021,7 @@ const address = [
             {
                 Id: '471',
                 Name: 'Huyện Cồn Cỏ',
-                Wards: [{ Level: 'Huyện' }],
+                Wards: [],
             },
         ],
     },
