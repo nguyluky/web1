@@ -5,15 +5,17 @@
  *  title: string;
  *  details: string;
  *  thumbnal: string;
+ *  imgs: string[];
  *  base_price: number;
  *  category: string[];
- *  option?: Option
+ *  option?: Option[]
  * }} Sach
  *
  * @typedef {{
  *   id: string;
  *   short_name: string;
  *   long_name: string;
+ *   img?: string
  *   price: number
  *  }} Option
  *
@@ -40,11 +42,19 @@
  *  phone_num: string;
  *  rule?: 'admin' | 'user';
  * }} UserInfo
+ * 
+ * 
+ * @typedef {{
+ *  id: string,
+ *  data: string
+ * }} imgStore
  *
 
  */
 
 import uuidv4 from '../until/uuid.js';
+import sanhs from './sachDb.js';
+import imgs from './imgStore.js';
 
 /**
  *
@@ -55,6 +65,7 @@ import uuidv4 from '../until/uuid.js';
  * category: Category[];
  * cart: Cart[];
  * sach: Sach[];
+ * imgs: imgStore[];
  * }}
  */
 const cache = {
@@ -359,7 +370,8 @@ const cache = {
         },
     ],
     cart: [],
-    sach: [],
+    sach: sanhs,
+    imgs: imgs,
 };
 
 /**
@@ -469,48 +481,20 @@ class FackDatabase {
 
     /**
      *
-     * @param {string} title
-     * @param {string} details
-     * @param {string} thumbnal
-     * @param {number} base_price
-     * @param {string[]} category
-     * @param {Option} option
+     * @param {Sach} data
      */
-    addSach(title, details, thumbnal, base_price, category, option) {
+    addSach(data) {
         const sach_id = uuidv4();
-        cache.sach.push({
-            id: sach_id,
-            title,
-            details,
-            thumbnal,
-            base_price,
-            category,
-            option,
-        });
+        data.id = sach_id;
+        cache.sach.push(data);
     }
 
     /**
-     * @param {string} id
-     * @param {string} title
-     * @param {string} details
-     * @param {string} thumbnal
-     * @param {number} base_price
-     * @param {string[]} category
-     * @param {Option} option
+     * @param {Sach} data
      */
-    updateSach(id, title, details, thumbnal, base_price, category, option) {
-        const new_sach = {
-            id,
-            title,
-            details,
-            thumbnal,
-            base_price,
-            category,
-            option,
-        };
-
-        const index = cache.sach.findIndex((e) => e.id == id);
-        cache.sach[index] = new_sach;
+    updateSach(data) {
+        const index = cache.sach.findIndex((e) => e.id == data.id);
+        cache.sach[index] = data;
     }
 
     /**
@@ -555,6 +539,42 @@ class FackDatabase {
      */
     getAllCategory() {
         return cache.category;
+    }
+
+    /**
+     *
+     * @returns {imgStore[]}
+     */
+    getAllImgs() {
+        return cache.imgs;
+    }
+
+    /**
+     *
+     * @param {string} id
+     * @returns {imgStore | undefined}
+     */
+    getImgById(id) {
+        return cache.imgs.find((e) => e.id == id);
+    }
+
+    /**
+     *
+     * @param {imgStore} img
+     */
+    addImg(img) {
+        const id = uuidv4();
+        img.id = id;
+        cache.imgs.push(img);
+    }
+
+    /**
+     *
+     * @param {imgStore} img
+     */
+    updateImg(img) {
+        const index = cache.imgs.findIndex((e) => (e.id = img.id));
+        cache.imgs[index] = img;
     }
 }
 

@@ -168,8 +168,16 @@ input[type='radio'] {
     background: #f5f5fa;
 }
 
+td > img {
+    width: 100%;
+}
+
 td,
 th {
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    max-width: 30vw;
     outline: none;
     top: 0;
     padding: 10px;

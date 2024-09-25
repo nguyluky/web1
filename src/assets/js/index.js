@@ -14,7 +14,6 @@ if (btnLocation && closePopup && popup_wrapper) {
     };
 
     closePopup.addEventListener('click', () => {
-        console.log('close');
         popup_wrapper.classList.remove('show');
     });
 }

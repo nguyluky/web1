@@ -22,5 +22,8 @@ export function renderCategory(list) {
  * @param {import("../db/fakeDb").Category[]} list
  */
 export function searchCategory(list) {
-    searchList(list, cols);
+    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    if (!table) return;
+
+    renderTable(searchList(list, cols), table, cols);
 }

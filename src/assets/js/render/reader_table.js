@@ -9,10 +9,11 @@ import text2htmlElement from '../until/text2htmlElement.js';
  * @template {{id: string}} T
  * @param {T[]} values
  * @param {HTMLTableElement} table
- * @param {{[key in keyof T]: string}} cols
+ * @param {{[key in keyof T]?: string}} cols
  * @param {OnChange<T>?} onchange
+ * @param {((key: T) => HTMLTableRowElement)?} cRenderRow
  */
-function renderTable(values, table, cols, onchange = null) {
+function renderTable(values, table, cols, onchange = null, cRenderRow = null) {
     table.innerHTML = '';
 
     const tableHeader = document.createElement('tr');
@@ -37,47 +38,54 @@ function renderTable(values, table, cols, onchange = null) {
 
     table.appendChild(tableHeader);
 
-    values.forEach((value, index) => {
-        const row = document.createElement('tr');
-
-        const col = document.createElement('td');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = value['id'];
-        checkbox.className = 'table-check-box';
-        col.appendChild(checkbox);
-        row.appendChild(col);
-
-        Object.keys(cols).forEach((key) => {
-            const col = document.createElement('td');
-            col.oninput = (event) => {
-                if (onchange)
-                    onchange(
-                        value,
-                        // @ts-ignore
-                        key,
-                        /**@type {HTMLTableCellElement}*/ (event.target).textContent,
-                    );
-            };
-            // col.setAttribute('contenteditable', 'true');
-            col.setAttribute('key', key);
-
-            col.insertAdjacentHTML('beforeend', value[key]);
-            row.appendChild(col);
+    if (cRenderRow) {
+        values.forEach((value, index) => {
+            const row = cRenderRow(value);
+            table.appendChild(row);
         });
+    } else
+        values.forEach((value, index) => {
+            const row = document.createElement('tr');
 
-        table.appendChild(row);
-    });
+            const col = document.createElement('td');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = value['id'];
+            checkbox.className = 'table-check-box';
+            col.appendChild(checkbox);
+            row.appendChild(col);
+
+            Object.keys(cols).forEach((key) => {
+                const col = document.createElement('td');
+                col.oninput = (event) => {
+                    if (onchange)
+                        onchange(
+                            value,
+                            // @ts-ignore
+                            key,
+                            /**@type {HTMLTableCellElement}*/ (event.target).textContent,
+                        );
+                };
+                // col.setAttribute('contenteditable', 'true');
+                col.setAttribute('key', key);
+
+                col.insertAdjacentHTML('beforeend', value[key]);
+                row.appendChild(col);
+            });
+
+            table.appendChild(row);
+        });
 }
 
 /**
  * @template {{id: string}} T
  * @param {T[]} values
- * @param {{[key in keyof T]: string}} cols
+ * @param {{[key in keyof T]?: string}} cols
+ * @returns {T[]}
  */
 function searchList(values, cols) {
     const searchInput = /**@type {HTMLInputElement}*/ (document.getElementById('search-input'));
-    if (!searchInput) return;
+    if (!searchInput) return [];
     let valueSearchInput = searchInput.value;
     let result = values.filter((e) => {
         return Object.keys(cols).some((key) => {
@@ -85,9 +93,8 @@ function searchList(values, cols) {
             return e[key].toUpperCase().includes(valueSearchInput.toUpperCase());
         });
     });
-    let table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
-    if (!table) return;
-    renderTable(result, table, cols, null);
+
+    return result;
 }
 
 /**

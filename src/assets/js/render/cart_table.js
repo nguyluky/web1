@@ -25,5 +25,9 @@ export function renderCart(list) {
  * @param {import("../db/fakeDb").Cart[]} list
  */
 export function searchCart(list) {
-    searchList(list, cols);
+    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    if (!table) return;
+    const result = searchList(list, cols);
+
+    renderTable(result, table, cols);
 }

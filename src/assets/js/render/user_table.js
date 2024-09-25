@@ -58,5 +58,8 @@ export function renderUser(list) {
  * @param {import("../db/fakeDb.js").UserInfo[]} list
  */
 export function searchUser(list) {
-    searchList(list, cols);
+    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    if (!table) return;
+
+    renderTable(searchList(list, cols), table, cols, onchangeEvent);
 }
