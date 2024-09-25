@@ -157,6 +157,14 @@ function showPopup(parder, title, context, onOk, onCancel) {
     popup.appendChild(popupFooter);
 
     parder.appendChild(popup);
+
+    parder.onclick = (event) => {
+        const target = /**@type {HTMLElement}*/ (event.target);
+        if (target.contains(popup)) {
+            parder.innerHTML = '';
+            if (onCancel) onCancel();
+        }
+    };
 }
 
 export { searchList, renderTable, showPopup };

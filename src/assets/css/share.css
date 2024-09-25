@@ -47,6 +47,7 @@ body {
 
 .ct-input .input_text::after {
     content: '';
+    z-index: 1;
     position: absolute;
     height: 24px;
     width: 1px;
