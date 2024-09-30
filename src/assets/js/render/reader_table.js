@@ -58,17 +58,23 @@ function renderTable(values, table, cols, onchange = null, cRenderRow = null) {
             Object.keys(cols).forEach((key) => {
                 const col = document.createElement('td');
                 col.oninput = (event) => {
+                    const target = /**@type {HTMLTableCellElement}*/ (event.target);
                     if (onchange)
                         onchange(
                             value,
                             // @ts-ignore
                             key,
-                            /**@type {HTMLTableCellElement}*/ (event.target).textContent,
+                            target.textContent,
                         );
+
+                    if (target.textContent == target.getAttribute('default-value'))
+                        col.setAttribute('ischange', 'false');
+                    else col.setAttribute('ischange', 'true');
                 };
                 // col.setAttribute('contenteditable', 'true');
+                col.setAttribute('ischange', 'false');
                 col.setAttribute('key', key);
-
+                col.setAttribute('default-value', value[key]);
                 col.insertAdjacentHTML('beforeend', value[key]);
                 row.appendChild(col);
             });

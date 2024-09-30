@@ -54,6 +54,7 @@
 
 import uuidv4 from '../until/uuid.js';
 import sanhs from './sachDb.js';
+// @ts-ignore
 import imgs from './imgStore.js';
 
 /**
@@ -382,7 +383,7 @@ const cache = {
  * thêm
  */
 
-class FackDatabase {
+class FakeDatabase {
     /**
      *
      * @param {string} user_id
@@ -578,5 +579,5 @@ class FackDatabase {
     }
 }
 
-const fackDatabase = new FackDatabase();
+const fackDatabase = new FakeDatabase();
 export default fackDatabase;

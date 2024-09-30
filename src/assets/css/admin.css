@@ -153,7 +153,7 @@ input[type='radio'] {
 #content_table th {
     background: #0a68f4;
     z-index: 1;
-    color: #fff;
+    color: #ffffff;
 }
 
 #content_table th i {
@@ -166,6 +166,14 @@ input[type='radio'] {
 
 #content_table tr:nth-child(even) {
     background: #f5f5fa;
+}
+
+#content_table tr:nth-child(odd):has(td[ischange='true']) {
+    background: #fffacd;
+}
+
+#content_table tr:nth-child(even):has(td[ischange='true']) {
+    background: hwb(54 72% 0%);
 }
 
 td > img {

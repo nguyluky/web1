@@ -19,8 +19,7 @@ const cacheSave = {};
  *
  * @type {import('./reader_table.js').OnChange<import('../db/fakeDb.js').UserInfo>}
  */
-function onchangeEvent(data, key, newValue) {
-    // console.log(data, key, newValue);
+function onChangeHandle(data, key, newValue) {
     // @ts-ignore
     data[key] = newValue;
     cacheSave[data.id] = data;
@@ -41,8 +40,6 @@ export function userDoSave() {
     });
 }
 
-function setToEditMode() {}
-
 /**
  *
  * @param {import("../db/fakeDb.js").UserInfo[]} list
@@ -51,7 +48,7 @@ export function renderUser(list) {
     const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
 
-    renderTable(list, table, cols, onchangeEvent);
+    renderTable(list, table, cols, onChangeHandle);
 }
 
 /**
@@ -61,5 +58,5 @@ export function searchUser(list) {
     const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
 
-    renderTable(searchList(list, cols), table, cols, onchangeEvent);
+    renderTable(searchList(list, cols), table, cols, onChangeHandle);
 }

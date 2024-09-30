@@ -6,42 +6,58 @@ import { renderSach, searchSach } from './render/sach_table.js';
 import { renderCategory, searchCategory } from './render/category_table.js';
 
 /**
+ __             __        
+/\ \__         /\ \       
+\ \ ,_\    __  \ \ \____  
+ \ \ \/  /'__`\ \ \ '__`\ 
+  \ \ \_/\ \L\.\_\ \ \L\ \
+   \ \__\ \__/.\_\\ \_,__/
+    \/__/\/__/\/_/ \/___/ 
+ */
+
+// lol
+
+/**
  * @type {string}
  */
-let tab;
+let tab = 'user';
+
+function renderManagement() {
+    const title = document.getElementById('table-title-header');
+    const input = /**@type {HTMLInputElement} */ (document.getElementById('search-input'));
+    input.value = '';
+    if (!title || !input) return;
+    switch (tab) {
+        case 'user': {
+            renderUser(fackDatabase.getAllUserInfo());
+            input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
+            title.textContent = 'User';
+            break;
+        }
+        case 'cart': {
+            renderCart(fackDatabase.getALlCart());
+            input.oninput = () => searchCart(fackDatabase.getALlCart());
+            title.textContent = 'Cart';
+            break;
+        }
+        case 'sach': {
+            renderSach(fackDatabase.getAllSach());
+            input.oninput = () => searchSach(fackDatabase.getAllSach());
+            title.textContent = 'Sách';
+            break;
+        }
+        case 'category': {
+            renderCategory(fackDatabase.getAllCategory());
+            input.oninput = () => searchCategory(fackDatabase.getAllCategory());
+            title.textContent = 'Category';
+        }
+    }
+}
 
 document.getElementsByName('tab-selestion').forEach((e) => {
     e.onchange = (event) => {
         tab = /**@type {HTMLInputElement} */ (event.target).value;
-        const title = document.getElementById('table-title-header');
-        const input = /**@type {HTMLInputElement} */ (document.getElementById('search-input'));
-        input.value = '';
-        if (!title || !input) return;
-        switch (tab) {
-            case 'user': {
-                renderUser(fackDatabase.getAllUserInfo());
-                input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
-                title.textContent = 'User';
-                break;
-            }
-            case 'cart': {
-                renderCart(fackDatabase.getALlCart());
-                input.oninput = () => searchCart(fackDatabase.getALlCart());
-                title.textContent = 'Cart';
-                break;
-            }
-            case 'sach': {
-                renderSach(fackDatabase.getAllSach());
-                input.oninput = () => searchSach(fackDatabase.getAllSach());
-                title.textContent = 'Sách';
-                break;
-            }
-            case 'category': {
-                renderCategory(fackDatabase.getAllCategory());
-                input.oninput = () => searchCategory(fackDatabase.getAllCategory());
-                title.textContent = 'Category';
-            }
-        }
+        renderManagement();
     };
 });
 
@@ -71,7 +87,7 @@ if (btnDelete)
 let canEdit = false;
 const btnSave = document.getElementById('save-btn');
 if (btnSave)
-    btnSave.onclick = () => {
+    btnSave.onclick = function () {
         if (!canEdit) {
             btnSave.innerHTML = '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
             document.querySelectorAll('#content_table td[key]').forEach((td) => {
@@ -89,6 +105,8 @@ if (btnSave)
             td.setAttribute('contenteditable', 'false');
         });
 
+        console.log(tab);
+
         switch (tab) {
             case 'user': {
                 userDoSave();
@@ -104,4 +122,6 @@ if (btnSave)
                 break;
             }
         }
+
+        renderManagement();
     };
