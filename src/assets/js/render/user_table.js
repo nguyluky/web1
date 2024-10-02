@@ -35,8 +35,9 @@ function userDoSave() {
         const data = cacheSave[e];
         fackDatabase.updateUserInfo(
             data.id,
-            data.email,
+            data.userName,
             data.name,
+            data.email,
             data.passwd,
             data.phone_num,
             data.rule,
