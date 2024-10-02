@@ -1,9 +1,10 @@
 import fackDatabase from './db/fakeDb.js';
-import { showPopup } from './render/reader_table.js';
-import { renderUser, searchUser, userDoSave } from './render/user_table.js';
-import { renderCart, searchCart } from './render/cart_table.js';
-import { renderSach, searchSach } from './render/sach_table.js';
-import { renderCategory, searchCategory } from './render/category_table.js';
+import { defaultRenderRow, showPopup } from './render/reader_table.js';
+import userRender from './render/user_table.js';
+import cartRender from './render/cart_table.js';
+import sachRender from './render/sach_table.js';
+import categoryRender from './render/category_table.js';
+import uuidv4 from './until/uuid.js';
 
 /**
  __             __        
@@ -15,113 +16,180 @@ import { renderCategory, searchCategory } from './render/category_table.js';
     \/__/\/__/\/_/ \/___/ 
  */
 
-// lol
-
 /**
  * @type {string}
  */
 let tab = 'user';
 
+/**
+ * @type {{[key: string]: import('./render/reader_table.js').intefaceRender<?>}}
+ */
+const tabManagement = {
+    user: userRender,
+    cart: cartRender,
+    sach: sachRender,
+    category: categoryRender,
+};
+
+const fakeDBManagement = {
+    user: fackDatabase.getAllUserInfo,
+    cart: fackDatabase.getALlCart,
+    sach: fackDatabase.getAllSach,
+    category: fackDatabase.getAllCategory,
+};
+
 function renderManagement() {
     const title = document.getElementById('table-title-header');
-    const input = /**@type {HTMLInputElement} */ (document.getElementById('search-input'));
+    const input = /**@type {HTMLInputElement} */ (
+        document.getElementById('search-input')
+    );
     input.value = '';
     if (!title || !input) return;
-    switch (tab) {
-        case 'user': {
-            renderUser(fackDatabase.getAllUserInfo());
-            input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
-            title.textContent = 'User';
-            break;
-        }
-        case 'cart': {
-            renderCart(fackDatabase.getALlCart());
-            input.oninput = () => searchCart(fackDatabase.getALlCart());
-            title.textContent = 'Cart';
-            break;
-        }
-        case 'sach': {
-            renderSach(fackDatabase.getAllSach());
-            input.oninput = () => searchSach(fackDatabase.getAllSach());
-            title.textContent = 'Sách';
-            break;
-        }
-        case 'category': {
-            renderCategory(fackDatabase.getAllCategory());
-            input.oninput = () => searchCategory(fackDatabase.getAllCategory());
-            title.textContent = 'Category';
-        }
-    }
+
+    const titleTabs = {
+        user: 'User',
+        cart: 'Cart',
+        sach: 'Sách',
+        category: 'Category',
+    };
+
+    const data = fakeDBManagement[tab] ? fakeDBManagement[tab]() : [];
+    tabManagement[tab].renderTable(data);
+    input.oninput = () => tabManagement[tab].search(data);
 }
 
-document.getElementsByName('tab-selestion').forEach((e) => {
-    e.onchange = (event) => {
-        tab = /**@type {HTMLInputElement} */ (event.target).value;
-        renderManagement();
-    };
-});
+function updateMangement() {
+    tabManagement[tab].doSave();
+}
 
-renderUser(fackDatabase.getAllUserInfo());
-const input = document.getElementById('search-input');
-if (input) input.oninput = () => searchUser(fackDatabase.getAllUserInfo());
+function main() {
+    document.getElementsByName('tab-selestion').forEach((e) => {
+        e.onchange = (event) => {
+            tab = /**@type {HTMLInputElement} */ (event.target).value;
+            renderManagement();
+        };
+    });
 
-const btnDelete = document.getElementById('delete-btn');
-if (btnDelete)
-    btnDelete.onclick = (event) => {
-        const popupWrapper = document.getElementById('popup-wrapper');
-        if (popupWrapper) {
-            showPopup(
-                popupWrapper,
-                'Xác nhận xóa',
-                'Bạn có muốn xóa vĩnh viên các dòng hay không.',
-                () => {
-                    // todo
-                    alert('chưa làm hàm xóa');
-                    console.log('ok');
-                },
-                null,
-            );
-        }
-    };
+    const input = document.getElementById('search-input');
+    const data = fakeDBManagement['user'] ? fakeDBManagement['user']() : [];
+    tabManagement['user'].renderTable(data);
+    input && (input.oninput = () => tabManagement['user'].search(data));
 
-let canEdit = false;
-const btnSave = document.getElementById('save-btn');
-if (btnSave)
-    btnSave.onclick = function () {
-        if (!canEdit) {
-            btnSave.innerHTML = '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
-            document.querySelectorAll('#content_table td[key]').forEach((td) => {
-                td.setAttribute('contenteditable', 'true');
-            });
-            canEdit = !canEdit;
-
-            return;
-        }
-
-        canEdit = !canEdit;
-
-        btnSave.innerHTML = '<i class="fa-solid fa-pen"></i><span>Edit</span>';
-        document.querySelectorAll('#content_table td[key]').forEach((td) => {
-            td.setAttribute('contenteditable', 'false');
-        });
-
-        console.log(tab);
-
-        switch (tab) {
-            case 'user': {
-                userDoSave();
-                break;
+    const btnDelete = document.getElementById('delete-btn');
+    if (btnDelete)
+        btnDelete.onclick = (event) => {
+            const popupWrapper = document.getElementById('popup-wrapper');
+            if (popupWrapper) {
+                showPopup(
+                    popupWrapper,
+                    'Xác nhận xóa',
+                    'Bạn có muốn xóa vĩnh viên các dòng hay không.',
+                    () => {
+                        // todo
+                        alert('chưa làm hàm xóa');
+                        console.log('ok');
+                    },
+                    null,
+                );
             }
-            case 'cart': {
-                break;
-            }
-            case 'sach': {
-                break;
-            }
-            case 'category': {
-                break;
-            }
-        }
+        };
 
-        renderManagement();
-    };
+    const btnSave = document.getElementById('save-btn');
+    if (btnSave)
+        btnSave.onclick = function () {
+            if (!btnSave.classList.contains('canedit')) {
+                btnSave.innerHTML =
+                    '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
+                btnSave.classList.add('canedit');
+                document
+                    .querySelectorAll('#content_table td[key]')
+                    .forEach((td) => {
+                        td.setAttribute('contenteditable', 'true');
+                    });
+
+                return;
+            }
+
+            const popupWrapper = document.getElementById('popup-wrapper');
+            if (popupWrapper)
+                showPopup(
+                    popupWrapper,
+                    'Xác nhận sửa',
+                    'Bạn có chắc là muốn sửa không',
+                    () => {
+                        // đổi cái icon và text
+                        btnSave.classList.remove('canedit');
+                        btnSave.innerHTML =
+                            '<i class="fa-solid fa-pen"></i><span>Edit</span>';
+                        document
+                            .querySelectorAll('#content_table td[key]')
+                            .forEach((td) => {
+                                td.setAttribute('contenteditable', 'false');
+                            });
+
+                        updateMangement();
+                        renderManagement();
+                    },
+                    () => {},
+                );
+        };
+
+    const btnAdd = document.getElementById('add-btn');
+    if (btnAdd && btnSave)
+        btnAdd.onclick = () => {
+            if (btnAdd.classList.contains('btn-warning')) {
+                btnAdd.classList.remove('btn-warning');
+                btnAdd.classList.add('btn-primary');
+                btnAdd.innerHTML =
+                    '<i class="fa-solid fa-plus"></i><span>Thêm</span>';
+
+                btnSave.classList.remove('canedit');
+                btnSave.innerHTML =
+                    '<i class="fa-solid fa-pen"></i><span>Edit</span>';
+
+                const allrow = document.querySelectorAll(
+                    '#content_table > tr[add-template]',
+                );
+                allrow.forEach((e) => {
+                    e.remove();
+                });
+            } else {
+                btnAdd.classList.add('btn-warning');
+                btnAdd.classList.remove('btn-primary');
+                btnAdd.innerHTML =
+                    '<i class="fa-solid fa-ban"></i><span>Hủy</span>';
+
+                // lời viết hàm if
+                btnSave.innerHTML =
+                    '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
+                btnSave.classList.add('canedit');
+
+                const render = tabManagement[tab].renderRow;
+
+                /**
+                 * @type {HTMLTableRowElement}
+                 */
+                let row;
+                if (render) {
+                    row = render({});
+                } else {
+                    row = defaultRenderRow(
+                        { id: uuidv4() },
+                        tabManagement[tab].cols,
+                    );
+                }
+
+                row.setAttribute('add-template', 'true');
+
+                const table = document.getElementById('content_table');
+
+                if (table) {
+                    table.insertBefore(row, table.childNodes[1]);
+                }
+
+                console.log(row);
+            }
+        };
+}
+
+main();

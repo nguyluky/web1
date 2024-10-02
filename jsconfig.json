@@ -12,5 +12,8 @@
     "compileOnSave": true,
     "typingOptions": {
         "enableAutoDiscovery": true
-    }
+    },
+    "exclude": [
+        ".\\src\\assets\\js\\db\\imgStore.js"
+    ]
 }

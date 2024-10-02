@@ -113,3 +113,16 @@ body {
 .button_1 > i {
     font-size: 20px;
 }
+
+.button_1.btn-outline-warning {
+    border: 1px solid #efb73e;
+    background: transparent;
+    box-sizing: border-box;
+    color: #efb73e;
+}
+
+.button_1.btn-warning {
+    background: #efb73e;
+    box-sizing: border-box;
+    color: #fff;
+}

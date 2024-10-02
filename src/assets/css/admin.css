@@ -135,6 +135,10 @@ input[type='radio'] {
     gap: 5px;
 }
 
+.right-wrapper .button_1 {
+    min-width: 80px;
+}
+
 .table-conten-wrapper {
     max-height: calc(100% - 40px);
     overflow: auto;
@@ -229,6 +233,7 @@ body {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
+    min-width: 30%;
 }
 
 .popup-header {

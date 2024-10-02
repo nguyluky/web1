@@ -1,5 +1,9 @@
 import { renderTable, searchList } from './reader_table.js';
 
+/**
+ * @typedef {import("../db/fakeDb").Category} Category
+ */
+
 const cols = {
     id: 'Id',
     name: 'Name',
@@ -8,9 +12,9 @@ const cols = {
 
 /**
  *
- * @param {import("../db/fakeDb").Category[]} list
+ * @param {Category[]} list
  */
-export function renderCategory(list) {
+function renderCategory(list) {
     const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
 
@@ -19,11 +23,28 @@ export function renderCategory(list) {
 
 /**
  *
- * @param {import("../db/fakeDb").Category[]} list
+ * @param {Category[]} list
  */
-export function searchCategory(list) {
+function searchCategory(list) {
     const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
 
     renderTable(searchList(list, cols), table, cols);
 }
+
+/**
+ * @type {import('./reader_table.js').intefaceRender<Category>}
+ */
+const Category_ = {
+    cols,
+    renderTable: renderCategory,
+    search: searchCategory,
+    doSave: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+    addRow: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+};
+
+export default Category_;

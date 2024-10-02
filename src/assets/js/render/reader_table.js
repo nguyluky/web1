@@ -7,6 +7,53 @@ import text2htmlElement from '../until/text2htmlElement.js';
 
 /**
  * @template {{id: string}} T
+ * @param {T} value
+ * @param {{[key in keyof T]?: string}} cols
+ * @returns {HTMLTableRowElement}
+ */
+export function defaultRenderRow(value, cols) {
+    const row = document.createElement('tr');
+    row.setAttribute('id-row', value.id);
+
+    // thêm check box
+    const col = document.createElement('td');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = value['id'];
+    checkbox.className = 'table-check-box';
+    col.appendChild(checkbox);
+    row.appendChild(col);
+
+    // thêm các phần khác
+    Object.keys(cols).forEach((key) => {
+        const col = document.createElement('td');
+        col.oninput = (event) => {
+            const target = /**@type {HTMLTableCellElement}*/ (event.target);
+            if (onchange)
+                onchange(
+                    value,
+                    // @ts-ignore
+                    key,
+                    target.textContent,
+                );
+
+            if (target.textContent == target.getAttribute('default-value'))
+                col.setAttribute('ischange', 'false');
+            else col.setAttribute('ischange', 'true');
+        };
+        // col.setAttribute('contenteditable', 'true');
+        col.setAttribute('ischange', 'false');
+        col.setAttribute('key', key);
+        col.setAttribute('default-value', value[key]);
+        col.insertAdjacentHTML('beforeend', value[key]);
+        row.appendChild(col);
+    });
+
+    return row;
+}
+
+/**
+ * @template {{id: string}} T
  * @param {T[]} values
  * @param {HTMLTableElement} table
  * @param {{[key in keyof T]?: string}} cols
@@ -45,40 +92,7 @@ function renderTable(values, table, cols, onchange = null, cRenderRow = null) {
         });
     } else
         values.forEach((value, index) => {
-            const row = document.createElement('tr');
-
-            const col = document.createElement('td');
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.value = value['id'];
-            checkbox.className = 'table-check-box';
-            col.appendChild(checkbox);
-            row.appendChild(col);
-
-            Object.keys(cols).forEach((key) => {
-                const col = document.createElement('td');
-                col.oninput = (event) => {
-                    const target = /**@type {HTMLTableCellElement}*/ (event.target);
-                    if (onchange)
-                        onchange(
-                            value,
-                            // @ts-ignore
-                            key,
-                            target.textContent,
-                        );
-
-                    if (target.textContent == target.getAttribute('default-value'))
-                        col.setAttribute('ischange', 'false');
-                    else col.setAttribute('ischange', 'true');
-                };
-                // col.setAttribute('contenteditable', 'true');
-                col.setAttribute('ischange', 'false');
-                col.setAttribute('key', key);
-                col.setAttribute('default-value', value[key]);
-                col.insertAdjacentHTML('beforeend', value[key]);
-                row.appendChild(col);
-            });
-
+            const row = defaultRenderRow(value, cols);
             table.appendChild(row);
         });
 }
@@ -104,6 +118,21 @@ function searchList(values, cols) {
 }
 
 /**
+ *
+ * dòng js để tạo một popup rồi thêm vào parder
+ * <div class="popup">
+ *     <div class="popup-header">
+ *         <h1>Xác nhận xóa</h1>
+ *         <button class="button_1">
+ *             <i class="fa-solid fa-xmark"></i>
+ *         </button>
+ *     </div>
+ *     <div class="pupop-context">Bạn có chắc là muốn xóa 20 dòng không:</div>
+ *     <div class="popup-footer">
+ *         <button class="button_1 btn-primary">Cancel</button>
+ *         <button class="button_1 btn-ouline-primary">OK</button>
+ *     </div>
+ * </div>
  *
  * @param {HTMLElement} parder
  * @param {string} title
@@ -179,5 +208,17 @@ function showPopup(parder, title, context, onOk, onCancel) {
         }
     };
 }
+
+/**
+ * @template {{id: string}} T
+ * @typedef {{
+ * cols: {[key in keyof T]?: string},
+ * renderTable: (list: T[]) => void,
+ * renderRow?: (value: T) => HTMLTableRowElement,
+ * doSave: () => void,
+ * search: (list: T[]) => void,
+ * addRow: () => void,
+ * }} intefaceRender
+ */
 
 export { searchList, renderTable, showPopup };

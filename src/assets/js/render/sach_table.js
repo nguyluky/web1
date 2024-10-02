@@ -1,6 +1,10 @@
 import fackDatabase from '../db/fakeDb.js';
 import { renderTable, searchList } from './reader_table.js';
 
+/**
+ * @typedef {import('../db/fakeDb').Sach} Sach
+ */
+
 const cols = {
     id: 'Id',
     title: 'Title',
@@ -14,7 +18,7 @@ const cols = {
 
 /**
  *
- * @param {import('../db/fakeDb').Sach} value
+ * @param {Sach} value
  */
 function renderRow(value) {
     const row = document.createElement('tr');
@@ -53,9 +57,9 @@ function renderRow(value) {
 
 /**
  *
- * @param {import("../db/fakeDb").Sach[]} list
+ * @param {Sach[]} list
  */
-export function renderSach(list) {
+function renderSach(list) {
     const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
 
@@ -64,12 +68,37 @@ export function renderSach(list) {
 
 /**
  *
- * @param {import("../db/fakeDb").Sach[]} list
+ * @param {Sach[]} list
  */
-export function searchSach(list) {
+function searchSach(list) {
     const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
 
-    const result = searchList(list, cols);
-    renderTable(result, table, cols, null, renderRow);
+    const result = searchList(list, cols).map((e) => e.id);
+    document.querySelectorAll('#content_table > tr[id-row]').forEach((e) => {
+        const id = e.getAttribute('id-row') || '';
+        if (result.includes(id)) {
+            /**@type {HTMLElement}*/ (e).style.display = '';
+        } else {
+            /**@type {HTMLElement}*/ (e).style.display = 'none';
+        }
+    });
 }
+
+/**
+ * @type {import('./reader_table.js').intefaceRender<Sach>}
+ */
+const Sach_ = {
+    cols,
+    renderTable: renderSach,
+    renderRow,
+    search: searchSach,
+    doSave: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+    addRow: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+};
+
+export default Sach_;

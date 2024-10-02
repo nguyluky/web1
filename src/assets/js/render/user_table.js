@@ -1,6 +1,10 @@
 import fackDatabase from '../db/fakeDb.js';
 import { searchList, renderTable } from './reader_table.js';
 
+/**
+ * @typedef {import('../db/fakeDb.js').UserInfo} UserInfo
+ */
+
 const cols = {
     id: 'Id',
     name: 'Name',
@@ -11,13 +15,13 @@ const cols = {
 };
 
 /**
- * @type {{[key: string]: import('../db/fakeDb.js').UserInfo}}
+ * @type {{[key: string]: UserInfo}}
  */
 const cacheSave = {};
 
 /**
  *
- * @type {import('./reader_table.js').OnChange<import('../db/fakeDb.js').UserInfo>}
+ * @type {import('./reader_table.js').OnChange<UserInfo>}
  */
 function onChangeHandle(data, key, newValue) {
     // @ts-ignore
@@ -25,7 +29,7 @@ function onChangeHandle(data, key, newValue) {
     cacheSave[data.id] = data;
 }
 
-export function userDoSave() {
+function userDoSave() {
     Object.keys(cacheSave).forEach((e) => {
         console.log(e);
         const data = cacheSave[e];
@@ -44,7 +48,7 @@ export function userDoSave() {
  *
  * @param {import("../db/fakeDb.js").UserInfo[]} list
  */
-export function renderUser(list) {
+function renderUser(list) {
     const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
 
@@ -54,9 +58,33 @@ export function renderUser(list) {
 /**
  * @param {import("../db/fakeDb.js").UserInfo[]} list
  */
-export function searchUser(list) {
+function searchUser(list) {
     const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
     if (!table) return;
 
-    renderTable(searchList(list, cols), table, cols, onChangeHandle);
+    const result = searchList(list, cols).map((e) => e.id);
+
+    document.querySelectorAll('#content_table > tr[id-row]').forEach((e) => {
+        const id = e.getAttribute('id-row') || '';
+        if (result.includes(id)) {
+            /**@type {HTMLElement}*/ (e).style.display = '';
+        } else {
+            /**@type {HTMLElement}*/ (e).style.display = 'none';
+        }
+    });
 }
+
+function addUser() {}
+
+/**
+ * @type {import('./reader_table.js').intefaceRender<UserInfo>}
+ */
+
+const user_ = {
+    cols,
+    renderTable: renderUser,
+    doSave: userDoSave,
+    search: searchUser,
+    addRow: addUser,
+};
+export default user_;

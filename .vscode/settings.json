@@ -13,6 +13,6 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true
     },
-    "livePreview.defaultPreviewPath": "/src/admin.html",
-    "liveServer.settings.port": 5501
+    "liveServer.settings.root": "/src",
+    "liveServer.settings.port": 5500
 }
