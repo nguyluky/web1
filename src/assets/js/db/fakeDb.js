@@ -1836,8 +1836,9 @@ class FakeDatabase {
     /**
      *
      * @param {string} id
-     * @param {string} email
+     * @param {string} userName
      * @param {string} name
+     * @param {string} email
      * @param {string} passwd
      * @param {string} phone_num
      * @param {"user" | "admin"| undefined} rule
