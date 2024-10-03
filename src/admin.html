@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>admin database</title>
         <link rel="stylesheet" href="./assets/css/admin.css" />
-        <!-- <script src="./assets/fontawesome/js/fontawesome.min.js"></script> -->
         <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css" />
         <script type="module" src="./assets/js/admin.js" defer></script>
     </head>
@@ -24,7 +23,12 @@
             <aside class="aside">
                 <div class="left-sidebar card">
                     <label class="container">
-                        <input type="radio" name="tab-selestion" checked="checked" value="user" />
+                        <input
+                            type="radio"
+                            name="tab-selestion"
+                            checked="checked"
+                            value="user"
+                        />
                         <div class="left-sidebar__btn btn-user">
                             <i class="fa-solid fa-users"></i>
                             <p><strong>User</strong></p>
@@ -45,7 +49,11 @@
                         </div>
                     </label>
                     <label class="container">
-                        <input type="radio" name="tab-selestion" value="category" />
+                        <input
+                            type="radio"
+                            name="tab-selestion"
+                            value="category"
+                        />
                         <div class="left-sidebar__btn btn-category">
                             <i class="fa-solid fa-bookmark"></i>
                             <p><strong>Category</strong></p>
@@ -58,7 +66,13 @@
                     <div class="table-title">
                         <h3 id="table-title-header">User</h3>
                         <div class="right-wrapper">
-                            <div style="display: flex; align-items: center; gap: 10px">
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 10px;
+                                "
+                            >
                                 <label class="search-box">
                                     <input
                                         type="text"
@@ -75,7 +89,10 @@
                                 <i class="fa-solid fa-plus"></i>
                                 <span>Thêm</span>
                             </button>
-                            <button class="button_1 btn-ouline-primary" id="save-btn">
+                            <button
+                                class="button_1 btn-ouline-primary"
+                                id="save-btn"
+                            >
                                 <i class="fa-solid fa-pen"></i>
                                 <span>Edit</span>
                             </button>
