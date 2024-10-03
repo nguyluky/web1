@@ -919,7 +919,7 @@ class FakeDatabase {
      * @param {UserInfo} data
      */
     addUserInfo(data) {
-        cache.user_info.push(data);
+        cache.user_info.unshift(data);
     }
 
     /**

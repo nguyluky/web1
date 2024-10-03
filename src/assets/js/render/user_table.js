@@ -160,16 +160,24 @@ function addUser() {
  * xoá 1 hàng mới thêm vô, ko xoá toàn bộ nội dung thêm
  */
 function cancelAdd() {
-    document
-        .querySelector(`tr[id-row="${cacheAdd[cacheAdd.length - 1].id}"]`)
-        ?.remove();
+    document.querySelector(`tr[id-row="${cacheAdd[0].id}"]`)?.remove();
+    cacheAdd = [];
 }
 
 /**
  * lấy toàn bộ các row đã chọn rồi delete
  */
 function removeRow() {
-    throw new Error('làm đi remove');
+    document.querySelectorAll('tr').forEach((e) => {
+        let cb = /**@type {HTMLInputElement} */ (
+            e.querySelector('input[type="checkbox"]')
+        );
+        if (cb && cb.checked) {
+            let rowID = e.getAttribute('id-row');
+            if (rowID) fackDatabase.deleteUserById(rowID);
+            e.remove();
+        }
+    });
 }
 
 /**
@@ -182,7 +190,7 @@ const user_ = {
     doSave: userDoSave,
     search: searchUser,
     addRow: addUser,
-    removeRow,
+    removeRow: removeRow,
     cancelAdd,
 };
 export default user_;
