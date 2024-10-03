@@ -104,13 +104,17 @@ function renderTable(values, table, cols, onchange = null, cRenderRow = null) {
  * @returns {T[]}
  */
 function searchList(values, cols) {
-    const searchInput = /**@type {HTMLInputElement}*/ (document.getElementById('search-input'));
+    const searchInput = /**@type {HTMLInputElement}*/ (
+        document.getElementById('search-input')
+    );
     if (!searchInput) return [];
     let valueSearchInput = searchInput.value;
     let result = values.filter((e) => {
         return Object.keys(cols).some((key) => {
             if (e[key] === undefined) return false;
-            return e[key].toUpperCase().includes(valueSearchInput.toUpperCase());
+            return e[key]
+                .toUpperCase()
+                .includes(valueSearchInput.toUpperCase());
         });
     });
 
@@ -218,6 +222,8 @@ function showPopup(parder, title, context, onOk, onCancel) {
  * doSave: () => void,
  * search: (list: T[]) => void,
  * addRow: () => void,
+ * removeRow: () => void,
+ * cancelAdd: () => void
  * }} intefaceRender
  */
 
