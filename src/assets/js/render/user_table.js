@@ -67,7 +67,7 @@ function userDoSave() {
         console.log(e);
         fackDatabase.addUserInfo(e);
     });
-
+    cacheAdd = [];
     document.querySelectorAll('#content_table td').forEach((e) => {
         e.setAttribute('contenteditable', 'false');
         e.setAttribute('ischange', 'false');

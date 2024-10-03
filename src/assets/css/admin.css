@@ -71,6 +71,9 @@ footer.footer {
     box-sizing: border-box;
     height: 100%;
     width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .left-sidebar__btn {

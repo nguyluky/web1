@@ -148,7 +148,11 @@ function main() {
                         // NOTE: chưa biết là gì
                         // renderManagement();
                     },
-                    () => {},
+                    () => {
+                        const btnAdd = document.getElementById('add-btn');
+                        if (btnAdd && btnAdd.classList.contains('btn-warning'))
+                            btnAdd.click();
+                    },
                 );
         };
 
