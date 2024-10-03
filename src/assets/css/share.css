@@ -6,6 +6,26 @@
     font-family: 'Inter', sans-serif;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #707070;
+}
+
 body {
     height: 100vh;
     background: #efefef;
@@ -16,7 +36,8 @@ body {
     padding: 10px;
     border-radius: 8px;
     background-color: #ffffff;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    /*  */
+    /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); */
 }
 
 .ct-input {
