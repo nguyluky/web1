@@ -128,7 +128,8 @@ function main() {
                             });
 
                         updateMangement();
-                        renderManagement();
+                        // NOTE: chưa biết là gì
+                        // renderManagement();
                     },
                     () => {},
                 );
@@ -147,47 +148,20 @@ function main() {
                 btnSave.innerHTML =
                     '<i class="fa-solid fa-pen"></i><span>Edit</span>';
 
-                const allrow = document.querySelectorAll(
-                    '#content_table > tr[add-template]',
-                );
-                allrow.forEach((e) => {
-                    e.remove();
-                });
+                // hủy
+                tabManagement[tab].cancelAdd();
             } else {
                 btnAdd.classList.add('btn-warning');
                 btnAdd.classList.remove('btn-primary');
                 btnAdd.innerHTML =
                     '<i class="fa-solid fa-ban"></i><span>Hủy</span>';
 
-                // lời viết hàm if
                 btnSave.innerHTML =
                     '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
                 btnSave.classList.add('canedit');
 
-                const render = tabManagement[tab].renderRow;
-
-                /**
-                 * @type {HTMLTableRowElement}
-                 */
-                let row;
-                if (render) {
-                    row = render({});
-                } else {
-                    row = defaultRenderRow(
-                        { id: uuidv4() },
-                        tabManagement[tab].cols,
-                    );
-                }
-
-                row.setAttribute('add-template', 'true');
-
-                const table = document.getElementById('content_table');
-
-                if (table) {
-                    table.insertBefore(row, table.childNodes[1]);
-                }
-
-                console.log(row);
+                // thêm
+                tabManagement[tab].addRow();
             }
         };
 }

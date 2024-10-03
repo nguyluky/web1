@@ -424,6 +424,17 @@ class FakeDatabase {
     }
 
     /**
+     * admin dùng để trực tiếp thêm vào database
+     *
+     * @param {UserInfo} data
+     */
+    addUserInfo(data) {
+        cache.user_info.push(data);
+    }
+
+    /**
+     *
+     * được dùng cho người dùng khi tạo tài khoản
      *
      * @param {string} password
      * @param {string} display_name

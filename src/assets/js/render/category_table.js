@@ -15,7 +15,9 @@ const cols = {
  * @param {Category[]} list
  */
 function renderCategory(list) {
-    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    const table = /**@type {HTMLTableElement}*/ (
+        document.getElementById('content_table')
+    );
     if (!table) return;
 
     renderTable(list, table, cols);
@@ -26,7 +28,9 @@ function renderCategory(list) {
  * @param {Category[]} list
  */
 function searchCategory(list) {
-    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    const table = /**@type {HTMLTableElement}*/ (
+        document.getElementById('content_table')
+    );
     if (!table) return;
 
     renderTable(searchList(list, cols), table, cols);
@@ -43,6 +47,12 @@ const Category_ = {
         throw new Error('Làm này đi, đồ lười');
     },
     addRow: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+    removeRow: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+    cancelAdd: () => {
         throw new Error('Làm này đi, đồ lười');
     },
 };

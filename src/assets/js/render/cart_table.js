@@ -18,7 +18,9 @@ const cols = {
  * @param {Cart[]} list
  */
 function renderCart(list) {
-    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    const table = /**@type {HTMLTableElement}*/ (
+        document.getElementById('content_table')
+    );
     if (!table) return;
 
     renderTable(list, table, cols);
@@ -29,7 +31,9 @@ function renderCart(list) {
  * @param {Cart[]} list
  */
 function searchCart(list) {
-    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    const table = /**@type {HTMLTableElement}*/ (
+        document.getElementById('content_table')
+    );
     if (!table) return;
     const result = searchList(list, cols);
 
@@ -47,6 +51,12 @@ const Cart_ = {
         throw new Error('Làm này đi, đồ lười');
     },
     addRow: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+    removeRow: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+    cancelAdd: () => {
         throw new Error('Làm này đi, đồ lười');
     },
 };

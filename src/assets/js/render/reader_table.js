@@ -2,16 +2,17 @@ import text2htmlElement from '../until/text2htmlElement.js';
 
 /**
  * @template T
- * @typedef {(data : T, key: keyof T, newValue: T[key]) => void} OnChange
+ * @typedef {(data : T, key: keyof T, newValue: T[keyof T]) => void} OnChange
  */
 
 /**
  * @template {{id: string}} T
  * @param {T} value
  * @param {{[key in keyof T]?: string}} cols
+ * @param {OnChange<T>?} onchange
  * @returns {HTMLTableRowElement}
  */
-export function defaultRenderRow(value, cols) {
+export function defaultRenderRow(value, cols, onchange = null) {
     const row = document.createElement('tr');
     row.setAttribute('id-row', value.id);
 
@@ -44,8 +45,8 @@ export function defaultRenderRow(value, cols) {
         // col.setAttribute('contenteditable', 'true');
         col.setAttribute('ischange', 'false');
         col.setAttribute('key', key);
-        col.setAttribute('default-value', value[key]);
-        col.insertAdjacentHTML('beforeend', value[key]);
+        col.setAttribute('default-value', value[key] || '');
+        col.insertAdjacentHTML('beforeend', value[key] || '');
         row.appendChild(col);
     });
 
@@ -57,10 +58,16 @@ export function defaultRenderRow(value, cols) {
  * @param {T[]} values
  * @param {HTMLTableElement} table
  * @param {{[key in keyof T]?: string}} cols
- * @param {OnChange<T>?} onchange
- * @param {((key: T) => HTMLTableRowElement)?} cRenderRow
+ * @param {OnChange<T>| undefined} onchange
+ * @param {((key: T, onchange?: OnChange<T>) => HTMLTableRowElement) | undefined} cRenderRow
  */
-function renderTable(values, table, cols, onchange = null, cRenderRow = null) {
+function renderTable(
+    values,
+    table,
+    cols,
+    onchange = undefined,
+    cRenderRow = undefined,
+) {
     table.innerHTML = '';
 
     const tableHeader = document.createElement('tr');
@@ -87,12 +94,12 @@ function renderTable(values, table, cols, onchange = null, cRenderRow = null) {
 
     if (cRenderRow) {
         values.forEach((value, index) => {
-            const row = cRenderRow(value);
+            const row = cRenderRow(value, onchange);
             table.appendChild(row);
         });
     } else
         values.forEach((value, index) => {
-            const row = defaultRenderRow(value, cols);
+            const row = defaultRenderRow(value, cols, onchange);
             table.appendChild(row);
         });
 }
@@ -214,6 +221,9 @@ function showPopup(parder, title, context, onOk, onCancel) {
 }
 
 /**
+ *
+ * fuckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+ *
  * @template {{id: string}} T
  * @typedef {{
  * cols: {[key in keyof T]?: string},

@@ -39,7 +39,8 @@ function renderRow(value) {
                     value,
                     // @ts-ignore
                     key,
-                    /**@type {HTMLTableCellElement}*/ (event.target).textContent,
+                    /**@type {HTMLTableCellElement}*/ (event.target)
+                        .textContent,
                 );
         };
         col.setAttribute('key', key);
@@ -60,10 +61,12 @@ function renderRow(value) {
  * @param {Sach[]} list
  */
 function renderSach(list) {
-    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    const table = /**@type {HTMLTableElement}*/ (
+        document.getElementById('content_table')
+    );
     if (!table) return;
 
-    renderTable(list, table, cols, null, renderRow);
+    renderTable(list, table, cols, undefined, renderRow);
 }
 
 /**
@@ -71,7 +74,9 @@ function renderSach(list) {
  * @param {Sach[]} list
  */
 function searchSach(list) {
-    const table = /**@type {HTMLTableElement}*/ (document.getElementById('content_table'));
+    const table = /**@type {HTMLTableElement}*/ (
+        document.getElementById('content_table')
+    );
     if (!table) return;
 
     const result = searchList(list, cols).map((e) => e.id);
@@ -97,6 +102,12 @@ const Sach_ = {
         throw new Error('Làm này đi, đồ lười');
     },
     addRow: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+    removeRow: () => {
+        throw new Error('Làm này đi, đồ lười');
+    },
+    cancelAdd: () => {
         throw new Error('Làm này đi, đồ lười');
     },
 };
