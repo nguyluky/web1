@@ -417,7 +417,9 @@ class FakeDatabase {
      * @returns {UserInfo | undefined}
      */
     getUserInfoByUserNameAndPassword(email, password) {
-        const user_info = cache.user_info.find((e) => e.email == email && e.passwd == password);
+        const user_info = cache.user_info.find(
+            (e) => e.email == email && e.passwd == password,
+        );
         return user_info;
     }
 
@@ -443,9 +445,8 @@ class FakeDatabase {
     /**
      *
      * @param {string} id
-     * @param {string} userName
-     * @param {string} name
      * @param {string} email
+     * @param {string} name
      * @param {string} passwd
      * @param {string} phone_num
      * @param {"user" | "admin"| undefined} rule
