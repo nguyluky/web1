@@ -53,6 +53,8 @@ function renderManagement() {
         category: 'Category',
     };
 
+    let web_title = document.querySelector('head title');
+    if (web_title) web_title.innerHTML = `Admin Web - ${titleTabs[tab]}`;
     const data = fakeDBManagement[tab] ? fakeDBManagement[tab]() : [];
     tabManagement[tab].renderTable(data);
     input.oninput = () => tabManagement[tab].search(data);
@@ -85,9 +87,8 @@ function main() {
                     'Xác nhận xóa',
                     'Bạn có muốn xóa vĩnh viên các dòng hay không.',
                     () => {
-                        // todo
-                        alert('chưa làm hàm xóa');
-                        console.log('ok');
+                        tabManagement[tab].removeRow();
+                        // console.log('ok');
                     },
                     null,
                 );
@@ -97,6 +98,7 @@ function main() {
     const btnSave = document.getElementById('save-btn');
     if (btnSave)
         btnSave.onclick = function () {
+            // nếu nhấn nút edit -> chuyển thành nút lưu và cho phép chỉnh sửa
             if (!btnSave.classList.contains('canedit')) {
                 btnSave.innerHTML =
                     '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
@@ -109,7 +111,7 @@ function main() {
 
                 return;
             }
-
+            // nếu nhấn nút save
             const popupWrapper = document.getElementById('popup-wrapper');
             if (popupWrapper)
                 showPopup(
@@ -117,6 +119,21 @@ function main() {
                     'Xác nhận sửa',
                     'Bạn có chắc là muốn sửa không',
                     () => {
+                        // nếu đang thêm thì đổi icon và text btn-warning
+                        const btnAdd = document.getElementById('add-btn');
+                        if (
+                            btnAdd &&
+                            btnAdd.classList.contains('btn-warning')
+                        ) {
+                            btnAdd.classList.remove('btn-warning');
+                            btnAdd.classList.add('btn-primary');
+                            btnAdd.innerHTML =
+                                '<i class="fa-solid fa-plus"></i><span>Thêm</span>';
+
+                            btnSave.classList.remove('canedit');
+                            btnSave.innerHTML =
+                                '<i class="fa-solid fa-pen"></i><span>Edit</span>';
+                        }
                         // đổi cái icon và text
                         btnSave.classList.remove('canedit');
                         btnSave.innerHTML =
