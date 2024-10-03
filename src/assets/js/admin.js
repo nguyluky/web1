@@ -117,6 +117,21 @@ function main() {
                     'Xác nhận sửa',
                     'Bạn có chắc là muốn sửa không',
                     () => {
+                        // nếu đang thêm thì đổi icon và text btn-warning
+                        const btnAdd = document.getElementById('add-btn');
+                        if (
+                            btnAdd &&
+                            btnAdd.classList.contains('btn-warning')
+                        ) {
+                            btnAdd.classList.remove('btn-warning');
+                            btnAdd.classList.add('btn-primary');
+                            btnAdd.innerHTML =
+                                '<i class="fa-solid fa-plus"></i><span>Thêm</span>';
+
+                            btnSave.classList.remove('canedit');
+                            btnSave.innerHTML =
+                                '<i class="fa-solid fa-pen"></i><span>Edit</span>';
+                        }
                         // đổi cái icon và text
                         btnSave.classList.remove('canedit');
                         btnSave.innerHTML =

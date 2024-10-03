@@ -154,11 +154,15 @@ function addUser() {
  * ký tên Hiếu
  * người dùng hủy yêu cầu thêm
  */
+
+/**
+ * Tuấn sửa lại
+ * xoá 1 hàng mới thêm vô, ko xoá toàn bộ nội dung thêm
+ */
 function cancelAdd() {
-    cacheAdd.forEach((e) => {
-        document.querySelector(`tr[id-row="${e.id}"]`)?.remove();
-    });
-    cacheAdd = [];
+    document
+        .querySelector(`tr[id-row="${cacheAdd[cacheAdd.length - 1].id}"]`)
+        ?.remove();
 }
 
 /**
