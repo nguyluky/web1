@@ -12,6 +12,20 @@ header.header {
 
 .header .center {
     flex: 1;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.center img {
+    height: 100%;
+}
+
+.center span {
+    margin-left: 8px;
+    font-weight: 600;
+    color: #3a84a7;
+    font-size: 16px;
 }
 
 main.main {
@@ -70,13 +84,15 @@ footer.footer {
 .left-sidebar {
     box-sizing: border-box;
     height: 100%;
-    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .left-sidebar__btn {
     box-sizing: border-box;
     height: 40px;
-    width: 180px;
+    width: 100%;
     display: flex;
     align-items: center;
     background: none;
@@ -261,13 +277,82 @@ body {
 }
 
 .table-check-box {
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     margin-left: 10px;
 }
 
 .table-title .button_1 > i {
     font-size: 15px;
+}
+
+#menu-btn {
+    font-size: 20px;
+    margin-inline: 20px;
+    opacity: 0;
+    pointer-events: none;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    background: none;
+    border-radius: 50%;
+}
+
+#menu-btn:hover {
+    background: #efefef;
+}
+
+#menu-btn:active {
+    transform: scale(0.98);
+}
+
+@media screen and (max-width: 1200px) {
+    .aside {
+        position: absolute;
+        left: -232px;
+    }
+
+    .article {
+        padding: 10px;
+    }
+
+    #content_table input[type='checkbox'] {
+        width: 15px;
+        height: 15px;
+    }
+
+    #menu-btn {
+        opacity: 1;
+        pointer-events: all;
+        cursor: pointer;
+    }
+    #drop-list {
+        height: auto;
+
+        z-index: 100;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+            0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 0;
+        padding: 0;
+        gap: 0;
+    }
+    #drop-list.show {
+        position: absolute;
+        left: 250px;
+        top: -15px;
+    }
+
+    #drop-list .container {
+        width: 140px;
+    }
+
+    #drop-list .left-sidebar__btn {
+        border-radius: 0;
+        font-weight: 300;
+    }
 }
 
 .popup.imgupload .pupop-context {

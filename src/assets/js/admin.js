@@ -151,7 +151,11 @@ function main() {
                         // NOTE: chưa biết là gì
                         // renderManagement();
                     },
-                    () => {},
+                    () => {
+                        const btnAdd = document.getElementById('add-btn');
+                        if (btnAdd && btnAdd.classList.contains('btn-warning'))
+                            btnAdd.click();
+                    },
                 );
         };
 
@@ -184,6 +188,22 @@ function main() {
                 tabManagement[tab].addRow();
             }
         };
+    let btnMenu = document.getElementById('menu-btn');
+    if (btnMenu) {
+        btnMenu.onclick = () => {
+            if (!btnMenu.classList.contains('active')) {
+                document.getElementById('drop-list')?.classList.add('show');
+                btnMenu.classList.add('active');
+                return;
+            }
+            document.getElementById('drop-list')?.classList.remove('show');
+            btnMenu.classList.remove('active');
+        };
+    }
+    document.getElementById('drop-list')?.addEventListener('click', () => {
+        document.getElementById('drop-list')?.classList.remove('show');
+        document.getElementById('menu-btn')?.classList.remove('active');
+    });
 }
 
 main();
