@@ -67,6 +67,9 @@ function updateMangement() {
 function main() {
     document.getElementsByName('tab-selestion').forEach((e) => {
         e.onchange = (event) => {
+            console.log(event.cancelable);
+            event.preventDefault();
+            event.stopPropagation();
             tab = /**@type {HTMLInputElement} */ (event.target).value;
             renderManagement();
         };

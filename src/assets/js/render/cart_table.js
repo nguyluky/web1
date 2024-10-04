@@ -11,6 +11,7 @@ const cols = {
     quantity: 'Số lượng',
     option_id: 'Option',
     status: 'Trạng thái',
+    timecreate: 'Ngày tạo',
 };
 
 /**
