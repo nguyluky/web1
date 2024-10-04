@@ -116,7 +116,7 @@ footer.footer {
     background-color: #808089;
 }
 
-input[type='radio'] {
+input[type='checkbox'] {
     display: none;
 }
 
