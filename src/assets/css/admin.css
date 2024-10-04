@@ -260,6 +260,7 @@ body {
     padding: 20px;
     border-radius: 8px;
     min-width: 30%;
+    max-width: 80vw;
 }
 
 .popup-header {
