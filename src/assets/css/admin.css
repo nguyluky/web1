@@ -129,11 +129,12 @@ input[type='radio'] {
     height: 100%;
 }
 
-.table-wrapper .table-title {
-    height: 40px;
+.table-title {
+    padding: 5px 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
 }
 
 .table-content {
@@ -144,15 +145,13 @@ input[type='radio'] {
 
 .table-wrapper .table-title .button_1 {
     height: 30px;
-}
-
-.right-wrapper {
-    display: flex;
-    gap: 5px;
-}
-
-.right-wrapper .button_1 {
     min-width: 80px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: right;
 }
 
 .table-conten-wrapper {
@@ -166,7 +165,7 @@ input[type='radio'] {
     width: 100%;
 }
 
-#content_table th {
+th {
     background: #0a68f4;
     z-index: 1;
     color: #ffffff;
@@ -224,14 +223,24 @@ body {
 .search-box {
     background: #fff;
     border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    display: block;
+    float: right;
+}
+
+.search-block {
+    margin-left: 10px;
+    flex: 1;
 }
 
 .search-box > input {
     border: none;
     background: none;
     height: 30px;
-    width: 350px;
+    width: 100%;
     padding: 0 10px;
+    box-sizing: border-box;
 }
 
 #popup-wrapper:has(.popup) {
@@ -251,6 +260,7 @@ body {
     padding: 20px;
     border-radius: 8px;
     min-width: 30%;
+    max-width: 80vw;
 }
 
 .popup-header {
@@ -312,6 +322,8 @@ body {
 @media screen and (max-width: 1200px) {
     .aside {
         position: absolute;
+        height: 0 !important;
+        width: 0 !important;
         left: -232px;
     }
 
@@ -331,7 +343,6 @@ body {
     }
     #drop-list {
         height: auto;
-
         z-index: 100;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
             0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -352,6 +363,41 @@ body {
     #drop-list .left-sidebar__btn {
         border-radius: 0;
         font-weight: 300;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .table-conten-wrapper {
+        height: calc(100% - 70px);
+    }
+
+    .table-wrapper .table-title {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        gap: 10px 0;
+        justify-content: unset;
+    }
+
+    #table-title-header {
+        grid-area: 2 / 1 / span 1 / span 2;
+    }
+
+    .search-block {
+        grid-area: 1 / 1 / span 1 / span 5;
+        margin: 0;
+    }
+
+    .search-block .search-box {
+        max-width: 100%;
+    }
+    .buttons {
+        grid-area: 2 / 3 / span 1 / span 3;
+    }
+    th {
+        font-size: 13px;
+    }
+    td {
+        font-size: 12px;
     }
 }
 

@@ -8,7 +8,9 @@
 
 /* width */
 ::-webkit-scrollbar {
+    /* nè  */
     width: 5px;
+    height: 5px;
 }
 
 /* Track */

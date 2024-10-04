@@ -52,7 +52,7 @@ function renderManagement() {
         sach: 'Sách',
         category: 'Category',
     };
-
+    title.innerHTML = titleTabs[tab];
     let web_title = document.querySelector('head title');
     if (web_title) web_title.innerHTML = `Admin Web - ${titleTabs[tab]}`;
     const data = fakeDBManagement[tab] ? fakeDBManagement[tab]() : [];
