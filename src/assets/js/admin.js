@@ -1,19 +1,18 @@
 import fackDatabase from './db/fakeDb.js';
-import { defaultRenderRow, showPopup } from './render/reader_table.js';
+import { showPopup } from './render/reader_table.js';
 import userRender from './render/user_table.js';
 import cartRender from './render/cart_table.js';
 import sachRender from './render/sach_table.js';
 import categoryRender from './render/category_table.js';
-import uuidv4 from './until/uuid.js';
 
-/**
- __             __        
-/\ \__         /\ \       
-\ \ ,_\    __  \ \ \____  
- \ \ \/  /'__`\ \ \ '__`\ 
-  \ \ \_/\ \L\.\_\ \ \L\ \
-   \ \__\ \__/.\_\\ \_,__/
-    \/__/\/__/\/_/ \/___/ 
+/**  ------- ADMIN -------
+ ______  ____             ______   __  __     
+/\  _  \/\  _`\   /'\_/`\/\__  _\ /\ \/\ \    
+\ \ \L\ \ \ \/\ \/\      \/_/\ \/ \ \ `\\ \   
+ \ \  __ \ \ \ \ \ \ \__\ \ \ \ \  \ \ , ` \  
+  \ \ \/\ \ \ \_\ \ \ \_/\ \ \_\ \__\ \ \`\ \ 
+   \ \_\ \_\ \____/\ \_\\ \_\/\_____\\ \_\ \_\
+    \/_/\/_/\/___/  \/_/ \/_/\/_____/ \/_/\/_/
  */
 
 /**
@@ -40,6 +39,68 @@ const fakeDBManagement = {
     cart: fackDatabase.getALlCart,
     sach: fackDatabase.getAllSach,
     category: fackDatabase.getAllCategory,
+};
+const btnMenu = document.getElementById('menu-btn');
+const btnAdd = document.getElementById('add-btn');
+const btnSave = document.getElementById('save-btn');
+const btnDelete = document.getElementById('delete-btn');
+const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
+    document.getElementsByName('tab-selestion')
+);
+const popupWrapper = document.getElementById('popup-wrapper');
+
+const buttonAddState = {
+    /**
+     * chuyển button thành button add
+     * với btn-warning var icon x
+     */
+    add: () => {
+        btnAdd?.classList.remove('btn-warning');
+        btnAdd?.classList.add('btn-primary');
+        btnAdd &&
+            (btnAdd.innerHTML =
+                '<i class="fa-solid fa-plus"></i><span>Thêm</span>');
+
+        btnSave?.classList.remove('canedit');
+        btnSave &&
+            (btnSave.innerHTML =
+                '<i class="fa-solid fa-pen"></i><span>Edit</span>');
+    },
+    /**
+     * chuyển thành button thêm
+     */
+    cancel: () => {
+        btnAdd?.classList.add('btn-warning');
+        btnAdd?.classList.remove('btn-primary');
+        btnAdd &&
+            (btnAdd.innerHTML =
+                '<i class="fa-solid fa-ban"></i><span>Hủy</span>');
+
+        btnSave &&
+            (btnSave.innerHTML =
+                '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>');
+        btnSave?.classList.add('canedit');
+    },
+};
+
+const buttonSaveState = {
+    edit: () => {
+        btnSave &&
+            (btnSave.innerHTML =
+                '<i class="fa-solid fa-pen"></i><span>Edit</span>');
+        document.querySelectorAll('#content_table td[key]').forEach((td) => {
+            td.setAttribute('contenteditable', 'false');
+        });
+    },
+    save: () => {
+        btnSave &&
+            (btnSave.innerHTML =
+                '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>');
+        btnSave?.classList.add('canedit');
+        document.querySelectorAll('#content_table td[key]').forEach((td) => {
+            td.setAttribute('contenteditable', 'true');
+        });
+    },
 };
 
 function renderManagement() {
@@ -73,15 +134,10 @@ function updateMangement() {
  * @param {MouseEvent} event
  */
 function buttonSaveHandle(event) {
-    // nếu nhấn nút edit -> chuyển thành nút lưu và cho phép chỉnh sửa
-    if (!this.classList.contains('canedit')) {
-        this.innerHTML =
-            '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
-        this.classList.add('canedit');
-        document.querySelectorAll('#content_table td[key]').forEach((td) => {
-            td.setAttribute('contenteditable', 'true');
-        });
-
+    const isEditMod = this.classList.contains('canedit');
+    // nhấn nút Edit
+    if (!isEditMod) {
+        buttonSaveState.save();
         return;
     }
 
@@ -93,40 +149,12 @@ function buttonSaveHandle(event) {
             'Xác nhận sửa',
             'Bạn có chắc là muốn sửa không',
             () => {
-                // nếu đang thêm thì đổi icon và text btn-warning
-                const btnAdd = document.getElementById('add-btn');
-                const btnSave = document.getElementById('save-btn');
-
-                if (!btnSave) return;
-
-                if (btnAdd && btnAdd.classList.contains('btn-warning')) {
-                    btnAdd.classList.remove('btn-warning');
-                    btnAdd.classList.add('btn-primary');
-                    btnAdd.innerHTML =
-                        '<i class="fa-solid fa-plus"></i><span>Thêm</span>';
-                }
-
-                // đổi cái icon và text
-                btnSave.classList.remove('canedit');
-                btnSave.innerHTML =
-                    '<i class="fa-solid fa-pen"></i><span>Edit</span>';
-                document
-                    .querySelectorAll('#content_table td[key]')
-                    .forEach((td) => {
-                        td.setAttribute('contenteditable', 'false');
-                    });
+                buttonAddState.add();
+                buttonSaveState.edit();
 
                 updateMangement();
             },
-            () => {
-                const btnAdd = document.getElementById('add-btn');
-                const btnSave = document.getElementById('save-btn');
-                if (!btnSave) return;
-
-                btnSave.classList.remove('canedit');
-                if (btnAdd && btnAdd.classList.contains('btn-warning'))
-                    btnAdd.click();
-            },
+            null,
         );
 }
 
@@ -143,7 +171,7 @@ function buttonDeleteHandle(event) {
             'Xác nhận xóa',
             'Bạn có muốn xóa vĩnh viên các dòng hay không.',
             () => {
-                tabManagement[tab].removeRow();
+                tabManagement[tab].removeRows();
                 // console.log('ok');
             },
             null,
@@ -157,29 +185,13 @@ function buttonDeleteHandle(event) {
  * @param {MouseEvent} event
  */
 function buttonAddHandle(event) {
-    const btnSave = document.getElementById('save-btn');
-    if (!btnSave) return;
+    const isAddMode = this.classList.contains('btn-warning');
 
-    if (this.classList.contains('btn-warning')) {
-        this.classList.remove('btn-warning');
-        this.classList.add('btn-primary');
-        this.innerHTML = '<i class="fa-solid fa-plus"></i><span>Thêm</span>';
-
-        btnSave.classList.remove('canedit');
-        btnSave.innerHTML = '<i class="fa-solid fa-pen"></i><span>Edit</span>';
-
-        // hủy
+    if (isAddMode) {
+        buttonAddState.add();
         tabManagement[tab].cancelAdd();
     } else {
-        this.classList.add('btn-warning');
-        this.classList.remove('btn-primary');
-        this.innerHTML = '<i class="fa-solid fa-ban"></i><span>Hủy</span>';
-
-        btnSave.innerHTML =
-            '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>';
-        btnSave.classList.add('canedit');
-
-        // thêm
+        buttonAddState.cancel();
         tabManagement[tab].addRow();
     }
 }
@@ -204,43 +216,22 @@ function buttonMenuHandle(event) {
  * @returns
  */
 function tabHandle(event) {
-    const btnSave = document.getElementById('save-btn');
     const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
         document.getElementsByName('tab-selestion')
     );
 
-    if (btnSave?.classList.contains('canedit')) {
+    const isEditMode = btnSave?.classList.contains('canedit');
+
+    if (isEditMode) {
         this.checked = false;
-        const popupWrapper = document.getElementById('popup-wrapper');
         popupWrapper &&
             showPopup(
                 popupWrapper,
                 'Xác nhận sửa',
                 'Bạn có chắc là muốn sửa không',
                 () => {
-                    // nếu đang thêm thì đổi icon và text btn-warning
-                    const btnAdd = document.getElementById('add-btn');
-                    const btnSave = document.getElementById('save-btn');
-
-                    if (!btnSave) return;
-
-                    if (btnAdd && btnAdd.classList.contains('btn-warning')) {
-                        btnAdd.classList.remove('btn-warning');
-                        btnAdd.classList.add('btn-primary');
-                        btnAdd.innerHTML =
-                            '<i class="fa-solid fa-plus"></i><span>Thêm</span>';
-                    }
-
-                    // đổi cái icon và text
-                    btnSave.classList.remove('canedit');
-                    btnSave.innerHTML =
-                        '<i class="fa-solid fa-pen"></i><span>Edit</span>';
-                    document
-                        .querySelectorAll('#content_table td[key]')
-                        .forEach((td) => {
-                            td.setAttribute('contenteditable', 'false');
-                        });
-
+                    buttonAddState.add();
+                    buttonSaveState.edit();
                     updateMangement();
 
                     tabElements.forEach((e) => (e.checked = false));
@@ -248,20 +239,7 @@ function tabHandle(event) {
                     tab = this.value;
                     renderManagement();
                 },
-                () => {
-                    const btnAdd = document.getElementById('add-btn');
-                    const btnSave = document.getElementById('save-btn');
-                    if (!btnSave) return;
-
-                    btnSave.classList.remove('canedit');
-                    if (btnAdd && btnAdd.classList.contains('btn-warning'))
-                        btnAdd.click();
-
-                    tabElements.forEach((e) => (e.checked = false));
-                    this.checked = true;
-                    tab = this.value;
-                    renderManagement();
-                },
+                null,
             );
 
         return;
@@ -274,9 +252,6 @@ function tabHandle(event) {
 }
 
 function main() {
-    const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
-        document.getElementsByName('tab-selestion')
-    );
     tabElements.forEach((e) => e.addEventListener('click', tabHandle));
 
     const input = document.getElementById('search-input');
@@ -284,20 +259,14 @@ function main() {
     tabManagement['user'].renderTable(data);
     input && (input.oninput = () => tabManagement['user'].search(data));
 
-    const btnDelete = document.getElementById('delete-btn');
-    if (btnDelete) btnDelete.addEventListener('click', buttonDeleteHandle);
-
-    const btnSave = document.getElementById('save-btn');
-    if (btnSave) btnSave.addEventListener('click', buttonSaveHandle);
-
-    const btnAdd = document.getElementById('add-btn');
-    if (btnAdd) btnAdd.addEventListener('click', buttonAddHandle);
-
-    const btnMenu = document.getElementById('menu-btn');
-    if (btnMenu) btnMenu.addEventListener('click', buttonMenuHandle);
+    btnDelete?.addEventListener('click', buttonDeleteHandle);
+    btnSave?.addEventListener('click', buttonSaveHandle);
+    btnAdd?.addEventListener('click', buttonAddHandle);
+    btnMenu?.addEventListener('click', buttonMenuHandle);
 
     document.getElementById('drop-list')?.addEventListener('click', () => {
         document.getElementById('drop-list')?.classList.remove('show');
+        // NOTE: không xóa dòng này -_-
         document.getElementById('menu-btn')?.classList.remove('active');
     });
 }

@@ -54,7 +54,7 @@ const Cart_ = {
     addRow: () => {
         throw new Error('Làm này đi, đồ lười');
     },
-    removeRow: () => {
+    removeRows: () => {
         throw new Error('Làm này đi, đồ lười');
     },
     cancelAdd: () => {

@@ -232,7 +232,7 @@ function showPopup(parder, title, context, onOk, onCancel) {
  * doSave: () => void,
  * search: (list: T[]) => void,
  * addRow: () => void,
- * removeRow: () => void,
+ * removeRows: () => void,
  * cancelAdd: () => void
  * }} intefaceRender
  */

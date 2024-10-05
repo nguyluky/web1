@@ -116,7 +116,7 @@ footer.footer {
     background-color: #808089;
 }
 
-input[type='checkbox'] {
+.aside input[type='checkbox'] {
     display: none;
 }
 
@@ -298,7 +298,7 @@ body {
 
 #menu-btn {
     font-size: 20px;
-    margin-inline: 20px;
+    margin-right: 20px;
     opacity: 0;
     pointer-events: none;
     height: 40px;
@@ -342,6 +342,7 @@ body {
         cursor: pointer;
     }
     #drop-list {
+        position: absolute;
         height: auto;
         z-index: 100;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
@@ -349,9 +350,11 @@ body {
         border-radius: 0;
         padding: 0;
         gap: 0;
+        left: 0px;
+        top: -15px;
+        transition: all 0.2s ease;
     }
     #drop-list.show {
-        position: absolute;
         left: 250px;
         top: -15px;
     }

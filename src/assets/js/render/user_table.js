@@ -167,7 +167,7 @@ function cancelAdd() {
 /**
  * lấy toàn bộ các row đã chọn rồi delete
  */
-function removeRow() {
+function removeRows() {
     document.querySelectorAll('tr').forEach((e) => {
         let cb = /**@type {HTMLInputElement} */ (
             e.querySelector('input[type="checkbox"]')
@@ -190,7 +190,7 @@ const user_ = {
     doSave: userDoSave,
     search: searchUser,
     addRow: addUser,
-    removeRow: removeRow,
+    removeRows,
     cancelAdd,
 };
 export default user_;
