@@ -102,11 +102,13 @@ body {
     height: 40px;
     width: 200px;
     transition: all 1s ease;
+    cursor: pointer;
 }
 
 .remember label {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 .remember input {
