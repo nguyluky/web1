@@ -53,7 +53,7 @@
 
  */
 
-import uuidv4 from '../until/uuid';
+import uuidv4 from '../until/uuid.js';
 
 /**
  * @enum {string}
