@@ -75,7 +75,9 @@ import imgs from './imgStore.js';
 let db;
 const req = window.indexedDB.open('fakedb', 1);
 
-req.onupgradeneeded = async () => {
+req.onupgradeneeded = async (event) => {
+    // không cần thiết như tôi thính nên rôi làm cái này luân =)
+
     let db_ = req.result;
 
     // ==================== create object ==================
@@ -134,7 +136,12 @@ req.onupgradeneeded = async () => {
     // ==================== init data (default data) ============
     console.log('test');
 
-    // không cần thiết như tôi thính nên rôi làm cái này luân =)
+    await new Promise((r, v) => {
+        event.target.transaction.oncomplete = r;
+    });
+
+    console.log('đang tải dữ liệu');
+
     const data = await Promise.all([
         import('./data/user.json', { with: { type: 'json' } }),
         import('./data/img.json', { with: { type: 'json' } }),
@@ -143,15 +150,11 @@ req.onupgradeneeded = async () => {
         import('./data/book.json', { with: { type: 'json' } }),
     ]);
 
-    await new Promise((r, v) => {
-        userObjStore_.transaction.oncomplete = r;
-        cartObjStore_.transaction.oncomplete = r;
-        bookObjStore_.transaction.oncomplete = r;
-        categoryStore_.transaction.oncomplete = r;
-        imgStore.transaction.oncomplete = r;
-    });
-
     // NOTE: indexedb chỉ được mở một transaction cừng một lúc
+
+    /**
+     * @type {IDBTransaction}
+     */
     const transaction = db_.transaction(
         [
             ObjectStoreName.USER,
@@ -162,6 +165,8 @@ req.onupgradeneeded = async () => {
         ],
         'readwrite',
     );
+
+    console.log('đang thêm dữ liệu');
 
     const userObjStore = transaction.objectStore(ObjectStoreName.USER);
     const imgObjStore = transaction.objectStore(ObjectStoreName.IMG);
@@ -184,10 +189,16 @@ req.onupgradeneeded = async () => {
         bookObjStore.add(element);
     });
 
-    await new Promise((r, v) => {
-        transaction.oncomplete = r;
-    });
-    db = db_;
+    // Kiểm tra khi transaction hoàn thành
+    transaction.oncomplete = function () {
+        console.log('Tạo object stores và thêm dữ liệu thành công!');
+        db = db_;
+    };
+
+    // Kiểm tra lỗi nếu có
+    transaction.onerror = function (event) {
+        console.error('Lỗi trong transaction: ', event);
+    };
 };
 
 req.onerror = (event) => {
