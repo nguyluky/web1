@@ -5,7 +5,7 @@ import cartRender from './render/cart_table.js';
 import sachRender from './render/sach_table.js';
 import categoryRender from './render/category_table.js';
 
-/**  ------- ADMIN -------
+/*  ------- ADMIN -------
  ______  ____             ______   __  __     
 /\  _  \/\  _`\   /'\_/`\/\__  _\ /\ \/\ \    
 \ \ \L\ \ \ \/\ \/\      \/_/\ \/ \ \ `\\ \   
@@ -13,6 +13,13 @@ import categoryRender from './render/category_table.js';
   \ \ \/\ \ \ \_\ \ \ \_/\ \ \_\ \__\ \ \`\ \ 
    \ \_\ \_\ \____/\ \_\\ \_\/\_____\\ \_\ \_\
     \/_/\/_/\/___/  \/_/ \/_/\/_____/ \/_/\/_/
+ */
+
+/**
+ * @typedef {import('./db/fakeDb.js').UserInfo} UserInfo
+ * @typedef {import('./db/fakeDb.js').Cart} Cart
+ * @typedef {import('./db/fakeDb.js').Sach} Sach
+ * @typedef {import('./db/fakeDb.js').Category} Category
  */
 
 /**
@@ -25,7 +32,16 @@ let tab = 'user';
 let state = 'none';
 
 /**
- * @type {{[key: string]: import('./render/reader_table.js').intefaceRender<?>}}
+ * @typedef {{
+ *  user: UserInfo,
+ *  cart: Cart,
+ *  sach: Sach,
+ *  category: Category,
+ * }} Templay
+ */
+
+/**
+ * @type {{[key in keyof Templay]: import('./render/reader_table.js').intefaceRender<Templay[key]>}}
  */
 const tabManagement = {
     user: userRender,
@@ -34,6 +50,9 @@ const tabManagement = {
     category: categoryRender,
 };
 
+/**
+ * @type {{[key in keyof Templay]: () => Promise<Templay[key][]>}}
+ */
 const fakeDBManagement = {
     user: fackDatabase.getAllUserInfo,
     cart: fackDatabase.getALlCart,
@@ -251,11 +270,14 @@ function tabHandle(event) {
     renderManagement();
 }
 
-function main() {
+async function main() {
     tabElements.forEach((e) => e.addEventListener('click', tabHandle));
 
     const input = document.getElementById('search-input');
-    const data = fakeDBManagement['user'] ? fakeDBManagement['user']() : [];
+
+    const data = fakeDBManagement['user']
+        ? await fakeDBManagement['user']()
+        : /**@type {UserInfo[]}*/ ([]);
     tabManagement['user'].renderTable(data);
     input && (input.oninput = () => tabManagement['user'].search(data));
 

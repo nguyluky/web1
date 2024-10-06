@@ -53,14 +53,7 @@ function userDoSave() {
     Object.keys(cacheSave).forEach((e) => {
         console.log(e);
         const data = cacheSave[e];
-        fackDatabase.updateUserInfo(
-            data.id,
-            data.email,
-            data.name,
-            data.passwd,
-            data.phone_num,
-            data.rule,
-        );
+        fackDatabase.updateUserInfo(data);
     });
 
     cacheAdd.forEach((e) => {
@@ -148,17 +141,6 @@ function addUser() {
     });
 }
 
-/**
- * tôi không chắc là các này tối ưu nhất
- * có ỳ mấy ông sử cho tôi
- * ký tên Hiếu
- * người dùng hủy yêu cầu thêm
- */
-
-/**
- * Tuấn sửa lại
- * xoá 1 hàng mới thêm vô, ko xoá toàn bộ nội dung thêm
- */
 function cancelAdd() {
     document.querySelector(`tr[id-row="${cacheAdd[0].id}"]`)?.remove();
     cacheAdd = [];
