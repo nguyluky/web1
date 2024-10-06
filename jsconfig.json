@@ -1,13 +1,14 @@
 {
     "compilerOptions": {
-        "module": "CommonJS",
+        "module": "esnext",
         "target": "ES2023",
-        "moduleResolution": "Classic",
+        "moduleResolution": "node",
         "allowJs": true,
         "allowImportingTsExtensions": true,
         "strictNullChecks": true,
         "strictFunctionTypes": true,
-        "checkJs": true
+        "checkJs": true,
+        "resolveJsonModule": true
     },
     "compileOnSave": true,
     "typingOptions": {
@@ -16,4 +17,5 @@
     "exclude": [
         ".\\src\\assets\\js\\db\\imgStore.js"
     ]
+    
 }

@@ -58,6 +58,8 @@ import sanhs from './sachDb.js';
 // @ts-ignore
 import imgs from './imgStore.js';
 
+// import defaultData from './defaultData.json' with { type: "json" , };
+
 /**
  *
  * lưu toàn bộ thông tin
