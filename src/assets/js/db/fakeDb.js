@@ -308,7 +308,7 @@ class FakeDatabase {
         if (!db) await this.awaitUntilReady();
         return new Promise((resolve, error) => {
             const data = db
-                .transaction(ObjectStoreName.USER, 'readonly')
+                .transaction(ObjectStoreName.USER, 'readwrite')
                 .objectStore(ObjectStoreName.USER);
             data.delete(user_id).onsuccess = resolve;
         });
@@ -343,7 +343,7 @@ class FakeDatabase {
         if (!db) await this.awaitUntilReady();
         return new Promise((resolve, error) => {
             const data = db
-                .transaction(ObjectStoreName.USER, 'readonly')
+                .transaction(ObjectStoreName.USER, 'readwrite')
                 .objectStore(ObjectStoreName.USER);
             data.add(userInfo).onsuccess = resolve;
         });
@@ -374,7 +374,7 @@ class FakeDatabase {
 
     async updateUserInfo(userInfo) {
         const data = db
-            .transaction(ObjectStoreName.USER, 'readonly')
+            .transaction(ObjectStoreName.USER, 'readwrite')
             .objectStore(ObjectStoreName.USER);
         data.put(userInfo);
     }
@@ -420,14 +420,14 @@ class FakeDatabase {
      */
     async addSach(bookInfo) {
         const data = db
-            .transaction(ObjectStoreName.BOOK, 'readonly')
+            .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
         data.add(bookInfo);
     }
 
     async updateSach(bookInfo) {
         const data = db
-            .transaction(ObjectStoreName.BOOK, 'readonly')
+            .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
         data.put(bookInfo);
     }
@@ -438,7 +438,7 @@ class FakeDatabase {
      */
     async deleteSachById(sach_id) {
         const data = db
-            .transaction(ObjectStoreName.BOOK, 'readonly')
+            .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
         data.delete(sach_id);
     }
