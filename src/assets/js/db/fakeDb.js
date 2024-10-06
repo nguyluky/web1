@@ -75,121 +75,119 @@ import imgs from './imgStore.js';
 let db;
 const req = window.indexedDB.open('fakedb', 1);
 
-req.onupgradeneeded = () => {
-    db = req.result;
+req.onupgradeneeded = async () => {
+    let db_ = req.result;
 
     // ==================== create object ==================
 
     // create user objectStore
-    const userObjStore = db.createObjectStore(ObjectStoreName.USER, {
+
+    const userObjStore_ = db_.createObjectStore(ObjectStoreName.USER, {
         keyPath: 'id',
         autoIncrement: true,
     });
-    userObjStore.createIndex('email', 'email', { unique: true });
-    userObjStore.createIndex('name', 'name', { unique: true });
-    userObjStore.createIndex('passwd', 'passwd', { unique: false });
-    userObjStore.createIndex('phone_num', 'phone_num', { unique: false });
-    userObjStore.createIndex('rule', 'rule', { unique: false });
-    userObjStore.createIndex('email_and_pass', ['email', 'passwd'], {
+    userObjStore_.createIndex('email', 'email', { unique: true });
+    userObjStore_.createIndex('name', 'name', { unique: true });
+    userObjStore_.createIndex('passwd', 'passwd', { unique: false });
+    userObjStore_.createIndex('phone_num', 'phone_num', { unique: false });
+    userObjStore_.createIndex('rule', 'rule', { unique: false });
+    userObjStore_.createIndex('email_and_pass', ['email', 'passwd'], {
         unique: true,
     });
 
-    // create cart object store
-    const cartObjStore = db.createObjectStore(ObjectStoreName.CART, {
+    const cartObjStore_ = db_.createObjectStore(ObjectStoreName.CART, {
         keyPath: 'id',
         autoIncrement: true,
     });
-    cartObjStore.createIndex('user_id', 'user_id', { unique: false });
-    cartObjStore.createIndex('sach', 'sach', { unique: false });
-    cartObjStore.createIndex('option_id', 'option_id', { unique: false });
-    cartObjStore.createIndex('quantity', 'quantity', { unique: false });
-    cartObjStore.createIndex('status', 'status', { unique: false });
-    cartObjStore.createIndex('timecreate', 'timecreate', { unique: false });
+    cartObjStore_.createIndex('user_id', 'user_id', { unique: false });
+    cartObjStore_.createIndex('sach', 'sach', { unique: false });
+    cartObjStore_.createIndex('option_id', 'option_id', { unique: false });
+    cartObjStore_.createIndex('quantity', 'quantity', { unique: false });
+    cartObjStore_.createIndex('status', 'status', { unique: false });
+    cartObjStore_.createIndex('timecreate', 'timecreate', { unique: false });
 
-    const bookObjStore = db.createObjectStore(ObjectStoreName.BOOK, {
+    const bookObjStore_ = db_.createObjectStore(ObjectStoreName.BOOK, {
         keyPath: 'id',
         autoIncrement: true,
     });
-    bookObjStore.createIndex('title', 'title', { unique: false });
-    bookObjStore.createIndex('details', 'details', { unique: false });
-    bookObjStore.createIndex('thumbnal', 'thumbnal', { unique: false });
-    bookObjStore.createIndex('imgs', 'imgs', { unique: false });
-    bookObjStore.createIndex('base_price', 'base_price', { unique: false });
-    bookObjStore.createIndex('category', 'category', { unique: false });
-    bookObjStore.createIndex('option', 'option', { unique: false });
+    bookObjStore_.createIndex('title', 'title', { unique: false });
+    bookObjStore_.createIndex('details', 'details', { unique: false });
+    bookObjStore_.createIndex('thumbnal', 'thumbnal', { unique: false });
+    bookObjStore_.createIndex('imgs', 'imgs', { unique: false });
+    bookObjStore_.createIndex('base_price', 'base_price', { unique: false });
+    bookObjStore_.createIndex('category', 'category', { unique: false });
+    bookObjStore_.createIndex('option', 'option', { unique: false });
 
-    const categoryStore = db.createObjectStore(ObjectStoreName.CATEGORY, {
+    const categoryStore_ = db_.createObjectStore(ObjectStoreName.CATEGORY, {
         keyPath: 'id',
         autoIncrement: true,
     });
-    categoryStore.createIndex('name', 'name', { unique: false });
-    categoryStore.createIndex('long_name', 'long_name', { unique: false });
+    categoryStore_.createIndex('name', 'name', { unique: false });
+    categoryStore_.createIndex('long_name', 'long_name', { unique: false });
 
-    const imgStore = db.createObjectStore(ObjectStoreName.IMG, {
+    const imgStore = db_.createObjectStore(ObjectStoreName.IMG, {
         keyPath: 'id',
         autoIncrement: true,
     });
     imgStore.createIndex('data', 'data');
 
     // ==================== init data (default data) ============
+    console.log('test');
 
-    userObjStore.transaction.oncomplete = async () => {
-        const userinfodata = await import('./data/user.json', {
-            with: { type: 'json' },
-        });
+    // không cần thiết như tôi thính nên rôi làm cái này luân =)
+    const data = await Promise.all([
+        import('./data/user.json', { with: { type: 'json' } }),
+        import('./data/img.json', { with: { type: 'json' } }),
+        // import('./data/cart.json', { with: { type: 'json' } }), // không có
+        import('./data/category.json', { with: { type: 'json' } }),
+        import('./data/book.json', { with: { type: 'json' } }),
+    ]);
 
-        let userInfo = db
-            .transaction(ObjectStoreName.USER, 'readwrite')
-            .objectStore(ObjectStoreName.USER);
+    await new Promise((r, v) => {
+        userObjStore_.transaction.oncomplete = r;
+        cartObjStore_.transaction.oncomplete = r;
+        bookObjStore_.transaction.oncomplete = r;
+        categoryStore_.transaction.oncomplete = r;
+        imgStore.transaction.oncomplete = r;
+    });
 
-        // vscode lỏ
-        userinfodata.default.data.forEach((e) => {
-            userInfo.add(e);
-        });
-    };
+    // NOTE: indexedb chỉ được mở một transaction cừng một lúc
+    const transaction = db_.transaction(
+        [
+            ObjectStoreName.USER,
+            ObjectStoreName.BOOK,
+            ObjectStoreName.CART,
+            ObjectStoreName.CATEGORY,
+            ObjectStoreName.IMG,
+        ],
+        'readwrite',
+    );
 
-    imgStore.transaction.oncomplete = async () => {
-        const imgdata = await import('./data/img.json', {
-            with: { type: 'json' },
-        });
+    const userObjStore = transaction.objectStore(ObjectStoreName.USER);
+    const imgObjStore = transaction.objectStore(ObjectStoreName.IMG);
+    // const cartObjStore = transaction.objectStore(ObjectStoreName.CART);
+    const bookObjStore = transaction.objectStore(ObjectStoreName.BOOK);
+    const categoryStore = transaction.objectStore(ObjectStoreName.CATEGORY);
 
-        let img = db
-            .transaction(ObjectStoreName.IMG, 'readwrite')
-            .objectStore(ObjectStoreName.IMG);
+    data[0].default.data.forEach((e) => {
+        userObjStore.add(e);
+    });
 
-        // @ts-ignore
-        imgdata.default.data.forEach((e) => {
-            img.add(e);
-        });
-    };
+    // @ts-ignore
+    data[1].default.data.forEach((element) => {
+        imgObjStore.add(element);
+    });
+    data[2].default.data.forEach((element) => {
+        categoryStore.add(element);
+    });
+    data[3].default.data.forEach((element) => {
+        bookObjStore.add(element);
+    });
 
-    categoryStore.transaction.oncomplete = async () => {
-        const categorydata = await import('./data/category.json', {
-            with: { type: 'json' },
-        });
-
-        let categoryInfo = db
-            .transaction(ObjectStoreName.CATEGORY, 'readwrite')
-            .objectStore(ObjectStoreName.CATEGORY);
-
-        categorydata.default.data.forEach((e) => {
-            categoryInfo.add(e);
-        });
-    };
-
-    bookObjStore.transaction.oncomplete = async () => {
-        const bookdata = await import('./data/book.json', {
-            with: { type: 'json' },
-        });
-
-        let bookInfo = db
-            .transaction(ObjectStoreName.BOOK, 'readwrite')
-            .objectStore(ObjectStoreName.BOOK);
-
-        bookdata.default.data.forEach((e) => {
-            bookInfo.add(e);
-        });
-    };
+    await new Promise((r, v) => {
+        transaction.oncomplete = r;
+    });
+    db = db_;
 };
 
 req.onerror = (event) => {
@@ -234,10 +232,34 @@ const cache = {
 class FakeDatabase {
     /**
      *
+     * triểm tra xem khởi tại data base thành công hay chưa
+     * @returns {boolean}
+     */
+    isReady() {
+        return !!db;
+    }
+
+    async awaitUntilReady() {
+        if (db) return new Promise((r, v) => r(1));
+
+        let id;
+        return new Promise((resolve, reject) => {
+            id = setInterval(() => {
+                if (db) {
+                    resolve(true);
+                    clearInterval(id);
+                }
+            }, 500);
+        });
+    }
+
+    /**
+     *
      * @param {string} user_id
      * @returns {Promise<UserInfo | undefined>}
      */
     async getUserInfoByUserId(user_id) {
+        if (!db) await this.awaitUntilReady();
         return new Promise((resolve, error) => {
             const data = db
                 .transaction(ObjectStoreName.USER, 'readonly')
@@ -255,6 +277,7 @@ class FakeDatabase {
      * @returns {Promise<UserInfo[]>}
      */
     async getAllUserInfo() {
+        if (!db) await this.awaitUntilReady();
         return new Promise((resolve, error) => {
             const data = db
                 .transaction(ObjectStoreName.USER, 'readonly')
@@ -272,10 +295,13 @@ class FakeDatabase {
      * @param {string} user_id
      */
     async deleteUserById(user_id) {
-        const data = db
-            .transaction(ObjectStoreName.USER, 'readonly')
-            .objectStore(ObjectStoreName.USER);
-        const userget = data.delete(user_id);
+        if (!db) await this.awaitUntilReady();
+        return new Promise((resolve, error) => {
+            const data = db
+                .transaction(ObjectStoreName.USER, 'readonly')
+                .objectStore(ObjectStoreName.USER);
+            data.delete(user_id).onsuccess = resolve;
+        });
     }
 
     /**
@@ -285,6 +311,7 @@ class FakeDatabase {
      * @returns {Promise<UserInfo | undefined>}
      */
     async getUserInfoByEmailAndPassword(email, password) {
+        if (!db) await this.awaitUntilReady();
         return new Promise((resolve, error) => {
             const data = db
                 .transaction(ObjectStoreName.USER, 'readonly')
@@ -303,10 +330,13 @@ class FakeDatabase {
      * @param {UserInfo} userInfo
      */
     async addUserInfo(userInfo) {
-        const data = db
-            .transaction(ObjectStoreName.USER, 'readonly')
-            .objectStore(ObjectStoreName.USER);
-        data.add(userInfo);
+        if (!db) await this.awaitUntilReady();
+        return new Promise((resolve, error) => {
+            const data = db
+                .transaction(ObjectStoreName.USER, 'readonly')
+                .objectStore(ObjectStoreName.USER);
+            data.add(userInfo).onsuccess = resolve;
+        });
     }
 
     /**
@@ -319,6 +349,8 @@ class FakeDatabase {
      * @param {string} email
      */
     async createUserInfo(password, display_name, std, email) {
+        // if (!db) await this.awaitUntilReady();
+
         const user_id = uuidv4();
         cache.user_info.push({
             id: user_id,

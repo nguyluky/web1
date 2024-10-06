@@ -23,15 +23,6 @@ import categoryRender from './render/category_table.js';
  */
 
 /**
- * @type {string}
- */
-let tab = 'user';
-/**
- * @type {string}
- */
-let state = 'none';
-
-/**
  * @typedef {{
  *  user: UserInfo,
  *  cart: Cart,
@@ -41,7 +32,16 @@ let state = 'none';
  */
 
 /**
- * @type {{[key in keyof Templay]: import('./render/reader_table.js').intefaceRender<Templay[key]>}}
+ * @type {string}
+ */
+let tab = 'user';
+/**
+ * @type {string}
+ */
+let state = 'none';
+
+/**
+ * @type {{[Key: string]: import('./render/reader_table.js').intefaceRender<?>}}
  */
 const tabManagement = {
     user: userRender,
@@ -51,13 +51,13 @@ const tabManagement = {
 };
 
 /**
- * @type {{[key in keyof Templay]: () => Promise<Templay[key][]>}}
+ * @type {{[key: string]: () => Promise<?>}}
  */
 const fakeDBManagement = {
-    user: fackDatabase.getAllUserInfo,
-    cart: fackDatabase.getALlCart,
-    sach: fackDatabase.getAllSach,
-    category: fackDatabase.getAllCategory,
+    user: () => fackDatabase.getAllUserInfo(),
+    cart: () => fackDatabase.getALlCart(),
+    sach: () => fackDatabase.getAllSach(),
+    category: () => fackDatabase.getAllCategory(),
 };
 const btnMenu = document.getElementById('menu-btn');
 const btnAdd = document.getElementById('add-btn');
@@ -122,7 +122,7 @@ const buttonSaveState = {
     },
 };
 
-function renderManagement() {
+async function renderManagement() {
     const title = document.getElementById('table-title-header');
     const input = /**@type {HTMLInputElement} */ (
         document.getElementById('search-input')
@@ -139,7 +139,7 @@ function renderManagement() {
     title.innerHTML = titleTabs[tab];
     let web_title = document.querySelector('head title');
     if (web_title) web_title.innerHTML = `Admin Web - ${titleTabs[tab]}`;
-    const data = fakeDBManagement[tab] ? fakeDBManagement[tab]() : [];
+    const data = fakeDBManagement[tab] ? await fakeDBManagement[tab]() : [];
     tabManagement[tab].renderTable(data);
     input.oninput = () => tabManagement[tab].search(data);
 }
