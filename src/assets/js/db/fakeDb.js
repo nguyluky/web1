@@ -69,11 +69,12 @@ const ObjectStoreName = {
  * @type {IDBDatabase}
  */
 let db;
+let isOnupgradeneeded = false;
 const req = window.indexedDB.open('fakedb', 1);
 
 req.onupgradeneeded = async (event) => {
     // không cần thiết như tôi thính nên rôi làm cái này luân =)
-
+    isOnupgradeneeded = true;
     let db_ = req.result;
 
     // ==================== create object ==================
@@ -166,7 +167,6 @@ req.onupgradeneeded = async (event) => {
 
     const userObjStore = transaction.objectStore(ObjectStoreName.USER);
     const imgObjStore = transaction.objectStore(ObjectStoreName.IMG);
-    // const cartObjStore = transaction.objectStore(ObjectStoreName.CART);
     const bookObjStore = transaction.objectStore(ObjectStoreName.BOOK);
     const categoryStore = transaction.objectStore(ObjectStoreName.CATEGORY);
 
@@ -188,7 +188,7 @@ req.onupgradeneeded = async (event) => {
     // Kiểm tra khi transaction hoàn thành
     transaction.oncomplete = function () {
         console.log('Tạo object stores và thêm dữ liệu thành công!');
-        db = db_;
+        isOnupgradeneeded = false;
     };
 
     // Kiểm tra lỗi nếu có
@@ -247,12 +247,15 @@ class FakeDatabase {
     }
 
     async awaitUntilReady() {
-        if (db) return new Promise((r, v) => r(1));
+        if (db && isOnupgradeneeded == false)
+            return new Promise((r, v) => r(1));
 
         let id;
         return new Promise((resolve, reject) => {
             id = setInterval(() => {
-                if (db) {
+                if (db && isOnupgradeneeded == false) {
+                    console.log(db);
+
                     resolve(true);
                     clearInterval(id);
                 }
