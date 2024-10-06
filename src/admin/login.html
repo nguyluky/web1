@@ -7,11 +7,12 @@
         <link rel="stylesheet" href="../assets/fontawesome/css/all.min.css" />
         <link rel="icon" href="../assets/img/favicon.png" />
         <link rel="stylesheet" href="../assets/css/admin_login.css" />
+        <script type="module" src="../assets/js/admin_login.js" defer></script>
     </head>
     <body>
         <div class="login-wrapper">
             <div class="header">
-                <span>You need to be logged in to continue</span>
+                <span>Login to continue</span>
             </div>
             <div class="login-body">
                 <form class="form-container">
@@ -32,7 +33,11 @@
                             type="password"
                             placeholder="Password"
                             required
+                            id="password"
                         />
+                        <div id="show-hide">
+                            <i class="fa-solid fa-eye" id="show-hide-icon"></i>
+                        </div>
                         <div class="icon-envelope">
                             <i class="fa-solid fa-unlock"></i>
                         </div>
@@ -48,7 +53,7 @@
                 </form>
             </div>
             <div class="footer">
-                <span>Design by Nhóm 16</span>
+                <span>Design by <a href="">Nhóm 16</a></span>
             </div>
         </div>
     </body>
