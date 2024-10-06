@@ -53,6 +53,8 @@
 
  */
 
+import uuidv4 from '../until/uuid';
+
 /**
  * @enum {string}
  */
@@ -63,12 +65,6 @@ const ObjectStoreName = {
     CATEGORY: 'categoryStore',
     IMG: 'imgStore',
 };
-
-import uuidv4 from '../until/uuid.js';
-import sanhs from './sachDb.js';
-// @ts-ignore
-import imgs from './imgStore.js';
-
 /**
  * @type {IDBDatabase}
  */
@@ -228,8 +224,8 @@ const cache = {
     user_info: [],
     category: [],
     cart: [],
-    sach: sanhs,
-    imgs: imgs,
+    sach: [],
+    imgs: [],
 };
 
 /**
