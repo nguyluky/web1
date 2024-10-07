@@ -55,4 +55,40 @@
  *
  */
 
+/**
+ * 
+ * @typedef {{
+*     Id:        string;
+*     Name:      string;
+*     Districts: District[];
+* }} Address 
+* @typedef {{
+*     Id:    string;
+*     Name:  string;
+*     Wards: Ward[];
+* }} District
+* @typedef {{
+*     Id?:    string;
+*     Name?:  string;
+*     Level: Level;
+* }} Ward
+
+export enum Level {
+   Phường = "Phường",
+   ThịTrấn = "Thị trấn",
+   Xã = "Xã",
+}
+
+*/
+
+/**
+ * @readonly
+ * @enum {string}
+ */
+export const Level = {
+    Phuong: 'Phường',
+    ThiTran: 'Thị trấn',
+    Xa: 'Xã',
+};
+
 export default {};

@@ -1,41 +1,5 @@
 /**
- * 
- * @typedef {{
- *     Id:        string;
- *     Name:      string;
- *     Districts: District[];
- * }} Address 
- * @typedef {{
- *     Id:    string;
- *     Name:  string;
- *     Wards: Ward[];
- * }} District
- * @typedef {{
- *     Id?:    string;
- *     Name?:  string;
- *     Level: Level;
- * }} Ward
-
-export enum Level {
-    Phường = "Phường",
-    ThịTrấn = "Thị trấn",
-    Xã = "Xã",
-}
-
- */
-
-/**
- * @readonly
- * @enum {string}
- */
-const Level = {
-    Phuong: 'Phường',
-    ThiTran: 'Thị trấn',
-    Xa: 'Xã',
-};
-
-/**
- * @type {Address[]}
+ * @type {import("../until/type").Address[]}
  */
 const address = [
     {

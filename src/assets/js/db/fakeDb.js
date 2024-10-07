@@ -5,7 +5,6 @@
  * @typedef {import('../until/type.js').UserInfo} UserInfo
  * @typedef {import('../until/type.js').imgStore} imgStore
  */
-
 import uuidv4 from '../until/uuid.js';
 
 /**
@@ -18,6 +17,9 @@ const ObjectStoreName = {
     CATEGORY: 'categoryStore',
     IMG: 'imgStore',
 };
+
+// ====================================================================
+
 /**
  * @type {IDBDatabase}
  */
@@ -25,6 +27,8 @@ let db;
 // dùng để kiểm tra xem onupgradeneeded đã tải xong chưa
 let isOnupgradeneeded = false;
 const req = window.indexedDB.open('fakedb', 1);
+
+//============================================================
 
 req.onupgradeneeded = async (event) => {
     // không cần thiết như tôi thính nên rôi làm cái này luân =)
@@ -155,6 +159,7 @@ req.onupgradeneeded = async (event) => {
 req.onerror = (event) => {
     console.error("Why didn't you allow my web app to use IndexedDB?!");
 };
+
 req.onsuccess = (event) => {
     if (isOnupgradeneeded) return;
     db = req.result;
@@ -163,33 +168,6 @@ req.onsuccess = (event) => {
         console.error(ev);
     };
 };
-
-/**
- *
- * lưu toàn bộ thông tin
- * @type {{
- * user_info: UserInfo[];
- * category: Category[];
- * cart: Cart[];
- * sach: Sach[];
- * imgs: imgStore[];
- * }}
- */
-const cache = {
-    user_info: [],
-    category: [],
-    cart: [],
-    sach: [],
-    imgs: [],
-};
-
-/**
- * lấy
- * lấy tất cả
- * delete
- * update
- * thêm
- */
 
 class FakeDatabase {
     /**
@@ -215,6 +193,14 @@ class FakeDatabase {
         });
     }
 
+    requestToPromise(request) {
+        return new Promise((resolve, reject) => {
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = (event) =>
+                reject(`Error: ${event.target.errorCode}`);
+        });
+    }
+
     /**
      *
      * @param {string} user_id
@@ -222,16 +208,12 @@ class FakeDatabase {
      */
     async getUserInfoByUserId(user_id) {
         if (!db) await this.awaitUntilReady();
-        return new Promise((resolve, error) => {
-            const data = db
-                .transaction(ObjectStoreName.USER, 'readonly')
-                .objectStore(ObjectStoreName.USER);
+        const transaction = db.transaction(ObjectStoreName.USER, 'readonly');
 
-            const userget = data.get(user_id);
-            userget.onsuccess = () => {
-                resolve(userget.result);
-            };
-        });
+        const userobj = transaction.objectStore(ObjectStoreName.USER);
+
+        const userget = userobj.get(user_id);
+        return await this.requestToPromise(userget);
     }
 
     /**
@@ -240,16 +222,12 @@ class FakeDatabase {
      */
     async getAllUserInfo() {
         if (!db) await this.awaitUntilReady();
-        return new Promise((resolve, error) => {
-            const data = db
-                .transaction(ObjectStoreName.USER, 'readonly')
-                .objectStore(ObjectStoreName.USER);
+        const data = db
+            .transaction(ObjectStoreName.USER, 'readonly')
+            .objectStore(ObjectStoreName.USER);
 
-            const userget = data.getAll();
-            userget.onsuccess = () => {
-                resolve(userget.result);
-            };
-        });
+        const userget = data.getAll();
+        return await this.requestToPromise(userget);
     }
 
     /**
@@ -258,12 +236,10 @@ class FakeDatabase {
      */
     async deleteUserById(user_id) {
         if (!db) await this.awaitUntilReady();
-        return new Promise((resolve, error) => {
-            const data = db
-                .transaction(ObjectStoreName.USER, 'readwrite')
-                .objectStore(ObjectStoreName.USER);
-            data.delete(user_id).onsuccess = resolve;
-        });
+        const data = db
+            .transaction(ObjectStoreName.USER, 'readwrite')
+            .objectStore(ObjectStoreName.USER);
+        return await this.requestToPromise(data.delete(user_id));
     }
 
     /**
@@ -274,16 +250,12 @@ class FakeDatabase {
      */
     async getUserInfoByEmailAndPassword(email, password) {
         if (!db) await this.awaitUntilReady();
-        return new Promise((resolve, error) => {
-            const data = db
-                .transaction(ObjectStoreName.USER, 'readonly')
-                .objectStore(ObjectStoreName.USER);
+        const data = db
+            .transaction(ObjectStoreName.USER, 'readonly')
+            .objectStore(ObjectStoreName.USER);
 
-            const userget = data.index('email_and_pass').get([email, password]);
-            userget.onsuccess = () => {
-                resolve(userget.result);
-            };
-        });
+        const userget = data.index('email_and_pass').get([email, password]);
+        return await this.requestToPromise(userget);
     }
 
     /**
@@ -292,12 +264,11 @@ class FakeDatabase {
      */
     async addUserInfo(userInfo) {
         if (!db) await this.awaitUntilReady();
-        return new Promise((resolve, error) => {
-            const data = db
-                .transaction(ObjectStoreName.USER, 'readwrite')
-                .objectStore(ObjectStoreName.USER);
-            data.add(userInfo).onsuccess = resolve;
-        });
+        const data = db
+            .transaction(ObjectStoreName.USER, 'readwrite')
+            .objectStore(ObjectStoreName.USER);
+
+        return await this.requestToPromise(data.add(userInfo));
     }
 
     /**
@@ -309,24 +280,33 @@ class FakeDatabase {
      * @param {string} email
      */
     async createUserInfo(password, display_name, std, email) {
-        // if (!db) await this.awaitUntilReady();
+        if (!db) await this.awaitUntilReady();
 
         const user_id = uuidv4();
-        cache.user_info.push({
+        const data = {
             id: user_id,
             name: display_name,
             email,
             passwd: password,
             phone_num: std,
             rule: 'user',
-        });
+        };
+
+        const data_ = db
+            .transaction(ObjectStoreName.USER, 'readwrite')
+            .objectStore(ObjectStoreName.USER);
+
+        return await this.requestToPromise(data_.add(data));
     }
 
     async updateUserInfo(userInfo) {
+        if (!db) await this.awaitUntilReady();
+
         const data = db
             .transaction(ObjectStoreName.USER, 'readwrite')
             .objectStore(ObjectStoreName.USER);
-        data.put(userInfo);
+
+        return await this.requestToPromise(data.put(userInfo));
     }
 
     /**
@@ -334,16 +314,14 @@ class FakeDatabase {
      * @returns {Promise<Sach[]>} array
      */
     async getAllSach() {
-        return new Promise((resolve, error) => {
-            const data = db
-                .transaction(ObjectStoreName.BOOK, 'readonly')
-                .objectStore(ObjectStoreName.BOOK);
+        if (!db) await this.awaitUntilReady();
+        const data = db
+            .transaction(ObjectStoreName.BOOK, 'readonly')
+            .objectStore(ObjectStoreName.BOOK);
 
-            const bookget = data.getAll();
-            bookget.onsuccess = () => {
-                resolve(bookget.result);
-            };
-        });
+        const req = data.getAll();
+
+        return await this.requestToPromise(req);
     }
 
     /**
@@ -352,16 +330,15 @@ class FakeDatabase {
      * @returns {Promise<Sach | undefined>} array
      */
     async getSachById(sach_id) {
-        return new Promise((resolve, error) => {
-            const data = db
-                .transaction(ObjectStoreName.BOOK, 'readonly')
-                .objectStore(ObjectStoreName.BOOK);
+        if (!db) await this.awaitUntilReady();
 
-            const bookget = data.get(sach_id);
-            bookget.onsuccess = () => {
-                resolve(bookget.result);
-            };
-        });
+        const data = db
+            .transaction(ObjectStoreName.BOOK, 'readonly')
+            .objectStore(ObjectStoreName.BOOK);
+
+        const req = data.get(sach_id);
+
+        return await this.requestToPromise(req);
     }
 
     /**
@@ -369,17 +346,26 @@ class FakeDatabase {
      * @param {Sach} bookInfo
      */
     async addSach(bookInfo) {
-        const data = db
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
             .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
-        data.add(bookInfo);
+        return await this.requestToPromise(objectStore.add(bookInfo));
     }
 
+    /**
+     *
+     * @param {Sach} bookInfo
+     * @returns
+     */
     async updateSach(bookInfo) {
+        if (!db) await this.awaitUntilReady();
+
         const data = db
             .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
-        data.put(bookInfo);
+        return await this.requestToPromise(data.put(bookInfo));
     }
 
     /**
@@ -387,10 +373,13 @@ class FakeDatabase {
      * @param {string} sach_id
      */
     async deleteSachById(sach_id) {
+        if (!db) await this.awaitUntilReady();
+
         const data = db
             .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
-        data.delete(sach_id);
+
+        return await this.requestToPromise(data.delete(sach_id));
     }
 
     /**
@@ -398,7 +387,13 @@ class FakeDatabase {
      * @returns {Promise<Cart[]>} array
      */
     async getALlCart() {
-        return cache.cart;
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
+            .transaction(ObjectStoreName.CART, 'readonly')
+            .objectStore(ObjectStoreName.CART);
+        const req = objectStore.getAll();
+        return await this.requestToPromise(req);
     }
 
     /**
@@ -407,25 +402,59 @@ class FakeDatabase {
      * @returns {Promise<Cart[]>} array
      */
     async getCartByUserId(user_id) {
-        return cache.cart.filter((e) => e.user_id == user_id);
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
+            .transaction(ObjectStoreName.CART, 'readonly')
+            .objectStore(ObjectStoreName.CART);
+
+        const req = objectStore.index('user_id').getAll(user_id);
+
+        return await this.requestToPromise(req);
     }
 
     /**
      *
-     * @param {string} cart_id
-     * @param {"suly" | "doixacnhan" | "thanhcong"} status
+     * @param {string} user_id
+     * @returns {Promise<Cart | undefined>} array
      */
-    async updateCartStatus(cart_id, status) {
-        const index = cache.cart.findIndex((e) => e.id == cart_id);
-        cache.cart[index].status = status;
+    async getCartById(user_id) {
+        if (!db) await this.awaitUntilReady();
+        const data = db
+            .transaction(ObjectStoreName.CART, 'readonly')
+            .objectStore(ObjectStoreName.CART);
+
+        const req = data.get(user_id);
+
+        return await this.requestToPromise(req);
     }
+
+    async updateCart(cart_data) {
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
+            .transaction(ObjectStoreName.CART, 'readwrite')
+            .objectStore(ObjectStoreName.CART);
+
+        const req = objectStore.put(cart_data);
+
+        return await this.requestToPromise(req);
+    }
+
+    // ừ đừng hỏi tôi
 
     /**
      *
      * @returns {Promise<Category[]>} array
      */
     async getAllCategory() {
-        return cache.category;
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
+            .transaction(ObjectStoreName.CATEGORY, 'readonly')
+            .objectStore(ObjectStoreName.CATEGORY);
+        const req = objectStore.getAll();
+        return await this.requestToPromise(req);
     }
 
     /**
@@ -433,7 +462,13 @@ class FakeDatabase {
      * @returns {Promise<imgStore[]>} array
      */
     async getAllImgs() {
-        return cache.imgs;
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
+            .transaction(ObjectStoreName.IMG, 'readonly')
+            .objectStore(ObjectStoreName.IMG);
+        const req = objectStore.getAll();
+        return await this.requestToPromise(req);
     }
 
     /**
@@ -442,7 +477,13 @@ class FakeDatabase {
      * @returns {Promise<imgStore | undefined>} item or undefinde
      */
     async getImgById(id) {
-        return cache.imgs.find((e) => e.id == id);
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
+            .transaction(ObjectStoreName.IMG, 'readonly')
+            .objectStore(ObjectStoreName.IMG);
+        const req = objectStore.get(id);
+        return await this.requestToPromise(req);
     }
 
     /**
@@ -450,9 +491,13 @@ class FakeDatabase {
      * @param {imgStore} img
      */
     async addImg(img) {
-        const id = uuidv4();
-        img.id = id;
-        cache.imgs.push(img);
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
+            .transaction(ObjectStoreName.IMG, 'readwrite')
+            .objectStore(ObjectStoreName.IMG);
+        const req = objectStore.add(img);
+        return await this.requestToPromise(req);
     }
 
     /**
@@ -460,8 +505,13 @@ class FakeDatabase {
      * @param {imgStore} img
      */
     async updateImg(img) {
-        const index = cache.imgs.findIndex((e) => (e.id = img.id));
-        cache.imgs[index] = img;
+        if (!db) await this.awaitUntilReady();
+
+        const objectStore = db
+            .transaction(ObjectStoreName.IMG, 'readwrite')
+            .objectStore(ObjectStoreName.IMG);
+        const req = objectStore.put(img);
+        return await this.requestToPromise(req);
     }
 }
 
