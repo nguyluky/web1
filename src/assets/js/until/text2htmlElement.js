@@ -1,7 +1,7 @@
 /**
  *
  * @param {string} text
- * @returns {Node | null}
+ * @returns {Node | null} html element
  */
 export default function text2htmlElement(text) {
     const template = document.createElement('template');

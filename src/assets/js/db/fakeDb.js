@@ -1,56 +1,9 @@
 /**
- *
- * @typedef {{
- *  id: string;
- *  title: string;
- *  details: string;
- *  thumbnal: string;
- *  imgs: string[];
- *  base_price: number;
- *  category: string[];
- *  option?: Option[]
- * }} Sach
- *
- * @typedef {{
- *   id: string;
- *   short_name: string;
- *   long_name: string;
- *   img?: string
- *   price: number
- *  }} Option
- *
- * @typedef {{
- *  id: string;
- *  name: string;
- *  long_name?: string;
- * }} Category
- *
- * @typedef {{
- *  id: string;
- *  user_id: string;
- *  sach: number;
- *  option_id?: number;
- *  quantity: number;
- *  status: "suly" | "doixacnhan" | "thanhcong";
- *  timecreate: Date
- * }} Cart
- *
- * @typedef {{
- *  id: string;
- *  email: string;
- *  name: string;
- *  passwd: string;
- *  phone_num: string;
- *  rule?: 'admin' | 'user';
- * }} UserInfo
- * 
- * 
- * @typedef {{
- *  id: string,
- *  data: string
- * }} imgStore
- *
-
+ * @typedef {import('../until/type.js').Cart} Cart
+ * @typedef {import('../until/type.js').Category} Category
+ * @typedef {import('../until/type.js').Sach} Sach
+ * @typedef {import('../until/type.js').UserInfo} UserInfo
+ * @typedef {import('../until/type.js').imgStore} imgStore
  */
 
 import uuidv4 from '../until/uuid.js';
@@ -134,7 +87,7 @@ req.onupgradeneeded = async (event) => {
     // ==================== init data (default data) ============
     console.log('test');
 
-    await new Promise((r, v) => {
+    await new Promise((r) => {
         event.target.transaction.oncomplete = r;
     });
 
@@ -190,6 +143,7 @@ req.onupgradeneeded = async (event) => {
     transaction.oncomplete = function () {
         console.log('Tạo object stores và thêm dữ liệu thành công!');
         isOnupgradeneeded = false;
+        db = db_;
     };
 
     // Kiểm tra lỗi nếu có
@@ -202,6 +156,7 @@ req.onerror = (event) => {
     console.error("Why didn't you allow my web app to use IndexedDB?!");
 };
 req.onsuccess = (event) => {
+    if (isOnupgradeneeded) return;
     db = req.result;
 
     db.onerror = (ev) => {
@@ -212,7 +167,6 @@ req.onsuccess = (event) => {
 /**
  *
  * lưu toàn bộ thông tin
- *
  * @type {{
  * user_info: UserInfo[];
  * category: Category[];
@@ -241,7 +195,7 @@ class FakeDatabase {
     /**
      *
      * triểm tra xem khởi tại data base thành công hay chưa
-     * @returns {boolean}
+     * @returns {boolean} trạn thái data base
      */
     isReady() {
         return !!db;
@@ -251,7 +205,7 @@ class FakeDatabase {
         let id;
         return new Promise((resolve, reject) => {
             id = setInterval(() => {
-                if (db && isOnupgradeneeded == false) {
+                if (db) {
                     console.log(db);
 
                     resolve(true);
@@ -264,7 +218,7 @@ class FakeDatabase {
     /**
      *
      * @param {string} user_id
-     * @returns {Promise<UserInfo | undefined>}
+     * @returns {Promise<UserInfo | undefined>} người dùng
      */
     async getUserInfoByUserId(user_id) {
         if (!db) await this.awaitUntilReady();
@@ -282,7 +236,7 @@ class FakeDatabase {
 
     /**
      *
-     * @returns {Promise<UserInfo[]>}
+     * @returns {Promise<UserInfo[]>} mảng người dùng
      */
     async getAllUserInfo() {
         if (!db) await this.awaitUntilReady();
@@ -316,7 +270,7 @@ class FakeDatabase {
      *
      * @param {string} email
      * @param {string} password
-     * @returns {Promise<UserInfo | undefined>}
+     * @returns {Promise<UserInfo | undefined>} nếu không tìm thấy sẽ trả về undefined
      */
     async getUserInfoByEmailAndPassword(email, password) {
         if (!db) await this.awaitUntilReady();
@@ -334,7 +288,6 @@ class FakeDatabase {
 
     /**
      * admin dùng để trực tiếp thêm vào database
-     *
      * @param {UserInfo} userInfo
      */
     async addUserInfo(userInfo) {
@@ -350,7 +303,6 @@ class FakeDatabase {
     /**
      *
      * được dùng cho người dùng khi tạo tài khoản
-     *
      * @param {string} password
      * @param {string} display_name
      * @param {string} std
@@ -379,7 +331,7 @@ class FakeDatabase {
 
     /**
      *
-     * @returns {Promise<Sach[]>}
+     * @returns {Promise<Sach[]>} array
      */
     async getAllSach() {
         return new Promise((resolve, error) => {
@@ -397,7 +349,7 @@ class FakeDatabase {
     /**
      *
      * @param {string} sach_id
-     * @returns {Promise<Sach | undefined>}
+     * @returns {Promise<Sach | undefined>} array
      */
     async getSachById(sach_id) {
         return new Promise((resolve, error) => {
@@ -443,7 +395,7 @@ class FakeDatabase {
 
     /**
      *
-     * @returns {Promise<Cart[]>}
+     * @returns {Promise<Cart[]>} array
      */
     async getALlCart() {
         return cache.cart;
@@ -452,7 +404,7 @@ class FakeDatabase {
     /**
      *
      * @param {string} user_id
-     * @returns {Promise<Cart[]>}
+     * @returns {Promise<Cart[]>} array
      */
     async getCartByUserId(user_id) {
         return cache.cart.filter((e) => e.user_id == user_id);
@@ -470,7 +422,7 @@ class FakeDatabase {
 
     /**
      *
-     * @returns {Promise<Category[]>}
+     * @returns {Promise<Category[]>} array
      */
     async getAllCategory() {
         return cache.category;
@@ -478,7 +430,7 @@ class FakeDatabase {
 
     /**
      *
-     * @returns {Promise<imgStore[]>}
+     * @returns {Promise<imgStore[]>} array
      */
     async getAllImgs() {
         return cache.imgs;
@@ -487,7 +439,7 @@ class FakeDatabase {
     /**
      *
      * @param {string} id
-     * @returns {Promise<imgStore | undefined>}
+     * @returns {Promise<imgStore | undefined>} item or undefinde
      */
     async getImgById(id) {
         return cache.imgs.find((e) => e.id == id);

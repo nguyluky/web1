@@ -16,10 +16,11 @@ import categoryRender from './render/category_table.js';
  */
 
 /**
- * @typedef {import('./db/fakeDb.js').UserInfo} UserInfo
- * @typedef {import('./db/fakeDb.js').Cart} Cart
- * @typedef {import('./db/fakeDb.js').Sach} Sach
- * @typedef {import('./db/fakeDb.js').Category} Category
+ * @typedef {import('./until/type.js').Cart} Cart
+ * @typedef {import('./until/type.js').Category} Category
+ * @typedef {import('./until/type.js').Sach} Sach
+ * @typedef {import('./until/type.js').UserInfo} UserInfo
+ * @typedef {import('./until/type.js').imgStore} imgStore
  */
 
 /**
@@ -63,6 +64,7 @@ const btnMenu = document.getElementById('menu-btn');
 const btnAdd = document.getElementById('add-btn');
 const btnSave = document.getElementById('save-btn');
 const btnDelete = document.getElementById('delete-btn');
+// eslint-disable-next-line jsdoc/no-undefined-types
 const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
     document.getElementsByName('tab-selestion')
 );
@@ -123,6 +125,9 @@ const buttonSaveState = {
     },
 };
 
+/**
+ *
+ */
 async function renderManagement() {
     const title = document.getElementById('table-title-header');
     const input = /**@type {HTMLInputElement} */ (
@@ -148,6 +153,9 @@ async function renderManagement() {
     input.oninput = () => tabManagement[tab].search(data);
 }
 
+/**
+ *
+ */
 function updateMangement() {
     tabManagement[tab].doSave();
 }
@@ -236,13 +244,8 @@ function buttonMenuHandle(event) {
 /**
  * @this {HTMLInputElement}
  * @param {MouseEvent} event
- * @returns
  */
 function tabHandle(event) {
-    const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
-        document.getElementsByName('tab-selestion')
-    );
-
     const isEditMode = btnSave?.classList.contains('canedit');
 
     if (isEditMode) {
@@ -274,6 +277,9 @@ function tabHandle(event) {
     renderManagement();
 }
 
+/**
+ * main funstion
+ */
 async function main() {
     tabElements.forEach((e) => e.addEventListener('click', tabHandle));
 

@@ -2,7 +2,8 @@ import fackDatabase from '../db/fakeDb.js';
 import { renderTable, searchList } from './reader_table.js';
 
 /**
- * @typedef {import('../db/fakeDb').Sach} Sach
+ * @typedef {import('../until/type.js').Sach} Sach
+ * @typedef {import('../until/type.js').imgStore} imgStore
  */
 
 const cols = {
@@ -19,6 +20,7 @@ const cols = {
 /**
  *
  * @param {Sach} value
+ * @returns {HTMLTableRowElement} row
  */
 function renderRow(value) {
     const row = document.createElement('tr');
@@ -47,7 +49,9 @@ function renderRow(value) {
 
         if (key == 'thumbnal') {
             const img = document.createElement('img');
-            img.src = fackDatabase.getImgById(value[key])?.data || '=(';
+            fackDatabase.getImgById(value[key]).then((imgS) => {
+                img.src = imgS?.data || '=(';
+            });
             col.appendChild(img);
         } else col.insertAdjacentHTML('beforeend', value[key]);
         row.appendChild(col);

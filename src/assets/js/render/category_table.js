@@ -1,7 +1,7 @@
 import { renderTable, searchList } from './reader_table.js';
 
 /**
- * @typedef {import("../db/fakeDb").Category} Category
+ * @typedef {import("../until/type.js").Category} Category
  */
 
 const cols = {

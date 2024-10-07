@@ -1,7 +1,7 @@
 import { renderTable, searchList } from './reader_table.js';
 
 /**
- * @typedef {import('../db/fakeDb').Cart} Cart
+ * @typedef {import('../until/type.js').Cart} Cart
  */
 
 const cols = {

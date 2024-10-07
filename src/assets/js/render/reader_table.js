@@ -2,15 +2,20 @@ import text2htmlElement from '../until/text2htmlElement.js';
 
 /**
  * @template T
- * @typedef {(data : T, key: keyof T, newValue: T[keyof T]) => void} OnChange
+ * @typedef {{[P in keyof Partial<T>]: string}} COLS
+ */
+
+/**
+ * @template T
+ * @typedef {(data : T, key: keyof T, newValue: T[key]) => void} OnChange
  */
 
 /**
  * @template {{id: string}} T
  * @param {T} value
- * @param {{[key in keyof T]?: string}} cols
+ * @param {COLS<T>} cols
  * @param {OnChange<T>?} onchange
- * @returns {HTMLTableRowElement}
+ * @returns {HTMLTableRowElement} r
  */
 export function defaultRenderRow(value, cols, onchange = null) {
     const row = document.createElement('tr');
@@ -57,7 +62,7 @@ export function defaultRenderRow(value, cols, onchange = null) {
  * @template {{id: string}} T
  * @param {T[]} values
  * @param {HTMLTableElement} table
- * @param {{[key in keyof T]?: string}} cols
+ * @param {COLS<T>} cols
  * @param {OnChange<T>| undefined} onchange
  * @param {((key: T, onchange?: OnChange<T>) => HTMLTableRowElement) | undefined} cRenderRow
  */
@@ -107,8 +112,8 @@ function renderTable(
 /**
  * @template {{id: string}} T
  * @param {T[]} values
- * @param {{[key in keyof T]?: string}} cols
- * @returns {T[]}
+ * @param {COLS<T>} cols
+ * @returns {T[]} ok
  */
 function searchList(values, cols) {
     const searchInput = /**@type {HTMLInputElement}*/ (
@@ -226,7 +231,7 @@ function showPopup(parder, title, context, onOk, onCancel) {
  *
  * @template {{id: string}} T
  * @typedef {{
- * cols: {[key in keyof T]?: string},
+ * cols: COLS<T>,
  * renderTable: (list: T[]) => void,
  * renderRow?: (value: T) => HTMLTableRowElement,
  * doSave: () => void,
