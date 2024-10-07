@@ -155,7 +155,7 @@ footer.footer {
 }
 
 .table-conten-wrapper {
-    max-height: calc(100% - 40px);
+    height: calc(100% - 40px);
     overflow: auto;
 }
 
@@ -341,6 +341,7 @@ body {
         pointer-events: all;
         cursor: pointer;
     }
+
     #drop-list {
         position: absolute;
         height: auto;
@@ -354,6 +355,7 @@ body {
         top: -15px;
         transition: all 0.2s ease;
     }
+
     #drop-list.show {
         left: 250px;
         top: -15px;
@@ -393,12 +395,15 @@ body {
     .search-block .search-box {
         max-width: 100%;
     }
+
     .buttons {
         grid-area: 2 / 3 / span 1 / span 3;
     }
+
     th {
         font-size: 13px;
     }
+
     td {
         font-size: 12px;
     }

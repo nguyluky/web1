@@ -69,6 +69,7 @@ const ObjectStoreName = {
  * @type {IDBDatabase}
  */
 let db;
+// dùng để kiểm tra xem onupgradeneeded đã tải xong chưa
 let isOnupgradeneeded = false;
 const req = window.indexedDB.open('fakedb', 1);
 
@@ -247,9 +248,6 @@ class FakeDatabase {
     }
 
     async awaitUntilReady() {
-        if (db && isOnupgradeneeded == false)
-            return new Promise((r, v) => r(1));
-
         let id;
         return new Promise((resolve, reject) => {
             id = setInterval(() => {

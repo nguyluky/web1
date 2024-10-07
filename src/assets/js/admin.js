@@ -67,6 +67,7 @@ const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
     document.getElementsByName('tab-selestion')
 );
 const popupWrapper = document.getElementById('popup-wrapper');
+const loadingTable = document.getElementById('loading');
 
 const buttonAddState = {
     /**
@@ -139,7 +140,10 @@ async function renderManagement() {
     title.innerHTML = titleTabs[tab];
     let web_title = document.querySelector('head title');
     if (web_title) web_title.innerHTML = `Admin Web - ${titleTabs[tab]}`;
+
+    loadingTable && (loadingTable.style.display = 'flex');
     const data = fakeDBManagement[tab] ? await fakeDBManagement[tab]() : [];
+    loadingTable && (loadingTable.style.display = 'none');
     tabManagement[tab].renderTable(data);
     input.oninput = () => tabManagement[tab].search(data);
 }
@@ -275,11 +279,8 @@ async function main() {
 
     const input = document.getElementById('search-input');
 
-    const data = fakeDBManagement['user']
-        ? await fakeDBManagement['user']()
-        : /**@type {UserInfo[]}*/ ([]);
-    tabManagement['user'].renderTable(data);
-    input && (input.oninput = () => tabManagement['user'].search(data));
+    renderManagement();
+    // input && (input.oninput = () => tabManagement['user'].search(data));
 
     btnDelete?.addEventListener('click', buttonDeleteHandle);
     btnSave?.addEventListener('click', buttonSaveHandle);
