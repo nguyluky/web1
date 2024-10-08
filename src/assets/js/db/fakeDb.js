@@ -98,11 +98,10 @@ req.onupgradeneeded = async (event) => {
     console.log('đang tải dữ liệu');
 
     const data = await Promise.all([
-        import('./data/user.json', { with: { type: 'json' } }),
-        import('./data/img.json', { with: { type: 'json' } }),
-        // import('./data/cart.json', { with: { type: 'json' } }), // không có
-        import('./data/category.json', { with: { type: 'json' } }),
-        import('./data/book.json', { with: { type: 'json' } }),
+        fetch('/assets/data/user.json').then((e) => e.json()),
+        fetch('/assets/data/img.json').then((e) => e.json()),
+        fetch('/assets/data/category.json').then((e) => e.json()),
+        fetch('/assets/data/book.json').then((e) => e.json()),
     ]);
 
     // NOTE: indexedb chỉ được mở một transaction cừng một lúc
@@ -128,18 +127,18 @@ req.onupgradeneeded = async (event) => {
     const bookObjStore = transaction.objectStore(ObjectStoreName.BOOK);
     const categoryStore = transaction.objectStore(ObjectStoreName.CATEGORY);
 
-    data[0].default.data.forEach((e) => {
+    data[0].data.forEach((e) => {
         userObjStore.add(e);
     });
 
     // @ts-ignore
-    data[1].default.data.forEach((element) => {
+    data[1].data.forEach((element) => {
         imgObjStore.add(element);
     });
-    data[2].default.data.forEach((element) => {
+    data[2].data.forEach((element) => {
         categoryStore.add(element);
     });
-    data[3].default.data.forEach((element) => {
+    data[3].data.forEach((element) => {
         bookObjStore.add(element);
     });
 

@@ -113,7 +113,7 @@ footer.footer {
 
 .container input:checked ~ .left-sidebar__btn {
     color: #ffffff;
-    background-color: #808089;
+    background-color: #0a68f4;
 }
 
 .aside input[type='checkbox'] {
@@ -166,6 +166,7 @@ footer.footer {
 }
 
 th {
+    min-width: max-content;
     background: #0a68f4;
     z-index: 1;
     color: #ffffff;
