@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>We sell books</title>
+        <script type="module" src="./assets/js/index.js"></script>
+        <link rel="stylesheet" href="./assets/css/cart.css" />
+        <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css" />
+        <link rel="icon" href="./assets/img/favicon.png" />
+    </head>
+
+    <body>
+        <div id="popup-wrapper">
+            <div class="popup">
+                <button id="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="popup-header">Địa chỉ giao hàng</div>
+                <div class="popup-body">
+                    <div class="popup-mess">
+                        Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao
+                        hàng cùng phí đóng gói, vận chuyển một cách chính xác
+                        nhất.
+                    </div>
+                    <div class="space_line">
+                        <div></div>
+                        <p>hoặc</p>
+                        <div></div>
+                    </div>
+                    <div class="select">
+                        <label>
+                            <input
+                                type="radio"
+                                name="select_address"
+                                checked="checked"
+                            />
+                            <span id="default_address"
+                                >(User default address)</span
+                            >
+                        </label>
+                        <label>
+                            <input type="radio" name="select_address" />
+                            <span id="other_address"
+                                >Chọn khu vực giao hàng khác</span
+                            >
+                        </label>
+                    </div>
+                </div>
+                <button class="popup-btn">GIAO ĐẾN ĐỊA CHỈ NÀY</button>
+            </div>
+        </div>
+        <header class="header">
+            <div class="header_wrapper">
+                <div class="left">
+                    <img src="./assets/img/logo1.png" alt="Logo" />
+                </div>
+                <div class="center">
+                    <label class="ct-input search">
+                        <div class="icon_input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input type="text" placeholder="tìm kiếm" />
+                        <div class="input_text">Tìm kiếm</div>
+                    </label>
+                </div>
+                <div class="right">
+                    <button class="button_1" id="btn-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>TP.Hồ Chí Minh</span>
+                    </button>
+                    <button class="button_1">
+                        <i class="fa-regular fa-face-smile-wink"></i>
+                        <span>Tài khoản</span>
+                    </button>
+                    <div class="line"></div>
+                    <button class="button_1 cart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main class="main main-cart">
+            <div class="main-component main_wapper">
+                <div class="main-cart-title">GIỎ HÀNG</div>
+                <div class="main-cart-content">
+                    <div class="left-content">
+                        <div class="left-content-heading card">
+                            <label>
+                                <input type="checkbox" />
+                                <span>Tất cả (1 sản phẩm)</span>
+                            </label>
+                            <div>Đơn giá</div>
+                            <div>Số lượng</div>
+                            <div>Thành tiền</div>
+                            <i class="fa-regular fa-trash-can"></i>
+                        </div>
+                    </div>
+                    <div class="right-content">
+                        <div class="info-user card">
+                            <div class="info-header">
+                                <span>Giao tới</span>
+                                <button id="change-address-btn">
+                                    Thay đổi
+                                </button>
+                            </div>
+                            <div class="info-content">
+                                <div class="contact-info">
+                                    <div class="contact-info__name">Ly Lê</div>
+                                    <div class="contact-info__phone-num">
+                                        0912345678
+                                    </div>
+                                </div>
+                                <div class="address-info">
+                                    106,đường Nguyễn Chí Thanh, thị trấn Quảng
+                                    Phú, huyện Cư M’gar, Đắk Lắk
+                                </div>
+                            </div>
+                        </div>
+                        <div class="coupon card">
+                            <div class="coupon-header">
+                                <div class="coupon-header__title">
+                                    Khuyến mãi
+                                </div>
+                                <div class="coupon-header__usage">
+                                    <span>Có thể chọn 2</span>
+                                </div>
+                            </div>
+                            <div class="coupon-list"></div>
+                            <div class="show-more">
+                                <i class="fa-solid fa-ticket"></i>
+                                <span>Chọn hoặc nhập Khuyến mãi khác</span>
+                            </div>
+                        </div>
+                        <div class="price-summary card">
+                            <ul class="prices__items">
+                                <li class="prices__item">
+                                    <div class="prices__text">Tạm tính</div>
+                                    <div class="prices__value">
+                                        <sub>₫</sub>
+                                    </div>
+                                </li>
+                                <li class="prices__item">
+                                    <div class="prices__text">Giảm giá</div>
+                                    <div class="prices__value">
+                                        <sub>₫</sub>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="prices__total">
+                                <span>Tổng tiền</span>
+                                <div class="prices__content">
+                                    <div class="prices__value"></div>
+                                    <div class="prices__value--note">
+                                        (Đã bao gồm VAT nếu có)
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="purchase-btn">Mua Hàng (0)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="footer">
+            <div class="footer_wrapper">
+                <div class="footer_box box1">
+                    <h4>🌍 Liên Hệ:</h4>
+                    <div>
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span
+                            >273 Đ. An Dương Vương, Phường 3, Quận 5, Hồ Chí
+                            Minh 700000</span
+                        >
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-envelope"></i>
+                        <span> acb@xyz.com </span>
+                    </div>
+                </div>
+                <div class="footer_box box2">
+                    <h4>Chào Mừng Đến Với wesellbooks</h4>
+                    <span>
+                        Chúng tôi tin rằng sách không chỉ để đọc mà còn để chia
+                        sẻ. Hãy tham gia cùng chúng tôi trong việc kết nối những
+                        tâm hồn yêu sách, tạo ra một cộng đồng văn hóa phong phú
+                        và đa dạng. Tại đây, bạn có thể trao đổi, tặng tặng hoặc
+                        nhận những cuốn sách yêu thích của mình.
+                    </span>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
