@@ -13,3 +13,13 @@ document.getElementById('show-hide-icon')?.addEventListener('click', () => {
     icon?.classList.remove('fa-eye-slash');
     icon?.classList.add('fa-eye');
 });
+
+document.querySelector('form')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    let rmb_btn = /**@type {HTMLInputElement} */ (
+        document.querySelector('.remember input[type="checkbox"]')
+    );
+    if (rmb_btn.checked) localStorage.setItem('isAdmin', 'true');
+    else sessionStorage.setItem('isAdmin', 'true');
+    location.href = '/admin/index.html';
+});
