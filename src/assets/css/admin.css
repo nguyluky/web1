@@ -166,7 +166,7 @@ footer.footer {
 }
 
 th {
-    min-width: max-content;
+    white-space: nowrap;
     background: #0a68f4;
     z-index: 1;
     color: #ffffff;
@@ -203,7 +203,6 @@ td {
 
 td,
 th {
-    text-wrap: pretty;
     overflow-wrap: break-word;
     overflow: hidden;
     max-width: 30vw;
