@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="module" src="./assets/js/index.js"></script>
+        <link rel="stylesheet" href="./assets/css/index.css" />
+        <link rel="stylesheet" href="./assets/css/test.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+            integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="icon" href="./assets/img/favicon.png" />
+        <title>Sign up</title>
+    </head>
+    <body>
+        <div id="popup-wrapper">
+            <div class="popup">
+                <button id="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="popup-header">Địa chỉ giao hàng</div>
+                <div class="popup-body">
+                    <div class="popup-mess">
+                        Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao hàng cùng phí đóng
+                        gói, vận chuyển một cách chính xác nhất.
+                    </div>
+                    <div class="space_line">
+                        <div></div>
+                        <p>hoặc</p>
+                        <div></div>
+                    </div>
+                    <div class="select">
+                        <label>
+                            <input type="radio" name="select_address" checked="checked" />
+                            <span id="default_address">(User default address)</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="select_address" />
+                            <span id="other_address">Chọn khu vực giao hàng khác</span>
+                        </label>
+                    </div>
+                </div>
+                <button class="popup-btn">GIAO ĐẾN ĐỊA CHỈ NÀY</button>
+            </div>
+        </div>
+        <header class="header">
+            <div class="header_wrapper">
+                <div class="left">
+                    <img src="./assets/img/logo1.png" alt="Logo" />
+                </div>
+                <div class="center">
+                    <label class="ct-input search">
+                        <div class="icon_input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input type="text" placeholder="Tìm kiếm" />
+                        <div class="input_text">Tìm kiếm</div>
+                    </label>
+                </div>
+                <div class="right">
+                    <button class="button_1" id="btn-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>TP.Hồ Chí Minh</span>
+                    </button>
+                    <button class="button_1">
+                        <i class="fa-regular fa-face-smile-wink"></i>
+                        <span>Tài khoản</span>
+                    </button>
+                    <div class="line"></div>
+                    <button class="button_1 cart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <div class="modal">
+            <div class="modal-overlay"></div>
+            <div class="sign-up-body">
+                <button id="btn-exit">
+                    <img src="./assets/img/exit.png" alt="" />
+                </button>
+                <div class="modal-body-left">
+                    <div class="auth-form">
+                        <button>
+                            <i class="fa-solid fa-less-than" style="color: #787878"></i>
+                        </button>
+                        <div class="sign-up-heading">
+                            <h4>Tạo tài khoản</h4>
+                        </div>
+
+                        <div class="input-auth-form">
+                            <div class="input-info">
+                                <div class="input-group">
+                                    <label for="name">Vui lòng cho biết tên bạn</label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        placeholder="Gồm 2 từ trở lên, không bao gồm số và kí tự đặc biệt"
+                                        required
+                                    />
+                                </div>
+                                <div class="input-group">
+                                    <label for="password">Đặt mật khẩu</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        required
+                                        placeholder="Từ 8 đến 32 kí tự, gồm chữ và số"
+                                    />
+                                </div>
+                                <input type="submit" id="btn-create-acc" value="Gửi" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body-right">
+                    <img src="./assets/img/logov1.png" alt="" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
