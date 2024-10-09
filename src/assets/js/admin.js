@@ -300,4 +300,16 @@ async function main() {
     });
 }
 
+function updateContent() {
+    const width = window.innerWidth;
+    const contentDiv = document.querySelector('table > tr > th');
+    if (!contentDiv) return;
+    // Thay đổi nội dung dựa trên độ rộng
+    if (width < 820) contentDiv.innerHTML = '...';
+    else contentDiv.innerHTML = 'Check<i class="fa-solid fa-filter">';
+}
+
+updateContent();
+
+window.addEventListener('resize', updateContent);
 window.addEventListener('load', main);
