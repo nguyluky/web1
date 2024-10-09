@@ -108,6 +108,7 @@ body {
     color: #808089;
     gap: 10px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .button_1:hover {

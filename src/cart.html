@@ -11,49 +11,12 @@
     </head>
 
     <body>
-        <div id="popup-wrapper">
-            <div class="popup">
-                <button id="btn-close">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <div class="popup-header">Địa chỉ giao hàng</div>
-                <div class="popup-body">
-                    <div class="popup-mess">
-                        Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao
-                        hàng cùng phí đóng gói, vận chuyển một cách chính xác
-                        nhất.
-                    </div>
-                    <div class="space_line">
-                        <div></div>
-                        <p>hoặc</p>
-                        <div></div>
-                    </div>
-                    <div class="select">
-                        <label>
-                            <input
-                                type="radio"
-                                name="select_address"
-                                checked="checked"
-                            />
-                            <span id="default_address"
-                                >(User default address)</span
-                            >
-                        </label>
-                        <label>
-                            <input type="radio" name="select_address" />
-                            <span id="other_address"
-                                >Chọn khu vực giao hàng khác</span
-                            >
-                        </label>
-                    </div>
-                </div>
-                <button class="popup-btn">GIAO ĐẾN ĐỊA CHỈ NÀY</button>
-            </div>
-        </div>
         <header class="header">
             <div class="header_wrapper">
                 <div class="left">
-                    <img src="./assets/img/logo1.png" alt="Logo" />
+                    <a href="/">
+                        <img src="./assets/img/logo1.png" alt="Logo" />
+                    </a>
                 </div>
                 <div class="center">
                     <label class="ct-input search">
@@ -151,7 +114,11 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="purchase-btn">Mua Hàng (0)</button>
+                        <div class="prices__button__center">
+                            <button class="button_1 btn-danger">
+                                Mua Hàng (0)
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -159,30 +126,90 @@
         <footer class="footer">
             <div class="footer_wrapper">
                 <div class="footer_box box1">
-                    <h4>🌍 Liên Hệ:</h4>
-                    <div>
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span
-                            >273 Đ. An Dương Vương, Phường 3, Quận 5, Hồ Chí
-                            Minh 700000</span
-                        >
-                    </div>
-                    <div>
-                        <i class="fa-solid fa-envelope"></i>
-                        <span> acb@xyz.com </span>
+                    <h4 class="footer-header">wesellbooks</h4>
+                    <div class="footer-context">
+                        <span>
+                            Chúng tôi là cộng đồng chia sẻ tài liệu học tập,
+                            giúp bạn dễ dàng truy cập vào những kiến thức quý
+                            giá. Cùng nhau học hỏi và phát triển!
+                        </span>
                     </div>
                 </div>
                 <div class="footer_box box2">
-                    <h4>Chào Mừng Đến Với wesellbooks</h4>
-                    <span>
-                        Chúng tôi tin rằng sách không chỉ để đọc mà còn để chia
-                        sẻ. Hãy tham gia cùng chúng tôi trong việc kết nối những
-                        tâm hồn yêu sách, tạo ra một cộng đồng văn hóa phong phú
-                        và đa dạng. Tại đây, bạn có thể trao đổi, tặng tặng hoặc
-                        nhận những cuốn sách yêu thích của mình.
-                    </span>
+                    <h4 class="footer-header">Thành viên sáng lập</h4>
+                    <div class="footer-context">
+                        <li>Nguyễn Khắc Hiếu</li>
+                        <li>OwO</li>
+                        <li>Place houlder</li>
+                        <li>Place houlder</li>
+                        <li>Place houlder</li>
+                    </div>
+                </div>
+
+                <div class="footer_box box3">
+                    <h4 class="footer-header">Liên hệ</h4>
+                    <div class="footer-context">
+                        <li>
+                            <i class="fa-solid fa-house"></i
+                            ><span
+                                >273 Đ. An Dương Vương, Phường 3, Quận 5, Hồ Chí
+                                Minh
+                            </span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>acb@xyz.com</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            <span>0876 882 811</span>
+                        </li>
+                        <li>
+                            <i class="fa-brands fa-facebook-f"></i>
+                            <span>https://fb.com/abc.1524</span>
+                        </li>
+                    </div>
                 </div>
             </div>
         </footer>
+        <div id="popup-wrapper">
+            <div class="popup">
+                <button id="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="popup-header">Địa chỉ giao hàng</div>
+                <div class="popup-body">
+                    <div class="popup-mess">
+                        Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao
+                        hàng cùng phí đóng gói, vận chuyển một cách chính xác
+                        nhất.
+                    </div>
+                    <div class="space_line">
+                        <div></div>
+                        <p>hoặc</p>
+                        <div></div>
+                    </div>
+                    <div class="select">
+                        <label>
+                            <input
+                                type="radio"
+                                name="select_address"
+                                checked="checked"
+                            />
+                            <span id="default_address"
+                                >(User default address)</span
+                            >
+                        </label>
+                        <label>
+                            <input type="radio" name="select_address" />
+                            <span id="other_address"
+                                >Chọn khu vực giao hàng khác</span
+                            >
+                        </label>
+                    </div>
+                </div>
+                <button class="popup-btn">GIAO ĐẾN ĐỊA CHỈ NÀY</button>
+            </div>
+        </div>
     </body>
 </html>
