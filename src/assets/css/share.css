@@ -86,6 +86,8 @@ body {
     display: flex;
     align-items: center;
     justify-self: center;
+    text-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .ct-input .input_text:hover {
@@ -106,6 +108,7 @@ body {
     color: #808089;
     gap: 10px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .button_1:hover {
