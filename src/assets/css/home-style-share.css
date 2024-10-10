@@ -109,12 +109,14 @@ footer.footer .footer_wrapper .footer_box {
     height: 100%;
     width: 100%;
     position: fixed;
-    z-index: 2;
+    z-index: 10;
     top: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.53);
     opacity: 0;
     pointer-events: none;
+    display: flex;
+    justify-content: center;
 }
 
 #popup-wrapper.show {
@@ -138,7 +140,7 @@ footer.footer .footer_wrapper .footer_box {
     flex-direction: column;
     padding: 15px;
     margin: 60px auto;
-    position: relative;
+    position: absolute;
 }
 
 .popup-btn {
@@ -278,5 +280,35 @@ footer.footer .footer_wrapper .footer_box {
 
     header.header {
         height: max-content;
+    }
+
+    .popup {
+        height: 100vh;
+        width: 100%;
+        margin: 0;
+        justify-content: start;
+        padding: 0;
+    }
+
+    .popup-header {
+        background: #0a68f4;
+        text-align: left;
+        color: #fff;
+    }
+
+    .popup-body {
+        height: calc(100vh - 116px);
+        box-sizing: border-box;
+        background-color: transparent;
+    }
+
+    .popup-btn {
+        margin-top: 0;
+        width: 90%;
+    }
+
+    #btn-close {
+        top: 14px;
+        right: 10px;
     }
 }
