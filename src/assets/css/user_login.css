@@ -162,3 +162,44 @@ input#password {
     margin-bottom: 10px;
     display: block;
 }
+
+@media screen and (max-width: 800px) {
+    .modal-body {
+        flex-direction: column-reverse;
+        height: 100%;
+        margin: 0;
+    }
+
+    .modal-body-right {
+        width: 100%;
+        border-radius: 0;
+        height: 30%;
+    }
+    .modal-body-left {
+        width: 100%;
+        border-radius: 0;
+        position: relative;
+        padding-top: 0;
+    }
+
+    .modal-body-right img {
+        display: none;
+    }
+
+    .modal-body-left::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 40px;
+        top: -39px;
+        left: 0;
+        background: #fff;
+        border-top-left-radius: 50% 50px;
+        border-top-right-radius: 50% 50px;
+    }
+
+    #btn-exit {
+        top: 10px;
+        left: 10px;
+    }
+}
