@@ -283,7 +283,7 @@ footer.footer .footer_wrapper .footer_box {
     }
 
     .popup {
-        height: 100vh;
+        height: 100svh;
         width: 100%;
         margin: 0;
         justify-content: start;
@@ -297,7 +297,7 @@ footer.footer .footer_wrapper .footer_box {
     }
 
     .popup-body {
-        height: calc(100vh - 116px);
+        height: calc(100svh - 116px);
         box-sizing: border-box;
         background-color: transparent;
     }
