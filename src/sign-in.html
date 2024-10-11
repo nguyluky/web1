@@ -75,7 +75,7 @@
                         <i class="fa-solid fa-location-dot"></i>
                         <span>TP.Hồ Chí Minh</span>
                     </button>
-                    <button class="button_1">
+                    <button class="button_1" id="btn-account">
                         <i class="fa-regular fa-face-smile-wink"></i>
                         <span>Tài khoản</span>
                     </button>
@@ -89,7 +89,7 @@
         <div class="modal">
             <div class="modal-overlay"></div>
 
-            <div class="modal-body hide-modal">
+            <div class="modal-body modal-demo">
                 <button id="btn-exit">
                     <img src="./assets/img/exit.png" alt="" />
                 </button>
@@ -105,12 +105,13 @@
                             <div class="input-group">
                                 <input
                                     type="tel"
-                                    class="input-phone"
+                                    id="input-phone"
                                     placeholder="Số điện thoại"
                                     required
                                     pattern="0[0-9]{9}"
                                 />
                             </div>
+                            <span class="form-error"></span>
                             <!-- <button>Tiếp tục</button> -->
                             <input
                                 type="submit"
@@ -131,5 +132,6 @@
                 </div>
             </div>
         </div>
+        <!-- <script src="./assets/js/user-login.js"></script> -->
     </body>
 </html>

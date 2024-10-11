@@ -3,7 +3,7 @@ const btnLocation = document.getElementById('btn-location');
 const closePopup = document.getElementById('btn-close');
 const popup_wrapper = document.getElementById('popup-wrapper');
 
-const btnAccount = document.getElementById('btn-acount');
+// const btnAccount = document.getElementById('btn-account');
 
 if (btnLocation && closePopup && popup_wrapper) {
     btnLocation.addEventListener('click', () => {
@@ -20,5 +20,24 @@ if (btnLocation && closePopup && popup_wrapper) {
 
     closePopup.addEventListener('click', () => {
         popup_wrapper.classList.remove('show');
+    });
+}
+
+const btnAccount = document.getElementById('btn-account');
+const modal = document.querySelector('.modal');
+const btnExit = document.getElementById('btn-exit');
+const modalDemo = document.querySelector('.modal-demo');
+const form = document.querySelector('form');
+if (btnAccount && modal && btnExit && modalDemo) {
+    btnAccount.addEventListener('click', () => {
+        modal.classList.add('show-modal');
+    });
+    btnExit.addEventListener('click', () => {
+        modal.classList.remove('show-modal');
+    });
+    modal.addEventListener('click', (e) => {
+        if (!modalDemo.contains(e.target)) {
+            btnExit.click();
+        }
     });
 }
