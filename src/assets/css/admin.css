@@ -196,17 +196,21 @@ td {
     font-size: 14px;
 }
 
-.details-wrapper {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height: 200px;
+td[key='details'] {
     position: relative;
 }
-
+.details-wrapper {
+    overflow-y: scroll;
+    text-overflow: ellipsis;
+    height: 200px;
+}
+.details-wrapper::-webkit-scrollbar {
+    width: 0;
+}
 .isOverFlow::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 0;
     height: 20px;
     width: 100%;
