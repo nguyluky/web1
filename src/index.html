@@ -144,18 +144,64 @@
                             <input
                                 type="radio"
                                 name="select_address"
-                                checked="checked"
                             />
                             <span id="default_address"
                                 >(User default address)</span
                             >
                         </label>
                         <label>
-                            <input type="radio" name="select_address" />
+                            <input type="radio" name="select_address" id="address_display"/>
                             <span id="other_address"
                                 >Chọn khu vực giao hàng khác</span
                             >
                         </label>
+                    </div>
+                    <div id="Address-form">
+                        <div class="Address-form__row">
+                            <p class="Address-type">Tỉnh/Thành phố</p>
+                            <div class="dropdown-container" id="dropdown-container--city" >
+                                <div class="Address__dropdown-btn">
+                                    <input placeholder="Vui lòng chọn tỉnh/thành phố">
+                                    </input>
+                                    <i class="fa-solid fa-angle-down"></i>
+                                </div>
+                                <div class="Address__dropdown-content">
+                                    <div>place holder</div>
+                                    <div>place holder</div>
+                                    <div>place holder</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Address-form__row">
+                            <p class="Address-type">Quận/Huyện</p>
+                            <div class="dropdown-container" id="dropdown-container--district">
+                                <div class="Address__dropdown-btn">
+                                    <input disabled placeholder="Vui lòng chọn quận/huyện">
+                                    </input>
+                                    <i class="fa-solid fa-angle-down"></i>
+                                </div>
+                                <div class="Address__dropdown-content">
+                                    <div>place holder</div>
+                                    <div>place holder</div>
+                                    <div>place holder</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Address-form__row">
+                            <p class="Address-type">Phường/Xã</p>
+                            <div class="dropdown-container" id="dropdown-container--ward">
+                                <div class="Address__dropdown-btn">
+                                    <input disabled placeholder="Vui lòng chọn phường/xã">
+                                    </input>
+                                    <i class="fa-solid fa-angle-down"></i>
+                                </div>
+                                <div class="Address__dropdown-content">
+                                    <div>place holder</div>
+                                    <div>place holder</div>
+                                    <div>place holder</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <button class="popup-btn">GIAO ĐẾN ĐỊA CHỈ NÀY</button>
