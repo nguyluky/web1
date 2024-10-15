@@ -36,8 +36,10 @@ if (btnAccount && modal && btnExit && modalDemo) {
         modal.classList.remove('show-modal');
     });
     modal.addEventListener('click', (e) => {
-        if (!modalDemo.contains(e.target)) {
+        if (!e.target) return;
+        if (!modalDemo.contains(/**@type {HTMLElement}*/ (e.target))) {
             btnExit.click();
         }
     });
 }
+//

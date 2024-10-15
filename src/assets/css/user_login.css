@@ -41,6 +41,10 @@
 /*btn-back*/
 #back-btn {
     cursor: pointer;
+    background-color: white;
+}
+#back-btn img {
+    width: 20px;
 }
 /* btn exit */
 #btn-exit {
@@ -79,7 +83,7 @@
     height: 100%;
 }
 .auth-form .heading {
-    margin-bottom: 20px;
+    margin: 20px 0px;
 }
 
 /* input phone */
@@ -104,7 +108,9 @@
 }
 /* button submit */
 #btn-submit,
-#btn-create-acc {
+#btn-create-acc,
+#btn-login-password,
+#btn-login {
     margin: 30px 0px 10px;
     width: 100%;
     background-color: rgb(255, 66, 78);
@@ -151,10 +157,6 @@
     display: flex;
 }
 
-.sign-up-body i {
-    font-size: 20px;
-    background-color: white;
-}
 .sign-up-heading {
     margin: 20px 0px 35px;
 }
@@ -162,8 +164,11 @@
     margin-top: 35px;
 }
 /* input sign up */
-input#name,
-input#password {
+#name,
+#login-password,
+#password,
+#input-password,
+#input-email {
     font-size: 14px;
 }
 .input-group label {
@@ -171,12 +176,15 @@ input#password {
     display: block;
 }
 #btn-create-acc:hover,
-#btn-submit:hover {
+#btn-submit:hover,
+#btn-login:hover,
+btn-login-password:hover {
     background-color: rgb(247, 92, 102);
 }
 @media screen and (max-width: 800px) {
     .modal-body,
-    .sign-up-body {
+    .sign-up-body,
+    .loginEmail-body {
         flex-direction: column-reverse;
         height: 100%;
         margin: 0;
@@ -214,4 +222,55 @@ input#password {
         top: 10px;
         left: 10px;
     }
+}
+
+/* fomr-error */
+.input-error .input-group::after {
+    border-color: rgb(255, 66, 78);
+}
+.form-error {
+    color: rgb(255, 66, 78);
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/*login Email*/
+.loginEmail-heading {
+    margin: 20px 0px;
+}
+.loginEmail-body {
+    width: 800px;
+    height: 443px;
+    margin: auto;
+    position: relative;
+    display: flex;
+}
+.loginEmail-body .input-group {
+    margin-bottom: 15px;
+}
+.noAccount a,
+.forgetPassword a {
+    text-decoration: none;
+    color: rgb(13, 92, 182);
+    font-size: 13px;
+}
+.forgetPassword {
+    margin-top: 20px;
+}
+p.noAccount {
+    margin-top: 10px;
+    color: rgb(120, 120, 120);
+    font-size: 13px;
+}
+.showPassword {
+    color: rgb(13, 92, 182);
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+}
+
+.input-fill::after {
+    color: rgb(13, 92, 182);
 }
