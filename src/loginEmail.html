@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>We sell books</title>
+        <script type="module" src="./assets/js/index.js"></script>
+        <link rel="stylesheet" href="./assets/css/index.css" />
+        <link rel="stylesheet" href="./assets/css/user_login.css" />
+
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+            integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="icon" href="./assets/img/favicon.png" />
+    </head>
+    <body>
+        <header class="header">
+            <div class="header_wrapper">
+                <div class="left">
+                    <img src="./assets/img/logo1.png" alt="Logo" />
+                </div>
+                <div class="center">
+                    <label class="ct-input search">
+                        <div class="icon_input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input type="text" placeholder="Tìm kiếm" />
+                        <div class="input_text">Tìm kiếm</div>
+                    </label>
+                </div>
+                <div class="right">
+                    <button class="button_1" id="btn-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>TP.Hồ Chí Minh</span>
+                    </button>
+                    <button class="button_1" id="btn-account">
+                        <i class="fa-regular fa-face-smile-wink"></i>
+                        <span>Tài khoản</span>
+                    </button>
+                    <div class="line"></div>
+                    <button class="button_1 cart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="modal" id="js-modal">
+            <div class="modal-overlay"></div>
+
+            <div class="loginEmail-body modal-demo">
+                <button id="btn-exit">
+                    <img src="./assets/img/exit.png" alt="" />
+                </button>
+
+                <div class="modal-body-left">
+                    <div class="auth-form">
+                        <button id="back-btn">
+                            <img src="./assets/img/back.png" alt="" />
+                        </button>
+                        <div class="loginEmail-heading">
+                            <h4>Đăng nhập bằng email</h4>
+                            <p>Nhập email và mật khẩu tài khoản</p>
+                        </div>
+                        <form action="" class="input-auth-form">
+                            <div class="input-group">
+                                <input
+                                    type="email"
+                                    id="input-email"
+                                    placeholder="abc@email.com"
+                                />
+                            </div>
+                            <div class="input-group">
+                                <input
+                                    type="password"
+                                    id="input-password"
+                                    placeholder="Mật khẩu"
+                                />
+                                <span class="showPassword">Hiện</span>
+                            </div>
+
+                            <input
+                                type="submit"
+                                value="Đăng nhập"
+                                id="btn-login"
+                            />
+                        </form>
+                        <p class="forgetPassword">
+                            <a href="#">Quên mật khẩu?</a>
+                        </p>
+                        <p class="noAccount">
+                            Chưa có tài khoản?
+                            <a href="#">Tạo tài khoản</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="modal-body-right">
+                    <img src="./assets/img/logov1.png" alt="" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

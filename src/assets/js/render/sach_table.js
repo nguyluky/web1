@@ -47,12 +47,20 @@ function renderRow(value) {
         };
         col.setAttribute('key', key);
 
-        if (key == 'thumbnal') {
+        if (key == 'details') {
+            const details_wrapper = document.createElement('div');
+            details_wrapper.className = 'details-wrapper';
+            details_wrapper.insertAdjacentHTML('beforeend', value[key]);
+            col.appendChild(details_wrapper);
+        } else if (key == 'thumbnal') {
+            const img_wrapper = document.createElement('div');
+            img_wrapper.className = 'img-wrapper';
             const img = document.createElement('img');
             fackDatabase.getImgById(value[key]).then((imgS) => {
                 img.src = imgS?.data || '=(';
             });
-            col.appendChild(img);
+            img_wrapper.appendChild(img);
+            col.appendChild(img_wrapper);
         } else col.insertAdjacentHTML('beforeend', value[key]);
         row.appendChild(col);
     });
@@ -71,6 +79,12 @@ function renderSach(list) {
     if (!table) return;
 
     renderTable(list, table, cols, undefined, renderRow);
+
+    Array.from(document.getElementsByClassName('details-wrapper')).forEach(
+        (e) => {
+            if (e.scrollHeight > e.clientHeight) e.classList.add('isOverFlow');
+        },
+    );
 }
 
 /**
@@ -94,6 +108,36 @@ function searchSach(list) {
     });
 }
 
+function addRow() {
+    const table = /**@type {HTMLTableElement}*/ (
+        document.getElementById('content_table')
+    );
+    if (!table) return;
+    /**@type {Sach}*/
+    const data = {
+        id: '',
+        title: '',
+        details: '',
+        thumbnal: 'default',
+        imgs: [],
+        base_price: 0,
+        category: [],
+        option: [],
+    };
+    const row = renderRow(data);
+    const thumbnal = row.querySelector('td[key="thumbnal"]');
+    if (!thumbnal) return;
+    if (thumbnal.firstElementChild)
+        thumbnal.removeChild(thumbnal.firstElementChild);
+    const upFile = document.createElement('input');
+    upFile.type = 'file';
+    thumbnal.appendChild(upFile);
+    table.insertBefore(row, table.childNodes[1]);
+    /**@type {HTMLElement} */ (table.parentNode).scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    });
+}
 /**
  * @type {import('./reader_table.js').intefaceRender<Sach>}
  */
@@ -105,9 +149,7 @@ const Sach_ = {
     doSave: () => {
         throw new Error('Làm này đi, đồ lười');
     },
-    addRow: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
+    addRow,
     removeRows: () => {
         throw new Error('Làm này đi, đồ lười');
     },

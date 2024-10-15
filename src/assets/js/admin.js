@@ -307,6 +307,13 @@ function updateContent() {
     // Thay đổi nội dung dựa trên độ rộng
     if (width < 820) contentDiv.innerHTML = '...';
     else contentDiv.innerHTML = 'Check<i class="fa-solid fa-filter">';
+
+    Array.from(document.getElementsByClassName('details-wrapper')).forEach(
+        (e) => {
+            if (e.scrollHeight > e.clientHeight) e.classList.add('isOverFlow');
+            else e.classList.remove('isOverFlow');
+        },
+    );
 }
 
 updateContent();
