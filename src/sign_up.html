@@ -6,6 +6,7 @@
         <script type="module" src="./assets/js/index.js"></script>
         <link rel="stylesheet" href="./assets/css/index.css" />
         <link rel="stylesheet" href="./assets/css/user_login.css" />
+
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
@@ -86,7 +87,7 @@
                 </div>
             </div>
         </header>
-        <div class="modal">
+        <div class="modal show-modal">
             <div class="modal-overlay"></div>
             <div class="sign-up-body modal-demo">
                 <button id="btn-exit">
@@ -95,16 +96,13 @@
                 <div class="modal-body-left">
                     <div class="auth-form">
                         <button id="back-btn">
-                            <i
-                                class="fa-solid fa-less-than"
-                                style="color: #787878"
-                            ></i>
+                            <img src="./assets/img/back.png" alt="" />
                         </button>
                         <div class="sign-up-heading">
                             <h4>Tạo tài khoản</h4>
                         </div>
 
-                        <div class="input-auth-form">
+                        <form action="" class="input-auth-form">
                             <div class="input-info">
                                 <div class="input-group">
                                     <label for="name"
@@ -132,7 +130,7 @@
                                     value="Gửi"
                                 />
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <div class="modal-body-right">
@@ -140,6 +138,5 @@
                 </div>
             </div>
         </div>
-        <script src="./assets/js/user-login.js"></script>
     </body>
 </html>
