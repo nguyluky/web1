@@ -3,8 +3,6 @@ const btnLocation = document.getElementById('btn-location');
 const closePopup = document.getElementById('btn-close');
 const popup_wrapper = document.getElementById('popup-wrapper');
 
-// const btnAccount = document.getElementById('btn-account');
-
 if (btnLocation && closePopup && popup_wrapper) {
     btnLocation.addEventListener('click', () => {
         popup_wrapper.classList.add('show');
@@ -42,4 +40,3 @@ if (btnAccount && modal && btnExit && modalDemo) {
         }
     });
 }
-//
