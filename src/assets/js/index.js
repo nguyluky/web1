@@ -37,13 +37,6 @@ document.querySelector('.select')?.addEventListener('click', () => {
         address_form?.classList.remove('show');
     }
 });
-/**
-document.querySelectorAll('.Address__dropdown-btn').forEach(e => {
-    e.addEventListener('click', () => {
-        e.parentNode?.querySelector('.Address__dropdown-content')?.classList.add('')
-    })
-})
-*/
 //droplist city, district, ward
 const addr_drop_btns = document.getElementsByClassName('Address__dropdown-btn');
 const addr_drop_conts = document.getElementsByClassName(
