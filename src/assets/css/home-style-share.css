@@ -126,7 +126,7 @@ footer.footer .footer_wrapper .footer_box {
 
 .popup * {
     box-sizing: inherit;
-    width: 100%;
+    /* width: 100%; */
 }
 
 .popup {
@@ -208,7 +208,6 @@ footer.footer .footer_wrapper .footer_box {
     font-size: 12px;
     padding: 0 15px;
     color: rgb(51, 51, 51);
-    background: #fff;
     flex: 0;
 }
 
@@ -311,4 +310,92 @@ footer.footer .footer_wrapper .footer_box {
         top: 14px;
         right: 10px;
     }
+}
+
+#Address-form{
+    display: none;
+    pointer-events: none;
+}
+
+#Address-form.show{
+    display: block;
+    pointer-events: all;
+}
+
+.Address-form__row{
+    display: flex;
+    align-items: center;
+    padding: 5px 30px;
+}
+
+.Address__dropdown-btn{
+    background-color: white;
+    border: solid 1px rgb(135, 135, 135);
+    color: rgb(135, 135, 135);
+    
+    border-radius: 4px;
+    height: 35px;
+    width: 100%;
+    padding-left: 10px;
+    text-align: start;
+    cursor: pointer;
+    display:flex;
+    align-items: center;
+}
+
+.Address__dropdown-btn--text{
+    white-space: nowrap;
+}
+
+.Address__dropdown-btn:hover:not(:disabled), .Address__dropdown-btn:focus{
+    border: solid 1px rgb(7, 7, 7);
+    color: rgb(7, 7, 7);
+}
+
+.Address__dropdown-btn:focus{
+    box-shadow: 0px 0px 5px 1px rgba(78, 148, 254, 0.808);
+}
+
+.Address__dropdown-btn:disabled{
+    border: solid 1px rgb(135, 135, 135);
+    color: rgb(135, 135, 135);
+    background-color: #f2f2f2;
+}
+
+.fa-angle-down{
+    text-align: end;
+    padding-right: 10px;
+}
+
+#dropdown-container--city{
+    position: relative;
+}
+
+.Address__dropdown-content{
+    background-color: white;
+    width: 100%;
+    border: solid 1px rgb(146, 145, 145);
+    border-radius: 4px;
+    box-shadow:0px 2px 5px rgb(174, 174, 174);
+    padding: 5px 10px;
+    margin-top: 5px;
+    font-size: 15px;
+    display: none;
+    position: absolute;
+}
+
+.Address__dropdown-btn input{
+    flex: 1;
+}
+
+.Address__dropdown-content div{
+    padding: 5px 0px;
+}
+
+.Address__dropdown-content div:hover{
+    color: rgba(78, 148, 254, 0.808);
+}
+
+.show{
+    display: block;
 }
