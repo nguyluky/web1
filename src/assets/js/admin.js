@@ -292,11 +292,24 @@ async function main() {
     btnSave?.addEventListener('click', buttonSaveHandle);
     btnAdd?.addEventListener('click', buttonAddHandle);
     btnMenu?.addEventListener('click', buttonMenuHandle);
-
+    const drop_menu = document.getElementById('drop-list');
     document.getElementById('drop-list')?.addEventListener('click', () => {
-        document.getElementById('drop-list')?.classList.remove('show');
+        drop_menu?.classList.remove('show');
         // NOTE: không xóa dòng này -_-
-        document.getElementById('menu-btn')?.classList.remove('active');
+        btnMenu?.classList.remove('active');
+    });
+
+    document.addEventListener('click', (event) => {
+        const isClickInsideDropdown = /**@type {HTMLElement} */ (
+            event.target
+        ).closest('#drop-list');
+        const isClickInsideMenu = /**@type {HTMLElement} */ (
+            event.target
+        ).closest('#menu-btn');
+        if (!isClickInsideDropdown && !isClickInsideMenu) {
+            drop_menu?.classList.remove('show');
+            btnMenu?.classList.remove('active');
+        }
     });
 }
 

@@ -80,17 +80,17 @@ function renderTable(
     // render table
     // check
     const col = document.createElement('th');
-    const icon = text2htmlElement('<i class="fa-solid fa-filter"></i>');
+    // const icon = text2htmlElement('<i class="fa-solid fa-filter"></i>');
     col.insertAdjacentHTML('beforeend', 'Check');
-    if (icon) col.appendChild(icon);
+    // if (icon) col.appendChild(icon);
     tableHeader.appendChild(col);
 
     Object.keys(cols).forEach((key) => {
         const col = document.createElement('th');
-        const icon = text2htmlElement('<i class="fa-solid fa-filter"></i>');
+        // const icon = text2htmlElement('<i class="fa-solid fa-filter"></i>');
 
         col.insertAdjacentHTML('beforeend', cols[key]);
-        if (icon) col.appendChild(icon);
+        // if (icon) col.appendChild(icon);
 
         tableHeader.appendChild(col);
     });
