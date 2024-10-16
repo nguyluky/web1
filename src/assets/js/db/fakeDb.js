@@ -6,6 +6,7 @@
  * @typedef {import('../until/type.js').imgStore} imgStore
  */
 import uuidv4 from '../until/uuid.js';
+import addressData from './addressDb.js'
 
 /**
  * @enum {string}
@@ -176,6 +177,25 @@ class FakeDatabase {
      */
     isReady() {
         return !!db;
+    }
+
+    async getAllTinhThanPho() {
+        return addressData.map(e => {
+            return e.Name
+        })
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @returns 
+     */
+    async getAllTinhThanhByThanPho(name) {
+        return addressData.find(e => e.Name == name)?.Districts.map(e => e.Name)
+    }
+
+    async getAllpxByThinhTpAndQh(pt, quan) {
+        return addressData.find(e => e.Name == pt)?.Districts.find(e => e.Name == quan)?.Wards.map(e => e.Name);
     }
 
     async awaitUntilReady() {

@@ -378,6 +378,8 @@ footer.footer .footer_wrapper .footer_box {
 }
 
 .Address__dropdown-content {
+    max-height: 30vh;
+    overflow: auto;
     background-color: white;
     width: 100%;
     border: solid 1px rgb(146, 145, 145);
