@@ -8,7 +8,9 @@ const modal = document.querySelector('.modal');
 const btnExit = document.getElementById('btn-exit');
 const modalDemo = document.querySelector('.modal-demo');
 
-const address_display = /**@type {HTMLInputElement}*/ (document.getElementById('address_display'));
+const address_display = /**@type {HTMLInputElement}*/ (
+    document.getElementById('address_display')
+);
 const address_form = document.getElementById('Address-form');
 
 // const addr_drop_btns = document.getElementsByClassName('Address__dropdown-btn');
@@ -23,7 +25,9 @@ function main() {
 
     // NOTE: nếu mà nhấn mà nó nó chứa thằng popup thì là nhấn bên ngoài
     popup_wrapper?.addEventListener('click', (event) => {
-        const popup = /**@type {HTMLElement}*/ (event.target).querySelector('.popup');
+        const popup = /**@type {HTMLElement}*/ (event.target).querySelector(
+            '.popup',
+        );
         if (popup) popup_wrapper?.classList.remove('show');
     });
 
@@ -56,10 +60,14 @@ function main() {
         });
     });
 
-    const listAddressForm__row = document.querySelectorAll('#Address-form > .Address-form__row');
+    const listAddressForm__row = document.querySelectorAll(
+        '#Address-form > .Address-form__row',
+    );
     listAddressForm__row.forEach((element, index) => {
         const input = element.querySelector('input');
-        const contentDropdowContent = element.querySelector('.Address__dropdown-content');
+        const contentDropdowContent = element.querySelector(
+            '.Address__dropdown-content',
+        );
         const button = element.querySelector('.Address__dropdown-btn');
 
         /**
@@ -69,7 +77,8 @@ function main() {
          */
         function hideDropdownHandle(event) {
             const target = /**@type {HTMLElement} */ (event.target);
-            const isClickInsideDropdown = button?.contains(target) || button?.isSameNode(target);
+            const isClickInsideDropdown =
+                button?.contains(target) || button?.isSameNode(target);
 
             if (isClickInsideDropdown) return;
             contentDropdowContent?.classList.remove('show');
@@ -85,7 +94,8 @@ function main() {
         contentDropdowContent?.querySelectorAll('div').forEach((e) => {
             e.addEventListener('click', () => {
                 input && (input.placeholder = e.textContent || '');
-                const nextInput = listAddressForm__row[index + 1]?.querySelector('input');
+                const nextInput =
+                    listAddressForm__row[index + 1]?.querySelector('input');
                 if (nextInput) nextInput.disabled = false;
             });
         });
