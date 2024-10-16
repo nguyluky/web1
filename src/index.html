@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>We sell books</title>
-        <script type="module" src="./assets/js/index.js"></script>
+        <script type="module" defer src="./assets/js/index.js"></script>
         <link rel="stylesheet" href="./assets/css/index.css" />
         <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css" />
         <link rel="icon" href="./assets/img/favicon.png" />
@@ -141,16 +141,17 @@
                     </div>
                     <div class="select">
                         <label>
-                            <input
-                                type="radio"
-                                name="select_address"
-                            />
+                            <input type="radio" name="select_address" checked />
                             <span id="default_address"
                                 >(User default address)</span
                             >
                         </label>
                         <label>
-                            <input type="radio" name="select_address" id="address_display"/>
+                            <input
+                                type="radio"
+                                name="select_address"
+                                id="address_display"
+                            />
                             <span id="other_address"
                                 >Chọn khu vực giao hàng khác</span
                             >
@@ -159,10 +160,14 @@
                     <div id="Address-form">
                         <div class="Address-form__row">
                             <p class="Address-type">Tỉnh/Thành phố</p>
-                            <div class="dropdown-container" id="dropdown-container--city" >
+                            <div
+                                class="dropdown-container"
+                                id="dropdown-container--city"
+                            >
                                 <div class="Address__dropdown-btn">
-                                    <input placeholder="Vui lòng chọn tỉnh/thành phố">
-                                    </input>
+                                    <input
+                                        placeholder="Vui lòng chọn tỉnh/thành phố"
+                                    />
                                     <i class="fa-solid fa-angle-down"></i>
                                 </div>
                                 <div class="Address__dropdown-content">
@@ -174,10 +179,15 @@
                         </div>
                         <div class="Address-form__row">
                             <p class="Address-type">Quận/Huyện</p>
-                            <div class="dropdown-container" id="dropdown-container--district">
+                            <div
+                                class="dropdown-container"
+                                id="dropdown-container--district"
+                            >
                                 <div class="Address__dropdown-btn">
-                                    <input disabled placeholder="Vui lòng chọn quận/huyện">
-                                    </input>
+                                    <input
+                                        disabled
+                                        placeholder="Vui lòng chọn quận/huyện"
+                                    />
                                     <i class="fa-solid fa-angle-down"></i>
                                 </div>
                                 <div class="Address__dropdown-content">
@@ -189,10 +199,15 @@
                         </div>
                         <div class="Address-form__row">
                             <p class="Address-type">Phường/Xã</p>
-                            <div class="dropdown-container" id="dropdown-container--ward">
+                            <div
+                                class="dropdown-container"
+                                id="dropdown-container--ward"
+                            >
                                 <div class="Address__dropdown-btn">
-                                    <input disabled placeholder="Vui lòng chọn phường/xã">
-                                    </input>
+                                    <input
+                                        disabled
+                                        placeholder="Vui lòng chọn phường/xã"
+                                    />
                                     <i class="fa-solid fa-angle-down"></i>
                                 </div>
                                 <div class="Address__dropdown-content">
@@ -205,6 +220,49 @@
                     </div>
                 </div>
                 <button class="popup-btn">GIAO ĐẾN ĐỊA CHỈ NÀY</button>
+            </div>
+        </div>
+        <div class="modal" id="js-modal">
+            <div class="modal-overlay"></div>
+
+            <div class="modal-body modal-demo">
+                <button id="btn-exit">
+                    <img src="./assets/img/exit.png" alt="" />
+                </button>
+                <div class="modal-body-left">
+                    <div class="auth-form">
+                        <div class="heading">
+                            <h4>Xin chào,</h4>
+                            <p>Đăng nhập hoặc Tạo tài khoản</p>
+                        </div>
+
+                        <form action="" class="input-auth-form">
+                            <div class="input-group">
+                                <input
+                                    type="tel"
+                                    id="input-phone"
+                                    placeholder="Số điện thoại"
+                                    required
+                                    pattern="0[0-9]{9}"
+                                />
+                            </div>
+                            <span class="form-error"></span>
+                            <input
+                                type="submit"
+                                value="Tiếp tục"
+                                id="btn-submit"
+                            />
+                        </form>
+
+                        <p class="login-email">
+                            <a href="#">Đăng nhập bằng email</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="modal-body-right">
+                    <img src="./assets/img/logov1.png" alt="" />
+                </div>
             </div>
         </div>
     </body>
