@@ -1,5 +1,6 @@
 @import url('./share.css');
 @import url('./dot-spinner.css');
+@import url('./user_login.css');
 
 :root {
     --width-header: 1200px;
@@ -117,11 +118,13 @@ footer.footer .footer_wrapper .footer_box {
     pointer-events: none;
     display: flex;
     justify-content: center;
+    display: none;
 }
 
 #popup-wrapper.show {
     opacity: 1;
     pointer-events: all;
+    display: flex;
 }
 
 .popup * {
