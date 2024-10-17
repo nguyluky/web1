@@ -118,6 +118,15 @@ function renderPhuongXa(tintp, qh, onchange) {
     );
 }
 
+function removeDiacritics(str) {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[Đ]/g, 'D')
+        .replace(/[đ]/g, 'd')
+        .toLocaleLowerCase();
+}
+
 function main() {
     //#region show & hide popup
     btnLocation?.addEventListener('click', () => {
@@ -210,9 +219,9 @@ function main() {
                 if (value == '') {
                     e.classList.remove('hide');
                 } else if (
-                    !e.textContent
-                        ?.toLocaleLowerCase()
-                        .includes(value.toLocaleLowerCase())
+                    !removeDiacritics(e.textContent).includes(
+                        removeDiacritics(value),
+                    )
                 ) {
                     e.classList.add('hide');
                 } else {
