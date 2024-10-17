@@ -17,151 +17,105 @@ const address_form = document.getElementById('Address-form');
 
 // #endregion
 
+/**
+ *
+ *
+ *
+ * @param {Promise<string[]>} promiseData
+ * @param {string} selector
+ * @param {(s: string) => void} [onchange]
+ */
+function contentRender__(promiseData, selector, onchange) {
+    const content = document.querySelector(selector);
+    if (content) {
+        content.innerHTML = `
+        <div class="dot-spinner-wrapper">
+            <div class="dot-spinner">
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+                <div class="dot-spinner__dot"></div>
+            </div>
+        </div>
+        `;
+
+        promiseData.then((e) => {
+            content.innerHTML = '';
+            e?.forEach((j, index) => {
+                const div = document.createElement('div');
+                div.textContent = j || '';
+                div.setAttribute('selection', index == 0 ? 'true' : 'false');
+                div.addEventListener('click', function () {
+                    const parder =
+                        this.parentElement?.parentElement?.parentElement;
+                    const input = /**@type {HTMLInputElement} */ (
+                        parder?.querySelector('.Address__dropdown-btn input')
+                    );
+
+                    if (parder) {
+                        // sr
+                        const nextInput = /**@type {HTMLInputElement} */ (
+                            /**@type {HTMLElement} */ (
+                                parder.nextElementSibling
+                            )?.querySelector('.Address__dropdown-btn input')
+                        );
+                        nextInput && (nextInput.disabled = false);
+                    }
+                    if (input) input.placeholder = this.textContent || '';
+
+                    onchange && onchange(this.textContent || '');
+                });
+                content.appendChild(div);
+            });
+        });
+    }
+}
 
 /**
  * gọi một lần ngay khi popup được load
  * có thể nói là ngay sau khi trang load
- * 
+ *
  * @param {(name: string) => void} [onchange] khi người dùng chọn
- * 
+ *
  */
 function renderTinhThanhPho(onchange) {
-    const data = fackDatabase.getAllTinhThanPho();
-    const content = document.querySelector('.Address__dropdown-content.tp')
-    if (content) {
-        content.innerHTML = `
-        <div class="dot-spinner-wrapper">
-            <div class="dot-spinner">
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-            </div>
-        </div>
-        `
-
-        data.then(e => {
-            content.innerHTML = ''
-            e?.forEach(j => {
-
-                const div = document.createElement('div')
-                div.textContent = j || ''
-                div.addEventListener('click', function () {
-                    const parder = this.parentElement?.parentElement?.parentElement;
-                    const input = /**@type {HTMLInputElement} */ (parder?.querySelector('.Address__dropdown-btn input'))
-
-                    if (parder) {
-                        // sr
-                        const nextInput = /**@type {HTMLInputElement} */ (/**@type {HTMLElement} */ (parder.nextElementSibling).querySelector('.Address__dropdown-btn input'))
-                        nextInput.disabled = false
-                    }
-                    if (input) input.placeholder = this.textContent || '';
-
-                    onchange && onchange(this.textContent || '');
-                });
-                content.appendChild(div)
-            })
-        })
-    }
+    contentRender__(
+        fackDatabase.getAllTinhThanPho(),
+        '.Address__dropdown-content.tp',
+        onchange,
+    );
 }
 
 /**
  * gọi khi người dùng đã cập nhật tỉnh thành phố
- * 
- * @param {string} tintp 
+ *
+ * @param {string} tintp
  * @param {(qh: string) => void} [onchange]
  */
 function renderQuanHuyen(tintp, onchange) {
-    const content = document.querySelector('.Address__dropdown-content.qh')
-    if (content) {
-        content.innerHTML = `
-        <div class="dot-spinner-wrapper">
-            <div class="dot-spinner">
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-            </div>
-        </div>
-        `
-
-        fackDatabase.getAllTinhThanhByThanPho(tintp).then(e => {
-            content.innerHTML = ''
-            e?.forEach(j => {
-
-                const div = document.createElement('div')
-                div.textContent = j || ''
-                div.addEventListener('click', function () {
-                    const parder = this.parentElement?.parentElement?.parentElement;
-                    const input = /**@type {HTMLInputElement} */ (parder?.querySelector('.Address__dropdown-btn input'))
-
-                    if (parder) {
-                        // sr
-                        const nextInput = /**@type {HTMLInputElement} */ (/**@type {HTMLElement} */ (parder.nextElementSibling).querySelector('.Address__dropdown-btn input'))
-                        nextInput.disabled = false
-                    }
-                    if (input) input.placeholder = this.textContent || '';
-
-                    onchange && onchange(this.textContent || '');
-                });
-                content.appendChild(div)
-            })
-        })
-    }
+    contentRender__(
+        fackDatabase.getAllTinhThanhByThanPho(tintp),
+        '.Address__dropdown-content.qh',
+        onchange,
+    );
 }
 
 /**
- * 
- * @param {string} tintp 
- * @param {string} qh 
- * @param {(px: string) => void} onchange 
+ *
+ * @param {string} tintp
+ * @param {string} qh
+ * @param {(px: string) => void} onchange
  */
 function renderPhuongXa(tintp, qh, onchange) {
-    const content = document.querySelector('.Address__dropdown-content.xp')
-    if (content) {
-        content.innerHTML = `
-        <div class="dot-spinner-wrapper">
-            <div class="dot-spinner">
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-            </div>
-        </div>
-        `
-
-        fackDatabase.getAllpxByThinhTpAndQh(tintp, qh).then(e => {
-            content.innerHTML = ''
-            e?.forEach(j => {
-
-                const div = document.createElement('div')
-                div.textContent = j || ''
-                div.addEventListener('click', function () {
-                    const parder = this.parentElement?.parentElement?.parentElement;
-                    const input = /**@type {HTMLInputElement} */ (parder?.querySelector('.Address__dropdown-btn input'))
-
-                    if (input) input.placeholder = this.textContent || '';
-
-                    onchange && onchange(this.textContent || '');
-                });
-                content.appendChild(div)
-            })
-        })
-    }
-    // const promiseData = fackDatabase.getAllpxByThinhTpAndQh(tintp, qh);
-
+    contentRender__(
+        fackDatabase.getAllpxByThinhTpAndQh(tintp, qh),
+        '.Address__dropdown-content.xp',
+        onchange,
+    );
 }
 
 function main() {
@@ -191,23 +145,21 @@ function main() {
     });
     modal?.addEventListener('click', (e) => {
         if (!e.target) return;
-        if (!modalDemo?.contains(/**@type {HTMLElement}*/(e.target))) {
+        if (!modalDemo?.contains(/**@type {HTMLElement}*/ (e.target))) {
             btnExit?.click();
         }
     });
 
     //#endregion
 
-    //#region handel address fill
+    //#region handel address dropdown
 
     // được gọi một lần duy nhất
-
     renderTinhThanhPho((tinhpt) => {
         renderQuanHuyen(tinhpt, (qh) => {
             renderPhuongXa(tinhpt, qh, (xp) => {
-
-                console.log(xp)
-            })
+                console.log(xp);
+            });
         });
     });
 
@@ -250,8 +202,102 @@ function main() {
             document.addEventListener('click', hideDropdownHandle);
         });
 
-        // FIX: nếu là nội dung mới được render vào thì không có sự kiện này 
-        // NOTE: đã được chuyển qua hàm khác chắc vậy 
+        // search
+        input?.addEventListener('input', () => {
+            const value = input.value;
+
+            contentDropdowContent?.querySelectorAll('div').forEach((e) => {
+                if (value == '') {
+                    e.classList.remove('hide');
+                } else if (
+                    !e.textContent
+                        ?.toLocaleLowerCase()
+                        .includes(value.toLocaleLowerCase())
+                ) {
+                    e.classList.add('hide');
+                } else {
+                    e.classList.remove('hide');
+                }
+            });
+
+            let curr = contentDropdowContent?.querySelector(
+                "div[selection='true']",
+            );
+
+            if (curr?.classList.contains('hide')) {
+                const a =
+                    contentDropdowContent?.querySelector('div:not(.hide)');
+                if (a) {
+                    a.setAttribute('selection', 'true');
+                    curr.setAttribute('selection', 'false');
+                }
+            }
+        });
+
+        input?.addEventListener('focusout', () => {
+            input.value = '';
+
+            contentDropdowContent?.querySelectorAll('div').forEach((e) => {
+                e.classList.remove('hide');
+            });
+        });
+
+        input?.addEventListener('keydown', (event) => {
+            if (
+                !(
+                    event.keyCode == 40 ||
+                    event.keyCode == 38 ||
+                    event.keyCode == 13
+                )
+            )
+                return;
+            event.preventDefault();
+            console.log(event);
+            let curr = contentDropdowContent?.querySelector(
+                "div[selection='true']",
+            );
+
+            if (event.keyCode == 13) {
+                /**@type {HTMLElement}*/ (curr)?.click();
+                input.value = '';
+                return;
+            }
+
+            /**
+             * @type {Element | undefined | null}
+             */
+            let next;
+
+            let temp = curr;
+
+            if (contentDropdowContent?.querySelector('div:not(.hide)'))
+                do {
+                    if (event.keyCode == 40) {
+                        next =
+                            temp?.nextElementSibling ||
+                            temp?.parentElement?.firstElementChild;
+                    } else if (event.keyCode == 38) {
+                        next =
+                            temp?.previousElementSibling ||
+                            temp?.parentElement?.lastElementChild;
+                    }
+
+                    temp = next;
+                } while (next?.classList.contains('hide'));
+
+            if (next) {
+                console.log(next);
+                curr?.setAttribute('selection', 'false');
+                next?.setAttribute('selection', 'true');
+                next?.scrollIntoView({
+                    inline: 'nearest',
+                    block: 'nearest',
+                });
+            }
+        });
+
+        // FIX: nếu là nội dung mới được render vào thì không có sự kiện này
+        // NOTE: đã được chuyển qua hàm khác chắc vậy
         // contentDropdowContent?.querySelectorAll('div').forEach((e) => {
         //     e.addEventListener('click', () => {
         //         input && (input.placeholder = e.textContent || '');

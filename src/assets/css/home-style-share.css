@@ -393,6 +393,18 @@ footer.footer .footer_wrapper .footer_box {
     z-index: 10;
 }
 
+.Address__dropdown-content > div {
+    cursor: pointer;
+}
+
+.Address__dropdown-content > div[selection='true'] {
+    background: red;
+}
+
+.Address__dropdown-content > div.hide {
+    display: none;
+}
+
 .Address__dropdown-btn input {
     flex: 1;
     outline: none;

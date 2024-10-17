@@ -6,7 +6,7 @@
  * @typedef {import('../until/type.js').imgStore} imgStore
  */
 import uuidv4 from '../until/uuid.js';
-import addressData from './addressDb.js'
+import addressData from './addressDb.js';
 
 /**
  * @enum {string}
@@ -180,22 +180,36 @@ class FakeDatabase {
     }
 
     async getAllTinhThanPho() {
-        return addressData.map(e => {
-            return e.Name
-        })
+        return addressData.map((e) => {
+            return e.Name;
+        });
     }
 
     /**
-     * 
-     * @param {string} name 
-     * @returns 
+     *
+     * @param {string} name
+     * @returns
      */
     async getAllTinhThanhByThanPho(name) {
-        return addressData.find(e => e.Name == name)?.Districts.map(e => e.Name)
+        return (
+            addressData
+                .find((e) => e.Name == name)
+                ?.Districts.map((e) => e.Name) || []
+        );
     }
 
+    /**
+     *
+     * @param {string} pt
+     * @param {string} quan
+     * @returns {Promise<string[]>}
+     */
     async getAllpxByThinhTpAndQh(pt, quan) {
-        return addressData.find(e => e.Name == pt)?.Districts.find(e => e.Name == quan)?.Wards.map(e => e.Name);
+        const pts = addressData.find((e) => e.Name == pt);
+        if (!pts) return [];
+        const qh = pts.Districts.find((e) => e.Name == quan);
+        if (!qh) return [];
+        return qh.Wards.map((e) => e.Name || '') || [];
     }
 
     async awaitUntilReady() {
