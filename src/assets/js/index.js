@@ -164,6 +164,7 @@ function main() {
     });
 
     // show address fill
+    // người khi người dùng chọn "chọn khu vực giao khac"
     document.getElementsByName('select_address').forEach((e) => {
         e.addEventListener('change', () => {
             if (address_display.checked) address_form?.classList.add('show');
@@ -183,6 +184,8 @@ function main() {
 
         /**
          *
+         * khi người dùng nhấn làm hiện cái dropdown thì sự kiện ẩn mới được bật
+         *
          * @param {MouseEvent} event
          * @returns
          */
@@ -196,13 +199,14 @@ function main() {
             document.removeEventListener('click', hideDropdownHandle);
         }
 
+        // người dùng nhấn vào cái button thì hiện cái dropdown
         button?.addEventListener('click', () => {
             if (input?.disabled) return;
             contentDropdowContent?.classList.add('show');
             document.addEventListener('click', hideDropdownHandle);
         });
 
-        // search
+        // NOTE: handle search
         input?.addEventListener('input', () => {
             const value = input.value;
 
@@ -220,6 +224,7 @@ function main() {
                 }
             });
 
+            // NOTE: nếu cái selection nó bị ẩn thì tìm cái không bị ẩn đầu tiện rồi chọn
             let curr = contentDropdowContent?.querySelector(
                 "div[selection='true']",
             );
@@ -234,6 +239,7 @@ function main() {
             }
         });
 
+        // cho toàn bộ hiện lại nếu dropdown bị ẩn
         input?.addEventListener('focusout', () => {
             input.value = '';
 
@@ -242,17 +248,18 @@ function main() {
             });
         });
 
+        // NOTE: handle người dùng nhấn arrow down, up and enter
         input?.addEventListener('keydown', (event) => {
+            console.log(event);
             if (
                 !(
-                    event.keyCode == 40 ||
-                    event.keyCode == 38 ||
-                    event.keyCode == 13
+                    event.code == 'ArrowDown' ||
+                    event.code == 'ArrowUp' ||
+                    event.code == 'Enter'
                 )
             )
                 return;
             event.preventDefault();
-            console.log(event);
             let curr = contentDropdowContent?.querySelector(
                 "div[selection='true']",
             );
@@ -270,6 +277,7 @@ function main() {
 
             let temp = curr;
 
+            // NOTE: tìm phần tử không bị ẩn gần nhất
             if (contentDropdowContent?.querySelector('div:not(.hide)'))
                 do {
                     if (event.keyCode == 40) {
