@@ -1,4 +1,4 @@
-import fackDatabase from './db/fakeDb.js';
+import fakeDatabase from './db/fakeDb.js';
 import { showPopup } from './render/reader_table.js';
 import userRender from './render/user_table.js';
 import cartRender from './render/cart_table.js';
@@ -14,35 +14,39 @@ import categoryRender from './render/category_table.js';
    \ \_\ \_\ \____/\ \_\\ \_\/\_____\\ \_\ \_\
     \/_/\/_/\/___/  \/_/ \/_/\/_____/ \/_/\/_/
  */
+//#region định nghĩa kiểu dữ liệu
 
 /**
+ * Định nghĩa các kiểu dữ liệu sử dụng trong project
+ *
  * @typedef {import('./until/type.js').Cart} Cart
+ *
  * @typedef {import('./until/type.js').Category} Category
+ *
  * @typedef {import('./until/type.js').Sach} Sach
+ *
  * @typedef {import('./until/type.js').UserInfo} UserInfo
+ *
  * @typedef {import('./until/type.js').imgStore} imgStore
- */
-
-/**
+ *
  * @typedef {{
- *  user: UserInfo,
- *  cart: Cart,
- *  sach: Sach,
- *  category: Category,
+ *     user: UserInfo;
+ *     cart: Cart;
+ *     sach: Sach;
+ *     category: Category;
  * }} Templay
  */
+//#endregion
 
-/**
- * @type {string}
- */
+/** @type {string} */
 let tab = 'user';
-/**
- * @type {string}
- */
-let state = 'none';
 
 /**
- * @type {{[Key: string]: import('./render/reader_table.js').intefaceRender<?>}}
+ * Quản lý các hàm render và cập nhật dữ liệu cho từng tab
+ *
+ * @type {{
+ *     [Key: string]: import('./render/reader_table.js').intefaceRender<?>;
+ * }}
  */
 const tabManagement = {
     user: userRender,
@@ -52,14 +56,18 @@ const tabManagement = {
 };
 
 /**
- * @type {{[key: string]: () => Promise<?>}}
+ * Lấy dữ liệu từ database giả lập cho từng tab
+ *
+ * @type {{ [key: string]: () => Promise<?> }}
  */
 const fakeDBManagement = {
-    user: () => fackDatabase.getAllUserInfo(),
-    cart: () => fackDatabase.getALlCart(),
-    sach: () => fackDatabase.getAllSach(),
-    category: () => fackDatabase.getAllCategory(),
+    user: () => fakeDatabase.getAllUserInfo(),
+    cart: () => fakeDatabase.getALlCart(),
+    sach: () => fakeDatabase.getAllSach(),
+    category: () => fakeDatabase.getAllCategory(),
 };
+
+//#region Các biến DOM quan trọng
 const btnMenu = document.getElementById('menu-btn');
 const btnAdd = document.getElementById('add-btn');
 const btnSave = document.getElementById('save-btn');
@@ -72,10 +80,7 @@ const popupWrapper = document.getElementById('popup-wrapper');
 const loadingTable = document.getElementById('loading');
 
 const buttonAddState = {
-    /**
-     * chuyển button thành button add
-     * với btn-warning var icon x
-     */
+    /* Thay đổi nút thành nút "Thêm" */
     add: () => {
         btnAdd?.classList.remove('btn-warning');
         btnAdd?.classList.add('btn-primary');
@@ -88,9 +93,7 @@ const buttonAddState = {
             (btnSave.innerHTML =
                 '<i class="fa-solid fa-pen"></i><span>Edit</span>');
     },
-    /**
-     * chuyển thành button thêm
-     */
+    /* Thay đổi nút thành "Hủy" */
     cancel: () => {
         btnAdd?.classList.add('btn-warning');
         btnAdd?.classList.remove('btn-primary');
@@ -106,6 +109,7 @@ const buttonAddState = {
 };
 
 const buttonSaveState = {
+    /* Đổi trạng thái nút thành "Chỉnh sửa" */
     edit: () => {
         btnSave &&
             (btnSave.innerHTML =
@@ -114,6 +118,7 @@ const buttonSaveState = {
             td.setAttribute('contenteditable', 'false');
         });
     },
+    /* Đổi trạng thái nút thành "Lưu" và cho phép chỉnh sửa */
     save: () => {
         btnSave &&
             (btnSave.innerHTML =
@@ -125,12 +130,10 @@ const buttonSaveState = {
     },
 };
 
-/**
- *
- */
+/* Xử lý render dữ liệu tương ứng với tab hiện tại */
 async function renderManagement() {
     const title = document.getElementById('table-title-header');
-    const input = /**@type {HTMLInputElement} */ (
+    const input = /** @type {HTMLInputElement} */ (
         document.getElementById('search-input')
     );
     input.value = '';
@@ -153,16 +156,13 @@ async function renderManagement() {
     input.oninput = () => tabManagement[tab].search(data);
 }
 
-/**
- *
- */
 function updateMangement() {
     tabManagement[tab].doSave();
 }
 
 /**
- * @this {HTMLElement}
  * @param {MouseEvent} event
+ * @this {HTMLElement}
  */
 function buttonSaveHandle(event) {
     const isEditMod = this.classList.contains('canedit');
@@ -190,9 +190,8 @@ function buttonSaveHandle(event) {
 }
 
 /**
- *
- * @this {HTMLElement}
  * @param {MouseEvent} event
+ * @this {HTMLElement}
  */
 function buttonDeleteHandle(event) {
     const popupWrapper = document.getElementById('popup-wrapper');
@@ -211,9 +210,8 @@ function buttonDeleteHandle(event) {
 }
 
 /**
- *
- * @this {HTMLElement}
  * @param {MouseEvent} event
+ * @this {HTMLElement}
  */
 function buttonAddHandle(event) {
     const isAddMode = this.classList.contains('btn-warning');
@@ -227,9 +225,8 @@ function buttonAddHandle(event) {
     }
 }
 /**
- *
- * @this {HTMLElement}
  * @param {MouseEvent} event
+ * @this {HTMLElement}
  */
 function buttonMenuHandle(event) {
     if (!this.classList.contains('active')) {
@@ -242,8 +239,10 @@ function buttonMenuHandle(event) {
 }
 
 /**
- * @this {HTMLInputElement}
+ * Xử lý khi chuyển giữa các tab khác nhau
+ *
  * @param {MouseEvent} event
+ * @this {HTMLInputElement}
  */
 function tabHandle(event) {
     const isEditMode = btnSave?.classList.contains('canedit');
@@ -277,16 +276,11 @@ function tabHandle(event) {
     renderManagement();
 }
 
-/**
- * main funstion
- */
+/** Main funstion */
 async function main() {
     tabElements.forEach((e) => e.addEventListener('click', tabHandle));
 
-    const input = document.getElementById('search-input');
-
     renderManagement();
-    // input && (input.oninput = () => tabManagement['user'].search(data));
 
     btnDelete?.addEventListener('click', buttonDeleteHandle);
     btnSave?.addEventListener('click', buttonSaveHandle);
@@ -300,10 +294,10 @@ async function main() {
     });
 
     document.addEventListener('click', (event) => {
-        const isClickInsideDropdown = /**@type {HTMLElement} */ (
+        const isClickInsideDropdown = /** @type {HTMLElement} */ (
             event.target
         ).closest('#drop-list');
-        const isClickInsideMenu = /**@type {HTMLElement} */ (
+        const isClickInsideMenu = /** @type {HTMLElement} */ (
             event.target
         ).closest('#menu-btn');
         if (!isClickInsideDropdown && !isClickInsideMenu) {

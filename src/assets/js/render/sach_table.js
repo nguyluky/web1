@@ -1,8 +1,9 @@
-import fackDatabase from '../db/fakeDb.js';
+import fakeDatabase from '../db/fakeDb.js';
 import { renderTable, searchList } from './reader_table.js';
 
 /**
  * @typedef {import('../until/type.js').Sach} Sach
+ *
  * @typedef {import('../until/type.js').imgStore} imgStore
  */
 
@@ -18,9 +19,8 @@ const cols = {
 };
 
 /**
- *
  * @param {Sach} value
- * @returns {HTMLTableRowElement} row
+ * @returns {HTMLTableRowElement} Row
  */
 function renderRow(value) {
     const row = document.createElement('tr');
@@ -41,7 +41,7 @@ function renderRow(value) {
                     value,
                     // @ts-ignore
                     key,
-                    /**@type {HTMLTableCellElement}*/ (event.target)
+                    /** @type {HTMLTableCellElement} */ (event.target)
                         .textContent,
                 );
         };
@@ -56,7 +56,7 @@ function renderRow(value) {
             const img_wrapper = document.createElement('div');
             img_wrapper.className = 'img-wrapper';
             const img = document.createElement('img');
-            fackDatabase.getImgById(value[key]).then((imgS) => {
+            fakeDatabase.getImgById(value[key]).then((imgS) => {
                 img.src = imgS?.data || '=(';
             });
             img_wrapper.appendChild(img);
@@ -68,12 +68,9 @@ function renderRow(value) {
     return row;
 }
 
-/**
- *
- * @param {Sach[]} list
- */
+/** @param {Sach[]} list */
 function renderSach(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
@@ -87,12 +84,9 @@ function renderSach(list) {
     );
 }
 
-/**
- *
- * @param {Sach[]} list
- */
+/** @param {Sach[]} list */
 function searchSach(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
@@ -101,19 +95,19 @@ function searchSach(list) {
     document.querySelectorAll('#content_table > tr[id-row]').forEach((e) => {
         const id = e.getAttribute('id-row') || '';
         if (result.includes(id)) {
-            /**@type {HTMLElement}*/ (e).style.display = '';
+            /** @type {HTMLElement} */ (e).style.display = '';
         } else {
-            /**@type {HTMLElement}*/ (e).style.display = 'none';
+            /** @type {HTMLElement} */ (e).style.display = 'none';
         }
     });
 }
 
 function addRow() {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
-    /**@type {Sach}*/
+    /** @type {Sach} */
     const data = {
         id: '',
         title: '',
@@ -133,14 +127,12 @@ function addRow() {
     upFile.type = 'file';
     thumbnal.appendChild(upFile);
     table.insertBefore(row, table.childNodes[1]);
-    /**@type {HTMLElement} */ (table.parentNode).scrollTo({
+    /** @type {HTMLElement} */ (table.parentNode).scrollTo({
         top: 0,
         behavior: 'smooth',
     });
 }
-/**
- * @type {import('./reader_table.js').intefaceRender<Sach>}
- */
+/** @type {import('./reader_table.js').intefaceRender<Sach>} */
 const Sach_ = {
     cols,
     renderTable: renderSach,

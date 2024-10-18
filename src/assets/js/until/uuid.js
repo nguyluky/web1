@@ -1,7 +1,4 @@
-/**
- *
- * @returns {string} id
- */
+/** @returns {string} Id */
 function uuidv4() {
     return '10000'.replace(/[018]/g, (c) =>
         (

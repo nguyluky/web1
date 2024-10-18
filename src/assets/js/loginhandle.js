@@ -1,3 +1,8 @@
+/**
+ * File này chạy ngay khi được tải xong nên không nên thêm bất cứ sử lý DOM nào
+ * ở đây
+ */
+
 // key: isAdmin là tài khoản admin
 // key: isUser là tài khoản User
 

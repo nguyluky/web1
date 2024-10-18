@@ -1,4 +1,4 @@
-import fackDatabase from './db/fakeDb.js';
+import fakeDatabase from './db/fakeDb.js';
 
 // #region khai bao bien
 const btnLocation = document.getElementById('btn-location');
@@ -10,7 +10,7 @@ const modal = document.querySelector('.modal');
 const btnExit = document.getElementById('btn-exit');
 const modalDemo = document.querySelector('.modal-demo');
 
-const address_display = /**@type {HTMLInputElement}*/ (
+const address_display = /** @type {HTMLInputElement} */ (
     document.getElementById('address_display')
 );
 const address_form = document.getElementById('Address-form');
@@ -18,8 +18,10 @@ const address_form = document.getElementById('Address-form');
 // #endregion
 
 /**
- *
- *
+ * Hàm này được sử dụng để render nội dung vào một phần tử được chọn bởi
+ * selector. Hàm này đầu tiên hiển thị một spinner (thể hiện trạng thái
+ * loading), sau đó thay thế nó bằng nội dung sau khi promiseData được giải
+ * quyết.
  *
  * @param {Promise<string[]>} promiseData
  * @param {string} selector
@@ -52,14 +54,14 @@ function contentRender__(promiseData, selector, onchange) {
                 div.addEventListener('click', function () {
                     const parder =
                         this.parentElement?.parentElement?.parentElement;
-                    const input = /**@type {HTMLInputElement} */ (
+                    const input = /** @type {HTMLInputElement} */ (
                         parder?.querySelector('.Address__dropdown-btn input')
                     );
 
                     if (parder) {
                         // sr
-                        const nextInput = /**@type {HTMLInputElement} */ (
-                            /**@type {HTMLElement} */ (
+                        const nextInput = /** @type {HTMLInputElement} */ (
+                            /** @type {HTMLElement} */ (
                                 parder.nextElementSibling
                             )?.querySelector('.Address__dropdown-btn input')
                         );
@@ -76,35 +78,36 @@ function contentRender__(promiseData, selector, onchange) {
 }
 
 /**
- * gọi một lần ngay khi popup được load
- * có thể nói là ngay sau khi trang load
+ * Gọi một lần ngay khi popup được load có thể nói là ngay sau khi trang load
  *
- * @param {(name: string) => void} [onchange] khi người dùng chọn
+ * Render danh sách tỉnh/thành phố
  *
+ * @param {(name: string) => void} [onchange] Khi người dùng chọn
  */
 function renderTinhThanhPho(onchange) {
     contentRender__(
-        fackDatabase.getAllTinhThanPho(),
+        fakeDatabase.getAllTinhThanPho(),
         '.Address__dropdown-content.tp',
         onchange,
     );
 }
 
 /**
- * gọi khi người dùng đã cập nhật tỉnh thành phố
+ * Render danh sách phường/xã khi người dùng chọn quận/huyện
  *
  * @param {string} tintp
  * @param {(qh: string) => void} [onchange]
  */
 function renderQuanHuyen(tintp, onchange) {
     contentRender__(
-        fackDatabase.getAllTinhThanhByThanPho(tintp),
+        fakeDatabase.getAllTinhThanhByThanPho(tintp),
         '.Address__dropdown-content.qh',
         onchange,
     );
 }
 
 /**
+ * Render danh sách phường/xã khi người dùng chọn quận/huyện
  *
  * @param {string} tintp
  * @param {string} qh
@@ -112,12 +115,20 @@ function renderQuanHuyen(tintp, onchange) {
  */
 function renderPhuongXa(tintp, qh, onchange) {
     contentRender__(
-        fackDatabase.getAllpxByThinhTpAndQh(tintp, qh),
+        fakeDatabase.getAllpxByThinhTpAndQh(tintp, qh),
         '.Address__dropdown-content.xp',
         onchange,
     );
 }
 
+/**
+ * - Xóa toàn bộ dấu trong chuỗi ví
+ * - Dụ => vi
+ * - Du dùng để tìm kiếm
+ *
+ * @param {string} str
+ * @returns
+ */
 function removeDiacritics(str) {
     return str
         .normalize('NFD')
@@ -127,6 +138,7 @@ function removeDiacritics(str) {
         .toLocaleLowerCase();
 }
 
+//#region Main
 function main() {
     //#region show & hide popup
     btnLocation?.addEventListener('click', () => {
@@ -135,7 +147,7 @@ function main() {
 
     // NOTE: nếu mà nhấn mà nó nó chứa thằng popup thì là nhấn bên ngoài
     popup_wrapper?.addEventListener('click', (event) => {
-        const popup = /**@type {HTMLElement}*/ (event.target).querySelector(
+        const popup = /** @type {HTMLElement} */ (event.target).querySelector(
             '.popup',
         );
         if (popup) popup_wrapper?.classList.remove('show');
@@ -154,7 +166,7 @@ function main() {
     });
     modal?.addEventListener('click', (e) => {
         if (!e.target) return;
-        if (!modalDemo?.contains(/**@type {HTMLElement}*/ (e.target))) {
+        if (!modalDemo?.contains(/** @type {HTMLElement} */ (e.target))) {
             btnExit?.click();
         }
     });
@@ -184,7 +196,7 @@ function main() {
     const listAddressForm__row = document.querySelectorAll(
         '#Address-form > .Address-form__row',
     );
-    listAddressForm__row.forEach((element, index) => {
+    listAddressForm__row.forEach((element) => {
         const input = element.querySelector('input');
         const contentDropdowContent = element.querySelector(
             '.Address__dropdown-content',
@@ -192,14 +204,13 @@ function main() {
         const button = element.querySelector('.Address__dropdown-btn');
 
         /**
-         *
-         * khi người dùng nhấn làm hiện cái dropdown thì sự kiện ẩn mới được bật
+         * Khi người dùng nhấn làm hiện cái dropdown thì sự kiện ẩn mới được bật
          *
          * @param {MouseEvent} event
          * @returns
          */
         function hideDropdownHandle(event) {
-            const target = /**@type {HTMLElement} */ (event.target);
+            const target = /** @type {HTMLElement} */ (event.target);
             const isClickInsideDropdown =
                 button?.contains(target) || button?.isSameNode(target);
 
@@ -223,7 +234,7 @@ function main() {
                 if (value == '') {
                     e.classList.remove('hide');
                 } else if (
-                    !removeDiacritics(e.textContent).includes(
+                    !removeDiacritics(e.textContent || '').includes(
                         removeDiacritics(value),
                     )
                 ) {
@@ -257,43 +268,43 @@ function main() {
             });
         });
 
-        // NOTE: handle người dùng nhấn arrow down, up and enter
+        /**
+         * NOTE: Xử lý sự kiện khi người dùng nhấn các phím điều hướng
+         * (ArrowDown, ArrowUp) và Enter trong dropdown. NOTE: Điều này cho phép
+         * người dùng điều hướng giữa các mục trong dropdown và chọn mục bằng
+         * phím Enter.
+         *
+         * @param {KeyboardEvent} event - Sự kiện bàn phím được kích hoạt khi
+         *   người dùng nhấn một phím.
+         */
         input?.addEventListener('keydown', (event) => {
-            console.log(event);
-            if (
-                !(
-                    event.code == 'ArrowDown' ||
-                    event.code == 'ArrowUp' ||
-                    event.code == 'Enter'
-                )
-            )
-                return;
+            const validkey = ['ArrowDown', 'ArrowUp', 'Enter'];
+            if (!validkey.includes(event.code)) return;
+
             event.preventDefault();
+
             let curr = contentDropdowContent?.querySelector(
                 "div[selection='true']",
             );
 
-            if (event.keyCode == 13) {
-                /**@type {HTMLElement}*/ (curr)?.click();
+            if (event.code == 'Enter') {
+                /** @type {HTMLElement} */ (curr)?.click();
                 input.value = '';
                 return;
             }
 
-            /**
-             * @type {Element | undefined | null}
-             */
+            /** @type {Element | undefined | null} */
             let next;
-
             let temp = curr;
 
             // NOTE: tìm phần tử không bị ẩn gần nhất
             if (contentDropdowContent?.querySelector('div:not(.hide)'))
                 do {
-                    if (event.keyCode == 40) {
+                    if (event.code == 'ArrowDown') {
                         next =
                             temp?.nextElementSibling ||
                             temp?.parentElement?.firstElementChild;
-                    } else if (event.keyCode == 38) {
+                    } else if (event.code == 'ArrowUp') {
                         next =
                             temp?.previousElementSibling ||
                             temp?.parentElement?.lastElementChild;
@@ -326,5 +337,6 @@ function main() {
 
     //#endregion
 }
+//#endregion
 
 main();

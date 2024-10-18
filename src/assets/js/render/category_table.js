@@ -1,8 +1,6 @@
 import { renderTable, searchList } from './reader_table.js';
 
-/**
- * @typedef {import("../until/type.js").Category} Category
- */
+/** @typedef {import('../until/type.js').Category} Category */
 
 const cols = {
     id: 'Id',
@@ -10,12 +8,9 @@ const cols = {
     long_name: 'Long Name',
 };
 
-/**
- *
- * @param {Category[]} list
- */
+/** @param {Category[]} list */
 function renderCategory(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
@@ -23,12 +18,9 @@ function renderCategory(list) {
     renderTable(list, table, cols);
 }
 
-/**
- *
- * @param {Category[]} list
- */
+/** @param {Category[]} list */
 function searchCategory(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
@@ -36,9 +28,7 @@ function searchCategory(list) {
     renderTable(searchList(list, cols), table, cols);
 }
 
-/**
- * @type {import('./reader_table.js').intefaceRender<Category>}
- */
+/** @type {import('./reader_table.js').intefaceRender<Category>} */
 const Category_ = {
     cols,
     renderTable: renderCategory,
