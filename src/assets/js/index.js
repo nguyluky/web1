@@ -1,4 +1,5 @@
 import fakeDatabase from './db/fakeDb.js';
+import removeDiacritics from './until/removeDiacritics.js';
 
 // #region khai bao bien
 const btnLocation = document.getElementById('btn-location');
@@ -27,7 +28,7 @@ const address_form = document.getElementById('Address-form');
  * @param {string} selector
  * @param {(s: string) => void} [onchange]
  */
-function contentRender__(promiseData, selector, onchange) {
+function __contentRender__(promiseData, selector, onchange) {
     const content = document.querySelector(selector);
     if (content) {
         content.innerHTML = `
@@ -85,7 +86,7 @@ function contentRender__(promiseData, selector, onchange) {
  * @param {(name: string) => void} [onchange] Khi người dùng chọn
  */
 function renderTinhThanhPho(onchange) {
-    contentRender__(
+    __contentRender__(
         fakeDatabase.getAllTinhThanPho(),
         '.Address__dropdown-content.tp',
         onchange,
@@ -99,7 +100,7 @@ function renderTinhThanhPho(onchange) {
  * @param {(qh: string) => void} [onchange]
  */
 function renderQuanHuyen(tintp, onchange) {
-    contentRender__(
+    __contentRender__(
         fakeDatabase.getAllTinhThanhByThanPho(tintp),
         '.Address__dropdown-content.qh',
         onchange,
@@ -114,28 +115,11 @@ function renderQuanHuyen(tintp, onchange) {
  * @param {(px: string) => void} onchange
  */
 function renderPhuongXa(tintp, qh, onchange) {
-    contentRender__(
+    __contentRender__(
         fakeDatabase.getAllpxByThinhTpAndQh(tintp, qh),
         '.Address__dropdown-content.xp',
         onchange,
     );
-}
-
-/**
- * - Xóa toàn bộ dấu trong chuỗi ví
- * - Dụ => vi
- * - Du dùng để tìm kiếm
- *
- * @param {string} str
- * @returns
- */
-function removeDiacritics(str) {
-    return str
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[Đ]/g, 'D')
-        .replace(/[đ]/g, 'd')
-        .toLocaleLowerCase();
 }
 
 /** Hàm này để khởi tạo hàm ẩn hiện chọn địa trỉ và input của người dùng */
