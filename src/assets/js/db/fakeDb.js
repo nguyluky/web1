@@ -34,13 +34,8 @@ let isOnupgradeneeded = false;
 // Tạo hoặc mở kết nối tới cơ sở dữ liệu có tên 'fakedb', version 1
 const req = window.indexedDB.open('fakedb', 1);
 
-// ====================================================================
-
-req.onupgradeneeded = async (event) => {
-    // không cần thiết như tôi thính nên rôi làm cái này luân =)
-    isOnupgradeneeded = true;
-    let db_ = req.result;
-
+/** @param {IDBDatabase} db_ */
+function createObjectStore(db_) {
     // ==================== Tạo các objectStore trong cơ sở dữ liệu ==================
 
     //#region User
@@ -103,15 +98,12 @@ req.onupgradeneeded = async (event) => {
     });
     imgStore.createIndex('data', 'data');
     //#endregion
+}
 
+/** @param {IDBDatabase} db_ */
+async function initDefaultData(db_) {
     // ==================== Thêm dữ liệu mặc định vào database ====================
     console.log('Bắt đầu thêm dữ liệu mặc định');
-
-    // Chờ transaction hoàn tất trước khi tiếp tục
-    await new Promise((r) => {
-        event.target.transaction.oncomplete = r;
-    });
-
     console.log('Đang tải dữ liệu từ file json...');
 
     // Lấy dữ liệu từ các file JSON
@@ -121,8 +113,6 @@ req.onupgradeneeded = async (event) => {
         fetch('/assets/data/category.json').then((e) => e.json()),
         fetch('/assets/data/book.json').then((e) => e.json()),
     ]);
-
-    // NOTE: indexedb chỉ được mở một transaction cừng một lúc
 
     /** @type {IDBTransaction} */
     const transaction = db_.transaction(
@@ -136,7 +126,7 @@ req.onupgradeneeded = async (event) => {
         'readwrite',
     );
 
-    console.log('đang thêm dữ liệu');
+    console.log('Đang thêm dữ liệu');
 
     const userObjStore = transaction.objectStore(ObjectStoreName.USER);
     const imgObjStore = transaction.objectStore(ObjectStoreName.IMG);
@@ -169,6 +159,21 @@ req.onupgradeneeded = async (event) => {
     transaction.onerror = function (event) {
         console.error('Lỗi trong transaction: ', event);
     };
+}
+
+req.onupgradeneeded = async (event) => {
+    isOnupgradeneeded = true;
+    let db_ = req.result;
+
+    // Tạo object store
+    createObjectStore(db_);
+
+    // Chờ transaction hoàn tất trước khi tiếp tục
+    await new Promise((r) => {
+        event.target.transaction.oncomplete = r;
+    });
+
+    await initDefaultData(db_);
 };
 
 // Xử lý lỗi khi không thể mở kết nối đến IndexedDB

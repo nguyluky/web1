@@ -1,4 +1,5 @@
 import fakeDatabase from './db/fakeDb.js';
+import removeDiacritics from './until/removeDiacritics.js';
 
 // #region khai bao bien
 const btnLocation = document.getElementById('btn-location');
@@ -27,7 +28,7 @@ const address_form = document.getElementById('Address-form');
  * @param {string} selector
  * @param {(s: string) => void} [onchange]
  */
-function contentRender__(promiseData, selector, onchange) {
+function __contentRender__(promiseData, selector, onchange) {
     const content = document.querySelector(selector);
     if (content) {
         content.innerHTML = `
@@ -85,7 +86,7 @@ function contentRender__(promiseData, selector, onchange) {
  * @param {(name: string) => void} [onchange] Khi người dùng chọn
  */
 function renderTinhThanhPho(onchange) {
-    contentRender__(
+    __contentRender__(
         fakeDatabase.getAllTinhThanPho(),
         '.Address__dropdown-content.tp',
         onchange,
@@ -99,7 +100,7 @@ function renderTinhThanhPho(onchange) {
  * @param {(qh: string) => void} [onchange]
  */
 function renderQuanHuyen(tintp, onchange) {
-    contentRender__(
+    __contentRender__(
         fakeDatabase.getAllTinhThanhByThanPho(tintp),
         '.Address__dropdown-content.qh',
         onchange,
@@ -114,7 +115,7 @@ function renderQuanHuyen(tintp, onchange) {
  * @param {(px: string) => void} onchange
  */
 function renderPhuongXa(tintp, qh, onchange) {
-    contentRender__(
+    __contentRender__(
         fakeDatabase.getAllpxByThinhTpAndQh(tintp, qh),
         '.Address__dropdown-content.xp',
         onchange,
@@ -157,6 +158,20 @@ function main() {
         popup_wrapper?.classList.remove('show');
     });
 
+    //
+    btnAccount?.addEventListener('click', () => {
+        modal?.classList.add('show-modal');
+    });
+    btnExit?.addEventListener('click', () => {
+        modal?.classList.remove('show-modal');
+    });
+    modal?.addEventListener('click', (e) => {
+        if (!e.target) return;
+        if (!modalDemo?.contains(/** @type {HTMLElement} */ (e.target))) {
+            btnExit?.click();
+        }
+    });
+
     //#endregion
 
     //#region handel address dropdown
@@ -170,19 +185,25 @@ function main() {
         });
     });
 
-    // show address fill
-    // người khi người dùng chọn "chọn khu vực giao khac"
-    document.getElementsByName('select_address').forEach((e) => {
-        e.addEventListener('change', () => {
-            if (address_display.checked) address_form?.classList.add('show');
-            else address_form?.classList.remove('show');
-        });
-    });
+    function showPopupLocation() {
+        popup_wrapper?.classList.add('show');
+    }
 
-    const listAddressForm__row = document.querySelectorAll(
-        '#Address-form > .Address-form__row',
-    );
-    listAddressForm__row.forEach((element) => {
+    /** @param {MouseEvent} event */
+    function HandleClickOutSidePopup(event) {
+        const popup = /** @type {HTMLElement} */ (event.target).querySelector(
+            '.popup',
+        );
+        if (popup) popup_wrapper?.classList.remove('show');
+    }
+
+    function showCustomLocation() {
+        if (address_display.checked) address_form?.classList.add('show');
+        else address_form?.classList.remove('show');
+    }
+
+    // khởi tạo
+    function initializeDropdown(element) {
         const input = element.querySelector('input');
         const contentDropdowContent = element.querySelector(
             '.Address__dropdown-content',
@@ -193,28 +214,19 @@ function main() {
          * Khi người dùng nhấn làm hiện cái dropdown thì sự kiện ẩn mới được bật
          *
          * @param {MouseEvent} event
-         * @returns
          */
-        function hideDropdownHandle(event) {
+        function handleClickOutsideDropdown(event) {
             const target = /** @type {HTMLElement} */ (event.target);
             const isClickInsideDropdown =
                 button?.contains(target) || button?.isSameNode(target);
 
             if (isClickInsideDropdown) return;
             contentDropdowContent?.classList.remove('show');
-            document.removeEventListener('click', hideDropdownHandle);
+            document.removeEventListener('click', handleClickOutsideDropdown);
         }
 
-        // người dùng nhấn vào cái button thì hiện cái dropdown
-        button?.addEventListener('click', () => {
-            if (input?.disabled) return;
-            contentDropdowContent?.classList.add('show');
-            document.addEventListener('click', hideDropdownHandle);
-        });
-
-        // NOTE: handle search
-        input?.addEventListener('input', () => {
-            const value = input.value;
+        function handleSearchInput() {
+            const value = input?.value || '';
 
             contentDropdowContent?.querySelectorAll('div').forEach((e) => {
                 if (value == '') {
@@ -243,27 +255,27 @@ function main() {
                     curr.setAttribute('selection', 'false');
                 }
             }
-        });
+        }
 
-        // cho toàn bộ hiện lại nếu dropdown bị ẩn
-        input?.addEventListener('focusout', () => {
+        function showDropdown() {
+            if (input?.disabled) return;
+            contentDropdowContent?.classList.add('show');
+            document.addEventListener('click', handleClickOutsideDropdown);
+        }
+
+        function resetDropdownOnBlur() {
+            if (!input) return;
             input.value = '';
 
             contentDropdowContent?.querySelectorAll('div').forEach((e) => {
                 e.classList.remove('hide');
             });
-        });
+        }
 
-        /**
-         * NOTE: Xử lý sự kiện khi người dùng nhấn các phím điều hướng
-         * (ArrowDown, ArrowUp) và Enter trong dropdown. NOTE: Điều này cho phép
-         * người dùng điều hướng giữa các mục trong dropdown và chọn mục bằng
-         * phím Enter.
-         *
-         * @param {KeyboardEvent} event - Sự kiện bàn phím được kích hoạt khi
-         *   người dùng nhấn một phím.
-         */
-        input?.addEventListener('keydown', (event) => {
+        /** @param {KeyboardEvent} event */
+        function handleKeyboardNavigation(event) {
+            if (!input) return;
+
             const validkey = ['ArrowDown', 'ArrowUp', 'Enter'];
             if (!validkey.includes(event.code)) return;
 
@@ -308,21 +320,64 @@ function main() {
                     block: 'nearest',
                 });
             }
-        });
+        }
 
-        // FIX: nếu là nội dung mới được render vào thì không có sự kiện này
-        // NOTE: đã được chuyển qua hàm khác chắc vậy
-        // contentDropdowContent?.querySelectorAll('div').forEach((e) => {
-        //     e.addEventListener('click', () => {
-        //         input && (input.placeholder = e.textContent || '');
-        //         const nextInput = listAddressForm__row[index + 1]?.querySelector('input');
-        //         if (nextInput) nextInput.disabled = false;
-        //     });
-        // });
+        // người dùng nhấn vào cái button thì hiện cái dropdown
+        button?.addEventListener('click', showDropdown);
+        input?.addEventListener('input', handleSearchInput);
+
+        // cho toàn bộ hiện lại nếu dropdown bị ẩn
+        input?.addEventListener('focusout', resetDropdownOnBlur);
+
+        /**
+         * - NOTE: Xử lý sự kiện khi người dùng nhấn các phím điều hướng
+         *   (ArrowDown, ArrowUp) và Enter trong dropdown.
+         * - NOTE: Điều này cho phép người dùng điều hướng giữa các mục trong
+         *   dropdown và chọn mục bằng phím Enter.
+         */
+        input?.addEventListener('keydown', handleKeyboardNavigation);
+    }
+
+    // hiện popup
+    btnLocation?.addEventListener('click', showPopupLocation);
+    // ẩn popup
+    popup_wrapper?.addEventListener('click', HandleClickOutSidePopup);
+
+    // show address fill
+    // người khi người dùng chọn "chọn khu vực giao khac"
+    document
+        .getElementsByName('select_address')
+        .forEach((e) => e.addEventListener('change', showCustomLocation));
+
+    // Dropdown handle
+    document
+        .querySelectorAll('#Address-form > .Address-form__row')
+        .forEach(initializeDropdown);
+}
+
+/** Sử lý login và nhữ tư tự như vậy */
+function initializeAccountPopup() {
+    closePopup?.addEventListener('click', () => {
+        popup_wrapper?.classList.remove('show');
     });
 
-    //#endregion
+    btnAccount?.addEventListener('click', () => {
+        modal?.classList.add('show-modal');
+    });
+    btnExit?.addEventListener('click', () => {
+        modal?.classList.remove('show-modal');
+    });
+    modal?.addEventListener('click', (e) => {
+        if (!e.target) return;
+        if (!modalDemo?.contains(/** @type {HTMLElement} */ (e.target))) {
+            btnExit?.click();
+        }
+    });
 }
-//#endregion
+
+function main() {
+    initializeLocationPopup();
+    initializeAccountPopup();
+}
 
 main();
