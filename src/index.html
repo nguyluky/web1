@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -44,10 +44,20 @@
                         <i class="fa-solid fa-location-dot"></i>
                         <span>TP.Hồ Chí Minh</span>
                     </button>
-                    <button class="button_1" id="btn-account">
+                    <button class="button_1 dropdown-btn" id="btn-account">
                         <i class="fa-regular fa-face-smile-wink"></i>
                         <span>Tài khoản</span>
+                        <!-- dropdown-pos-center-bottom có thì làm thêm css  -->
+                        <div
+                            class="dropdown-btn-content dropdown-pos-left-bottom"
+                        >
+                            <!-- thêm vòa đi -->
+                            <p>Người dùng: abcdef</p>
+                            <p>Đơn hàn của bạn</p>
+                            <p>Đăng xuất</p>
+                        </div>
                     </button>
+
                     <div class="line"></div>
                     <a class="button_1 cart" href="/cart.html">
                         <i class="fa-solid fa-cart-shopping"></i>
@@ -56,10 +66,6 @@
             </div>
         </header>
         <main class="main">
-            <!-- <div class="nav_wrapper">
-            <span>Home > </span>
-            <span class="nav_curr">Search</span>
-        </div> -->
             <div class="main_wapper">
                 <aside class="aside">
                     <div class="aside-box box1 card">

@@ -1,16 +1,18 @@
 /**
  * @typedef {import('../until/type.js').Cart} Cart
+ *
  * @typedef {import('../until/type.js').Category} Category
+ *
  * @typedef {import('../until/type.js').Sach} Sach
+ *
  * @typedef {import('../until/type.js').UserInfo} UserInfo
+ *
  * @typedef {import('../until/type.js').imgStore} imgStore
  */
 import uuidv4 from '../until/uuid.js';
 import addressData from './addressDb.js';
 
-/**
- * @enum {string}
- */
+/** @enum {string} */
 const ObjectStoreName = {
     USER: 'userStore',
     CART: 'cartStore',
@@ -22,28 +24,32 @@ const ObjectStoreName = {
 // ====================================================================
 
 /**
+ * Biến lưu trữ kết nối đến IndexedDB
+ *
  * @type {IDBDatabase}
  */
 let db;
-// dùng để kiểm tra xem onupgradeneeded đã tải xong chưa
+// Cờ kiểm tra xem onupgradeneeded đã hoàn thành chưa
 let isOnupgradeneeded = false;
+// Tạo hoặc mở kết nối tới cơ sở dữ liệu có tên 'fakedb', version 1
 const req = window.indexedDB.open('fakedb', 1);
 
-//============================================================
+// ====================================================================
 
 req.onupgradeneeded = async (event) => {
     // không cần thiết như tôi thính nên rôi làm cái này luân =)
     isOnupgradeneeded = true;
     let db_ = req.result;
 
-    // ==================== create object ==================
+    // ==================== Tạo các objectStore trong cơ sở dữ liệu ==================
 
-    // create user objectStore
-
+    //#region User
+    // Tạo objectStore cho user
     const userObjStore_ = db_.createObjectStore(ObjectStoreName.USER, {
         keyPath: 'id',
         autoIncrement: true,
     });
+    // Tạo các index để truy vấn dữ liệu user
     userObjStore_.createIndex('email', 'email', { unique: true });
     userObjStore_.createIndex('name', 'name', { unique: true });
     userObjStore_.createIndex('passwd', 'passwd', { unique: false });
@@ -52,7 +58,9 @@ req.onupgradeneeded = async (event) => {
     userObjStore_.createIndex('email_and_pass', ['email', 'passwd'], {
         unique: true,
     });
+    //#endregion
 
+    //#region Tạo objectStore cho cart
     const cartObjStore_ = db_.createObjectStore(ObjectStoreName.CART, {
         keyPath: 'id',
         autoIncrement: true,
@@ -63,7 +71,9 @@ req.onupgradeneeded = async (event) => {
     cartObjStore_.createIndex('quantity', 'quantity', { unique: false });
     cartObjStore_.createIndex('status', 'status', { unique: false });
     cartObjStore_.createIndex('timecreate', 'timecreate', { unique: false });
+    //#endregion
 
+    //#region Tạo objectStore cho book
     const bookObjStore_ = db_.createObjectStore(ObjectStoreName.BOOK, {
         keyPath: 'id',
         autoIncrement: true,
@@ -75,7 +85,9 @@ req.onupgradeneeded = async (event) => {
     bookObjStore_.createIndex('base_price', 'base_price', { unique: false });
     bookObjStore_.createIndex('category', 'category', { unique: false });
     bookObjStore_.createIndex('option', 'option', { unique: false });
+    //#endregion
 
+    //#region Tạo objectStore cho category
     const categoryStore_ = db_.createObjectStore(ObjectStoreName.CATEGORY, {
         keyPath: 'id',
         autoIncrement: true,
@@ -83,21 +95,26 @@ req.onupgradeneeded = async (event) => {
     categoryStore_.createIndex('name', 'name', { unique: false });
     categoryStore_.createIndex('long_name', 'long_name', { unique: false });
 
+    //#endregion
+    //#region
     const imgStore = db_.createObjectStore(ObjectStoreName.IMG, {
         keyPath: 'id',
         autoIncrement: true,
     });
     imgStore.createIndex('data', 'data');
+    //#endregion
 
-    // ==================== init data (default data) ============
-    console.log('test');
+    // ==================== Thêm dữ liệu mặc định vào database ====================
+    console.log('Bắt đầu thêm dữ liệu mặc định');
 
+    // Chờ transaction hoàn tất trước khi tiếp tục
     await new Promise((r) => {
         event.target.transaction.oncomplete = r;
     });
 
-    console.log('đang tải dữ liệu');
+    console.log('Đang tải dữ liệu từ file json...');
 
+    // Lấy dữ liệu từ các file JSON
     const data = await Promise.all([
         fetch('/assets/data/user.json').then((e) => e.json()),
         fetch('/assets/data/img.json').then((e) => e.json()),
@@ -107,9 +124,7 @@ req.onupgradeneeded = async (event) => {
 
     // NOTE: indexedb chỉ được mở một transaction cừng một lúc
 
-    /**
-     * @type {IDBTransaction}
-     */
+    /** @type {IDBTransaction} */
     const transaction = db_.transaction(
         [
             ObjectStoreName.USER,
@@ -156,24 +171,31 @@ req.onupgradeneeded = async (event) => {
     };
 };
 
+// Xử lý lỗi khi không thể mở kết nối đến IndexedDB
 req.onerror = (event) => {
     console.error("Why didn't you allow my web app to use IndexedDB?!");
 };
 
+// Xử lý khi kết nối thành công
 req.onsuccess = (event) => {
-    if (isOnupgradeneeded) return;
-    db = req.result;
+    if (isOnupgradeneeded) return; // Nếu đang trong quá trình nâng cấp thì không làm gì thêm
+    db = req.result; // Lưu kết nối cơ sở dữ liệu vào biến db
 
     db.onerror = (ev) => {
-        console.error(ev);
+        console.error(ev); // Xử lý lỗi khi sử dụng cơ sở dữ liệu
     };
 };
 
+/**
+ * FakeDatabase class provides an interface to interact with the IndexedDB
+ * database. It includes methods for managing users, books, carts, categories,
+ * and images.
+ */
 class FakeDatabase {
     /**
+     * Kiểm tra xem cơ sở dữ liệu đã sẵn sàng hay chưa
      *
-     * triểm tra xem khởi tại data base thành công hay chưa
-     * @returns {boolean} trạn thái data base
+     * @returns {boolean} Trạng thái của cơ sở dữ liệu
      */
     isReady() {
         return !!db;
@@ -186,7 +208,6 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {string} name
      * @returns
      */
@@ -199,7 +220,6 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {string} pt
      * @param {string} quan
      * @returns {Promise<string[]>}
@@ -235,9 +255,8 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {string} user_id
-     * @returns {Promise<UserInfo | undefined>} người dùng
+     * @returns {Promise<UserInfo | undefined>} Người dùng
      */
     async getUserInfoByUserId(user_id) {
         if (!db) await this.awaitUntilReady();
@@ -249,10 +268,7 @@ class FakeDatabase {
         return await this.requestToPromise(userget);
     }
 
-    /**
-     *
-     * @returns {Promise<UserInfo[]>} mảng người dùng
-     */
+    /** @returns {Promise<UserInfo[]>} Mảng người dùng */
     async getAllUserInfo() {
         if (!db) await this.awaitUntilReady();
         const data = db
@@ -263,10 +279,7 @@ class FakeDatabase {
         return await this.requestToPromise(userget);
     }
 
-    /**
-     *
-     * @param {string} user_id
-     */
+    /** @param {string} user_id */
     async deleteUserById(user_id) {
         if (!db) await this.awaitUntilReady();
         const data = db
@@ -276,10 +289,10 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {string} email
      * @param {string} password
-     * @returns {Promise<UserInfo | undefined>} nếu không tìm thấy sẽ trả về undefined
+     * @returns {Promise<UserInfo | undefined>} Nếu không tìm thấy sẽ trả về
+     *   undefined
      */
     async getUserInfoByEmailAndPassword(email, password) {
         if (!db) await this.awaitUntilReady();
@@ -292,7 +305,8 @@ class FakeDatabase {
     }
 
     /**
-     * admin dùng để trực tiếp thêm vào database
+     * Admin dùng để trực tiếp thêm vào database
+     *
      * @param {UserInfo} userInfo
      */
     async addUserInfo(userInfo) {
@@ -305,8 +319,8 @@ class FakeDatabase {
     }
 
     /**
+     * Được dùng cho người dùng khi tạo tài khoản
      *
-     * được dùng cho người dùng khi tạo tài khoản
      * @param {string} password
      * @param {string} display_name
      * @param {string} std
@@ -342,10 +356,7 @@ class FakeDatabase {
         return await this.requestToPromise(data.put(userInfo));
     }
 
-    /**
-     *
-     * @returns {Promise<Sach[]>} array
-     */
+    /** @returns {Promise<Sach[]>} Array */
     async getAllSach() {
         if (!db) await this.awaitUntilReady();
         const data = db
@@ -358,9 +369,8 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {string} sach_id
-     * @returns {Promise<Sach | undefined>} array
+     * @returns {Promise<Sach | undefined>} Array
      */
     async getSachById(sach_id) {
         if (!db) await this.awaitUntilReady();
@@ -374,10 +384,7 @@ class FakeDatabase {
         return await this.requestToPromise(req);
     }
 
-    /**
-     *
-     * @param {Sach} bookInfo
-     */
+    /** @param {Sach} bookInfo */
     async addSach(bookInfo) {
         if (!db) await this.awaitUntilReady();
 
@@ -388,7 +395,6 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {Sach} bookInfo
      * @returns
      */
@@ -401,10 +407,7 @@ class FakeDatabase {
         return await this.requestToPromise(data.put(bookInfo));
     }
 
-    /**
-     *
-     * @param {string} sach_id
-     */
+    /** @param {string} sach_id */
     async deleteSachById(sach_id) {
         if (!db) await this.awaitUntilReady();
 
@@ -415,10 +418,7 @@ class FakeDatabase {
         return await this.requestToPromise(data.delete(sach_id));
     }
 
-    /**
-     *
-     * @returns {Promise<Cart[]>} array
-     */
+    /** @returns {Promise<Cart[]>} Array */
     async getALlCart() {
         if (!db) await this.awaitUntilReady();
 
@@ -430,9 +430,8 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {string} user_id
-     * @returns {Promise<Cart[]>} array
+     * @returns {Promise<Cart[]>} Array
      */
     async getCartByUserId(user_id) {
         if (!db) await this.awaitUntilReady();
@@ -447,9 +446,8 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {string} user_id
-     * @returns {Promise<Cart | undefined>} array
+     * @returns {Promise<Cart | undefined>} Array
      */
     async getCartById(user_id) {
         if (!db) await this.awaitUntilReady();
@@ -476,10 +474,7 @@ class FakeDatabase {
 
     // ừ đừng hỏi tôi
 
-    /**
-     *
-     * @returns {Promise<Category[]>} array
-     */
+    /** @returns {Promise<Category[]>} Array */
     async getAllCategory() {
         if (!db) await this.awaitUntilReady();
 
@@ -490,10 +485,7 @@ class FakeDatabase {
         return await this.requestToPromise(req);
     }
 
-    /**
-     *
-     * @returns {Promise<imgStore[]>} array
-     */
+    /** @returns {Promise<imgStore[]>} Array */
     async getAllImgs() {
         if (!db) await this.awaitUntilReady();
 
@@ -505,9 +497,8 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {string} id
-     * @returns {Promise<imgStore | undefined>} item or undefinde
+     * @returns {Promise<imgStore | undefined>} Item or undefinde
      */
     async getImgById(id) {
         if (!db) await this.awaitUntilReady();
@@ -519,10 +510,7 @@ class FakeDatabase {
         return await this.requestToPromise(req);
     }
 
-    /**
-     *
-     * @param {imgStore} img
-     */
+    /** @param {imgStore} img */
     async addImg(img) {
         if (!db) await this.awaitUntilReady();
 
@@ -533,10 +521,7 @@ class FakeDatabase {
         return await this.requestToPromise(req);
     }
 
-    /**
-     *
-     * @param {imgStore} img
-     */
+    /** @param {imgStore} img */
     async updateImg(img) {
         if (!db) await this.awaitUntilReady();
 
@@ -548,5 +533,5 @@ class FakeDatabase {
     }
 }
 
-const fackDatabase = new FakeDatabase();
-export default fackDatabase;
+const fakeDatabase = new FakeDatabase();
+export default fakeDatabase;

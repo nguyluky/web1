@@ -1,7 +1,6 @@
 /**
- *
  * @param {string} text
- * @returns {Node | null} html element
+ * @returns {Node | null} Html element
  */
 export default function text2htmlElement(text) {
     const template = document.createElement('template');
@@ -15,5 +14,5 @@ export default function text2htmlElement(text) {
                 'the element; call .trim() on your input to avoid this.',
         );
     }
-    return /**@type {Node} */ template.content.firstChild;
+    return /** @type {Node} */ template.content.firstChild;
 }

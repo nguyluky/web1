@@ -1,21 +1,28 @@
-import text2htmlElement from '../until/text2htmlElement.js';
-
 /**
- * @template T
- * @typedef {{[P in keyof Partial<T>]: string}} COLS
+ * File này định nghĩa các chức năng để render bảng dữ liệu (table), tìm kiếm dữ
+ * liệu (search), và hiển thị popup xác nhận. File sử dụng các kiểu dữ liệu tổng
+ * quát (generic types) để áp dụng cho nhiều loại dữ liệu khác nhau, dựa vào các
+ * đặc tính chung như id.
  */
 
 /**
  * @template T
- * @typedef {(data : T, key: keyof T, newValue: T[key]) => void} OnChange
+ * @typedef {{ [P in keyof Partial<T>]: string }} COLS
  */
 
 /**
- * @template {{id: string}} T
- * @param {T} value
- * @param {COLS<T>} cols
- * @param {OnChange<T>?} onchange
- * @returns {HTMLTableRowElement} r
+ * @template T
+ * @typedef {(data: T, key: keyof T, newValue: T[key]) => void} OnChange
+ */
+
+/**
+ * Tạo một hàng bảng HTML dựa trên dữ liệu cung cấp.
+ *
+ * @template {{ id: string }} T
+ * @param {T} value - Dữ liệu của hàng.
+ * @param {COLS<T>} cols - Định nghĩa các cột trong bảng.
+ * @param {OnChange<T>?} [onchange] - Hàm gọi lại khi dữ liệu thay đổi.
+ * @returns {HTMLTableRowElement} - Hàng bảng đã được tạo.
  */
 export function defaultRenderRow(value, cols, onchange = null) {
     const row = document.createElement('tr');
@@ -34,7 +41,7 @@ export function defaultRenderRow(value, cols, onchange = null) {
     Object.keys(cols).forEach((key) => {
         const col = document.createElement('td');
         col.oninput = (event) => {
-            const target = /**@type {HTMLTableCellElement}*/ (event.target);
+            const target = /** @type {HTMLTableCellElement} */ (event.target);
             if (onchange)
                 onchange(
                     value,
@@ -43,6 +50,7 @@ export function defaultRenderRow(value, cols, onchange = null) {
                     target.textContent,
                 );
 
+            // Đánh dấu cột nếu dữ liệu đã thay đổi
             if (target.textContent == target.getAttribute('default-value'))
                 col.setAttribute('ischange', 'false');
             else col.setAttribute('ischange', 'true');
@@ -59,20 +67,17 @@ export function defaultRenderRow(value, cols, onchange = null) {
 }
 
 /**
- * @template {{id: string}} T
- * @param {T[]} values
- * @param {HTMLTableElement} table
- * @param {COLS<T>} cols
- * @param {OnChange<T>| undefined} onchange
- * @param {((key: T, onchange?: OnChange<T>) => HTMLTableRowElement) | undefined} cRenderRow
+ * Render bảng HTML với nhiều hàng dữ liệu.
+ *
+ * @template {{ id: string }} T
+ * @param {T[]} values - Dữ liệu để hiển thị.
+ * @param {HTMLTableElement} table - Phần tử bảng HTML để render.
+ * @param {COLS<T>} cols - Định nghĩa các cột trong bảng.
+ * @param {OnChange<T>} [onchange] - Hàm gọi lại khi dữ liệu thay đổi.
+ * @param {(value: T, onchange?: OnChange<T>) => HTMLTableRowElement} [cRenderRow]
+ *   - Hàm render hàng tùy chỉnh.
  */
-function renderTable(
-    values,
-    table,
-    cols,
-    onchange = undefined,
-    cRenderRow = undefined,
-) {
+function renderTable(values, table, cols, onchange, cRenderRow) {
     table.innerHTML = '';
 
     const tableHeader = document.createElement('tr');
@@ -80,43 +85,37 @@ function renderTable(
     // render table
     // check
     const col = document.createElement('th');
-    // const icon = text2htmlElement('<i class="fa-solid fa-filter"></i>');
     col.insertAdjacentHTML('beforeend', 'Check');
-    // if (icon) col.appendChild(icon);
     tableHeader.appendChild(col);
 
     Object.keys(cols).forEach((key) => {
         const col = document.createElement('th');
-        // const icon = text2htmlElement('<i class="fa-solid fa-filter"></i>');
 
         col.insertAdjacentHTML('beforeend', cols[key]);
-        // if (icon) col.appendChild(icon);
 
         tableHeader.appendChild(col);
     });
 
     table.appendChild(tableHeader);
 
-    if (cRenderRow) {
-        values.forEach((value, index) => {
-            const row = cRenderRow(value, onchange);
-            table.appendChild(row);
-        });
-    } else
-        values.forEach((value, index) => {
-            const row = defaultRenderRow(value, cols, onchange);
-            table.appendChild(row);
-        });
+    values.forEach((value, index) => {
+        const row = cRenderRow
+            ? cRenderRow(value, onchange)
+            : defaultRenderRow(value, cols, onchange);
+        table.appendChild(row);
+    });
 }
 
 /**
- * @template {{id: string}} T
- * @param {T[]} values
- * @param {COLS<T>} cols
- * @returns {T[]} ok
+ * Tìm kiếm trong danh sách dựa trên input tìm kiếm và cột.
+ *
+ * @template {{ id: string }} T
+ * @param {T[]} values - Danh sách dữ liệu để tìm kiếm.
+ * @param {COLS<T>} cols - Định nghĩa các cột trong bảng.
+ * @returns {T[]} - Danh sách các giá trị tìm kiếm được.
  */
 function searchList(values, cols) {
-    const searchInput = /**@type {HTMLInputElement}*/ (
+    const searchInput = /** @type {HTMLInputElement} */ (
         document.getElementById('search-input')
     );
     if (!searchInput) return [];
@@ -134,27 +133,13 @@ function searchList(values, cols) {
 }
 
 /**
+ * Tạo và hiển thị một popup xác nhận.
  *
- * dòng js để tạo một popup rồi thêm vào parder
- * <div class="popup">
- *     <div class="popup-header">
- *         <h1>Xác nhận xóa</h1>
- *         <button class="button_1">
- *             <i class="fa-solid fa-xmark"></i>
- *         </button>
- *     </div>
- *     <div class="pupop-context">Bạn có chắc là muốn xóa 20 dòng không:</div>
- *     <div class="popup-footer">
- *         <button class="button_1 btn-primary">Cancel</button>
- *         <button class="button_1 btn-ouline-primary">OK</button>
- *     </div>
- * </div>
- *
- * @param {HTMLElement} parder
- * @param {string} title
- * @param {string} context
- * @param {(() => void )?} onOk
- * @param {(() => void)?} onCancel
+ * @param {HTMLElement} parder - Phần tử cha chứa popup.
+ * @param {string} title - Tiêu đề của popup.
+ * @param {string} context - Nội dung của popup.
+ * @param {(() => void)?} onOk - Hàm gọi lại khi người dùng nhấn OK.
+ * @param {(() => void)?} onCancel - Hàm gọi lại khi người dùng nhấn Cancel.
  */
 function showPopup(parder, title, context, onOk, onCancel) {
     // Create the main popup div
@@ -217,7 +202,7 @@ function showPopup(parder, title, context, onOk, onCancel) {
     parder.appendChild(popup);
 
     parder.onclick = (event) => {
-        const target = /**@type {HTMLElement}*/ (event.target);
+        const target = /** @type {HTMLElement} */ (event.target);
         if (target.contains(popup)) {
             parder.innerHTML = '';
             if (onCancel) onCancel();
@@ -226,19 +211,18 @@ function showPopup(parder, title, context, onOk, onCancel) {
 }
 
 /**
+ * Fuckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
  *
- * fuckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
- *
- * @template {{id: string}} T
+ * @template {{ id: string }} T
  * @typedef {{
- * cols: COLS<T>,
- * renderTable: (list: T[]) => void,
- * renderRow?: (value: T) => HTMLTableRowElement,
- * doSave: () => void,
- * search: (list: T[]) => void,
- * addRow: () => void,
- * removeRows: () => void,
- * cancelAdd: () => void
+ *     cols: COLS<T>;
+ *     renderTable: (list: T[]) => void;
+ *     renderRow?: (value: T) => HTMLTableRowElement;
+ *     doSave: () => void;
+ *     search: (list: T[]) => void;
+ *     addRow: () => void;
+ *     removeRows: () => void;
+ *     cancelAdd: () => void;
  * }} intefaceRender
  */
 

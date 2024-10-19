@@ -1,5 +1,5 @@
 document.getElementById('show-hide-icon')?.addEventListener('click', () => {
-    let e = /**@type {HTMLInputElement} */ (
+    let e = /** @type {HTMLInputElement} */ (
         document.getElementById('password')
     );
     let icon = document.getElementById('show-hide-icon');
@@ -16,7 +16,7 @@ document.getElementById('show-hide-icon')?.addEventListener('click', () => {
 
 document.querySelector('form')?.addEventListener('submit', (event) => {
     event.preventDefault();
-    let rmb_btn = /**@type {HTMLInputElement} */ (
+    let rmb_btn = /** @type {HTMLInputElement} */ (
         document.querySelector('.remember input[type="checkbox"]')
     );
     if (rmb_btn.checked) localStorage.setItem('isAdmin', 'true');

@@ -1,11 +1,10 @@
-import fackDatabase from '../db/fakeDb.js';
+import fakeDatabase from '../db/fakeDb.js';
 import uuidv4 from '../until/uuid.js';
 import { searchList, renderTable, defaultRenderRow } from './reader_table.js';
 
-/**
- * @typedef {import('../db/fakeDb.js').UserInfo} UserInfo
- */
+/** @typedef {import('../db/fakeDb.js').UserInfo} UserInfo */
 
+// Định nghĩa các cột trong bảng người dùng
 const cols = {
     id: 'Id',
     name: 'Name',
@@ -16,16 +15,23 @@ const cols = {
 };
 
 /**
- * @type {{[key: string]: UserInfo}}
+ * CacheSave lưu trữ tạm thời các thay đổi của người dùng trước khi lưu vào
+ * database
+ *
+ * @type {{ [key: string]: UserInfo }}
  */
 let cacheSave = {};
 
 /**
+ * CacheAdd lưu trữ tạm thời các người dùng mới được thêm vào trước khi lưu vào
+ * database
+ *
  * @type {UserInfo[]}
  */
 let cacheAdd = [];
 
 /**
+ * Hàm xử lý khi có thay đổi dữ liệu trên bảng (hàm callback)
  *
  * @type {import('./reader_table.js').OnChange<UserInfo>}
  */
@@ -45,35 +51,37 @@ function onChangeHandle(data, key, newValue) {
     }
 }
 
-/**
- * lưu chỉnh sử và sác nhận thêm
- */
+/** Hàm lưu lại các chỉnh sửa và người dùng mới vào database */
 function userDoSave() {
-    // TODO: thêm kiểm tra dữ liệu vidu là email và std
+    // TODO: thêm kiểm tra dữ liệu, ví dụ kiểm tra định dạng email hoặc số điện thoại hợp lệ
+
+    // Lưu các thay đổi từ cacheSave vào database
     Object.keys(cacheSave).forEach((e) => {
         console.log(e);
         const data = cacheSave[e];
-        fackDatabase.updateUserInfo(data);
+        fakeDatabase.updateUserInfo(data); // Gọi hàm cập nhật người dùng trong cơ sở dữ liệu giả lập
     });
 
+    // Lưu người dùng mới vào database
     cacheAdd.forEach((e) => {
         console.log(e);
-        fackDatabase.addUserInfo(e);
+        fakeDatabase.addUserInfo(e); // Gọi hàm thêm người dùng mới vào cơ sở dữ liệu
     });
     cacheAdd = [];
     document.querySelectorAll('#content_table td').forEach((e) => {
-        e.setAttribute('contenteditable', 'false');
-        e.setAttribute('ischange', 'false');
-        e.setAttribute('default-value', e.textContent || '');
+        e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
+        e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
+        e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
     });
 }
 
 /**
+ * Render bảng người dùng từ danh sách dữ liệu
  *
- * @param {UserInfo[]} list
+ * @param {UserInfo[]} list - Danh sách người dùng cần hiển thị
  */
 function renderUser(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
@@ -82,28 +90,33 @@ function renderUser(list) {
 }
 
 /**
- * @param {UserInfo[]} list
+ * Hàm tìm kiếm người dùng trong bảng dựa trên input tìm kiếm
+ *
+ * @param {UserInfo[]} list - Danh sách người dùng để tìm kiếm
  */
 function searchUser(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
 
+    // Sử dụng hàm searchList để lọc danh sách người dùng theo input tìm kiếm
     const result = searchList(list, cols).map((e) => e.id);
 
+    // Duyệt qua tất cả các hàng của bảng và hiển thị hoặc ẩn dựa trên kết quả tìm kiếm
     document.querySelectorAll('#content_table > tr[id-row]').forEach((e) => {
         const id = e.getAttribute('id-row') || '';
         if (result.includes(id)) {
-            /**@type {HTMLElement}*/ (e).style.display = '';
+            /** @type {HTMLElement} */ (e).style.display = '';
         } else {
-            /**@type {HTMLElement}*/ (e).style.display = 'none';
+            /** @type {HTMLElement} */ (e).style.display = 'none';
         }
     });
 }
 
+/** Hàm thêm một người dùng mới vào bảng */
 function addUser() {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
 
@@ -111,9 +124,7 @@ function addUser() {
         throw new Error('cái đéo gì vậy');
     }
 
-    /**
-     * @type {UserInfo}
-     */
+    /** @type {UserInfo} */
     const data = {
         id: uuidv4(),
         email: '',
@@ -122,7 +133,11 @@ function addUser() {
         phone_num: '',
         rule: 'user',
     };
+
+    // Lưu người dùng mới vào cache
     cacheAdd.push(data);
+
+    // Tạo một hàng mới cho người dùng trong bảng
     const row = defaultRenderRow(data, cols, (data, key, values) => {
         cacheAdd[0] = {
             ...cacheAdd[0],
@@ -130,42 +145,44 @@ function addUser() {
         };
     });
 
+    // Cho phép chỉnh sửa các ô trong hàng mới
     row.querySelectorAll('td').forEach((e) =>
         e.setAttribute('contenteditable', 'true'),
     );
 
+    // Thêm hàng mới lên đầu bảng
     table.insertBefore(row, table.childNodes[1]);
-    /**@type {HTMLElement} */ (table.parentNode).scrollTo({
+    /** @type {HTMLElement} */ (table.parentNode).scrollTo({
         top: 0,
         behavior: 'smooth',
     });
 }
 
+/** Hủy hành động thêm người dùng mới và xóa hàng vừa thêm */
 function cancelAdd() {
     document.querySelector(`tr[id-row="${cacheAdd[0].id}"]`)?.remove();
     cacheAdd = [];
 }
 
-/**
- * lấy toàn bộ các row đã chọn rồi delete
- */
+/** Xóa các người dùng đã được chọn trong bảng */
 function removeRows() {
     document.querySelectorAll('tr').forEach((e) => {
-        let cb = /**@type {HTMLInputElement} */ (
+        let cb = /** @type {HTMLInputElement | null} */ (
             e.querySelector('input[type="checkbox"]')
         );
-        if (cb && cb.checked) {
+        if (cb?.checked) {
             let rowID = e.getAttribute('id-row');
-            if (rowID) fackDatabase.deleteUserById(rowID);
+            if (rowID) fakeDatabase.deleteUserById(rowID);
             e.remove();
         }
     });
 }
 
 /**
+ * Đối tượng quản lý toàn bộ các thao tác liên quan đến người dùng
+ *
  * @type {import('./reader_table.js').intefaceRender<UserInfo>}
  */
-
 const user_ = {
     cols,
     renderTable: renderUser,
