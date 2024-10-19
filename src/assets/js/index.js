@@ -9,7 +9,7 @@ const btnAccount = document.getElementById('btn-account');
 const modal = document.querySelector('.modal');
 const btnExit = document.getElementById('btn-exit');
 const modalDemo = document.querySelector('.modal-demo');
-
+const btnSubmit = document.getElementById('btn-submit');
 const address_display = /** @type {HTMLInputElement} */ (
     document.getElementById('address_display')
 );
@@ -155,20 +155,6 @@ function main() {
 
     closePopup?.addEventListener('click', () => {
         popup_wrapper?.classList.remove('show');
-    });
-
-    //
-    btnAccount?.addEventListener('click', () => {
-        modal?.classList.add('show-modal');
-    });
-    btnExit?.addEventListener('click', () => {
-        modal?.classList.remove('show-modal');
-    });
-    modal?.addEventListener('click', (e) => {
-        if (!e.target) return;
-        if (!modalDemo?.contains(/** @type {HTMLElement} */ (e.target))) {
-            btnExit?.click();
-        }
     });
 
     //#endregion

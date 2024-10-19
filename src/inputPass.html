@@ -48,14 +48,14 @@
             </div>
         </header>
 
-        <div class="modal" id="js-modal">
+        <div class="modal show-modal" id="js-modal">
             <div class="modal-overlay"></div>
 
-            <div class="modal-body">
+            <div class="modal-body modal-demo">
                 <button id="btn-exit">
                     <img src="./assets/img/exit.png" alt="" />
                 </button>
-                <div class="modal-body-left modal-demo">
+                <div class="modal-body-left">
                     <div class="auth-form">
                         <button id="back-btn">
                             <img src="./assets/img/back.png" alt="" />
@@ -63,8 +63,6 @@
                         <div class="heading">
                             <h4>Nhập mật khẩu</h4>
                             <p>Vui lòng nhập mật khẩu của số điện thoại</p>
-                            <!-- so diẹn thoai cua tài khoan -->
-                            <p></p>
                         </div>
                         <form actiọn="" class="input-auth-form">
                             <div class="input-group">
@@ -74,6 +72,7 @@
                                     placeholder="Mật khẩu"
                                 />
                             </div>
+                            <span class="form-error"></span>
                             <input
                                 type="submit"
                                 id="btn-login-password"

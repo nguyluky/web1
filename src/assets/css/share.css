@@ -69,7 +69,6 @@ body {
 
 .ct-input .input_text::after {
     content: '';
-    z-index: 1;
     position: absolute;
     height: 24px;
     width: 1px;
@@ -146,7 +145,7 @@ body {
 }
 
 .dropdown-btn-content.dropdown-pos-left-bottom > p {
-    text-align: end;
+    text-align: left;
 }
 
 .dropdown-btn-content > p {

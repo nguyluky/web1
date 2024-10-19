@@ -303,6 +303,16 @@ class FakeDatabase {
         const userget = data.index('email_and_pass').get([email, password]);
         return await this.requestToPromise(userget);
     }
+    /**@param {string} phone_num */
+    async getUserInfoByPhoneNum(phone_num) {
+        if (!db) await this.awaitUntilReady();
+        const data = db
+            .transaction(ObjectStoreName.USER, 'readonly')
+            .objectStore(ObjectStoreName.USER);
+
+        const userget = data.index('phone_num').get(phone_num);
+        return await this.requestToPromise(userget);
+    }
 
     /**
      * Admin dùng để trực tiếp thêm vào database
