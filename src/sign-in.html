@@ -15,6 +15,8 @@
             referrerpolicy="no-referrer"
         />
         <link rel="icon" href="./assets/img/favicon.png" />
+        <script src="./assets/js/test.js"></script>
+
     </head>
     <body>
         <div id="popup-wrapper">
@@ -86,48 +88,7 @@
                 </div>
             </div>
         </header>
-        <div class="modal" id="js-modal">
-            <div class="modal-overlay"></div>
-
-            <div class="modal-body modal-demo">
-                <button id="btn-exit">
-                    <img src="./assets/img/exit.png" alt="" />
-                </button>
-                <div class="modal-body-left">
-                    <div class="auth-form">
-                        <div class="heading">
-                            <h4>Xin chào,</h4>
-                            <p>Đăng nhập hoặc Tạo tài khoản</p>
-                        </div>
-
-                        <form action="" class="input-auth-form">
-                            <div class="input-group">
-                                <input
-                                    type="tel"
-                                    id="input-phone"
-                                    placeholder="Số điện thoại"
-                                    required
-                                    pattern="0[0-9]{9}"
-                                />
-                            </div>
-                            <span class="form-error"></span>
-                            <input
-                                type="submit"
-                                value="Tiếp tục"
-                                id="btn-submit"
-                            />
-                        </form>
-
-                        <p class="login-email">
-                            <a href="#">Đăng nhập bằng email</a>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="modal-body-right">
-                    <img src="./assets/img/logov1.png" alt="" />
-                </div>
-            </div>
+        <div class="modal js-modal"></div>
         </div>
     </body>
 </html>
