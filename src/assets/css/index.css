@@ -165,7 +165,7 @@ aside.aside {
 @media screen and (max-width: 650px) {
     :root {
         --coutnt-row: 2;
-        --cart-width: 150px;
+        --cart-width: 130px;
         --width-header: calc(
             var(--cart-width) * var(--coutnt-row) + (var(--coutnt-row) - 1) *
                 20px + 40px
@@ -178,6 +178,7 @@ aside.aside {
 
     article.article {
         box-sizing: border-box;
+        padding: 5px;
     }
 
     aside.aside {
