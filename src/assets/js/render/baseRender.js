@@ -75,7 +75,8 @@ export function defaultRenderRow(value, cols, onchange = null) {
  * @param {(value: T, onchange?: OnChange<T>) => HTMLTableRowElement} [cRenderRow]
  *   - Hàm render hàng tùy chỉnh.
  *
- *   {@link ../../../docs/RENDER_TABLE.md} for more information.
+ *   {@link https://github.com/nguyluky/web1/blob/main/docs/RENDER_TABLE.md} for
+ *   more information.
  */
 function renderTable(values, table, cols, onchange, cRenderRow) {
     table.innerHTML = '';
@@ -114,7 +115,8 @@ function renderTable(values, table, cols, onchange, cRenderRow) {
  * @param {COLS<T>} cols - Định nghĩa các cột trong bảng.
  * @returns {T[]} - Danh sách các giá trị tìm kiếm được.
  *
- *   {@link ../../../docs/SEARCH_LIST.md} for more information.
+ *   {@link https://github.com/nguyluky/web1/blob/main/docs/SEARCH_LIST.md} for
+ *   more information.
  */
 function searchList(values, cols) {
     const searchInput = /** @type {HTMLInputElement} */ (
