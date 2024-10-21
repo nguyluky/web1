@@ -85,6 +85,7 @@ function changePopup(popupInfo) {
         else
             link.innerHTML = `<a href=${popupInfo.link.url}>${popupInfo.link.content}</a>`;
 }
+
 if (btnAccount && modal && btnExit && modalDemo) {
     // nhấn button "Tài khoản" => hiện popup
     btnAccount?.addEventListener('click', () => {
@@ -166,7 +167,6 @@ function checkLengthError(input, min) {
     }
 }
 /**
- *
  * @param {string} passwordInput
  * @param {string} cfPasswordInput
  * @returns
@@ -184,7 +184,6 @@ function checkMatchpassword(passwordInput, cfPasswordInput) {
 // });
 form?.addEventListener('submit', async function (e) {
     e.preventDefault();
-    const email = document.querySelector('#input-email');
     const tel = document.querySelector('#input-phone');
     if (tel) {
         let isPhoneCorrect = await checkPhoneNum(tel);

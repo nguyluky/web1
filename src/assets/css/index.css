@@ -1,9 +1,17 @@
 @import url(./home-style-share.css);
 
+:root {
+    --cart-width: 170px;
+    --coutnt-row: 7;
+    --width-header: calc(
+        var(--cart-width) * var(--coutnt-row) + (var(--coutnt-row) - 1) * 20px +
+            240px + 20px
+    );
+}
+
 .main_wapper {
     display: flex;
     gap: 20px;
-    margin: 0 30px;
 }
 
 aside.aside {
@@ -44,7 +52,7 @@ aside.aside {
 
 .product-container {
     display: grid;
-    grid-template-columns: auto auto auto auto auto;
+    grid-template-columns: repeat(var(--coutnt-row), auto);
     justify-items: center;
     /* justify-content: left; */
     gap: 20px 20px;
@@ -52,7 +60,8 @@ aside.aside {
 .product-card {
     background-color: #fff;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-    width: clamp(160px, 20%, 170px);
+    /* width: clamp(160px, 20%, 170px); */
+    width: var(--cart-width);
     aspect-ratio: 9/14;
     border-radius: 8px;
     padding: 8px 10px;
@@ -117,19 +126,66 @@ aside.aside {
     cursor: pointer;
 }
 
-@media screen and (max-width: 1100px) {
+/* @media screen and (max-width: 1100px) {
     .product-container {
         grid-template-columns: auto auto auto auto;
     }
-}
+} */
 
-@media screen and (max-width: 900px) {
-    .product-container {
-        grid-template-columns: auto auto auto;
+@media screen and (max-width: 1600px) {
+    :root {
+        --coutnt-row: 6;
     }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 1410px) {
+    :root {
+        --coutnt-row: 5;
+    }
+}
+
+@media screen and (max-width: 1220px) {
+    :root {
+        --coutnt-row: 4;
+    }
+}
+
+@media screen and (max-width: 1030px) {
+    :root {
+        --coutnt-row: 3;
+    }
+}
+
+@media screen and (max-width: 840px) {
+    :root {
+        --coutnt-row: 2;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    :root {
+        --coutnt-row: 2;
+        --cart-width: 150px;
+        --width-header: calc(
+            var(--cart-width) * var(--coutnt-row) + (var(--coutnt-row) - 1) *
+                20px + 40px
+        );
+    }
+
+    .main_wapper {
+        flex-direction: column;
+    }
+
+    article.article {
+        box-sizing: border-box;
+    }
+
+    aside.aside {
+        height: fit-content;
+    }
+}
+
+/* @media screen and (max-width: 700px) {
     .product-container {
         grid-template-columns: auto auto;
     }
@@ -139,4 +195,4 @@ aside.aside {
     .product-container {
         grid-template-columns: auto;
     }
-}
+} */

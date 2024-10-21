@@ -4,7 +4,7 @@
  * - Du dùng để tìm kiếm
  *
  * @param {string} str
- * @returns
+ * @returns {string}
  */
 export default function removeDiacritics(str) {
     return str

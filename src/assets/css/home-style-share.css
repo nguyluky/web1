@@ -253,11 +253,6 @@ footer.footer .footer_wrapper .footer_box {
     }
 }
 
-@media screen and (max-width: 500px) {
-    .header_wrapper .right .button_1 > span {
-        display: none;
-    }
-}
 @media screen and (max-width: 900px) {
     :root {
         --width-header: 90vw;
@@ -417,3 +412,15 @@ footer.footer .footer_wrapper .footer_box {
 .show {
     display: block;
 }
+
+@media screen and (max-width: 500px) {
+    .header_wrapper .right .button_1 > span {
+        display: none;
+    }
+}
+
+/* @media screen and (max-width: 900px) {
+    :root {
+        --width-header: 90vw;
+    }
+} */

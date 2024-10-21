@@ -130,7 +130,7 @@ const buttonSaveState = {
     },
 };
 
-/* Xử lý render dữ liệu tương ứng với tab hiện tại */
+/** Xử lý render dữ liệu tương ứng với tab hiện tại */
 async function renderManagement() {
     const title = document.getElementById('table-title-header');
     const input = /** @type {HTMLInputElement} */ (
@@ -156,6 +156,7 @@ async function renderManagement() {
     input.oninput = () => tabManagement[tab].search(data);
 }
 
+/** Không biết ghi gì */
 function updateMangement() {
     tabManagement[tab].doSave();
 }
@@ -244,7 +245,7 @@ function buttonMenuHandle(event) {
  * @param {MouseEvent} event
  * @this {HTMLInputElement}
  */
-function tabHandle(event) {
+function HandleSwitchTab(event) {
     const isEditMode = btnSave?.classList.contains('canedit');
 
     if (isEditMode) {
@@ -276,15 +277,16 @@ function tabHandle(event) {
     renderManagement();
 }
 
-/** Main funstion */
-async function main() {
-    tabElements.forEach((e) => e.addEventListener('click', tabHandle));
-
-    renderManagement();
-
+function initializeMainButton() {
     btnDelete?.addEventListener('click', buttonDeleteHandle);
     btnSave?.addEventListener('click', buttonSaveHandle);
     btnAdd?.addEventListener('click', buttonAddHandle);
+}
+
+function initializeSideBar() {
+    tabElements.forEach((e) => e.addEventListener('click', HandleSwitchTab));
+
+    // show side bar where in mobile ui
     btnMenu?.addEventListener('click', buttonMenuHandle);
     const drop_menu = document.getElementById('drop-list');
     document.getElementById('drop-list')?.addEventListener('click', () => {
@@ -307,7 +309,7 @@ async function main() {
     });
 }
 
-function updateContent() {
+function handleContentOverflow() {
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
     if (!contentDiv) return;
@@ -323,7 +325,14 @@ function updateContent() {
     );
 }
 
-updateContent();
+/** Main funstion */
+async function main() {
+    //
+    initializeSideBar();
+    initializeMainButton();
 
-window.addEventListener('resize', updateContent);
+    renderManagement();
+}
+
+window.addEventListener('resize', handleContentOverflow);
 window.addEventListener('load', main);
