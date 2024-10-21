@@ -1,4 +1,4 @@
-import { renderTable, searchList } from './reader_table.js';
+import { renderTable, searchList } from './baseRender.js';
 
 /** @typedef {import('../until/type.js').Cart} Cart */
 
@@ -33,7 +33,7 @@ function searchCart(list) {
     renderTable(result, table, cols);
 }
 
-/** @type {import('./reader_table.js').intefaceRender<Cart>} */
+/** @type {import('./baseRender.js').IntefaceRender<Cart>} */
 const Cart_ = {
     cols,
     renderTable: renderCart,

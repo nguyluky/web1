@@ -1,4 +1,4 @@
-import { renderTable, searchList } from './reader_table.js';
+import { renderTable, searchList } from './baseRender.js';
 
 /** @typedef {import('../until/type.js').Category} Category */
 
@@ -28,7 +28,7 @@ function searchCategory(list) {
     renderTable(searchList(list, cols), table, cols);
 }
 
-/** @type {import('./reader_table.js').intefaceRender<Category>} */
+/** @type {import('./baseRender.js').IntefaceRender<Category>} */
 const Category_ = {
     cols,
     renderTable: renderCategory,

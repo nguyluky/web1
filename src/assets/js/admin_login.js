@@ -1,3 +1,8 @@
+// giải thích file này được sử dụng trong file admin/index.html
+// file này sẽ được sử dụng để xử lý đăng nhập của admin
+// khi đăng nhập thành công sẽ chuyển hướng đến trang admin/index.html
+// còn nếu đăng nhập thất bại sẽ hiển thị thông báo lỗi
+// và không chuyển hướng
 document.getElementById('show-hide-icon')?.addEventListener('click', () => {
     let e = /** @type {HTMLInputElement} */ (
         document.getElementById('password')

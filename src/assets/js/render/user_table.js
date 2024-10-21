@@ -1,6 +1,6 @@
 import fakeDatabase from '../db/fakeDb.js';
 import uuidv4 from '../until/uuid.js';
-import { searchList, renderTable, defaultRenderRow } from './reader_table.js';
+import { searchList, renderTable, defaultRenderRow } from './baseRender.js';
 
 /** @typedef {import('../db/fakeDb.js').UserInfo} UserInfo */
 
@@ -33,7 +33,7 @@ let cacheAdd = [];
 /**
  * Hàm xử lý khi có thay đổi dữ liệu trên bảng (hàm callback)
  *
- * @type {import('./reader_table.js').OnChange<UserInfo>}
+ * @type {import('./baseRender.js').OnChange<UserInfo>}
  */
 function onChangeHandle(data, key, newValue) {
     console.log('onchange called');
@@ -181,7 +181,7 @@ function removeRows() {
 /**
  * Đối tượng quản lý toàn bộ các thao tác liên quan đến người dùng
  *
- * @type {import('./reader_table.js').intefaceRender<UserInfo>}
+ * @type {import('./baseRender.js').IntefaceRender<UserInfo>}
  */
 const user_ = {
     cols,

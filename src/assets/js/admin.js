@@ -1,5 +1,5 @@
 import fakeDatabase from './db/fakeDb.js';
-import { showPopup } from './render/reader_table.js';
+import { showPopup } from './render/baseRender.js';
 import userRender from './render/user_table.js';
 import cartRender from './render/cart_table.js';
 import sachRender from './render/sach_table.js';
@@ -28,13 +28,6 @@ import categoryRender from './render/category_table.js';
  * @typedef {import('./until/type.js').UserInfo} UserInfo
  *
  * @typedef {import('./until/type.js').imgStore} imgStore
- *
- * @typedef {{
- *     user: UserInfo;
- *     cart: Cart;
- *     sach: Sach;
- *     category: Category;
- * }} Templay
  */
 //#endregion
 
@@ -45,7 +38,7 @@ let tab = 'user';
  * Quản lý các hàm render và cập nhật dữ liệu cho từng tab
  *
  * @type {{
- *     [Key: string]: import('./render/reader_table.js').intefaceRender<?>;
+ *     [Key: string]: import('./render/baseRender.js').IntefaceRender<?>;
  * }}
  */
 const tabManagement = {
