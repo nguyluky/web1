@@ -1,6 +1,7 @@
 import fakeDatabase from '../db/fakeDb.js';
 import uuidv4 from '../until/uuid.js';
 import { searchList, renderTable, defaultRenderRow } from './baseRender.js';
+import { validateUserInfo } from '../until/type.js';
 
 /** @typedef {import('../db/fakeDb.js').UserInfo} UserInfo */
 
@@ -52,15 +53,29 @@ function onChangeHandle(data, key, newValue) {
 }
 
 /** Hàm lưu lại các chỉnh sửa và người dùng mới vào database */
-function userDoSave() {
-    // TODO: thêm kiểm tra dữ liệu, ví dụ kiểm tra định dạng email hoặc số điện thoại hợp lệ
-
+async function userDoSave() {
     // Lưu các thay đổi từ cacheSave vào database
-    Object.keys(cacheSave).forEach((e) => {
-        console.log(e);
+
+    const values = Object.values(cacheSave);
+
+    for (let i = 0; i < values.length; i++) {
+        const { key, msg } = validateUserInfo(values[i]) || {};
+        if (msg) {
+            // TODO: làm tiếp hiếu
+            // hiếu bận học để mai kiểm tra rồi
+        }
+    }
+
+    const taskAdd = Object.keys(cacheSave).map((e) => {
         const data = cacheSave[e];
-        fakeDatabase.updateUserInfo(data); // Gọi hàm cập nhật người dùng trong cơ sở dữ liệu giả lập
+        return fakeDatabase.updateUserInfo(data); // Gọi hàm cập nhật người dùng trong cơ sở dữ liệu giả lập
     });
+
+    try {
+        await Promise.all(taskAdd);
+    } catch (e) {
+        console.error(e);
+    }
 
     // Lưu người dùng mới vào database
     cacheAdd.forEach((e) => {
