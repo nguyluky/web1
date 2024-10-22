@@ -309,6 +309,86 @@ body {
     height: 35px;
 }
 
+#submit-wrapper:has(#submit-popup) {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+#submit-popup {
+    padding: 20px;
+    background-color: #fff;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    gap: 20px;
+}
+
+#cancel-submit {
+    background-color: #fff;
+    width: 24px;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    cursor: pointer;
+}
+
+#cancel-submit > i {
+    font-size: 20px;
+}
+#submit-img {
+    border: 1px solid #0a68f4;
+    width: 300px;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+#submit-img > img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+#save-submit {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0a68f4;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 3px 5px 0 #898989;
+    transition: all 0.2s;
+}
+
+#save-submit:hover {
+    opacity: 0.8;
+}
+
+#save-submit:active {
+    transform: translate(3px, 5px);
+    box-shadow: none;
+}
 .table-check-box {
     aspect-ratio: 1/1;
     width: 18px;
@@ -474,21 +554,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.file-upload-btn input {
-    display: none;
-}
-
-.file-upload-btn {
-    color: #808089;
-    border: 1px solid #808089;
-    border-radius: 4px;
-    padding: 5px 10px;
-}
-
-.file-upload-btn:active {
-    transform: scale(0.96);
 }
 
 .popup.imgupload .pupop-context img {
