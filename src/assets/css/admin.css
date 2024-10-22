@@ -35,7 +35,7 @@ main.main {
 
 aside.aside {
     height: 100%;
-    /* width: fit-content; */
+    min-width: fit-content;
     padding: 16px;
     box-sizing: border-box;
 }
