@@ -1,9 +1,12 @@
-import fackDatabase from './db/fakeDb.js';
+import fakeDatabase from './db/fakeDBv1.js';
+import removeDiacritics from './until/removeDiacritics.js';
 
-console.log('Popup function success');
+//#region khai bao bien
 const btnLocation = document.getElementById('btn-location');
 const closePopup = document.getElementById('btn-close');
 const popup_wrapper = document.getElementById('popup-wrapper');
+
+// const btnAccount = document.getElementById('btn-account');
 
 if (btnLocation && closePopup && popup_wrapper) {
     btnLocation.addEventListener('click', () => {
@@ -24,83 +27,22 @@ if (btnLocation && closePopup && popup_wrapper) {
 }
 
 const btnAccount = document.getElementById('btn-account');
-const modal = document.querySelector('.js-modal');
-
-function validatePhoneNum() {
-    validator({
-        form: '.input-auth-form',
-        rules: [
-            validator.isRequired('#input-phone-email'),
-            validator.isValidInput('#input-phone-email'),
-        ],
-
-        onSubmit: (data) => {
-            // ch sửa lai lấy thông tin người dùng băng email hoặc sdt
-            fackDatabase
-                .getUserInfoByPhoneNum(data['#input-phone-email'])
-                .then((userInfo) => {
-                    console.log(userInfo);
-                    if (userInfo) {
-                        showInputPassword(modal);
-                        validatePassword();
-                    } else {
-                        showCreateAccount(modal);
-                        validateCrateNewAccount();
-                    }
-                    closeSignIn(modal);
-                })
-                .catch((e) => {
-                    if (e) {
-                        showCreateAccount(modal);
-                        validateCrateNewAccount();
-                    }
-                });
-        },
-    });
-}
-
-function validatePassword() {
-    validator({
-        form: 'input-auth-form',
-        rules: [
-            validator.isRequired('#login-password'),
-            validator.minLength('#login-password'),
-        ],
-        onSubmit: (data) => {},
-    });
-}
-
-function validateCrateNewAccount() {}
-
-if (btnAccount && modal) {
+const modal = document.querySelector('.modal');
+const btnExit = document.getElementById('btn-exit');
+const modalDemo = document.querySelector('.modal-demo');
+const form = document.querySelector('form');
+if (btnAccount && modal && btnExit && modalDemo) {
     btnAccount.addEventListener('click', () => {
-        showSignIn(modal);
-        closeSignIn(modal);
         modal.classList.add('show-modal');
-        validatePhoneNum();
-        // const btnSubmit = document.querySelector('#btn-submit');
-        // btnSubmit?.addEventListener('click', (event) => {
-        //     // event.preventDefault();
-        //     // được rồi nè
-        //     event.stopPropagation();
-        //     inputPass(modal);
-        // });
+    });
+    btnExit.addEventListener('click', () => {
+        modal.classList.remove('show-modal');
+    });
+    modal.addEventListener('click', (e) => {
+        if (!e.target) return;
+        if (!modalDemo.contains(/**@type {HTMLElement}*/ (e.target))) {
+            btnExit.click();
+        }
     });
 }
-
-function closeSignIn(modal) {
-    const btnExit = document.getElementById('btn-exit');
-    const modalDemo = document.querySelector('.modal-demo');
-
-    if (btnExit)
-        btnExit.onclick = () => {
-            modal.classList.remove('show-modal');
-        };
-    if (modal)
-        modal.onclick = (e) => {
-            if (!e.target) return;
-            if (!modalDemo?.contains(/**@type {HTMLElement}*/ (e.target))) {
-                btnExit?.click();
-            }
-        };
-}
+//
