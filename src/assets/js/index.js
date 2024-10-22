@@ -25,7 +25,6 @@ if (btnLocation && closePopup && popup_wrapper) {
 
 const btnAccount = document.getElementById('btn-account');
 const modal = document.querySelector('.js-modal');
-const form = document.querySelector('form');
 
 function validatePhoneNum() {
     validator({
@@ -60,7 +59,16 @@ function validatePhoneNum() {
     });
 }
 
-function validatePassword() {}
+function validatePassword() {
+    validator({
+        form: 'input-auth-form',
+        rules: [
+            validator.isRequired('#login-password'),
+            validator.minLength('#login-password'),
+        ],
+        onSubmit: (data) => {},
+    });
+}
 
 function validateCrateNewAccount() {}
 

@@ -1,18 +1,4 @@
 // @ts-nocheck
-// const inputs = document.querySelectorAll('input');
-// inputs.forEach((input) => {
-//     input.addEventListener('input', () => {
-//         const parentInput = input.parentElement;
-//         const errorElement = parentInput?.nextElementSibling;
-//         parentInput?.classList.add('input-fill');
-//         if (errorElement) {
-//             errorElement.innerHTML = '';
-//         }
-//         if (!input.value) {
-//             parentInput?.classList.remove('input-fill');
-//         }
-//     });
-// });
 
 function isEmail(value) {
     const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -93,6 +79,13 @@ validator.minLength = function (selector, min) {
         },
     };
 };
+
+validator.isConfirmPass = function (selector) {
+    return {
+        selector: selector,
+        test: function (value)
+    }
+}
 
 function showSignIn(modal) {
     if (modal) {
@@ -214,7 +207,6 @@ function showInputPassword(modal) {
                         <div class="heading">
                             <h4>Nhập mật khẩu</h4>
                             <p>Vui lòng nhập mật khẩu của số điện thoại</p>
-                            <!-- so diẹn thoai cua tài khoan -->
                             <p></p>
                         </div>
                         <form actiọn="" class="input-auth-form">
@@ -241,3 +233,18 @@ function showInputPassword(modal) {
         `;
     }
 }
+
+// const inputs = document.querySelectorAll('input');
+// inputs.forEach((input) => {
+//     input.addEventListener('input', () => {
+//         const parentInput = input.parentElement;
+//         const errorElement = parentInput?.nextElementSibling;
+//         parentInput?.classList.add('input-fill');
+//         if (errorElement) {
+//             errorElement.innerHTML = '';
+//         }
+//         if (!input.value) {
+//             parentInput?.classList.remove('input-fill');
+//         }
+//     });
+// });
