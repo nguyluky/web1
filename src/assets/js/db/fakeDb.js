@@ -184,10 +184,6 @@ req.onerror = (event) => {
 req.onsuccess = () => {
     if (isOnupgradeneeded) return; // Nếu đang trong quá trình nâng cấp thì không làm gì thêm
     db = req.result; // Lưu kết nối cơ sở dữ liệu vào biến db
-
-    db.onerror = (ev) => {
-        console.error(ev); // Xử lý lỗi khi sử dụng cơ sở dữ liệu
-    };
 };
 
 /**
@@ -253,8 +249,7 @@ class FakeDatabase {
     requestToPromise(request) {
         return new Promise((resolve, reject) => {
             request.onsuccess = () => resolve(request.result);
-            request.onerror = (event) =>
-                reject(`Error: ${event.target.errorCode}`);
+            request.onerror = (event) => reject(event.target.error);
         });
     }
 

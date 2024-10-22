@@ -150,15 +150,17 @@ async function renderManagement() {
 }
 
 /** Không biết ghi gì */
+/** @returns {Promise<void>} */
 function updateMangement() {
-    tabManagement[tab].doSave();
+    return tabManagement[tab].doSave();
 }
 
+//#region Xử lý sự kiện
 /**
  * @param {MouseEvent} event
  * @this {HTMLElement}
  */
-function buttonSaveHandle(event) {
+function handleButtonSave(event) {
     const isEditMod = this.classList.contains('canedit');
     // nhấn nút Edit
     if (!isEditMod) {
@@ -174,10 +176,12 @@ function buttonSaveHandle(event) {
             'Xác nhận sửa',
             'Bạn có chắc là muốn sửa không',
             () => {
-                buttonAddState.add();
-                buttonSaveState.edit();
-
-                updateMangement();
+                updateMangement()
+                    .then(() => {
+                        buttonAddState.add();
+                        buttonSaveState.edit();
+                    })
+                    .catch(() => {});
             },
             null,
         );
@@ -187,7 +191,7 @@ function buttonSaveHandle(event) {
  * @param {MouseEvent} event
  * @this {HTMLElement}
  */
-function buttonDeleteHandle(event) {
+function handleButtonDelete(event) {
     const popupWrapper = document.getElementById('popup-wrapper');
     if (popupWrapper) {
         showPopup(
@@ -207,7 +211,7 @@ function buttonDeleteHandle(event) {
  * @param {MouseEvent} event
  * @this {HTMLElement}
  */
-function buttonAddHandle(event) {
+function dandleButtonAdd(event) {
     const isAddMode = this.classList.contains('btn-warning');
 
     if (isAddMode) {
@@ -222,7 +226,7 @@ function buttonAddHandle(event) {
  * @param {MouseEvent} event
  * @this {HTMLElement}
  */
-function buttonMenuHandle(event) {
+function handleButtonMenu(event) {
     if (!this.classList.contains('active')) {
         document.getElementById('drop-list')?.classList.add('show');
         this.classList.add('active');
@@ -238,7 +242,7 @@ function buttonMenuHandle(event) {
  * @param {MouseEvent} event
  * @this {HTMLInputElement}
  */
-function HandleSwitchTab(event) {
+function handleSwitchTab(event) {
     const isEditMode = btnSave?.classList.contains('canedit');
 
     if (isEditMode) {
@@ -270,17 +274,35 @@ function HandleSwitchTab(event) {
     renderManagement();
 }
 
+function handleContentOverflow() {
+    const width = window.innerWidth;
+    const contentDiv = document.querySelector('table > tr > th');
+    if (!contentDiv) return;
+    // Thay đổi nội dung dựa trên độ rộng
+    if (width < 820) contentDiv.innerHTML = '...';
+    else contentDiv.innerHTML = 'Check<i class="fa-solid fa-filter">';
+
+    Array.from(document.getElementsByClassName('details-wrapper')).forEach(
+        (e) => {
+            if (e.scrollHeight > e.clientHeight) e.classList.add('isOverFlow');
+            else e.classList.remove('isOverFlow');
+        },
+    );
+}
+//#endregion
+
+//#region Khởi tạo các sự kiện
 function initializeMainButton() {
-    btnDelete?.addEventListener('click', buttonDeleteHandle);
-    btnSave?.addEventListener('click', buttonSaveHandle);
-    btnAdd?.addEventListener('click', buttonAddHandle);
+    btnDelete?.addEventListener('click', handleButtonDelete);
+    btnSave?.addEventListener('click', handleButtonSave);
+    btnAdd?.addEventListener('click', dandleButtonAdd);
 }
 
 function initializeSideBar() {
-    tabElements.forEach((e) => e.addEventListener('click', HandleSwitchTab));
+    tabElements.forEach((e) => e.addEventListener('click', handleSwitchTab));
 
     // show side bar where in mobile ui
-    btnMenu?.addEventListener('click', buttonMenuHandle);
+    btnMenu?.addEventListener('click', handleButtonMenu);
     const drop_menu = document.getElementById('drop-list');
     document.getElementById('drop-list')?.addEventListener('click', () => {
         drop_menu?.classList.remove('show');
@@ -302,21 +324,7 @@ function initializeSideBar() {
     });
 }
 
-function handleContentOverflow() {
-    const width = window.innerWidth;
-    const contentDiv = document.querySelector('table > tr > th');
-    if (!contentDiv) return;
-    // Thay đổi nội dung dựa trên độ rộng
-    if (width < 820) contentDiv.innerHTML = '...';
-    else contentDiv.innerHTML = 'Check<i class="fa-solid fa-filter">';
-
-    Array.from(document.getElementsByClassName('details-wrapper')).forEach(
-        (e) => {
-            if (e.scrollHeight > e.clientHeight) e.classList.add('isOverFlow');
-            else e.classList.remove('isOverFlow');
-        },
-    );
-}
+//#endregion
 
 /** Main funstion */
 async function main() {

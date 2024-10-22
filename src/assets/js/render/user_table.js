@@ -1,4 +1,5 @@
 import fakeDatabase from '../db/fakeDb.js';
+import { validateUserInfo } from '../until/type.js';
 import uuidv4 from '../until/uuid.js';
 import { searchList, renderTable, defaultRenderRow } from './baseRender.js';
 
@@ -51,28 +52,97 @@ function onChangeHandle(data, key, newValue) {
     }
 }
 
-/** Hàm lưu lại các chỉnh sửa và người dùng mới vào database */
-function userDoSave() {
-    // TODO: thêm kiểm tra dữ liệu, ví dụ kiểm tra định dạng email hoặc số điện thoại hợp lệ
+/**
+ * @param {string} id
+ * @param {string} key
+ * @param {string} msg
+ */
+function showErrorKey(id, key, msg) {
+    const row = document.querySelector(`tr[id-row="${id}"]`);
+    const col = row?.querySelector(`td[key="${key}"]`);
+    col?.setAttribute('error', msg);
+}
 
-    // Lưu các thay đổi từ cacheSave vào database
-    Object.keys(cacheSave).forEach((e) => {
-        console.log(e);
-        const data = cacheSave[e];
-        fakeDatabase.updateUserInfo(data); // Gọi hàm cập nhật người dùng trong cơ sở dữ liệu giả lập
+/** Hàm lưu lại các chỉnh sửa và người dùng mới vào database */
+/** @returns {Promise<boolean>} */
+async function userDoSave() {
+    const updateValues = Object.values(cacheSave);
+    const addValues = Object.values(cacheAdd);
+
+    let hasError = false;
+
+    [...updateValues, ...addValues].forEach((value) => {
+        const errors = validateUserInfo(value);
+
+        errors.forEach((e) => {
+            const { key, msg } = e;
+            hasError = true;
+            showErrorKey(value.id, key, msg);
+        });
+    });
+
+    if (hasError) {
+        throw Error('Có lỗi xảy ra');
+    }
+
+    const changeV = updateValues.map((e) => {
+        return fakeDatabase.updateUserInfo(e).catch((ee) => {
+            console.error({ e: ee });
+            if (ee.name == 'ConstraintError') {
+                const key = /** @type {string} */ (
+                    ee.message.match(/'([^']+)'/)?.[0]
+                );
+                if (key) {
+                    showErrorKey(
+                        e.id,
+                        key.replace(/'/g, ''),
+                        'Email đã tồn tại',
+                    );
+                }
+            }
+            hasError = true;
+        });
     });
 
     // Lưu người dùng mới vào database
-    cacheAdd.forEach((e) => {
-        console.log(e);
-        fakeDatabase.addUserInfo(e); // Gọi hàm thêm người dùng mới vào cơ sở dữ liệu
+    const addV = cacheAdd.map((e) => {
+        return fakeDatabase.addUserInfo(e).catch((ee) => {
+            console.error({ e: ee });
+            if (ee.name == 'ConstraintError') {
+                const key = /** @type {string} */ (
+                    ee.message.match(/'([^']+)'/)?.[0]
+                );
+                if (key) {
+                    showErrorKey(
+                        e.id,
+                        key.replace(/'/g, ''),
+                        'Email đã tồn tại',
+                    );
+                }
+            }
+            hasError = true;
+        });
     });
+
+    await Promise.all([...changeV, ...addV]);
+
+    if (hasError) {
+        throw Error('Có lỗi xảy ra');
+    }
+
     cacheAdd = [];
+
+    document
+        .querySelectorAll('td[error]')
+        .forEach((e) => e.removeAttribute('error'));
+
     document.querySelectorAll('#content_table td').forEach((e) => {
         e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
         e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
         e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
     });
+
+    return true;
 }
 
 /**

@@ -221,7 +221,7 @@ function showPopup(parder, title, context, onOk, onCancel) {
  *     cols: COLS<T>;
  *     renderTable: (list: T[]) => void;
  *     renderRow?: (value: T) => HTMLTableRowElement;
- *     doSave: () => void;
+ *     doSave: () => Promise<?>;
  *     search: (list: T[]) => void;
  *     addRow: () => void;
  *     removeRows: () => void;
