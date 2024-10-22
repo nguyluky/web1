@@ -31,8 +31,24 @@ import categoryRender from './render/category_table.js';
  */
 //#endregion
 
+const urlParams = new URLSearchParams(window.location.search);
 /** @type {string} */
-let tab = 'user';
+let tab = urlParams.get('tab') || 'user';
+/** @type {HTMLElement | null} */ (
+    document.querySelector('input[name="tab-selestion"][value="' + tab + '"]')
+)?.click();
+
+//#region Các biến DOM quan trọng
+const btnMenu = document.getElementById('menu-btn');
+const btnAdd = document.getElementById('add-btn');
+const btnSave = document.getElementById('save-btn');
+const btnDelete = document.getElementById('delete-btn');
+// eslint-disable-next-line jsdoc/no-undefined-types
+const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
+    document.getElementsByName('tab-selestion')
+);
+const popupWrapper = document.getElementById('popup-wrapper');
+const loadingTable = document.getElementById('loading');
 
 /**
  * Quản lý các hàm render và cập nhật dữ liệu cho từng tab
@@ -59,18 +75,6 @@ const fakeDBManagement = {
     sach: () => fakeDatabase.getAllSach(),
     category: () => fakeDatabase.getAllCategory(),
 };
-
-//#region Các biến DOM quan trọng
-const btnMenu = document.getElementById('menu-btn');
-const btnAdd = document.getElementById('add-btn');
-const btnSave = document.getElementById('save-btn');
-const btnDelete = document.getElementById('delete-btn');
-// eslint-disable-next-line jsdoc/no-undefined-types
-const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
-    document.getElementsByName('tab-selestion')
-);
-const popupWrapper = document.getElementById('popup-wrapper');
-const loadingTable = document.getElementById('loading');
 
 const buttonAddState = {
     /* Thay đổi nút thành nút "Thêm" */
@@ -155,7 +159,6 @@ function updateMangement() {
     return tabManagement[tab].doSave();
 }
 
-//#region Xử lý sự kiện
 /**
  * @param {MouseEvent} event
  * @this {HTMLElement}
@@ -270,7 +273,14 @@ function handleSwitchTab(event) {
 
     tabElements.forEach((e) => (e.checked = false));
     this.checked = true;
+
+    if (this.value === tab) return;
     tab = this.value;
+
+    // cập nhật url
+
+    history.pushState({ tab }, '', `?tab=${tab}`);
+
     renderManagement();
 }
 
@@ -289,16 +299,14 @@ function handleContentOverflow() {
         },
     );
 }
-//#endregion
 
-//#region Khởi tạo các sự kiện
 function initializeMainButton() {
     btnDelete?.addEventListener('click', handleButtonDelete);
     btnSave?.addEventListener('click', handleButtonSave);
     btnAdd?.addEventListener('click', dandleButtonAdd);
 }
 
-function initializeSideBar() {
+function initializeSideBarPopup() {
     tabElements.forEach((e) => e.addEventListener('click', handleSwitchTab));
 
     // show side bar where in mobile ui
@@ -324,16 +332,31 @@ function initializeSideBar() {
     });
 }
 
-//#endregion
-
 /** Main funstion */
 async function main() {
     //
-    initializeSideBar();
+    initializeSideBarPopup();
     initializeMainButton();
-
     renderManagement();
 }
 
 window.addEventListener('resize', handleContentOverflow);
 window.addEventListener('load', main);
+
+// onhashchange là gì
+// https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
+window.onpopstate = function (event) {
+    const urlParams = new URLSearchParams(window.location.search);
+    tab = urlParams.get('tab') || 'user';
+
+    tabElements.forEach((e) => (e.checked = false));
+    const tab_ = /** @type {HTMLInputElement | null} */ (
+        document.querySelector(
+            'input[name="tab-selestion"][value="' + tab + '"]',
+        )
+    );
+
+    if (tab_) tab_.checked = true;
+
+    renderManagement();
+};
