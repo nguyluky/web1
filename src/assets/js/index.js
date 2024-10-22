@@ -1,7 +1,7 @@
 import fakeDatabase from './db/fakeDBv1.js';
 import removeDiacritics from './until/removeDiacritics.js';
 
-#region khai bao bien
+//#region khai bao bien
 const btnLocation = document.getElementById('btn-location');
 const closePopup = document.getElementById('btn-close');
 const popup_wrapper = document.getElementById('popup-wrapper');
