@@ -1,7 +1,7 @@
 import fakeDatabase from './db/fakeDBv1.js';
 import removeDiacritics from './until/removeDiacritics.js';
 
-// #region khai bao bien
+//#region khai bao bien
 const btnLocation = document.getElementById('btn-location');
 const closePopup = document.getElementById('btn-close');
 const popup_wrapper = document.getElementById('popup-wrapper');
@@ -329,3 +329,16 @@ function main() {
 }
 
 main();
+
+
+
+const catergory_row = document.querySelectorAll('.catergory__row--header');
+catergory_row.forEach(row =>{
+    console.log(row);
+    row.addEventListener('click', () =>{
+    const catergory_sub_row = row.parentElement?.querySelector('.catergory__row--sub');
+    console.log(catergory_sub_row);
+    catergory_sub_row?.classList.toggle('show');
+    })
+});
+    

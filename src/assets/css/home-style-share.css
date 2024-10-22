@@ -409,6 +409,51 @@ footer.footer .footer_wrapper .footer_box {
     background-color: rgba(134, 182, 255, 0.5);
 }
 
+.catergory__header{
+    font-size: 18px;
+    font-weight:700;
+    padding: 10px 0px;
+}
+
+.catergory__content{
+    display: flex;
+    flex-direction: column;
+}
+
+.catergory__row{
+    background-color: white;
+    border: none;
+    font-size: 18px;
+    font-weight:500;
+    padding-top: 20px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.catergory__row--sub{
+    padding-left: 30px;
+    padding-top: 5px;
+    display: none;
+}
+
+.catergory__row--sub > li{
+    padding: 5px 0px;
+    font-size: 16px;
+    border: none;
+    background-color: white;
+    text-align: left;
+    cursor:pointer;
+}
+
+.catergory__row--sub > li span{
+    position: relative;
+    left: -10px;
+}
+
+.catergory__row--header:hover , .catergory__row--sub > li:hover{
+    color: #189eff;
+}
+
 .show {
     display: block;
 }
