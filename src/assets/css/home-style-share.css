@@ -409,6 +409,10 @@ footer.footer .footer_wrapper .footer_box {
     background-color: rgba(134, 182, 255, 0.5);
 }
 
+.aside-box.box1.card{
+    padding-left: 30px;
+}
+
 .catergory__header{
     font-size: 18px;
     font-weight:700;
@@ -439,6 +443,7 @@ footer.footer .footer_wrapper .footer_box {
 .catergory__row--sub > li{
     padding: 5px 0px;
     font-size: 16px;
+    font-weight:450;
     border: none;
     background-color: white;
     text-align: left;
