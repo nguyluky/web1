@@ -1,4 +1,4 @@
-import fakeDatabase from './db/fakeDb.js';
+import fakeDatabase from './db/fakeDBv1.js';
 import removeDiacritics from './until/removeDiacritics.js';
 
 // #region khai bao bien
