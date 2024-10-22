@@ -1,4 +1,5 @@
 import fakeDatabase from '../db/fakeDBv1.js';
+import uuidv from '../until/uuid.js';
 import { renderTable, searchList } from './baseRender.js';
 
 /**
@@ -17,14 +18,36 @@ const cols = {
     // category: 'Category',
     // option: 'Option',
 };
+let cacheSave = {};
+let cacheAdd = [];
+/**
+ * Hàm xử lý khi có thay đổi dữ liệu trên bảng (hàm callback)
+ *
+ * @type {import('./baseRender.js').OnChange<Sach>}
+ */
+function onChangeHandle(data, key, newValue) {
+    console.log('onchange called');
 
+    if (cacheSave[data.id]) {
+        cacheSave[data.id] = {
+            ...cacheSave[data.id],
+            [key]: newValue,
+        };
+    } else {
+        cacheSave[data.id] = {
+            ...data,
+            [key]: newValue,
+        };
+    }
+}
 /**
  * @param {Sach} value
+ * @param {import('./baseRender.js').OnChange<Sach>?} onchange
  * @returns {HTMLTableRowElement} Row
  */
-function renderRow(value) {
+function renderRow(value, onchange = null) {
     const row = document.createElement('tr');
-
+    row.setAttribute('id-row', value.id);
     const col = document.createElement('td');
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -78,7 +101,7 @@ function renderSach(list) {
     );
     if (!table) return;
 
-    renderTable(list, table, cols, undefined, renderRow);
+    renderTable(list, table, cols, onChangeHandle, renderRow);
     // nếu tràn ô thì thêm overflow
     Array.from(document.getElementsByClassName('details-wrapper')).forEach(
         (e) => {
@@ -112,7 +135,7 @@ function addRow() {
     if (!table) return;
     /** @type {Sach} */
     const data = {
-        id: '',
+        id: uuidv(36),
         title: '',
         details: '',
         thumbnal: 'default',
@@ -121,13 +144,72 @@ function addRow() {
         category: [],
         option: [],
     };
-    table.insertBefore(renderRow(data), table.childNodes[1]);
+    cacheAdd.push(data);
+
+    let row = renderRow(data, (data, key, values) => {
+        cacheAdd[0][key] = values;
+    });
+    row.querySelectorAll('td:not(:has(input[type="checkbox"]))').forEach(
+        (e) => {
+            e.setAttribute('contenteditable', 'true');
+        },
+    );
+    table.insertBefore(row, table.childNodes[1]);
     /** @type {HTMLElement} */ (table.parentNode).scrollTo({
         top: 0,
         behavior: 'smooth',
     });
 }
 
+function cancelAdd() {
+    document.querySelector(`tr[id-row="${cacheAdd[0].id}"]`)?.remove();
+    cacheAdd = [];
+}
+
+function removeRows() {
+    document.querySelectorAll('tr').forEach((e) => {
+        let cb = /** @type {HTMLInputElement | null} */ (
+            e.querySelector('input[type="checkbox"]')
+        );
+        if (cb?.checked) {
+            let rowID = e.getAttribute('id-row');
+            if (rowID) fakeDatabase.deleteSachById(rowID);
+            e.remove();
+        }
+    });
+}
+
+async function saveBook() {
+    Object.keys(cacheSave).forEach((e) => {
+        console.log(e);
+        const data = cacheSave[e];
+        fakeDatabase.updateSach(data); // Gọi hàm cập nhật người dùng trong cơ sở dữ liệu giả lập
+    });
+
+    // Lưu người dùng mới vào database
+    cacheAdd.forEach((e) => {
+        console.log(e);
+        let source = /**@type {HTMLImageElement} */ (
+            document.querySelector(`tr[id-row="${e.id}"] .img-wrapper img`)
+        ).src;
+        if (source != '../assets/img/default-image.png') {
+            e.thumbnal = uuidv(36);
+            let img_id = e.thumbnal;
+            let img = {
+                id: img_id,
+                data: source,
+            };
+            fakeDatabase.addImg(img);
+        }
+        fakeDatabase.addSach(e); // Gọi hàm thêm người dùng mới vào cơ sở dữ liệu
+    });
+    cacheAdd = [];
+    document.querySelectorAll('#content_table td').forEach((e) => {
+        e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
+        e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
+        e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
+    });
+}
 function previewImg() {
     let imgInput = /**@type {HTMLInputElement} */ (
         document.getElementById('imgInput')
@@ -150,9 +232,8 @@ function previewImg() {
     });
 }
 async function showSubmitPopup() {
+    if (!(this.parentNode.getAttribute('contenteditable') == 'true')) return;
     const wrapper = document.getElementById('submit-wrapper');
-    // createElement('div');
-    // wrapper.className = 'submit-wrapper';
 
     const popup = document.createElement('div');
     popup.id = 'submit-popup';
@@ -166,16 +247,16 @@ async function showSubmitPopup() {
 
     const img_wrapper = document.createElement('div');
     img_wrapper.id = 'submit-img';
-    const img = document.createElement('img');
+    const imgPreview = document.createElement('img');
     let img_id = 'default';
     let e = this.parentNode.parentNode.querySelector('td[key="id"]');
     await fakeDatabase.getSachById(e.textContent).then((sach) => {
-        img_id = sach.thumbnal;
+        if (sach) img_id = sach.thumbnal;
     });
     fakeDatabase.getImgById(img_id).then((imgS) => {
-        img.src = imgS.data;
+        imgPreview.src = imgS.data;
     });
-    img_wrapper.appendChild(img);
+    img_wrapper.appendChild(imgPreview);
     popup.appendChild(img_wrapper);
 
     const input = document.createElement('input');
@@ -197,6 +278,9 @@ async function showSubmitPopup() {
     cancel.addEventListener('click', () => {
         popup.remove();
     });
+    btn_save.addEventListener('click', () => {
+        this.querySelector('img').src = imgPreview.src;
+    });
 }
 
 /** @type {import('./baseRender.js').IntefaceRender<Sach>} */
@@ -205,16 +289,10 @@ const Sach_ = {
     renderTable: renderSach,
     renderRow,
     search: searchSach,
-    doSave: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
+    doSave: saveBook,
     addRow,
-    removeRows: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
-    cancelAdd: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
+    removeRows,
+    cancelAdd,
 };
 
 export default Sach_;

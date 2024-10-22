@@ -1,4 +1,4 @@
-import uuidv4 from '../until/uuid.js';
+import uuidv from '../until/uuid.js';
 import addressData from './addressDb.js';
 
 const ObjectStoreName = {
@@ -256,7 +256,7 @@ class FakeDatabase {
     async createUserInfo(password, display_name, std, email) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
-        const user_id = uuidv4();
+        const user_id = uuidv(8);
         const userInfo = {
             id: user_id,
             name: display_name,
