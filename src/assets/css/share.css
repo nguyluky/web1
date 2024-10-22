@@ -38,8 +38,6 @@ body {
     padding: 10px;
     border-radius: 4px;
     background-color: #ffffff;
-    /*  */
-    /* box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); */
 }
 
 .ct-input {
@@ -71,7 +69,6 @@ body {
 
 .ct-input .input_text::after {
     content: '';
-    z-index: 1;
     position: absolute;
     height: 24px;
     width: 1px;
@@ -118,6 +115,47 @@ body {
 
 .button_1:active {
     transform: scale(0.98);
+}
+
+.button_1.dropdown-btn:active {
+    transform: none;
+}
+
+.button_1:hover .dropdown-btn-content {
+    display: block;
+}
+
+.button_1.dropdown-btn {
+    position: relative;
+}
+
+.dropdown-btn .dropdown-btn-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.18) 0px 6px 12px 0px;
+    border-radius: 8px;
+    padding: 10px 0;
+    width: max-content;
+}
+
+.dropdown-btn-content.dropdown-pos-left-bottom {
+    right: 0;
+    top: 100%;
+}
+
+.dropdown-btn-content.dropdown-pos-left-bottom > p {
+    text-align: left;
+}
+
+.dropdown-btn-content > p {
+    font-size: 15px;
+    padding: 5px 10px;
+    color: #27272a;
+}
+
+.dropdown-btn-content > p:hover {
+    background: #efefef;
 }
 
 .button_1.btn-primary {

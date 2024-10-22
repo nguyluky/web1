@@ -1,5 +1,5 @@
-import fackDatabase from './db/fakeDb.js';
-import { showPopup } from './render/reader_table.js';
+import fakeDatabase from './db/fakeDBv1.js';
+import { showPopup } from './render/baseRender.js';
 import userRender from './render/user_table.js';
 import cartRender from './render/cart_table.js';
 import sachRender from './render/sach_table.js';
@@ -14,35 +14,32 @@ import categoryRender from './render/category_table.js';
    \ \_\ \_\ \____/\ \_\\ \_\/\_____\\ \_\ \_\
     \/_/\/_/\/___/  \/_/ \/_/\/_____/ \/_/\/_/
  */
+//#region định nghĩa kiểu dữ liệu
 
 /**
+ * Định nghĩa các kiểu dữ liệu sử dụng trong project
+ *
  * @typedef {import('./until/type.js').Cart} Cart
+ *
  * @typedef {import('./until/type.js').Category} Category
+ *
  * @typedef {import('./until/type.js').Sach} Sach
+ *
  * @typedef {import('./until/type.js').UserInfo} UserInfo
+ *
  * @typedef {import('./until/type.js').imgStore} imgStore
  */
+//#endregion
 
-/**
- * @typedef {{
- *  user: UserInfo,
- *  cart: Cart,
- *  sach: Sach,
- *  category: Category,
- * }} Templay
- */
-
-/**
- * @type {string}
- */
+/** @type {string} */
 let tab = 'user';
-/**
- * @type {string}
- */
-let state = 'none';
 
 /**
- * @type {{[Key: string]: import('./render/reader_table.js').intefaceRender<?>}}
+ * Quản lý các hàm render và cập nhật dữ liệu cho từng tab
+ *
+ * @type {{
+ *     [Key: string]: import('./render/baseRender.js').IntefaceRender<?>;
+ * }}
  */
 const tabManagement = {
     user: userRender,
@@ -52,14 +49,18 @@ const tabManagement = {
 };
 
 /**
- * @type {{[key: string]: () => Promise<?>}}
+ * Lấy dữ liệu từ database giả lập cho từng tab
+ *
+ * @type {{ [key: string]: () => Promise<?> }}
  */
 const fakeDBManagement = {
-    user: () => fackDatabase.getAllUserInfo(),
-    cart: () => fackDatabase.getALlCart(),
-    sach: () => fackDatabase.getAllSach(),
-    category: () => fackDatabase.getAllCategory(),
+    user: () => fakeDatabase.getAllUserInfo(),
+    cart: () => fakeDatabase.getALlCart(),
+    sach: () => fakeDatabase.getAllSach(),
+    category: () => fakeDatabase.getAllCategory(),
 };
+
+//#region Các biến DOM quan trọng
 const btnMenu = document.getElementById('menu-btn');
 const btnAdd = document.getElementById('add-btn');
 const btnSave = document.getElementById('save-btn');
@@ -72,10 +73,7 @@ const popupWrapper = document.getElementById('popup-wrapper');
 const loadingTable = document.getElementById('loading');
 
 const buttonAddState = {
-    /**
-     * chuyển button thành button add
-     * với btn-warning var icon x
-     */
+    /* Thay đổi nút thành nút "Thêm" */
     add: () => {
         btnAdd?.classList.remove('btn-warning');
         btnAdd?.classList.add('btn-primary');
@@ -88,9 +86,7 @@ const buttonAddState = {
             (btnSave.innerHTML =
                 '<i class="fa-solid fa-pen"></i><span>Edit</span>');
     },
-    /**
-     * chuyển thành button thêm
-     */
+    /* Thay đổi nút thành "Hủy" */
     cancel: () => {
         btnAdd?.classList.add('btn-warning');
         btnAdd?.classList.remove('btn-primary');
@@ -106,6 +102,7 @@ const buttonAddState = {
 };
 
 const buttonSaveState = {
+    /* Đổi trạng thái nút thành "Chỉnh sửa" */
     edit: () => {
         btnSave &&
             (btnSave.innerHTML =
@@ -114,6 +111,7 @@ const buttonSaveState = {
             td.setAttribute('contenteditable', 'false');
         });
     },
+    /* Đổi trạng thái nút thành "Lưu" và cho phép chỉnh sửa */
     save: () => {
         btnSave &&
             (btnSave.innerHTML =
@@ -125,12 +123,10 @@ const buttonSaveState = {
     },
 };
 
-/**
- *
- */
+/** Xử lý render dữ liệu tương ứng với tab hiện tại */
 async function renderManagement() {
     const title = document.getElementById('table-title-header');
-    const input = /**@type {HTMLInputElement} */ (
+    const input = /** @type {HTMLInputElement} */ (
         document.getElementById('search-input')
     );
     input.value = '';
@@ -153,18 +149,18 @@ async function renderManagement() {
     input.oninput = () => tabManagement[tab].search(data);
 }
 
-/**
- *
- */
+/** Không biết ghi gì */
+/** @returns {Promise<void>} */
 function updateMangement() {
-    tabManagement[tab].doSave();
+    return tabManagement[tab].doSave();
 }
 
+//#region Xử lý sự kiện
 /**
- * @this {HTMLElement}
  * @param {MouseEvent} event
+ * @this {HTMLElement}
  */
-function buttonSaveHandle(event) {
+function handleButtonSave(event) {
     const isEditMod = this.classList.contains('canedit');
     // nhấn nút Edit
     if (!isEditMod) {
@@ -180,21 +176,22 @@ function buttonSaveHandle(event) {
             'Xác nhận sửa',
             'Bạn có chắc là muốn sửa không',
             () => {
-                buttonAddState.add();
-                buttonSaveState.edit();
-
-                updateMangement();
+                updateMangement()
+                    .then(() => {
+                        buttonAddState.add();
+                        buttonSaveState.edit();
+                    })
+                    .catch(() => {});
             },
             null,
         );
 }
 
 /**
- *
- * @this {HTMLElement}
  * @param {MouseEvent} event
+ * @this {HTMLElement}
  */
-function buttonDeleteHandle(event) {
+function handleButtonDelete(event) {
     const popupWrapper = document.getElementById('popup-wrapper');
     if (popupWrapper) {
         showPopup(
@@ -211,11 +208,10 @@ function buttonDeleteHandle(event) {
 }
 
 /**
- *
- * @this {HTMLElement}
  * @param {MouseEvent} event
+ * @this {HTMLElement}
  */
-function buttonAddHandle(event) {
+function dandleButtonAdd(event) {
     const isAddMode = this.classList.contains('btn-warning');
 
     if (isAddMode) {
@@ -227,11 +223,10 @@ function buttonAddHandle(event) {
     }
 }
 /**
- *
- * @this {HTMLElement}
  * @param {MouseEvent} event
+ * @this {HTMLElement}
  */
-function buttonMenuHandle(event) {
+function handleButtonMenu(event) {
     if (!this.classList.contains('active')) {
         document.getElementById('drop-list')?.classList.add('show');
         this.classList.add('active');
@@ -242,10 +237,12 @@ function buttonMenuHandle(event) {
 }
 
 /**
- * @this {HTMLInputElement}
+ * Xử lý khi chuyển giữa các tab khác nhau
+ *
  * @param {MouseEvent} event
+ * @this {HTMLInputElement}
  */
-function tabHandle(event) {
+function handleSwitchTab(event) {
     const isEditMode = btnSave?.classList.contains('canedit');
 
     if (isEditMode) {
@@ -277,30 +274,7 @@ function tabHandle(event) {
     renderManagement();
 }
 
-/**
- * main funstion
- */
-async function main() {
-    tabElements.forEach((e) => e.addEventListener('click', tabHandle));
-
-    const input = document.getElementById('search-input');
-
-    renderManagement();
-    // input && (input.oninput = () => tabManagement['user'].search(data));
-
-    btnDelete?.addEventListener('click', buttonDeleteHandle);
-    btnSave?.addEventListener('click', buttonSaveHandle);
-    btnAdd?.addEventListener('click', buttonAddHandle);
-    btnMenu?.addEventListener('click', buttonMenuHandle);
-
-    document.getElementById('drop-list')?.addEventListener('click', () => {
-        document.getElementById('drop-list')?.classList.remove('show');
-        // NOTE: không xóa dòng này -_-
-        document.getElementById('menu-btn')?.classList.remove('active');
-    });
-}
-
-function updateContent() {
+function handleContentOverflow() {
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
     if (!contentDiv) return;
@@ -315,8 +289,51 @@ function updateContent() {
         },
     );
 }
+//#endregion
 
-updateContent();
+//#region Khởi tạo các sự kiện
+function initializeMainButton() {
+    btnDelete?.addEventListener('click', handleButtonDelete);
+    btnSave?.addEventListener('click', handleButtonSave);
+    btnAdd?.addEventListener('click', dandleButtonAdd);
+}
 
-window.addEventListener('resize', updateContent);
+function initializeSideBar() {
+    tabElements.forEach((e) => e.addEventListener('click', handleSwitchTab));
+
+    // show side bar where in mobile ui
+    btnMenu?.addEventListener('click', handleButtonMenu);
+    const drop_menu = document.getElementById('drop-list');
+    document.getElementById('drop-list')?.addEventListener('click', () => {
+        drop_menu?.classList.remove('show');
+        // NOTE: không xóa dòng này -_-
+        btnMenu?.classList.remove('active');
+    });
+
+    document.addEventListener('click', (event) => {
+        const isClickInsideDropdown = /** @type {HTMLElement} */ (
+            event.target
+        ).closest('#drop-list');
+        const isClickInsideMenu = /** @type {HTMLElement} */ (
+            event.target
+        ).closest('#menu-btn');
+        if (!isClickInsideDropdown && !isClickInsideMenu) {
+            drop_menu?.classList.remove('show');
+            btnMenu?.classList.remove('active');
+        }
+    });
+}
+
+//#endregion
+
+/** Main funstion */
+async function main() {
+    //
+    initializeSideBar();
+    initializeMainButton();
+
+    renderManagement();
+}
+
+window.addEventListener('resize', handleContentOverflow);
 window.addEventListener('load', main);

@@ -1,6 +1,4 @@
-/**
- * @type {import("../until/type").Address[]}
- */
+/** @type {import('../until/type').Address[]} */
 const address = [
     {
         Id: '01',
@@ -24070,4 +24068,4 @@ const address = [
 
 export default address;
 
-// function 
+// function

@@ -1,8 +1,6 @@
-import { renderTable, searchList } from './reader_table.js';
+import { renderTable, searchList } from './baseRender.js';
 
-/**
- * @typedef {import('../until/type.js').Cart} Cart
- */
+/** @typedef {import('../until/type.js').Cart} Cart */
 
 const cols = {
     id: 'Id',
@@ -14,12 +12,9 @@ const cols = {
     timecreate: 'Ngày tạo',
 };
 
-/**
- *
- * @param {Cart[]} list
- */
+/** @param {Cart[]} list */
 function renderCart(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
@@ -27,12 +22,9 @@ function renderCart(list) {
     renderTable(list, table, cols);
 }
 
-/**
- *
- * @param {Cart[]} list
- */
+/** @param {Cart[]} list */
 function searchCart(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
@@ -41,9 +33,7 @@ function searchCart(list) {
     renderTable(result, table, cols);
 }
 
-/**
- * @type {import('./reader_table.js').intefaceRender<Cart>}
- */
+/** @type {import('./baseRender.js').IntefaceRender<Cart>} */
 const Cart_ = {
     cols,
     renderTable: renderCart,

@@ -1,8 +1,9 @@
-import fackDatabase from '../db/fakeDb.js';
-import { renderTable, searchList } from './reader_table.js';
+import fakeDatabase from '../db/fakeDBv1.js';
+import { renderTable, searchList } from './baseRender.js';
 
 /**
  * @typedef {import('../until/type.js').Sach} Sach
+ *
  * @typedef {import('../until/type.js').imgStore} imgStore
  */
 
@@ -18,9 +19,8 @@ const cols = {
 };
 
 /**
- *
  * @param {Sach} value
- * @returns {HTMLTableRowElement} row
+ * @returns {HTMLTableRowElement} Row
  */
 function renderRow(value) {
     const row = document.createElement('tr');
@@ -41,7 +41,7 @@ function renderRow(value) {
                     value,
                     // @ts-ignore
                     key,
-                    /**@type {HTMLTableCellElement}*/ (event.target)
+                    /** @type {HTMLTableCellElement} */ (event.target)
                         .textContent,
                 );
         };
@@ -53,13 +53,16 @@ function renderRow(value) {
             details_wrapper.insertAdjacentHTML('beforeend', value[key]);
             col.appendChild(details_wrapper);
         } else if (key == 'thumbnal') {
+            // tạo div bao ảnh
             const img_wrapper = document.createElement('div');
             img_wrapper.className = 'img-wrapper';
+            // tạo thẻ img hiển thị ảnh
             const img = document.createElement('img');
-            fackDatabase.getImgById(value[key]).then((imgS) => {
-                img.src = imgS?.data || '=(';
+            fakeDatabase.getImgById(value[key]).then((imgS) => {
+                img.src = imgS?.data || '../assets/img/default-image.png';
             });
             img_wrapper.appendChild(img);
+            img_wrapper.addEventListener('click', showSubmitPopup);
             col.appendChild(img_wrapper);
         } else col.insertAdjacentHTML('beforeend', value[key]);
         row.appendChild(col);
@@ -68,18 +71,15 @@ function renderRow(value) {
     return row;
 }
 
-/**
- *
- * @param {Sach[]} list
- */
+/** @param {Sach[]} list */
 function renderSach(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
 
     renderTable(list, table, cols, undefined, renderRow);
-
+    // nếu tràn ô thì thêm overflow
     Array.from(document.getElementsByClassName('details-wrapper')).forEach(
         (e) => {
             if (e.scrollHeight > e.clientHeight) e.classList.add('isOverFlow');
@@ -87,12 +87,9 @@ function renderSach(list) {
     );
 }
 
-/**
- *
- * @param {Sach[]} list
- */
+/** @param {Sach[]} list */
 function searchSach(list) {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
@@ -101,19 +98,19 @@ function searchSach(list) {
     document.querySelectorAll('#content_table > tr[id-row]').forEach((e) => {
         const id = e.getAttribute('id-row') || '';
         if (result.includes(id)) {
-            /**@type {HTMLElement}*/ (e).style.display = '';
+            /** @type {HTMLElement} */ (e).style.display = '';
         } else {
-            /**@type {HTMLElement}*/ (e).style.display = 'none';
+            /** @type {HTMLElement} */ (e).style.display = 'none';
         }
     });
 }
 
 function addRow() {
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
-    /**@type {Sach}*/
+    /** @type {Sach} */
     const data = {
         id: '',
         title: '',
@@ -124,23 +121,85 @@ function addRow() {
         category: [],
         option: [],
     };
-    const row = renderRow(data);
-    const thumbnal = row.querySelector('td[key="thumbnal"]');
-    if (!thumbnal) return;
-    if (thumbnal.firstElementChild)
-        thumbnal.removeChild(thumbnal.firstElementChild);
-    const upFile = document.createElement('input');
-    upFile.type = 'file';
-    thumbnal.appendChild(upFile);
-    table.insertBefore(row, table.childNodes[1]);
-    /**@type {HTMLElement} */ (table.parentNode).scrollTo({
+    table.insertBefore(renderRow(data), table.childNodes[1]);
+    /** @type {HTMLElement} */ (table.parentNode).scrollTo({
         top: 0,
         behavior: 'smooth',
     });
 }
-/**
- * @type {import('./reader_table.js').intefaceRender<Sach>}
- */
+
+function previewImg() {
+    let imgInput = /**@type {HTMLInputElement} */ (
+        document.getElementById('imgInput')
+    );
+    let imgPreview = /**@type {HTMLImageElement} */ (
+        document.querySelector('#submit-img img')
+    );
+    if (!imgInput || !imgPreview) return;
+    imgInput.addEventListener('change', () => {
+        let file = imgInput.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                imgPreview.src = /**@type {string} */ (event.target?.result);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+}
+async function showSubmitPopup() {
+    const wrapper = document.getElementById('submit-wrapper');
+    // createElement('div');
+    // wrapper.className = 'submit-wrapper';
+
+    const popup = document.createElement('div');
+    popup.id = 'submit-popup';
+
+    const cancel = document.createElement('div');
+    cancel.id = 'cancel-submit';
+    const closeIcon = document.createElement('i');
+    closeIcon.className = 'fa-solid fa-xmark';
+    cancel.appendChild(closeIcon);
+    popup.appendChild(cancel);
+
+    const img_wrapper = document.createElement('div');
+    img_wrapper.id = 'submit-img';
+    const img = document.createElement('img');
+    let img_id = 'default';
+    let e = this.parentNode.parentNode.querySelector('td[key="id"]');
+    await fakeDatabase.getSachById(e.textContent).then((sach) => {
+        img_id = sach.thumbnal;
+    });
+    fakeDatabase.getImgById(img_id).then((imgS) => {
+        img.src = imgS.data;
+    });
+    img_wrapper.appendChild(img);
+    popup.appendChild(img_wrapper);
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.id = 'imgInput';
+    const btn_save = document.createElement('div');
+    btn_save.id = 'save-submit';
+    btn_save.textContent = 'Save';
+    popup.appendChild(input);
+    popup.appendChild(btn_save);
+    wrapper?.insertAdjacentElement('afterbegin', popup);
+
+    // event
+    previewImg();
+    wrapper?.addEventListener('click', (e) => {
+        if (/**@type {HTMLElement} */ (e.target).contains(popup)) cancel.click;
+    });
+    cancel.addEventListener('click', () => {
+        popup.remove();
+    });
+}
+
+/** @type {import('./baseRender.js').IntefaceRender<Sach>} */
 const Sach_ = {
     cols,
     renderTable: renderSach,
