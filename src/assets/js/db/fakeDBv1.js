@@ -15,7 +15,7 @@ const req = window.indexedDB.open('fakedb', 1);
 
 // Initialize dataLoaded state from localStorage or set default
 const dataLoaded = JSON.parse(
-    /**@type {string} */ (window.localStorage.getItem('dataLoaded')),
+    /** @type {string} */ (window.localStorage.getItem('dataLoaded')),
 ) || {
     [ObjectStoreName.USER]: false,
     [ObjectStoreName.IMG]: false,
@@ -172,8 +172,7 @@ class FakeDatabase {
     async requestToPromise(request) {
         return new Promise((resolve, reject) => {
             request.onsuccess = () => resolve(request.result);
-            request.onerror = (event) =>
-                reject(`Error: ${event.target.errorCode}`);
+            request.onerror = (event) => reject(event.target.error);
         });
     }
     async awaitUntilReady() {
