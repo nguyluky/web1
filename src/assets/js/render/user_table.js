@@ -1,4 +1,4 @@
-import fakeDatabase from '../db/fakeDb.js';
+import fakeDatabase from '../db/fakeDBv1.js';
 import { validateUserInfo } from '../until/type.js';
 import uuidv4 from '../until/uuid.js';
 import { searchList, renderTable, defaultRenderRow } from './baseRender.js';

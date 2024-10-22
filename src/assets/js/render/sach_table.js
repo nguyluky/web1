@@ -1,4 +1,4 @@
-import fakeDatabase from '../db/fakeDb.js';
+import fakeDatabase from '../db/fakeDBv1.js';
 import { renderTable, searchList } from './baseRender.js';
 
 /**

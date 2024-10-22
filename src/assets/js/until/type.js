@@ -21,15 +21,16 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     img?: string;
  *     price: number;
  * }} Option
- */
-/**
+ *
+ *
  * @typedef {{
  *     id: string;
  *     name: string;
  *     long_name?: string;
  * }} Category
- *
- *
+ */
+
+/**
  * @typedef {{
  *     id: string;
  *     user_id: string;
@@ -49,8 +50,9 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     phone_num: string;
  *     rule?: 'admin' | 'user';
  * }} UserInfo
- *
- *
+ */
+
+/**
  * @typedef {{
  *     id: string;
  *     data: string;

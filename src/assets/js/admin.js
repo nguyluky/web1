@@ -1,4 +1,4 @@
-import fakeDatabase from './db/fakeDb.js';
+import fakeDatabase from './db/fakeDBv1.js';
 import { showPopup } from './render/baseRender.js';
 import userRender from './render/user_table.js';
 import cartRender from './render/cart_table.js';

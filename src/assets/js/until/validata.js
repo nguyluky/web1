@@ -2,6 +2,10 @@
  * @param {string} email
  * @returns {boolean}
  */
+/**
+ * @param {string} email
+ * @returns {boolean}
+ */
 const validateEmail = (email) => {
     return !!String(email)
         .toLowerCase()
@@ -10,8 +14,13 @@ const validateEmail = (email) => {
         );
 };
 
-const validateNumberPhone = (phone) => {
-    return !!String(phone).match(/^[0-9]{10,11}$/);
+/**
+ * @param {string} numberPhone
+ * @returns {boolean}
+ */
+const validateNumberPhone = (numberPhone) => {
+    return !!String(numberPhone).match(
+        /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/,
+    );
 };
-
 export { validateEmail, validateNumberPhone };

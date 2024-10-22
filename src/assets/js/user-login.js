@@ -1,4 +1,4 @@
-import fakeDatabase from './db/fakeDb.js';
+import fakeDatabase from './db/fakeDBv1.js';
 
 const btnAccount = document.getElementById('btn-account');
 const modal = document.getElementById('js-modal');
