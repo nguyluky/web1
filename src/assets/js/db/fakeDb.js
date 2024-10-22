@@ -21,8 +21,6 @@ const ObjectStoreName = {
     IMG: 'imgStore',
 };
 
-// ====================================================================
-
 /**
  * Biến lưu trữ kết nối đến IndexedDB
  *
@@ -100,9 +98,9 @@ function createObjectStore(db_) {
     //#endregion
 }
 
+// ==================== Thêm dữ liệu mặc định vào database ====================
 /** @param {IDBDatabase} db_ */
 async function initDefaultData(db_) {
-    // ==================== Thêm dữ liệu mặc định vào database ====================
     console.log('Bắt đầu thêm dữ liệu mặc định');
     console.log('Đang tải dữ liệu từ file json...');
 
@@ -179,10 +177,11 @@ req.onupgradeneeded = async (event) => {
 // Xử lý lỗi khi không thể mở kết nối đến IndexedDB
 req.onerror = (event) => {
     console.error("Why didn't you allow my web app to use IndexedDB?!");
+    console.error(event);
 };
 
 // Xử lý khi kết nối thành công
-req.onsuccess = (event) => {
+req.onsuccess = () => {
     if (isOnupgradeneeded) return; // Nếu đang trong quá trình nâng cấp thì không làm gì thêm
     db = req.result; // Lưu kết nối cơ sở dữ liệu vào biến db
 
@@ -214,7 +213,7 @@ class FakeDatabase {
 
     /**
      * @param {string} name
-     * @returns
+     * @returns {Promise<string[]>}
      */
     async getAllTinhThanhByThanPho(name) {
         return (
@@ -239,7 +238,7 @@ class FakeDatabase {
 
     async awaitUntilReady() {
         let id;
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             id = setInterval(() => {
                 if (db) {
                     console.log(db);
@@ -284,7 +283,10 @@ class FakeDatabase {
         return await this.requestToPromise(userget);
     }
 
-    /** @param {string} user_id */
+    /**
+     * @param {string} user_id
+     * @returns {Promise<UserInfo | undefined>}
+     */
     async deleteUserById(user_id) {
         if (!db) await this.awaitUntilReady();
         const data = db
@@ -297,7 +299,6 @@ class FakeDatabase {
      * @param {string} email
      * @param {string} password
      * @returns {Promise<UserInfo | undefined>} Nếu không tìm thấy sẽ trả về
-     *   undefined
      */
     async getUserInfoByEmailAndPassword(email, password) {
         if (!db) await this.awaitUntilReady();
@@ -308,7 +309,11 @@ class FakeDatabase {
         const userget = data.index('email_and_pass').get([email, password]);
         return await this.requestToPromise(userget);
     }
-    /**@param {string} phone_num */
+
+    /**
+     * @param {string} phone_num
+     * @returns {Promise<UserInfo | undefined>}
+     */
     async getUserInfoByPhoneNum(phone_num) {
         if (!db) await this.awaitUntilReady();
         const data = db
@@ -330,7 +335,7 @@ class FakeDatabase {
             .transaction(ObjectStoreName.USER, 'readwrite')
             .objectStore(ObjectStoreName.USER);
 
-        return await this.requestToPromise(data.add(userInfo));
+        await this.requestToPromise(data.add(userInfo));
     }
 
     /**
@@ -358,9 +363,10 @@ class FakeDatabase {
             .transaction(ObjectStoreName.USER, 'readwrite')
             .objectStore(ObjectStoreName.USER);
 
-        return await this.requestToPromise(data_.add(data));
+        await this.requestToPromise(data_.add(data));
     }
 
+    /** @param {UserInfo} userInfo */
     async updateUserInfo(userInfo) {
         if (!db) await this.awaitUntilReady();
 
@@ -368,7 +374,7 @@ class FakeDatabase {
             .transaction(ObjectStoreName.USER, 'readwrite')
             .objectStore(ObjectStoreName.USER);
 
-        return await this.requestToPromise(data.put(userInfo));
+        await this.requestToPromise(data.put(userInfo));
     }
 
     /** @returns {Promise<Sach[]>} Array */
@@ -406,20 +412,17 @@ class FakeDatabase {
         const objectStore = db
             .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
-        return await this.requestToPromise(objectStore.add(bookInfo));
+        await this.requestToPromise(objectStore.add(bookInfo));
     }
 
-    /**
-     * @param {Sach} bookInfo
-     * @returns
-     */
+    /** @param {Sach} bookInfo */
     async updateSach(bookInfo) {
         if (!db) await this.awaitUntilReady();
 
         const data = db
             .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
-        return await this.requestToPromise(data.put(bookInfo));
+        await this.requestToPromise(data.put(bookInfo));
     }
 
     /** @param {string} sach_id */
@@ -430,7 +433,7 @@ class FakeDatabase {
             .transaction(ObjectStoreName.BOOK, 'readwrite')
             .objectStore(ObjectStoreName.BOOK);
 
-        return await this.requestToPromise(data.delete(sach_id));
+        await this.requestToPromise(data.delete(sach_id));
     }
 
     /** @returns {Promise<Cart[]>} Array */
@@ -533,7 +536,7 @@ class FakeDatabase {
             .transaction(ObjectStoreName.IMG, 'readwrite')
             .objectStore(ObjectStoreName.IMG);
         const req = objectStore.add(img);
-        return await this.requestToPromise(req);
+        await this.requestToPromise(req);
     }
 
     /** @param {imgStore} img */
@@ -544,7 +547,7 @@ class FakeDatabase {
             .transaction(ObjectStoreName.IMG, 'readwrite')
             .objectStore(ObjectStoreName.IMG);
         const req = objectStore.put(img);
-        return await this.requestToPromise(req);
+        await this.requestToPromise(req);
     }
 }
 

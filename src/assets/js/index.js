@@ -1,4 +1,4 @@
-import fakeDatabase from './db/fakeDb.js';
+import fakeDatabase from './db/fakeDBv1.js';
 import removeDiacritics from './until/removeDiacritics.js';
 
 #region khai bao bien
@@ -10,7 +10,7 @@ const btnAccount = document.getElementById('btn-account');
 const modal = document.querySelector('.modal');
 const btnExit = document.getElementById('btn-exit');
 const modalDemo = document.querySelector('.modal-demo');
-const btnSubmit = document.getElementById('btn-submit');
+
 const address_display = /** @type {HTMLInputElement} */ (
     document.getElementById('address_display')
 );
@@ -122,60 +122,8 @@ function renderPhuongXa(tintp, qh, onchange) {
     );
 }
 
-/**
- * - Xóa toàn bộ dấu trong chuỗi ví
- * - Dụ => vi
- * - Du dùng để tìm kiếm
- *
- * @param {string} str
- * @returns
- */
-function removeDiacritics(str) {
-    return str
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[Đ]/g, 'D')
-        .replace(/[đ]/g, 'd')
-        .toLocaleLowerCase();
-}
-
-//#region Main
-function main() {
-    //#region show & hide popup
-    btnLocation?.addEventListener('click', () => {
-        popup_wrapper?.classList.add('show');
-    });
-
-    // NOTE: nếu mà nhấn mà nó nó chứa thằng popup thì là nhấn bên ngoài
-    popup_wrapper?.addEventListener('click', (event) => {
-        const popup = /** @type {HTMLElement} */ (event.target).querySelector(
-            '.popup',
-        );
-        if (popup) popup_wrapper?.classList.remove('show');
-    });
-
-    closePopup?.addEventListener('click', () => {
-        popup_wrapper?.classList.remove('show');
-    });
-
-    //
-    btnAccount?.addEventListener('click', () => {
-        modal?.classList.add('show-modal');
-    });
-    btnExit?.addEventListener('click', () => {
-        modal?.classList.remove('show-modal');
-    });
-    modal?.addEventListener('click', (e) => {
-        if (!e.target) return;
-        if (!modalDemo?.contains(/** @type {HTMLElement} */ (e.target))) {
-            btnExit?.click();
-        }
-    });
-
-    //#endregion
-
-    //#region handel address dropdown
-
+/** Khỏi tại hàm sử lý popup đại trỉ */
+function initializeLocationPopup() {
     // được gọi một lần duy nhất
     renderTinhThanhPho((tinhpt) => {
         renderQuanHuyen(tinhpt, (qh) => {
@@ -185,6 +133,7 @@ function main() {
         });
     });
 
+    /** Hiện popup */
     function showPopupLocation() {
         popup_wrapper?.classList.add('show');
     }
@@ -202,7 +151,6 @@ function main() {
         else address_form?.classList.remove('show');
     }
 
-    // khởi tạo
     function initializeDropdown(element) {
         const input = element.querySelector('input');
         const contentDropdowContent = element.querySelector(

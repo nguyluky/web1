@@ -1,5 +1,5 @@
-import fakeDatabase from '../db/fakeDb.js';
-import { renderTable, searchList } from './reader_table.js';
+import fakeDatabase from '../db/fakeDBv1.js';
+import { renderTable, searchList } from './baseRender.js';
 
 /**
  * @typedef {import('../until/type.js').Sach} Sach
@@ -132,7 +132,7 @@ function addRow() {
         behavior: 'smooth',
     });
 }
-/** @type {import('./reader_table.js').intefaceRender<Sach>} */
+/** @type {import('./baseRender.js').IntefaceRender<Sach>} */
 const Sach_ = {
     cols,
     renderTable: renderSach,

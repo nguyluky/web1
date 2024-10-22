@@ -3,7 +3,7 @@
 @import url('./user_login.css');
 
 :root {
-    --width-header: 1200px;
+    --width-header: calc(100vw - 200px);
 }
 
 header.header {
@@ -74,7 +74,6 @@ main.main {
     display: flex;
     align-items: center;
     flex-direction: column;
-    min-height: calc(100vh - 220px);
 }
 
 footer.footer {
@@ -250,22 +249,11 @@ footer.footer .footer_wrapper .footer_box {
 
 @media screen and (max-width: 1200px) {
     :root {
-        --width-header: 1000px;
+        --width-header: calc(100vw - 100px);
     }
 }
 
-@media screen and (max-width: 1000px) {
-    :root {
-        --width-header: 800px;
-    }
-}
-
-@media screen and (max-width: 500px) {
-    .header_wrapper .right .button_1 > span {
-        display: none;
-    }
-}
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
     :root {
         --width-header: 90vw;
     }
@@ -469,3 +457,15 @@ footer.footer .footer_wrapper .footer_box {
 .show {
     display: block;
 }
+
+@media screen and (max-width: 500px) {
+    .header_wrapper .right .button_1 > span {
+        display: none;
+    }
+}
+
+/* @media screen and (max-width: 900px) {
+    :root {
+        --width-header: 90vw;
+    }
+} */
