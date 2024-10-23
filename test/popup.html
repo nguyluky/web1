@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -9,6 +9,38 @@
             rel="stylesheet"
             href="../src/assets/fontawesome/css/all.min.css"
         />
+
+        <style>
+            .img-preview-wrapper {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
+            .img-preview-wrapper img {
+                width: 100%;
+                aspect-ratio: 1/1;
+                object-fit: cover;
+            }
+
+            .file-upload-btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            .file-upload-btn i {
+                margin-right: 5px;
+            }
+
+            .file-upload-btn input {
+                display: none;
+            }
+        </style>
     </head>
     <body>
         <div id="popup-wrapper">
@@ -20,12 +52,14 @@
                     </button>
                 </div>
                 <div class="pupop-context">
-                    <img />
-                    <label class="file-upload-btn">
-                        <i class="fa-solid fa-file-arrow-up"></i>
-                        <span>Nhấp để upload</span>
-                        <input type="file" id="img" accept="image/*" />
-                    </label>
+                    <div class="img-preview-wrapper">
+                        <img />
+                        <label class="file-upload-btn">
+                            <i class="fa-solid fa-file-arrow-up"></i>
+                            <span>Nhấp để upload</span>
+                            <input type="file" id="img" accept="image/*" />
+                        </label>
+                    </div>
                 </div>
                 <div class="popup-footer">
                     <button class="button_1 btn-primary">Cancel</button>

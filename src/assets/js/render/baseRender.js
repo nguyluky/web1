@@ -5,8 +5,6 @@
  * đặc tính chung như id.
  */
 
-import { createPopupBase } from './popupRender.js';
-
 /**
  * @template T
  * @typedef {{ [P in keyof Partial<T>]: string }} COLS
@@ -139,44 +137,6 @@ function searchList(values, cols) {
 }
 
 /**
- * Tạo và hiển thị một popup xác nhận.
- *
- * @param {string} title - Tiêu đề của popup.
- * @param {string} context - Nội dung của popup.
- * @param {(() => void)?} onOk - Hàm gọi lại khi người dùng nhấn OK.
- * @param {(() => void)?} onCancel - Hàm gọi lại khi người dùng nhấn Cancel.
- */
-function showPopup(title, context, onOk, onCancel) {
-    let parder = document.getElementById('popup-wrapper');
-    if (!parder) {
-        parder = document.createElement('div');
-        parder.id = 'popup-wrapper';
-        document.body.appendChild(parder);
-    }
-    const popup = createPopupBase(
-        title,
-        context,
-        () => {
-            parder.innerHTML = '';
-            if (onOk) onOk();
-        },
-        () => {
-            parder.innerHTML = '';
-            if (onCancel) onCancel();
-        },
-    );
-
-    parder.appendChild(popup);
-
-    parder.onclick = (event) => {
-        const target = /** @type {HTMLElement} */ (event.target);
-        if (target.contains(popup)) {
-            parder.innerHTML = '';
-            if (onCancel) onCancel();
-        }
-    };
-}
-/**
  * Fuckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
  *
  * @template {{ id: string }} T
@@ -192,4 +152,4 @@ function showPopup(title, context, onOk, onCancel) {
  * }} IntefaceRender
  */
 
-export { searchList, renderTable, showPopup };
+export { searchList, renderTable };

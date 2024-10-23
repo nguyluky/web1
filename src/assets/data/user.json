@@ -1,704 +1,904 @@
 {
     "data": [
         {
-            "id": "49790139",
+            "id": "0",
             "name": "Audrey Hyatt IV",
             "email": "Rose.Haley@hotmail.com",
             "phone_num": "0539628275",
-            "passwd": "jmembRtsuoo1tYI"
+            "passwd": "jmembRtsuoo1tYI",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "69451623",
+            "id": "1",
             "name": "Della Yundt",
             "email": "Nelda.Goyette10@yahoo.com",
             "phone_num": "0592417222",
-            "passwd": "ax5wOXVWX9c6SHb"
+            "passwd": "ax5wOXVWX9c6SHb",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "44507506",
+            "id": "2",
             "name": "Elias Conn",
             "email": "Broderick_Schoen@yahoo.com",
             "phone_num": "0852715368",
-            "passwd": "bhBBiBvhItPkKBW"
+            "passwd": "bhBBiBvhItPkKBW",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "94327975",
+            "id": "3",
             "name": "Kristina Altenwerth MD",
             "email": "Flo.Upton@hotmail.com",
             "phone_num": "0748584339",
-            "passwd": "gy3cM6hQh4xdR1F"
+            "passwd": "gy3cM6hQh4xdR1F",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "01052182",
+            "id": "4",
             "name": "Edith Bosco",
             "email": "Keyon81@yahoo.com",
             "phone_num": "0921953547",
-            "passwd": "zxk6dV_CV48g03z"
+            "passwd": "zxk6dV_CV48g03z",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "53908722",
+            "id": "5",
             "name": "Marianne O'Conner",
             "email": "Aliya_Schulist45@yahoo.com",
             "phone_num": "0549373213",
-            "passwd": "iD54h0B9m3yWRpx"
+            "passwd": "iD54h0B9m3yWRpx",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "62307757",
+            "id": "6",
             "name": "Kim Morissette",
             "email": "Uriel.Wiegand@hotmail.com",
             "phone_num": "0936163721",
-            "passwd": "FZ1BbQLoM1PumSA"
+            "passwd": "FZ1BbQLoM1PumSA",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "29358828",
+            "id": "7",
             "name": "Greg Mayer",
             "email": "Brandon1@yahoo.com",
             "phone_num": "0879199239",
-            "passwd": "XHaFxWskD9Zo4WH"
+            "passwd": "XHaFxWskD9Zo4WH",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "63265670",
+            "id": "8",
             "name": "Robert Gislason",
             "email": "Jammie41@yahoo.com",
             "phone_num": "0825656372",
-            "passwd": "ab3IA5ltyvk_R8r"
+            "passwd": "ab3IA5ltyvk_R8r",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "55881507",
+            "id": "9",
             "name": "Lillie Heathcote",
             "email": "Anne23@hotmail.com",
             "phone_num": "0823264645",
-            "passwd": "AN6qYpxTwM95J3N"
+            "passwd": "AN6qYpxTwM95J3N",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "43702526",
+            "id": "10",
             "name": "Glenn Brakus IV",
             "email": "Pattie62@gmail.com",
             "phone_num": "0331789786",
-            "passwd": "FsqBTs4oreciZGl"
+            "passwd": "FsqBTs4oreciZGl",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "70579732",
+            "id": "11",
             "name": "Angelica Langworth",
             "email": "Letitia.Bayer@hotmail.com",
             "phone_num": "0722586696",
-            "passwd": "mLBuS0WgxCermbN"
+            "passwd": "mLBuS0WgxCermbN",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "64184552",
+            "id": "12",
             "name": "Esther Rohan IV",
             "email": "Cole.Thompson@yahoo.com",
             "phone_num": "0935874116",
-            "passwd": "QvT5gm9VdMD6QbL"
+            "passwd": "QvT5gm9VdMD6QbL",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "43186083",
+            "id": "13",
             "name": "Dr. Randall Schumm",
             "email": "Lisette60@hotmail.com",
             "phone_num": "0746777773",
-            "passwd": "FEgpKKXNNmGkv_j"
+            "passwd": "FEgpKKXNNmGkv_j",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "01766065",
+            "id": "14",
             "name": "Roosevelt Volkman",
             "email": "Burnice83@yahoo.com",
             "phone_num": "0573914147",
-            "passwd": "1OuntqnXlSPjwCx"
+            "passwd": "1OuntqnXlSPjwCx",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "40529803",
+            "id": "15",
             "name": "Patsy Hansen PhD",
             "email": "Sheridan45@hotmail.com",
             "phone_num": "0519325998",
-            "passwd": "08DyuzWqDx6G6B1"
+            "passwd": "08DyuzWqDx6G6B1",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "86149811",
+            "id": "16",
             "name": "Ted Jacobi",
             "email": "Dortha49@yahoo.com",
             "phone_num": "0936461756",
-            "passwd": "iYd3KtDZ0Hi3o0N"
+            "passwd": "iYd3KtDZ0Hi3o0N",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "30937427",
+            "id": "17",
             "name": "Erin Brown",
             "email": "Elyse22@hotmail.com",
             "phone_num": "0878263497",
-            "passwd": "basjBFrRymKcbhK"
+            "passwd": "basjBFrRymKcbhK",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "59168014",
+            "id": "18",
             "name": "Maggie Mayert",
             "email": "Doris_MacGyver35@hotmail.com",
             "phone_num": "0526784469",
-            "passwd": "IRmEB5qiKfg0625"
+            "passwd": "IRmEB5qiKfg0625",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "51214370",
+            "id": "19",
             "name": "Walter Feeney",
             "email": "Corbin_Von55@yahoo.com",
             "phone_num": "0551767911",
-            "passwd": "NDj0G4yISGKfA2K"
+            "passwd": "NDj0G4yISGKfA2K",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "79286879",
+            "id": "20",
             "name": "Zachary Blanda",
             "email": "Tiana_Hauck74@gmail.com",
             "phone_num": "0554285315",
-            "passwd": "eSKOW44eqQW9ZBv"
+            "passwd": "eSKOW44eqQW9ZBv",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "18761797",
+            "id": "21",
             "name": "Andrew Lemke",
             "email": "Krystina55@gmail.com",
             "phone_num": "0733967134",
-            "passwd": "VcGi4egHy9r6foR"
+            "passwd": "VcGi4egHy9r6foR",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "57077347",
+            "id": "22",
             "name": "Hazel Berge",
             "email": "Meaghan.Herzog52@hotmail.com",
             "phone_num": "0881319643",
-            "passwd": "4LMKoYIYABa96Mv"
+            "passwd": "4LMKoYIYABa96Mv",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "34678544",
+            "id": "23",
             "name": "Benjamin Kemmer",
             "email": "Sylvia_Moen50@hotmail.com",
             "phone_num": "0589171618",
-            "passwd": "f8cVTzrcp2VJzro"
+            "passwd": "f8cVTzrcp2VJzro",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "08445288",
+            "id": "24",
             "name": "Ed Harber",
             "email": "Deja_OKeefe@yahoo.com",
             "phone_num": "0746283785",
-            "passwd": "VdeVlQ5lvcjG21G"
+            "passwd": "VdeVlQ5lvcjG21G",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "92845903",
+            "id": "25",
             "name": "Janis Mraz",
             "email": "Demond.Schimmel@hotmail.com",
             "phone_num": "0724492992",
-            "passwd": "Orun2yX8vUKVxNK"
+            "passwd": "Orun2yX8vUKVxNK",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "69632002",
+            "id": "26",
             "name": "Cedric Daniel II",
             "email": "Oleta69@hotmail.com",
             "phone_num": "0377647518",
-            "passwd": "7dEP01UmQtj2LzI"
+            "passwd": "7dEP01UmQtj2LzI",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "34616382",
+            "id": "27",
             "name": "Guadalupe Considine",
             "email": "John_Gulgowski67@gmail.com",
             "phone_num": "0752192544",
-            "passwd": "TVVMxIYqhOXHxO3"
+            "passwd": "TVVMxIYqhOXHxO3",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "94711650",
+            "id": "28",
             "name": "Norman Bode",
             "email": "Aubrey.Abernathy6@hotmail.com",
             "phone_num": "0824118545",
-            "passwd": "EMYHCgjUxuaB68J"
+            "passwd": "EMYHCgjUxuaB68J",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "95099050",
+            "id": "29",
             "name": "Angelo Schultz",
             "email": "Abby98@yahoo.com",
             "phone_num": "0849732739",
-            "passwd": "S6CDgLfNKZucSsG"
+            "passwd": "S6CDgLfNKZucSsG",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "02207480",
+            "id": "30",
             "name": "Lester Fahey",
             "email": "Cale.Abernathy97@hotmail.com",
             "phone_num": "0397591163",
-            "passwd": "Z5bEFEz_XIAHiGr"
+            "passwd": "Z5bEFEz_XIAHiGr",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "35529289",
+            "id": "31",
             "name": "Bridget Gusikowski",
             "email": "Ryder_Heaney47@yahoo.com",
             "phone_num": "0738154437",
-            "passwd": "rs76ECWRkDtenBO"
+            "passwd": "rs76ECWRkDtenBO",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "57355297",
+            "id": "32",
             "name": "Kenneth Kris Jr.",
             "email": "Newell_Ruecker@gmail.com",
             "phone_num": "0389249689",
-            "passwd": "8Ii0SBl3inZLQd0"
+            "passwd": "8Ii0SBl3inZLQd0",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "46884804",
+            "id": "33",
             "name": "Peter Kihn",
             "email": "Jordon_Bergnaum@yahoo.com",
             "phone_num": "0736291618",
-            "passwd": "B7GzzdAvGJy7oz_"
+            "passwd": "B7GzzdAvGJy7oz_",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "62058676",
+            "id": "34",
             "name": "Lindsey Schultz",
             "email": "Amiya_Christiansen61@hotmail.com",
             "phone_num": "0352394853",
-            "passwd": "4otOYFSQr2gtHV6"
+            "passwd": "4otOYFSQr2gtHV6",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "65728131",
+            "id": "35",
             "name": "Dale Muller",
             "email": "Hannah.McLaughlin@yahoo.com",
             "phone_num": "0529654618",
-            "passwd": "Jx2XrwZoftweJRz"
+            "passwd": "Jx2XrwZoftweJRz",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "59022876",
+            "id": "36",
             "name": "Gabriel Bechtelar",
             "email": "Katarina.Douglas72@yahoo.com",
             "phone_num": "0778958664",
-            "passwd": "IrhLmhMNbKKBcaQ"
+            "passwd": "IrhLmhMNbKKBcaQ",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "66621971",
+            "id": "37",
             "name": "Jesse Hudson",
             "email": "Emmett.Schultz@yahoo.com",
             "phone_num": "0789846998",
-            "passwd": "bZO407LT3AOfsem"
+            "passwd": "bZO407LT3AOfsem",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "35814787",
+            "id": "38",
             "name": "Percy Bechtelar",
             "email": "Jennifer.Swift79@hotmail.com",
             "phone_num": "0832816233",
-            "passwd": "NuqopCxYn3tIrlE"
+            "passwd": "NuqopCxYn3tIrlE",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "69858110",
+            "id": "39",
             "name": "Dr. Fernando Gleichner DVM",
             "email": "Una46@yahoo.com",
             "phone_num": "0762318964",
-            "passwd": "waoY2GbB4P2ou8X"
+            "passwd": "waoY2GbB4P2ou8X",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "03100231",
+            "id": "40",
             "name": "Ira Kovacek",
             "email": "Reynold27@yahoo.com",
             "phone_num": "0965347276",
-            "passwd": "3eK31pgbY88AmmU"
+            "passwd": "3eK31pgbY88AmmU",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "02894477",
+            "id": "41",
             "name": "Gloria Kuhlman",
             "email": "Kelly_Abbott@gmail.com",
             "phone_num": "0729323735",
-            "passwd": "6Y12BqewIBEkHTn"
+            "passwd": "6Y12BqewIBEkHTn",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "64358721",
+            "id": "42",
             "name": "Perry Friesen-Huel",
             "email": "Glen.Schamberger@hotmail.com",
             "phone_num": "0773283931",
-            "passwd": "xQbYHgPTUcFydrs"
+            "passwd": "xQbYHgPTUcFydrs",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "16290093",
+            "id": "43",
             "name": "Stanley Kuvalis-Hayes",
             "email": "Sylvan.McKenzie@yahoo.com",
             "phone_num": "0866967232",
-            "passwd": "bVCP_ydYbWJg4iR"
+            "passwd": "bVCP_ydYbWJg4iR",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "10922517",
+            "id": "44",
             "name": "Milton Rutherford Sr.",
             "email": "Araceli.Gorczany76@yahoo.com",
             "phone_num": "0949864886",
-            "passwd": "J55pEbyOABO9wYe"
+            "passwd": "J55pEbyOABO9wYe",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "70040260",
+            "id": "45",
             "name": "Sadie Hane",
             "email": "Eloise_Walter52@hotmail.com",
             "phone_num": "0574617826",
-            "passwd": "gTjfZ26SjHvm5yY"
+            "passwd": "gTjfZ26SjHvm5yY",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "13899899",
+            "id": "46",
             "name": "Jon Bednar",
             "email": "Eldred_Hermiston47@hotmail.com",
             "phone_num": "0589589427",
-            "passwd": "qmqunEzKFw6TKwZ"
+            "passwd": "qmqunEzKFw6TKwZ",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "85961783",
+            "id": "47",
             "name": "Eugene Kilback",
             "email": "Aron_Cummerata-Dickens@gmail.com",
             "phone_num": "0342789414",
-            "passwd": "k960uO9CYOEcOPT"
+            "passwd": "k960uO9CYOEcOPT",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "60332211",
+            "id": "48",
             "name": "Clarence Watsica",
             "email": "Tre85@yahoo.com",
             "phone_num": "0325885718",
-            "passwd": "Ob1_xJxxOMm9zF7"
+            "passwd": "Ob1_xJxxOMm9zF7",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "96590138",
+            "id": "49",
             "name": "Amelia Kutch II",
             "email": "Edyth.White43@yahoo.com",
             "phone_num": "0786368749",
-            "passwd": "4kB83cAsatuUfwJ"
+            "passwd": "4kB83cAsatuUfwJ",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "89380380",
+            "id": "50",
             "name": "Dana Harvey",
             "email": "Rozella69@yahoo.com",
             "phone_num": "0535533673",
-            "passwd": "zGgH9oXNF6ai1VM"
+            "passwd": "zGgH9oXNF6ai1VM",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "68180665",
+            "id": "51",
             "name": "Isaac Brown PhD",
             "email": "Valentin.Willms40@hotmail.com",
             "phone_num": "0771753581",
-            "passwd": "iYzbtNg_0qg2Grf"
+            "passwd": "iYzbtNg_0qg2Grf",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "38850704",
+            "id": "52",
             "name": "Lucy Dicki",
             "email": "Marcel_Kris83@gmail.com",
             "phone_num": "0969877919",
-            "passwd": "DvnBUKaU7A0jQWl"
+            "passwd": "DvnBUKaU7A0jQWl",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "26910964",
+            "id": "53",
             "name": "Dr. Estelle O'Hara",
             "email": "Meggie54@gmail.com",
             "phone_num": "0551252268",
-            "passwd": "ydKFO97DqwzTX5z"
+            "passwd": "ydKFO97DqwzTX5z",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "47074258",
+            "id": "54",
             "name": "Eddie Fisher",
             "email": "Waino58@hotmail.com",
             "phone_num": "0538373487",
-            "passwd": "7tZCr4nxlCnQrLy"
+            "passwd": "7tZCr4nxlCnQrLy",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "82499659",
+            "id": "55",
             "name": "Julio Gerlach II",
             "email": "Vincenzo_Moen78@gmail.com",
             "phone_num": "0556886215",
-            "passwd": "EyOysF5g1Qm93Hx"
+            "passwd": "EyOysF5g1Qm93Hx",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "39959863",
+            "id": "56",
             "name": "Michelle Zboncak",
             "email": "Jamarcus.Rice@yahoo.com",
             "phone_num": "0872731138",
-            "passwd": "5FPfnmNARFBd2RS"
+            "passwd": "5FPfnmNARFBd2RS",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "13112240",
+            "id": "57",
             "name": "Regina Olson",
             "email": "Carli65@hotmail.com",
             "phone_num": "0517987593",
-            "passwd": "NWcheBx6pUsoqmW"
+            "passwd": "NWcheBx6pUsoqmW",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "19579079",
+            "id": "58",
             "name": "Miss Sally Wilkinson-Cruickshank",
             "email": "Stephan.Anderson@yahoo.com",
             "phone_num": "0799183735",
-            "passwd": "XtS8UOF3jC8S_E5"
+            "passwd": "XtS8UOF3jC8S_E5",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "08791856",
+            "id": "59",
             "name": "Evan Feeney",
             "email": "Ola_Braun@yahoo.com",
             "phone_num": "0868768513",
-            "passwd": "7_LnmJKVGtc2SVD"
+            "passwd": "7_LnmJKVGtc2SVD",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "92138385",
+            "id": "60",
             "name": "Delia Baumbach",
             "email": "Gage31@gmail.com",
             "phone_num": "0513892387",
-            "passwd": "UMqrLRD_2OkZuS6"
+            "passwd": "UMqrLRD_2OkZuS6",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "94888677",
+            "id": "61",
             "name": "Danny Schoen",
             "email": "Wade75@gmail.com",
             "phone_num": "0916635117",
-            "passwd": "2OJqyYQLdQWUJ3T"
+            "passwd": "2OJqyYQLdQWUJ3T",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "15180955",
+            "id": "62",
             "name": "Lynn Hamill",
             "email": "Loraine_Armstrong55@hotmail.com",
             "phone_num": "0355793492",
-            "passwd": "8mR_5uIiqDKByIB"
+            "passwd": "8mR_5uIiqDKByIB",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "06295670",
+            "id": "63",
             "name": "Warren Dare",
             "email": "Karine86@hotmail.com",
             "phone_num": "0591159732",
-            "passwd": "TXN_MpsYnJtWcSZ"
+            "passwd": "TXN_MpsYnJtWcSZ",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "36638680",
+            "id": "64",
             "name": "Aaron Brown",
             "email": "Justus_Russel16@gmail.com",
             "phone_num": "0396428965",
-            "passwd": "R7b9HsKoVRfylKa"
+            "passwd": "R7b9HsKoVRfylKa",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "12840793",
+            "id": "65",
             "name": "Ellen Gulgowski",
             "email": "Kaci86@hotmail.com",
             "phone_num": "0541947582",
-            "passwd": "e4YsCwaPgHSaQEA"
+            "passwd": "e4YsCwaPgHSaQEA",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "22746783",
+            "id": "66",
             "name": "Suzanne Barrows",
             "email": "Stewart.Johnston@yahoo.com",
             "phone_num": "0926131669",
-            "passwd": "krY7t2wgY7sT_ht"
+            "passwd": "krY7t2wgY7sT_ht",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "22190511",
+            "id": "67",
             "name": "Kenneth Padberg I",
             "email": "Cynthia.Paucek30@gmail.com",
             "phone_num": "0796785418",
-            "passwd": "S6BR_3MAc6EqRP9"
+            "passwd": "S6BR_3MAc6EqRP9",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "61046961",
+            "id": "68",
             "name": "Barry Haley III",
             "email": "Krystal_Predovic96@hotmail.com",
             "phone_num": "0961614293",
-            "passwd": "2o7Cyf3NRmFn0SJ"
+            "passwd": "2o7Cyf3NRmFn0SJ",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "71294592",
+            "id": "69",
             "name": "Bryant Upton",
             "email": "Abdiel73@yahoo.com",
             "phone_num": "0341154764",
-            "passwd": "2XIC3YIPZ_T3efK"
+            "passwd": "2XIC3YIPZ_T3efK",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "06519053",
+            "id": "70",
             "name": "Laverne Hermiston",
             "email": "Yesenia62@gmail.com",
             "phone_num": "0854198563",
-            "passwd": "e2eJSj6FQNhbWWC"
+            "passwd": "e2eJSj6FQNhbWWC",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "34519360",
+            "id": "71",
             "name": "Dennis Murphy",
             "email": "Lulu73@yahoo.com",
             "phone_num": "0559384721",
-            "passwd": "7oQeUdpJhIxJPSg"
+            "passwd": "7oQeUdpJhIxJPSg",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "00314887",
+            "id": "72",
             "name": "Elmer Botsford",
             "email": "Stephany66@gmail.com",
             "phone_num": "0572259228",
-            "passwd": "ym48gAae3PGtNvN"
+            "passwd": "ym48gAae3PGtNvN",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "77253020",
+            "id": "73",
             "name": "Ella Connelly-Labadie",
             "email": "Therese_Rodriguez@hotmail.com",
             "phone_num": "0788467933",
-            "passwd": "lSyLrphHSHhr1_k"
+            "passwd": "lSyLrphHSHhr1_k",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "80797581",
+            "id": "74",
             "name": "Peter Simonis",
             "email": "Kallie.Littel3@hotmail.com",
             "phone_num": "0337988147",
-            "passwd": "QIu3V5_TJVWgTB_"
+            "passwd": "QIu3V5_TJVWgTB_",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "35982281",
+            "id": "75",
             "name": "Francis Wolf",
             "email": "Jay.Balistreri@yahoo.com",
             "phone_num": "0749188993",
-            "passwd": "wY0Eqcwbi2czty9"
+            "passwd": "wY0Eqcwbi2czty9",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "29906871",
+            "id": "76",
             "name": "Steve Moore",
             "email": "Durward60@yahoo.com",
             "phone_num": "0731981557",
-            "passwd": "KqWR_quOW__1vNt"
+            "passwd": "KqWR_quOW__1vNt",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "07670224",
+            "id": "77",
             "name": "Bethany Deckow-Moore",
             "email": "Gene.Balistreri@gmail.com",
             "phone_num": "0531453916",
-            "passwd": "kLWZm9GNuxGDrRc"
+            "passwd": "kLWZm9GNuxGDrRc",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "95982620",
+            "id": "78",
             "name": "Tracy Ebert",
             "email": "Alejandra.Wehner@gmail.com",
             "phone_num": "0825678619",
-            "passwd": "fCLtar4Wg2GOsum"
+            "passwd": "fCLtar4Wg2GOsum",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "00042081",
+            "id": "79",
             "name": "Sara Lebsack DDS",
             "email": "Osbaldo_Wuckert41@hotmail.com",
             "phone_num": "0982992332",
-            "passwd": "95HZT8Eg8dILsqs"
+            "passwd": "95HZT8Eg8dILsqs",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "97641653",
+            "id": "80",
             "name": "Jill Heathcote",
             "email": "Frankie82@gmail.com",
             "phone_num": "0827249745",
-            "passwd": "QUY6FzoUVABTuUc"
+            "passwd": "QUY6FzoUVABTuUc",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "67446363",
+            "id": "81",
             "name": "Elizabeth McLaughlin",
             "email": "Reanna22@yahoo.com",
             "phone_num": "0967323213",
-            "passwd": "st91cxSV85T3AWb"
+            "passwd": "st91cxSV85T3AWb",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "20919729",
+            "id": "82",
             "name": "Beverly Bins",
             "email": "Kari_Tillman@gmail.com",
             "phone_num": "0551189462",
-            "passwd": "FQbBXyalMragW95"
+            "passwd": "FQbBXyalMragW95",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "98406133",
+            "id": "83",
             "name": "Charlene Erdman",
             "email": "Jennyfer_Yundt-Durgan25@hotmail.com",
             "phone_num": "0871828845",
-            "passwd": "FnZp8agxANj37qP"
+            "passwd": "FnZp8agxANj37qP",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "05027540",
+            "id": "84",
             "name": "Marcella Prosacco",
             "email": "Hayden.Stiedemann@hotmail.com",
             "phone_num": "0715253537",
-            "passwd": "fv2hHVYl1kwcFVs"
+            "passwd": "fv2hHVYl1kwcFVs",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "64063946",
+            "id": "85",
             "name": "Jacquelyn Reichel",
             "email": "Lavonne94@yahoo.com",
             "phone_num": "0916817413",
-            "passwd": "o6aOTOalA_7ON3t"
+            "passwd": "o6aOTOalA_7ON3t",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "91168745",
+            "id": "86",
             "name": "Kay Terry",
             "email": "Johathan.Maggio64@hotmail.com",
             "phone_num": "0958732931",
-            "passwd": "E5oh2Rtap2PcFx8"
+            "passwd": "E5oh2Rtap2PcFx8",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "10490633",
+            "id": "87",
             "name": "Darlene Farrell",
             "email": "Trevion_Bruen-Herman47@hotmail.com",
             "phone_num": "0724489897",
-            "passwd": "z_1R6e7hYZAt8Ag"
+            "passwd": "z_1R6e7hYZAt8Ag",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "41315362",
+            "id": "88",
             "name": "Derek Barton",
             "email": "Reba24@hotmail.com",
             "phone_num": "0785647756",
-            "passwd": "29Is7SPdw9kciaa"
+            "passwd": "29Is7SPdw9kciaa",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "97302226",
+            "id": "89",
             "name": "Lila Turner",
             "email": "Asha32@yahoo.com",
             "phone_num": "0725877543",
-            "passwd": "mQVLjLdkFT6i6c9"
+            "passwd": "mQVLjLdkFT6i6c9",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "43039266",
+            "id": "90",
             "name": "Mr. Wilfred Predovic",
             "email": "Dayna14@hotmail.com",
             "phone_num": "0953923691",
-            "passwd": "WV0DCYxyRRQOaM1"
+            "passwd": "WV0DCYxyRRQOaM1",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "90389012",
+            "id": "91",
             "name": "Dianne Schinner",
             "email": "Eldred.Conroy@hotmail.com",
             "phone_num": "0826547451",
-            "passwd": "lY71jW85M1O3kMK"
+            "passwd": "lY71jW85M1O3kMK",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "51549111",
+            "id": "92",
             "name": "Darryl Trantow",
             "email": "Rhianna.Beatty0@gmail.com",
             "phone_num": "0373821525",
-            "passwd": "CSs4lgnzy6EPjoJ"
+            "passwd": "CSs4lgnzy6EPjoJ",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "57632301",
+            "id": "93",
             "name": "Sheryl O'Kon I",
             "email": "Jacklyn_Gleason18@yahoo.com",
             "phone_num": "0976393978",
-            "passwd": "NLGW88BktjOJnSo"
+            "passwd": "NLGW88BktjOJnSo",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "70618506",
+            "id": "94",
             "name": "Sherry Shanahan",
             "email": "Allison_Wyman@hotmail.com",
             "phone_num": "0351922148",
-            "passwd": "N5pj2y3XI4gdAwq"
+            "passwd": "N5pj2y3XI4gdAwq",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "33559379",
+            "id": "95",
             "name": "Alvin Bahringer",
             "email": "Olen_Howe@hotmail.com",
             "phone_num": "0599336951",
-            "passwd": "cg4GipUhS2_pniV"
+            "passwd": "cg4GipUhS2_pniV",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "63082977",
+            "id": "96",
             "name": "Meredith Ferry",
             "email": "Geo21@yahoo.com",
             "phone_num": "0722546876",
-            "passwd": "JAI5XTwLcnpt5cJ"
+            "passwd": "JAI5XTwLcnpt5cJ",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "61353710",
+            "id": "97",
             "name": "Dianne Oberbrunner",
             "email": "Donnell_Wilderman66@yahoo.com",
             "phone_num": "0861416714",
-            "passwd": "eSdfcj9OR4ofgGt"
+            "passwd": "eSdfcj9OR4ofgGt",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "81294933",
+            "id": "98",
             "name": "Renee Grady DVM",
             "email": "Kirstin.Russel21@hotmail.com",
             "phone_num": "0749267278",
-            "passwd": "ppurc2QSPHDZKqB"
+            "passwd": "ppurc2QSPHDZKqB",
+            "rule": "user",
+            "status": "active"
         },
         {
-            "id": "24884559",
+            "id": "99",
             "name": "Lester Daugherty",
             "email": "Sanford81@gmail.com",
             "phone_num": "0533784813",
-            "passwd": "qM0iRPax6vGnUXh"
+            "passwd": "qM0iRPax6vGnUXh",
+            "rule": "user",
+            "status": "active"
         }
     ]
 }

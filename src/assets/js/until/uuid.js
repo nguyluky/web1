@@ -1,7 +1,8 @@
 /**
- *  @param {number} length
- *  @returns {string} Id */
-function uuidv(length) {
+ * @param {number} length
+ * @returns {string} Id
+ */
+function uuidv(length = 36) {
     const pattern = '00000000-0000-0000-0000-000000000000'.replace(
         /[0]/g,
         (c) =>

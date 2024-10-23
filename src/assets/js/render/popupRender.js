@@ -1,78 +1,77 @@
-/**
- * @param {string} title
- * @param {string} context
- * @param {(() => void)?} onOk
- * @param {(() => void)?} onCancel
- * @returns {HTMLDivElement}
- */
-export function createPopupBase(title, context, onOk, onCancel) {
-    // Create the main popup div
-    const popup = document.createElement('div');
-    popup.className = 'popup';
+import { createImgPreviewPopup, createPopupBase } from './popupFactory.js';
 
-    // Create the header
-    const popupHeader = document.createElement('div');
-    popupHeader.className = 'popup-header';
-
-    const title_ = document.createElement('h1');
-    title_.textContent = title;
-
-    const closeButton = document.createElement('button');
-    closeButton.className = 'button_1';
-    closeButton.onclick = onCancel;
-    const closeIcon = document.createElement('i');
-    closeIcon.className = 'fa-solid fa-xmark';
-    closeButton.appendChild(closeIcon);
-
-    // Append header elements
-    popupHeader.appendChild(title_);
-    popupHeader.appendChild(closeButton);
-    popup.appendChild(popupHeader);
-
-    // Create the context
-    const popupContext = document.createElement('div');
-    popupContext.className = 'pupop-context';
-    popupContext.textContent = context;
-    popup.appendChild(popupContext);
-
-    // Create the footer
-    const popupFooter = document.createElement('div');
-    popupFooter.className = 'popup-footer';
-
-    const cancelButton = document.createElement('button');
-    cancelButton.className = 'button_1 btn-primary';
-    cancelButton.textContent = 'Cancel';
-    cancelButton.onclick = onCancel;
-
-    const okButton = document.createElement('button');
-    okButton.className = 'button_1 btn-ouline-primary';
-    okButton.textContent = 'OK';
-    okButton.onclick = onOk;
-
-    // Append footer elements
-    popupFooter.appendChild(cancelButton);
-    popupFooter.appendChild(okButton);
-    popup.appendChild(popupFooter);
-
-    return popup;
+function getPopupWrapper() {
+    let parder = document.getElementById('popup-wrapper');
+    if (!parder) {
+        parder = document.createElement('div');
+        parder.id = 'popup-wrapper';
+        document.body.appendChild(parder);
+    }
+    return parder;
 }
 
-export function showImgPreviewPopup(imgSrc) {
-    const popup = document.createElement('div');
-    popup.id = 'img-preview-popup';
+/**
+ * Tạo và hiển thị một popup xác nhận.
+ *
+ * @param {string} title - Tiêu đề của popup.
+ * @param {string} context - Nội dung của popup.
+ * @param {(() => void)?} onOk - Hàm gọi lại khi người dùng nhấn OK.
+ * @param {(() => void)?} onCancel - Hàm gọi lại khi người dùng nhấn Cancel.
+ */
+export function showPopup(title, context, onOk, onCancel) {
+    const parder = getPopupWrapper();
+    const popup = createPopupBase(
+        title,
+        context,
+        () => {
+            parder.innerHTML = '';
+            if (onOk) onOk();
+        },
+        () => {
+            parder.innerHTML = '';
+            if (onCancel) onCancel();
+        },
+    );
 
-    const img = document.createElement('img');
-    img.src = imgSrc;
+    parder.appendChild(popup);
 
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'button_1';
-    closeBtn.textContent = 'Close';
-    closeBtn.onclick = () => {
-        popup.remove();
+    parder.onclick = (event) => {
+        const target = /** @type {HTMLElement} */ (event.target);
+        if (target.contains(popup)) {
+            parder.innerHTML = '';
+            if (onCancel) onCancel();
+        }
     };
+}
 
-    popup.appendChild(img);
-    popup.appendChild(closeBtn);
+/**
+ * @param {string} imgSrc
+ * @param {((base64: string) => void)?} onChangeImg
+ * @param {((base64: string) => void)?} onOk
+ * @param {(() => void)?} onCancel
+ */
+export function showImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
+    const parder = getPopupWrapper();
+    const popup = createImgPreviewPopup(
+        imgSrc,
+        onChangeImg,
+        (base64) => {
+            parder.innerHTML = '';
+            if (onOk) onOk(base64);
+        },
+        () => {
+            parder.innerHTML = '';
+            if (onCancel) onCancel();
+        },
+    );
 
-    document.body.appendChild(popup);
+    parder.appendChild(popup);
+
+    parder.onclick = (event) => {
+        const target = /** @type {HTMLElement} */ (event.target);
+        if (target.contains(popup)) {
+            parder.innerHTML = '';
+            if (onCancel) onCancel();
+        }
+    };
 }

@@ -1,6 +1,7 @@
 import fakeDatabase from '../db/fakeDBv1.js';
 import uuidv from '../until/uuid.js';
 import { renderTable, searchList } from './baseRender.js';
+import { showImgPreviewPopup } from './popupRender.js';
 
 /**
  * @typedef {import('../until/type.js').Sach} Sach
@@ -20,6 +21,7 @@ const cols = {
 };
 let cacheSave = {};
 let cacheAdd = [];
+let cacheImg = {};
 /**
  * Hàm xử lý khi có thay đổi dữ liệu trên bảng (hàm callback)
  *
@@ -45,7 +47,7 @@ function onChangeHandle(data, key, newValue) {
  * @param {import('./baseRender.js').OnChange<Sach>?} onchange
  * @returns {HTMLTableRowElement} Row
  */
-function renderRow(value, onchange = null) {
+function createRow(value, onchange = null) {
     const row = document.createElement('tr');
     row.setAttribute('id-row', value.id);
     const col = document.createElement('td');
@@ -73,7 +75,11 @@ function renderRow(value, onchange = null) {
         if (key == 'details') {
             const details_wrapper = document.createElement('div');
             details_wrapper.className = 'details-wrapper';
+
+            // const pre = document.createElement('pre');
+            // pre.textContent = value[key];
             details_wrapper.insertAdjacentHTML('beforeend', value[key]);
+            // details_wrapper.appendChild(pre);
             col.appendChild(details_wrapper);
         } else if (key == 'thumbnal') {
             // tạo div bao ảnh
@@ -85,7 +91,19 @@ function renderRow(value, onchange = null) {
                 img.src = imgS?.data || '../assets/img/default-image.png';
             });
             img_wrapper.appendChild(img);
-            img_wrapper.addEventListener('click', showSubmitPopup);
+            img_wrapper.addEventListener('click', () => {
+                if (col.getAttribute('contenteditable') !== 'true') return;
+                showImgPreviewPopup(
+                    img.src,
+                    () => {},
+                    (base64) => {
+                        // lưu vào cache để lưu vào db
+                        cacheImg[value.thumbnal] = base64;
+                        img.src = base64;
+                    },
+                    () => {},
+                );
+            });
             col.appendChild(img_wrapper);
         } else col.insertAdjacentHTML('beforeend', value[key]);
         row.appendChild(col);
@@ -101,7 +119,7 @@ function renderSach(list) {
     );
     if (!table) return;
 
-    renderTable(list, table, cols, onChangeHandle, renderRow);
+    renderTable(list, table, cols, onChangeHandle, createRow);
     // nếu tràn ô thì thêm overflow
     Array.from(document.getElementsByClassName('details-wrapper')).forEach(
         (e) => {
@@ -142,11 +160,10 @@ function addRow() {
         imgs: [],
         base_price: 0,
         category: [],
-        option: [],
     };
     cacheAdd.push(data);
 
-    let row = renderRow(data, (data, key, values) => {
+    let row = createRow(data, (data, key, values) => {
         cacheAdd[0][key] = values;
     });
     row.querySelectorAll('td:not(:has(input[type="checkbox"]))').forEach(
@@ -180,16 +197,17 @@ function removeRows() {
 }
 
 async function saveBook() {
+    console.log(cacheSave);
+
     Object.keys(cacheSave).forEach((e) => {
         console.log(e);
         const data = cacheSave[e];
         fakeDatabase.updateSach(data); // Gọi hàm cập nhật người dùng trong cơ sở dữ liệu giả lập
     });
 
-    // Lưu người dùng mới vào database
     cacheAdd.forEach((e) => {
         console.log(e);
-        let source = /**@type {HTMLImageElement} */ (
+        let source = /** @type {HTMLImageElement} */ (
             document.querySelector(`tr[id-row="${e.id}"] .img-wrapper img`)
         ).src;
         if (source != '../assets/img/default-image.png') {
@@ -201,93 +219,34 @@ async function saveBook() {
             };
             fakeDatabase.addImg(img);
         }
-        fakeDatabase.addSach(e); // Gọi hàm thêm người dùng mới vào cơ sở dữ liệu
+        fakeDatabase.addSach(e);
     });
+
+    Object.keys(cacheImg).forEach((e) => {
+        let img = {
+            id: e,
+            data: cacheImg[e],
+        };
+        fakeDatabase.updateImg(img);
+    });
+
+    cacheSave = {};
     cacheAdd = [];
+
     document.querySelectorAll('#content_table td').forEach((e) => {
         e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
         e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
         e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
     });
 }
-function previewImg() {
-    let imgInput = /**@type {HTMLInputElement} */ (
-        document.getElementById('imgInput')
-    );
-    let imgPreview = /**@type {HTMLImageElement} */ (
-        document.querySelector('#submit-img img')
-    );
-    if (!imgInput || !imgPreview) return;
-    imgInput.addEventListener('change', () => {
-        let file = imgInput.files?.[0];
-        if (file) {
-            const reader = new FileReader();
 
-            reader.onload = function (event) {
-                imgPreview.src = /**@type {string} */ (event.target?.result);
-            };
-
-            reader.readAsDataURL(file);
-        }
-    });
-}
-async function showSubmitPopup() {
-    if (!(this.parentNode.getAttribute('contenteditable') == 'true')) return;
-    const wrapper = document.getElementById('submit-wrapper');
-
-    const popup = document.createElement('div');
-    popup.id = 'submit-popup';
-
-    const cancel = document.createElement('div');
-    cancel.id = 'cancel-submit';
-    const closeIcon = document.createElement('i');
-    closeIcon.className = 'fa-solid fa-xmark';
-    cancel.appendChild(closeIcon);
-    popup.appendChild(cancel);
-
-    const img_wrapper = document.createElement('div');
-    img_wrapper.id = 'submit-img';
-    const imgPreview = document.createElement('img');
-    let img_id = 'default';
-    let e = this.parentNode.parentNode.querySelector('td[key="id"]');
-    await fakeDatabase.getSachById(e.textContent).then((sach) => {
-        if (sach) img_id = sach.thumbnal;
-    });
-    fakeDatabase.getImgById(img_id).then((imgS) => {
-        imgPreview.src = imgS.data;
-    });
-    img_wrapper.appendChild(imgPreview);
-    popup.appendChild(img_wrapper);
-
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.id = 'imgInput';
-    const btn_save = document.createElement('div');
-    btn_save.id = 'save-submit';
-    btn_save.textContent = 'Save';
-    popup.appendChild(input);
-    popup.appendChild(btn_save);
-    wrapper?.insertAdjacentElement('afterbegin', popup);
-
-    // event
-    previewImg();
-    wrapper?.addEventListener('click', (e) => {
-        if (/**@type {HTMLElement} */ (e.target).contains(popup)) cancel.click;
-    });
-    cancel.addEventListener('click', () => {
-        popup.remove();
-    });
-    btn_save.addEventListener('click', () => {
-        this.querySelector('img').src = imgPreview.src;
-    });
-}
+// chuyển qua file popupFactory.js
 
 /** @type {import('./baseRender.js').IntefaceRender<Sach>} */
 const Sach_ = {
     cols,
     renderTable: renderSach,
-    renderRow,
+    renderRow: createRow,
     search: searchSach,
     doSave: saveBook,
     addRow,

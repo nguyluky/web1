@@ -1,9 +1,9 @@
 import fakeDatabase from './db/fakeDBv1.js';
-import { showPopup } from './render/baseRender.js';
 import userRender from './render/user_table.js';
 import cartRender from './render/cart_table.js';
 import sachRender from './render/sach_table.js';
 import categoryRender from './render/category_table.js';
+import { showPopup } from './render/popupRender.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
@@ -45,7 +45,6 @@ const btnDelete = document.getElementById('delete-btn');
 const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
     document.getElementsByName('tab-selestion')
 );
-const popupWrapper = document.getElementById('popup-wrapper');
 const loadingTable = document.getElementById('loading');
 
 /**

@@ -192,10 +192,6 @@ th {
     object-fit: contain;
 }
 
-td {
-    font-size: 14px;
-}
-
 td[key='details'] {
     position: relative;
 }
@@ -225,12 +221,14 @@ tr:hover td[error]::before {
 
 .details-wrapper {
     overflow-y: scroll;
-    text-overflow: ellipsis;
     height: 200px;
+    max-width: 300px;
+    text-wrap: wrap;
+    white-space: pre;
 }
-.details-wrapper::-webkit-scrollbar {
+/* .details-wrapper::-webkit-scrollbar {
     width: 0;
-}
+} */
 .isOverFlow::after {
     content: '';
     position: absolute;
@@ -241,18 +239,17 @@ tr:hover td[error]::before {
 }
 
 tr:nth-child(odd) .isOverFlow::after {
-    background: linear-gradient(rgba(255, 255, 255, 0.2), #fff);
+    /* background: linear-gradient(rgba(255, 255, 255, 0.2), #fff); */
 }
 
 tr:nth-child(even) .isOverFlow::after {
-    background: linear-gradient(rgba(245, 245, 250, 0.2), #f5f5fa);
+    /* background: linear-gradient(rgba(245, 245, 250, 0.2), #f5f5fa); */
 }
 
 td,
 th {
-    overflow-wrap: break-word;
     overflow: hidden;
-    max-width: 30vw;
+    width: max-content;
     outline: none;
     top: 0;
     padding: 10px;
@@ -265,6 +262,10 @@ th {
 
 body {
     height: auto;
+}
+
+td > pre {
+    width: min-content;
 }
 
 .search-box {
@@ -291,6 +292,7 @@ body {
 }
 
 #popup-wrapper:has(.popup) {
+    z-index: 1;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -583,4 +585,35 @@ body {
 
 .popup.imgupload .pupop-context img {
     width: 100%;
+}
+
+.img-preview-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+.img-preview-wrapper img {
+    width: 400px;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.file-upload-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.file-upload-btn i {
+    margin-right: 5px;
+}
+
+.file-upload-btn input {
+    display: none;
 }

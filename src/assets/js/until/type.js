@@ -9,18 +9,10 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     imgs: string[];
  *     base_price: number;
  *     category: string[];
- *     option?: Option[];
  * }} Sach
  */
 
 /**
- * @typedef {{
- *     id: string;
- *     short_name: string;
- *     long_name: string;
- *     img?: string;
- *     price: number;
- * }} Option
  *
  *
  * @typedef {{
@@ -48,7 +40,8 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     name: string;
  *     passwd: string;
  *     phone_num: string;
- *     rule?: 'admin' | 'user';
+ *     rule: 'admin' | 'user';
+ *     status: 'active' | 'ban';
  * }} UserInfo
  */
 

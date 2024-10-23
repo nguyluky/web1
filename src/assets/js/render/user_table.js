@@ -13,6 +13,7 @@ const cols = {
     email: 'Email',
     phone_num: 'Phone',
     rule: 'Rule',
+    status: 'Status',
 };
 
 /**
@@ -131,6 +132,7 @@ async function userDoSave() {
     }
 
     cacheAdd = [];
+    cacheSave = {};
 
     document
         .querySelectorAll('td[error]')
@@ -202,6 +204,7 @@ function addUser() {
         passwd: '',
         phone_num: '',
         rule: 'user',
+        status: 'active',
     };
 
     // Lưu người dùng mới vào cache
