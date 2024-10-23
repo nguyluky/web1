@@ -31,7 +31,7 @@ import { showPopup } from './render/popupRender.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 /** @type {string} */
-let tab = urlParams.get('tab') || 'user';
+let tab = urlParams.get('tab') || 'dashboard';
 /** @type {HTMLElement | null} */ (
     document.querySelector('input[name="tab-selestion"][value="' + tab + '"]')
 )?.click();
@@ -127,6 +127,11 @@ const buttonSaveState = {
 
 /** Xử lý render dữ liệu tương ứng với tab hiện tại */
 async function renderManagement() {
+    if (tab == 'dashboard') {
+        document.querySelector('.table-wrapper')?.classList.add('hide');
+        return;
+    }
+    document.querySelector('.table-wrapper')?.classList.remove('hide');
     const title = document.getElementById('table-title-header');
     const input = /** @type {HTMLInputElement} */ (
         document.getElementById('search-input')
