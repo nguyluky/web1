@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -11,23 +11,24 @@
         <script src="../assets/js/loginhandle.js"></script>
     </head>
     <body>
-        <header class="header">
-            <button id="menu-btn"><i class="fa-solid fa-bars"></i></button>
-            <div class="left"></div>
-            <div class="center">
-                <img src="../assets/img/favicon.png" alt="Logo" />
-                <span>wesellbooks</span>
-            </div>
-            <div class="right">
-                <button class="button_1">
-                    <i class="fa-regular fa-face-smile-wink"></i>
-                    <span>Tài khoản</span>
-                </button>
-            </div>
-        </header>
         <main class="main">
             <aside class="aside">
-                <div class="left-sidebar card" id="drop-list">
+                <div class="brand-name">
+                    <img src="../assets/img/favicon.png" alt="Logo" />
+                    <span>wesellbooks</span>
+                </div>
+                <div class="left-sidebar" id="drop-list">
+                    <label class="container">
+                        <input
+                            type="checkbox"
+                            name="tab-selestion"
+                            value="dashboard"
+                        />
+                        <div class="left-sidebar__btn btn-user">
+                            <i class="fa-solid fa-house-chimney"></i>
+                            <p><strong>Dashboard</strong></p>
+                        </div>
+                    </label>
                     <label class="container">
                         <input
                             type="checkbox"
@@ -61,71 +62,88 @@
                             <p><strong>Sách</strong></p>
                         </div>
                     </label>
-                    <label class="container">
-                        <input
-                            type="checkbox"
-                            name="tab-selestion"
-                            value="category"
-                        />
-                        <div class="left-sidebar__btn btn-category">
-                            <i class="fa-solid fa-bookmark"></i>
-                            <p><strong>Category</strong></p>
-                        </div>
-                    </label>
+                </div>
+                <div id="sign-out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Đăng xuất</span>
                 </div>
             </aside>
             <article class="article">
-                <div class="table-wrapper">
-                    <div class="table-title">
-                        <h3 id="table-title-header">User</h3>
-                        <div class="search-block">
-                            <label class="search-box">
-                                <input
-                                    type="text"
-                                    id="search-input"
-                                    placeholder="Search here"
-                                />
-                            </label>
-                        </div>
-                        <div class="buttons">
-                            <button class="button_1 btn-danger" id="delete-btn">
-                                <i class="fa-solid fa-trash"></i>
-                                <span>Xóa</span>
-                            </button>
-                            <button class="button_1 btn-primary" id="add-btn">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>Thêm</span>
-                            </button>
-                            <button
-                                class="button_1 btn-ouline-primary"
-                                id="save-btn"
-                            >
-                                <i class="fa-solid fa-pen"></i>
-                                <span>Edit</span>
-                            </button>
-                        </div>
+                <div class="article-header">
+                    <div class="left">
+                        <button id="menu-btn">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
                     </div>
-
-                    <div class="table-conten-wrapper">
-                        <div
-                            class="dot-spinner-wrapper"
-                            id="loading"
-                            style="display: none"
-                        >
-                            <div class="dot-spinner">
-                                <div class="dot-spinner__dot"></div>
-                                <div class="dot-spinner__dot"></div>
-                                <div class="dot-spinner__dot"></div>
-                                <div class="dot-spinner__dot"></div>
-                                <div class="dot-spinner__dot"></div>
-                                <div class="dot-spinner__dot"></div>
-                                <div class="dot-spinner__dot"></div>
-                                <div class="dot-spinner__dot"></div>
+                    <div class="center"></div>
+                    <div class="right">
+                        <button class="button_1">
+                            <i class="fa-regular fa-face-smile-wink"></i>
+                            <span>Tài khoản</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="article-main">
+                    <div class="table-wrapper">
+                        <div class="table-title">
+                            <h3 id="table-title-header">User</h3>
+                            <div class="search-block">
+                                <label class="search-box">
+                                    <input
+                                        type="text"
+                                        id="search-input"
+                                        placeholder="Search here"
+                                    />
+                                </label>
                             </div>
-
-                            <p style="margin-left: 10px">Đang tải dữ liệu</p>
+                            <div class="buttons">
+                                <button
+                                    class="button_1 btn-danger"
+                                    id="delete-btn"
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                    <span>Xóa</span>
+                                </button>
+                                <button
+                                    class="button_1 btn-primary"
+                                    id="add-btn"
+                                >
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Thêm</span>
+                                </button>
+                                <button
+                                    class="button_1 btn-ouline-primary"
+                                    id="save-btn"
+                                >
+                                    <i class="fa-solid fa-pen"></i>
+                                    <span>Edit</span>
+                                </button>
+                            </div>
                         </div>
-                        <table id="content_table"></table>
+
+                        <div class="table-conten-wrapper">
+                            <div
+                                class="dot-spinner-wrapper"
+                                id="loading"
+                                style="display: none"
+                            >
+                                <div class="dot-spinner">
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                    <div class="dot-spinner__dot"></div>
+                                </div>
+
+                                <p style="margin-left: 10px">
+                                    Đang tải dữ liệu
+                                </p>
+                            </div>
+                            <table id="content_table"></table>
+                        </div>
                     </div>
                 </div>
             </article>
