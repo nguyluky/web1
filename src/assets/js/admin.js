@@ -14,10 +14,9 @@ import categoryRender from './render/category_table.js';
    \ \_\ \_\ \____/\ \_\\ \_\/\_____\\ \_\ \_\
     \/_/\/_/\/___/  \/_/ \/_/\/_____/ \/_/\/_/
  */
-//#region định nghĩa kiểu dữ liệu
 
 /**
- * Định nghĩa các kiểu dữ liệu sử dụng trong project
+ * Định nghĩa các kiểu dữ liệu sử dụng trong file
  *
  * @typedef {import('./until/type.js').Cart} Cart
  *
@@ -29,7 +28,6 @@ import categoryRender from './render/category_table.js';
  *
  * @typedef {import('./until/type.js').imgStore} imgStore
  */
-//#endregion
 
 const urlParams = new URLSearchParams(window.location.search);
 /** @type {string} */
@@ -76,6 +74,7 @@ const fakeDBManagement = {
     category: () => fakeDatabase.getAllCategory(),
 };
 
+// đặt lại tên biến phía duối cho tôi
 const buttonAddState = {
     /* Thay đổi nút thành nút "Thêm" */
     add: () => {
@@ -159,131 +158,6 @@ function updateMangement() {
     return tabManagement[tab].doSave();
 }
 
-/**
- * @param {MouseEvent} event
- * @this {HTMLElement}
- */
-function handleButtonSave(event) {
-    const isEditMod = this.classList.contains('canedit');
-    // nhấn nút Edit
-    if (!isEditMod) {
-        buttonSaveState.save();
-        return;
-    }
-
-    // nếu nhấn nút save
-    const popupWrapper = document.getElementById('popup-wrapper');
-    if (popupWrapper)
-        showPopup(
-            popupWrapper,
-            'Xác nhận sửa',
-            'Bạn có chắc là muốn sửa không',
-            () => {
-                updateMangement()
-                    .then(() => {
-                        buttonAddState.add();
-                        buttonSaveState.edit();
-                    })
-                    .catch(() => {});
-            },
-            null,
-        );
-}
-
-/**
- * @param {MouseEvent} event
- * @this {HTMLElement}
- */
-function handleButtonDelete(event) {
-    const popupWrapper = document.getElementById('popup-wrapper');
-    if (popupWrapper) {
-        showPopup(
-            popupWrapper,
-            'Xác nhận xóa',
-            'Bạn có muốn xóa vĩnh viên các dòng hay không.',
-            () => {
-                tabManagement[tab].removeRows();
-                // console.log('ok');
-            },
-            null,
-        );
-    }
-}
-
-/**
- * @param {MouseEvent} event
- * @this {HTMLElement}
- */
-function dandleButtonAdd(event) {
-    const isAddMode = this.classList.contains('btn-warning');
-
-    if (isAddMode) {
-        buttonAddState.add();
-        tabManagement[tab].cancelAdd();
-    } else {
-        buttonAddState.cancel();
-        tabManagement[tab].addRow();
-    }
-}
-/**
- * @param {MouseEvent} event
- * @this {HTMLElement}
- */
-function handleButtonMenu(event) {
-    if (!this.classList.contains('active')) {
-        document.getElementById('drop-list')?.classList.add('show');
-        this.classList.add('active');
-        return;
-    }
-    document.getElementById('drop-list')?.classList.remove('show');
-    this.classList.remove('active');
-}
-
-/**
- * Xử lý khi chuyển giữa các tab khác nhau
- *
- * @param {MouseEvent} event
- * @this {HTMLInputElement}
- */
-function handleSwitchTab(event) {
-    const isEditMode = btnSave?.classList.contains('canedit');
-
-    if (isEditMode) {
-        this.checked = false;
-        popupWrapper &&
-            showPopup(
-                popupWrapper,
-                'Xác nhận sửa',
-                'Bạn có chắc là muốn sửa không',
-                () => {
-                    buttonAddState.add();
-                    buttonSaveState.edit();
-                    updateMangement();
-
-                    tabElements.forEach((e) => (e.checked = false));
-                    this.checked = true;
-                    tab = this.value;
-                    renderManagement();
-                },
-                null,
-            );
-
-        return;
-    }
-
-    tabElements.forEach((e) => (e.checked = false));
-    this.checked = true;
-
-    if (this.value === tab) return;
-    tab = this.value;
-
-    // cập nhật url
-
-    history.pushState({ tab }, '', `?tab=${tab}`);
-
-    renderManagement();
-}
-
 function handleContentOverflow() {
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
@@ -300,25 +174,133 @@ function handleContentOverflow() {
     );
 }
 
-function initializeMainButton() {
+function setupMainButtonEvents() {
+    /**
+     * @param {MouseEvent} event
+     * @this {HTMLElement}
+     */
+    function handleButtonSave(event) {
+        const isEditMod = this.classList.contains('canedit');
+        // nhấn nút Edit
+        if (!isEditMod) {
+            buttonSaveState.save();
+            return;
+        }
+
+        // nếu nhấn nút save
+        showPopup(
+            'Xác nhận sửa',
+            'Bạn có chắc là muốn sửa không',
+            () => {
+                updateMangement()
+                    .then(() => {
+                        buttonAddState.add();
+                        buttonSaveState.edit();
+                    })
+                    .catch(() => {});
+            },
+            null,
+        );
+    }
+
+    /**
+     * @param {MouseEvent} event
+     * @this {HTMLElement}
+     */
+    function handleButtonDelete(event) {
+        showPopup(
+            'Xác nhận xóa',
+            'Bạn có muốn xóa vĩnh viên các dòng hay không.',
+            () => {
+                tabManagement[tab].removeRows();
+                // console.log('ok');
+            },
+            null,
+        );
+    }
+
+    /**
+     * @param {MouseEvent} event
+     * @this {HTMLElement}
+     */
+    function HandleButtonAdd(event) {
+        const isAddMode = this.classList.contains('btn-warning');
+
+        if (isAddMode) {
+            buttonAddState.add();
+            tabManagement[tab].cancelAdd();
+        } else {
+            buttonAddState.cancel();
+            tabManagement[tab].addRow();
+        }
+    }
+
     btnDelete?.addEventListener('click', handleButtonDelete);
     btnSave?.addEventListener('click', handleButtonSave);
-    btnAdd?.addEventListener('click', dandleButtonAdd);
+    btnAdd?.addEventListener('click', HandleButtonAdd);
 }
 
-function initializeSideBarPopup() {
-    tabElements.forEach((e) => e.addEventListener('click', handleSwitchTab));
-
-    // show side bar where in mobile ui
-    btnMenu?.addEventListener('click', handleButtonMenu);
+function setupSiderBar() {
     const drop_menu = document.getElementById('drop-list');
-    document.getElementById('drop-list')?.addEventListener('click', () => {
-        drop_menu?.classList.remove('show');
-        // NOTE: không xóa dòng này -_-
-        btnMenu?.classList.remove('active');
-    });
 
-    document.addEventListener('click', (event) => {
+    /**
+     * Xử lý khi chuyển giữa các tab khác nhau
+     *
+     * @this {HTMLInputElement}
+     */
+    function handleSwitchTab() {
+        const isEditMode = btnSave?.classList.contains('canedit');
+
+        if (isEditMode) {
+            this.checked = false;
+            showPopup(
+                'Xác nhận sửa',
+                'Bạn có chắc là muốn sửa không',
+                () => {
+                    buttonAddState.add();
+                    buttonSaveState.edit();
+                    updateMangement();
+
+                    tabElements.forEach((e) => (e.checked = false));
+                    this.checked = true;
+                    tab = this.value;
+                    renderManagement();
+                },
+                null,
+            );
+
+            return;
+        }
+
+        tabElements.forEach((e) => (e.checked = false));
+        this.checked = true;
+
+        if (this.value === tab) return;
+        tab = this.value;
+
+        // cập nhật url
+
+        history.pushState({ tab }, '', `?tab=${tab}`);
+
+        renderManagement();
+    }
+
+    function handlePopState(event) {
+        tab = event.state?.tab || 'user';
+
+        tabElements.forEach((e) => (e.checked = false));
+        const tab_ = /** @type {HTMLInputElement | null} */ (
+            document.querySelector(
+                'input[name="tab-selestion"][value="' + tab + '"]',
+            )
+        );
+
+        if (tab_) tab_.checked = true;
+
+        renderManagement();
+    }
+
+    function handleClickOutside(event) {
         const isClickInsideDropdown = /** @type {HTMLElement} */ (
             event.target
         ).closest('#drop-list');
@@ -329,34 +311,51 @@ function initializeSideBarPopup() {
             drop_menu?.classList.remove('show');
             btnMenu?.classList.remove('active');
         }
-    });
+    }
+
+    // hàm này đểm làm gì vậy tuấn
+    // ?
+    function handleDropList(event) {
+        drop_menu?.classList.remove('show');
+        // NOTE: không xóa dòng này -_-
+        btnMenu?.classList.remove('active');
+    }
+
+    /**
+     * @param {MouseEvent} event
+     * @this {HTMLElement}
+     */
+    function handleButtonMenu(event) {
+        if (!this.classList.contains('active')) {
+            document.getElementById('drop-list')?.classList.add('show');
+            this.classList.add('active');
+            return;
+        }
+        document.getElementById('drop-list')?.classList.remove('show');
+        this.classList.remove('active');
+    }
+
+    tabElements.forEach((e) => e.addEventListener('click', handleSwitchTab));
+    // popstate là gì
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event
+    window.addEventListener('popstate', handlePopState);
+
+    // show side bar where in mobile ui
+    btnMenu?.addEventListener('click', handleButtonMenu);
+    document
+        .getElementById('drop-list')
+        ?.addEventListener('click', handleDropList);
+
+    document.addEventListener('click', handleClickOutside);
 }
 
 /** Main funstion */
 async function main() {
     //
-    initializeSideBarPopup();
-    initializeMainButton();
+    setupMainButtonEvents();
+    setupSiderBar();
     renderManagement();
 }
 
 window.addEventListener('resize', handleContentOverflow);
-window.addEventListener('load', main);
-
-// onhashchange là gì
-// https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
-window.onpopstate = function (event) {
-    const urlParams = new URLSearchParams(window.location.search);
-    tab = urlParams.get('tab') || 'user';
-
-    tabElements.forEach((e) => (e.checked = false));
-    const tab_ = /** @type {HTMLInputElement | null} */ (
-        document.querySelector(
-            'input[name="tab-selestion"][value="' + tab + '"]',
-        )
-    );
-
-    if (tab_) tab_.checked = true;
-
-    renderManagement();
-};
+main();

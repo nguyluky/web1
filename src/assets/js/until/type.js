@@ -82,6 +82,19 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  */
 
 /**
+ * @typedef {{
+ *     id: string;
+ *     user_id: string;
+ *     items: Cart[];
+ *     data: Date;
+ *     state: 'suly' | 'doixacnhan' | 'thanhcong';
+ *     last_update: Date;
+ *     is_pay: boolean;
+ *     total: number;
+ * }} Order
+ */
+
+/**
  * @param {UserInfo} userInfo
  * @returns {{
  *     key: string;

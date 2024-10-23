@@ -5,6 +5,8 @@
  * đặc tính chung như id.
  */
 
+import { createPopupBase } from './popupRender.js';
+
 /**
  * @template T
  * @typedef {{ [P in keyof Partial<T>]: string }} COLS
@@ -139,69 +141,30 @@ function searchList(values, cols) {
 /**
  * Tạo và hiển thị một popup xác nhận.
  *
- * @param {HTMLElement} parder - Phần tử cha chứa popup.
  * @param {string} title - Tiêu đề của popup.
  * @param {string} context - Nội dung của popup.
  * @param {(() => void)?} onOk - Hàm gọi lại khi người dùng nhấn OK.
  * @param {(() => void)?} onCancel - Hàm gọi lại khi người dùng nhấn Cancel.
  */
-function showPopup(parder, title, context, onOk, onCancel) {
-    // Create the main popup div
-    const popup = document.createElement('div');
-    popup.className = 'popup';
-
-    // Create the header
-    const popupHeader = document.createElement('div');
-    popupHeader.className = 'popup-header';
-
-    const title_ = document.createElement('h1');
-    title_.textContent = title;
-
-    const closeButton = document.createElement('button');
-    closeButton.className = 'button_1';
-    closeButton.onclick = () => {
-        parder.innerHTML = '';
-        if (onCancel) onCancel();
-    };
-    const closeIcon = document.createElement('i');
-    closeIcon.className = 'fa-solid fa-xmark';
-    closeButton.appendChild(closeIcon);
-
-    // Append header elements
-    popupHeader.appendChild(title_);
-    popupHeader.appendChild(closeButton);
-    popup.appendChild(popupHeader);
-
-    // Create the context
-    const popupContext = document.createElement('div');
-    popupContext.className = 'pupop-context';
-    popupContext.textContent = context;
-    popup.appendChild(popupContext);
-
-    // Create the footer
-    const popupFooter = document.createElement('div');
-    popupFooter.className = 'popup-footer';
-
-    const cancelButton = document.createElement('button');
-    cancelButton.className = 'button_1 btn-primary';
-    cancelButton.textContent = 'Cancel';
-    cancelButton.onclick = () => {
-        parder.innerHTML = '';
-        if (onCancel) onCancel();
-    };
-
-    const okButton = document.createElement('button');
-    okButton.className = 'button_1 btn-ouline-primary';
-    okButton.textContent = 'OK';
-    okButton.onclick = () => {
-        parder.innerHTML = '';
-        if (onOk) onOk();
-    };
-
-    // Append footer elements
-    popupFooter.appendChild(cancelButton);
-    popupFooter.appendChild(okButton);
-    popup.appendChild(popupFooter);
+function showPopup(title, context, onOk, onCancel) {
+    let parder = document.getElementById('popup-wrapper');
+    if (!parder) {
+        parder = document.createElement('div');
+        parder.id = 'popup-wrapper';
+        document.body.appendChild(parder);
+    }
+    const popup = createPopupBase(
+        title,
+        context,
+        () => {
+            parder.innerHTML = '';
+            if (onOk) onOk();
+        },
+        () => {
+            parder.innerHTML = '';
+            if (onCancel) onCancel();
+        },
+    );
 
     parder.appendChild(popup);
 

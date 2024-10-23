@@ -1,14 +1,19 @@
-import uuidv4 from '../until/uuid.js';
 import addressData from './addressDb.js';
 
+/** @enum {string} */
 const ObjectStoreName = {
     USER: 'userStore',
     CART: 'cartStore',
     BOOK: 'bookStore',
     CATEGORY: 'categoryStore',
     IMG: 'imgStore',
+    ORDER: 'orderStore',
 };
-
+/**
+ * Biến lưu trữ kết nối đến IndexedDB
+ *
+ * @type {IDBDatabase}
+ */
 let db;
 let isOnupgradeneeded = false;
 const req = window.indexedDB.open('fakedb', 1);
@@ -85,13 +90,26 @@ function createObjectStore(db_) {
     categoryStore_.createIndex('long_name', 'long_name', { unique: false });
 
     //#endregion
-    //#region
+    //#region Tạo objectStore cho img
     const imgStore = db_.createObjectStore(ObjectStoreName.IMG, {
         keyPath: 'id',
         autoIncrement: true,
     });
     imgStore.createIndex('data', 'data');
     //#endregion
+
+    // #region Tạo objectStore cho order
+    const orderStore = db_.createObjectStore(ObjectStoreName.ORDER, {
+        keyPath: 'id',
+        autoIncrement: true,
+    });
+    orderStore.createIndex('user_id', 'user_id', { unique: false });
+    orderStore.createIndex('items', 'items', { unique: false });
+    orderStore.createIndex('data', 'data', { unique: false });
+    orderStore.createIndex('state', 'state', { unique: false });
+    orderStore.createIndex('last_update', 'last_update', { unique: false });
+    orderStore.createIndex('is_pay', 'is_pay', { unique: false });
+    orderStore.createIndex('total', 'total', { unique: false });
 }
 async function loadUserData() {
     if (!dataLoaded[ObjectStoreName.USER]) {
@@ -105,7 +123,6 @@ async function loadUserData() {
         updateDataLoaded(ObjectStoreName.USER);
     }
 }
-
 async function loadImgData() {
     if (!dataLoaded[ObjectStoreName.IMG]) {
         const data = await fetch('/assets/data/img.json').then((res) =>
@@ -118,7 +135,6 @@ async function loadImgData() {
         // await requestToPromise(transaction);
     }
 }
-
 async function loadCategoryData() {
     if (!dataLoaded[ObjectStoreName.CATEGORY]) {
         const data = await fetch('/assets/data/category.json').then((res) =>
@@ -146,6 +162,7 @@ async function loadBookData() {
         updateDataLoaded(ObjectStoreName.BOOK);
     }
 }
+async function loadOrder(params) {}
 
 req.onupgradeneeded = (event) => {
     isOnupgradeneeded = true;
@@ -164,6 +181,47 @@ req.onsuccess = () => {
     if (!isOnupgradeneeded) db = req.result;
 };
 
+// ## hàm liên quan đến người dùng
+// - getUserInfoByUserId
+// - getAllUserInfo
+// - deleteUserById
+// - getUserInfoByEmailAndPassword
+// - getUserInfoByPhoneNum              không nên dùng (chuyển qua hàm checkIfUserExists)
+// - checkIfUserExists
+// - addUserInfo
+// - updateUserInfo
+// ## hàm liên quan đến sách
+// - getAllSach
+// - getSachById
+// - addSach
+// - updateSach
+// - deleteSachById
+// ## hàm liên quan đến giỏ hàng
+// - getALlCart
+// - getCartByUserId
+// - getCartById
+// - updateCart
+// ## hàm liên quan đến danh mục
+// - getAllCategory
+// ## hàm liên quan đến ảnh
+// - getAllImgs
+// - getImgById
+// - addImg
+// - updateImg
+// ## hàm liên quan đến địa chỉ
+// - getAllTinhThanPho
+// - getAllTinhThanhByThanPho
+// - getAllpxByThinhTpAndQh
+// ## hàm liên quan đến đơn hàng
+// - getAllOrder
+// - getOrderById
+// - addOrder
+// - updateOrder
+// - deleteOrderById
+// ## hàm liên quan đến địa chỉ
+// - getAllTinhThanPho
+// - getAllTinhThanhByThanPho
+// - getAllpxByThinhTpAndQh
 class FakeDatabase {
     isReady() {
         return !!db;
@@ -175,6 +233,7 @@ class FakeDatabase {
             request.onerror = (event) => reject(event.target.error);
         });
     }
+
     async awaitUntilReady() {
         while (!db) {
             await new Promise((resolve) => setTimeout(resolve, 500));
@@ -213,7 +272,6 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.USER);
         const transaction = db.transaction(ObjectStoreName.USER, 'readonly');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        console.log('Database ready');
         return this.requestToPromise(userStore.getAll());
     }
 
@@ -245,26 +303,13 @@ class FakeDatabase {
         );
     }
 
+    async checkIfUserExists(email, phone_num) {
+        // TODO: Implement this function
+    }
+
     async addUserInfo(userInfo) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
-        const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
-        const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(userStore.add(userInfo));
-    }
-
-    async createUserInfo(password, display_name, std, email) {
-        if (!db) await this.awaitUntilReady();
-        await this.ensureDataLoaded(ObjectStoreName.USER);
-        const user_id = uuidv4();
-        const userInfo = {
-            id: user_id,
-            name: display_name,
-            email,
-            passwd: password,
-            phone_num: std,
-            rule: 'user',
-        };
         const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
         return this.requestToPromise(userStore.add(userInfo));
@@ -413,6 +458,48 @@ class FakeDatabase {
         const qh = pts.Districts.find((e) => e.Name == quan);
         if (!qh) return [];
         return qh.Wards.map((e) => e.Name || '') || [];
+    }
+
+    // tạo cho tôi hàm liên quan đến đơn hàng
+
+    async getAllOrder() {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.ORDER);
+        const transaction = db.transaction(ObjectStoreName.ORDER, 'readonly');
+        const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
+        return this.requestToPromise(orderStore.getAll());
+    }
+
+    async getOrderById(order_id) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.ORDER);
+        const transaction = db.transaction(ObjectStoreName.ORDER, 'readonly');
+        const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
+        return this.requestToPromise(orderStore.get(order_id));
+    }
+
+    async addOrder(order) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.ORDER);
+        const transaction = db.transaction(ObjectStoreName.ORDER, 'readwrite');
+        const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
+        return this.requestToPromise(orderStore.add(order));
+    }
+
+    async updateOrder(order) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.ORDER);
+        const transaction = db.transaction(ObjectStoreName.ORDER, 'readwrite');
+        const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
+        return this.requestToPromise(orderStore.put(order));
+    }
+
+    async deleteOrderById(order_id) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.ORDER);
+        const transaction = db.transaction(ObjectStoreName.ORDER, 'readwrite');
+        const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
+        return this.requestToPromise(orderStore.delete(order_id));
     }
 }
 
