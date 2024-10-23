@@ -9,7 +9,7 @@
  *
  * @typedef {import('../until/type.js').imgStore} imgStore
  */
-import uuidv4 from '../until/uuid.js';
+import uuidv from '../until/uuid.js';
 import addressData from './addressDb.js';
 
 /** @enum {string} */
@@ -344,7 +344,7 @@ class FakeDatabase {
     async createUserInfo(password, display_name, std, email) {
         if (!db) await this.awaitUntilReady();
 
-        const user_id = uuidv4();
+        const user_id = uuidv(8);
         const data = {
             id: user_id,
             name: display_name,

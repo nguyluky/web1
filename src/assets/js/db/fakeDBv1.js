@@ -1,3 +1,4 @@
+import uuidv4 from '../until/uuid.js';
 import addressData from './addressDb.js';
 
 /** @enum {string} */
@@ -310,6 +311,23 @@ class FakeDatabase {
     async addUserInfo(userInfo) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
+        const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
+        const userStore = transaction.objectStore(ObjectStoreName.USER);
+        return this.requestToPromise(userStore.add(userInfo));
+    }
+
+    async createUserInfo(password, display_name, std, email) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.USER);
+        const user_id = uuidv4();
+        const userInfo = {
+            id: user_id,
+            name: display_name,
+            email,
+            passwd: password,
+            phone_num: std,
+            rule: 'user',
+        };
         const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
         return this.requestToPromise(userStore.add(userInfo));

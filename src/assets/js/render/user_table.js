@@ -1,6 +1,6 @@
 import fakeDatabase from '../db/fakeDBv1.js';
 import { validateUserInfo } from '../until/type.js';
-import uuidv4 from '../until/uuid.js';
+import uuidv from '../until/uuid.js';
 import { searchList, renderTable, defaultRenderRow } from './baseRender.js';
 
 /** @typedef {import('../db/fakeDb.js').UserInfo} UserInfo */
@@ -196,7 +196,7 @@ function addUser() {
 
     /** @type {UserInfo} */
     const data = {
-        id: uuidv4(),
+        id: uuidv(8),
         email: '',
         name: '',
         passwd: '',
@@ -216,7 +216,7 @@ function addUser() {
     });
 
     // Cho phép chỉnh sửa các ô trong hàng mới
-    row.querySelectorAll('td').forEach((e) =>
+    row.querySelectorAll('td:not(:has(input[type="checkbox"]))').forEach((e) =>
         e.setAttribute('contenteditable', 'true'),
     );
 
