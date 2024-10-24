@@ -45,6 +45,61 @@ function onChangeHandle(data, key, newValue) {
 }
 
 /**
+ *
+ * @param {string[]} value
+ * @returns {HTMLDivElement}
+ */
+function createCategoryCell(value) {
+    const categoryContainer = document.createElement('div');
+    categoryContainer.className = 'category-container';
+
+    const categorys = [...value];
+
+    fakeDatabase.getAllCategory().then((allCategory) => {
+        categorys.forEach((categoryMs) => {
+            const category = allCategory.find((e) => e.id == categoryMs);
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'category';
+
+            const s = document.createElement('span');
+            s.textContent = category?.name || '';
+            categoryDiv.appendChild(s);
+
+            const i = document.createElement('i');
+            i.className = 'fa-solid fa-xmark';
+            categoryDiv.appendChild(i);
+
+            i.addEventListener('click', () => {
+                console.log('remove', categoryMs);
+            });
+
+            categoryContainer.appendChild(categoryDiv);
+        });
+
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category add';
+
+        categoryDiv.addEventListener('click', () => {
+            console.log('thêm click');
+        });
+
+        const s = document.createElement('span');
+        s.textContent = 'Thêm';
+        categoryDiv.appendChild(s);
+
+        const i = document.createElement('i');
+        i.className = 'fa-solid fa-plus';
+        categoryDiv.appendChild(i);
+
+        categoryContainer.contentEditable = 'false';
+        categoryContainer.appendChild(categoryDiv);
+    });
+
+    // TODO: thêm vào kiểm tra thay đôi
+    return categoryContainer;
+}
+
+/**
  * @param {Sach} value
  * @param {import('./baseRender.js').OnChange<Sach>?} onchange
  * @returns {HTMLTableRowElement} Row
@@ -65,47 +120,8 @@ function createRow(value, onchange = null) {
 
         switch (key) {
             case 'category': {
-                const categoryContainer = document.createElement('div');
-                categoryContainer.className = 'category-container';
-
-                const a = value['category'].map((e) => {
-                    return fakeDatabase.getCategoryById(e).then((category) => {
-                        const categoryDiv = document.createElement('div');
-                        categoryDiv.className = 'category';
-
-                        const s = document.createElement('span');
-                        s.textContent = category?.name || '';
-                        categoryDiv.appendChild(s);
-
-                        const i = document.createElement('i');
-                        i.className = 'fa-solid fa-xmark';
-                        categoryDiv.appendChild(i);
-
-                        categoryContainer.appendChild(categoryDiv);
-                    });
-                });
-
-                Promise.all(a).then(() => {
-                    const categoryDiv = document.createElement('div');
-                    categoryDiv.className = 'category add';
-
-                    const i = document.createElement('i');
-                    i.className = 'fa-solid fa-plus';
-                    categoryDiv.appendChild(i);
-
-                    const s = document.createElement('span');
-                    s.textContent = 'Thêm';
-                    categoryDiv.appendChild(s);
-
-                    categoryContainer.contentEditable = 'false';
-                    categoryContainer.appendChild(categoryDiv);
-                });
-
-                // TODO: thêm vào kiểm tra thay đôi
-
-                col.setAttribute('key', 'category');
+                const categoryContainer = createCategoryCell(value['category']);
                 col.appendChild(categoryContainer);
-
                 break;
             }
             case 'details': {
@@ -131,7 +147,6 @@ function createRow(value, onchange = null) {
 
                 details_wrapper.setAttribute('default-value', value[key]);
                 col.appendChild(details_wrapper);
-                col.setAttribute('key', 'details');
                 break;
             }
             case 'thumbnal': {
@@ -182,10 +197,9 @@ function createRow(value, onchange = null) {
                         col.setAttribute('ischange', 'false');
                     else col.setAttribute('ischange', 'true');
                 };
-                col.setAttribute('key', key);
             }
         }
-
+        col.setAttribute('key', 'category');
         row.appendChild(col);
     });
 

@@ -252,6 +252,48 @@ function setupMainButtonEvents() {
     btnSignOut?.addEventListener('click', handleButtonSignOut);
 }
 
+/**
+ *
+ * @param {PopStateEvent} event
+ */
+function handlePopState(event) {
+    const isEditMode = btnSave?.classList.contains('canedit');
+
+    if (isEditMode) {
+        if (event.state?.tab != tab) {
+            history.go(1);
+            showPopup(
+                'Xác nhận sửa',
+                'Bạn có chắc là muốn sửa không',
+                () => {
+                    // buttonAddState.add();
+                    // buttonSaveState.edit();
+                    // updateMangement();
+                    // tabElements.forEach((e) => (e.checked = false));
+                    // this.checked = true;
+                    // tab = this.value;
+                    // renderManagement();
+                },
+                null,
+            );
+        }
+
+        return;
+    }
+
+    tab = event.state?.tab || 'user';
+    tabElements.forEach((e) => (e.checked = false));
+    const tab_ = /** @type {HTMLInputElement | null} */ (
+        document.querySelector(
+            'input[name="tab-selestion"][value="' + tab + '"]',
+        )
+    );
+
+    if (tab_) tab_.checked = true;
+
+    renderManagement();
+}
+
 function setupSiderBar() {
     const drop_menu = document.querySelector('.aside');
 
@@ -297,21 +339,6 @@ function setupSiderBar() {
         renderManagement();
     }
 
-    function handlePopState(event) {
-        tab = event.state?.tab || 'user';
-
-        tabElements.forEach((e) => (e.checked = false));
-        const tab_ = /** @type {HTMLInputElement | null} */ (
-            document.querySelector(
-                'input[name="tab-selestion"][value="' + tab + '"]',
-            )
-        );
-
-        if (tab_) tab_.checked = true;
-
-        renderManagement();
-    }
-
     function handleClickOutside(event) {
         const isClickInsideDropdown = /** @type {HTMLElement} */ (
             event.target
@@ -348,9 +375,6 @@ function setupSiderBar() {
     }
 
     tabElements.forEach((e) => e.addEventListener('click', handleSwitchTab));
-    // popstate là gì
-    // https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event
-    window.addEventListener('popstate', handlePopState);
 
     // show side bar where in mobile ui
     btnMenu?.addEventListener('click', handleButtonMenu);
@@ -367,7 +391,11 @@ async function main() {
     setupMainButtonEvents();
     setupSiderBar();
     renderManagement();
+
+    // popstate là gì
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('resize', handleContentOverflow);
 }
 
-window.addEventListener('resize', handleContentOverflow);
 main();
