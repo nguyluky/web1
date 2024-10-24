@@ -1,5 +1,18 @@
-import uuidv4 from '../until/uuid.js';
 import addressData from './addressDb.js';
+
+/**
+ * @typedef {import('../until/type.js').Cart} Cart
+ *
+ * @typedef {import('../until/type.js').Category} Category
+ *
+ * @typedef {import('../until/type.js').Sach} Sach
+ *
+ * @typedef {import('../until/type.js').UserInfo} UserInfo
+ *
+ * @typedef {import('../until/type.js').imgStore} ImgStore
+ *
+ * @typedef {import('../until/type.js').Order} Order
+ */
 
 /** @enum {string} */
 const ObjectStoreName = {
@@ -241,6 +254,7 @@ class FakeDatabase {
         }
     }
 
+    /** @param {ObjectStoreName} objectStoreName */
     async ensureDataLoaded(objectStoreName) {
         switch (objectStoreName) {
             case ObjectStoreName.USER:
@@ -260,6 +274,10 @@ class FakeDatabase {
         }
     }
 
+    /**
+     * @param {string} user_id
+     * @returns {Promise<UserInfo | undefined>}
+     */
     async getUserInfoByUserId(user_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
@@ -268,6 +286,7 @@ class FakeDatabase {
         return this.requestToPromise(userStore.get(user_id));
     }
 
+    /** @returns {Promise<UserInfo[]>} */
     async getAllUserInfo() {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
@@ -284,6 +303,11 @@ class FakeDatabase {
         return this.requestToPromise(userStore.delete(user_id));
     }
 
+    /**
+     * @param {string} email
+     * @param {string} password
+     * @returns {Promise<UserInfo>}
+     */
     async getUserInfoByEmailAndPassword(email, password) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
@@ -294,6 +318,10 @@ class FakeDatabase {
         );
     }
 
+    /**
+     * @param {string} phone_num
+     * @returns {Promise<UserInfo>}
+     */
     async getUserInfoByPhoneNum(phone_num) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
@@ -308,6 +336,10 @@ class FakeDatabase {
         // TODO: Implement this function
     }
 
+    /**
+     * @param {UserInfo} userInfo
+     * @returns {Promise<?>}
+     */
     async addUserInfo(userInfo) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
@@ -316,6 +348,10 @@ class FakeDatabase {
         return this.requestToPromise(userStore.add(userInfo));
     }
 
+    /**
+     * @param {UserInfo} userInfo
+     * @returns {Promise<?>}
+     */
     async updateUserInfo(userInfo) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
@@ -324,6 +360,7 @@ class FakeDatabase {
         return this.requestToPromise(userStore.put(userInfo));
     }
 
+    /** @returns {Promise<Sach[]>} */
     async getAllSach() {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
@@ -332,6 +369,10 @@ class FakeDatabase {
         return this.requestToPromise(bookStore.getAll());
     }
 
+    /**
+     * @param {string} sach_id
+     * @returns {Promise<Sach | undefined>}
+     */
     async getSachById(sach_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
@@ -340,6 +381,10 @@ class FakeDatabase {
         return this.requestToPromise(bookStore.get(sach_id));
     }
 
+    /**
+     * @param {Sach} bookInfo
+     * @returns {Promise<?>}
+     */
     async addSach(bookInfo) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
@@ -348,6 +393,10 @@ class FakeDatabase {
         return this.requestToPromise(bookStore.add(bookInfo));
     }
 
+    /**
+     * @param {Sach} bookInfo
+     * @returns {Promise<?>}
+     */
     async updateSach(bookInfo) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
@@ -356,6 +405,10 @@ class FakeDatabase {
         return this.requestToPromise(bookStore.put(bookInfo));
     }
 
+    /**
+     * @param {string} sach_id
+     * @returns {Promise<?>}
+     */
     async deleteSachById(sach_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
@@ -364,6 +417,7 @@ class FakeDatabase {
         return this.requestToPromise(bookStore.delete(sach_id));
     }
 
+    /** @returns {Promise<Cart[]>} */
     async getALlCart() {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.CART);
@@ -372,6 +426,10 @@ class FakeDatabase {
         return this.requestToPromise(cartStore.getAll());
     }
 
+    /**
+     * @param {string} user_id
+     * @returns {Promise<Cart[]>}
+     */
     async getCartByUserId(user_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.CART);
@@ -382,14 +440,22 @@ class FakeDatabase {
         );
     }
 
-    async getCartById(user_id) {
+    /**
+     * @param {string} cart_id
+     * @returns {Promise<Cart | undefined>}
+     */
+    async getCartById(cart_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.CART);
         const transaction = db.transaction(ObjectStoreName.CART, 'readonly');
         const cartStore = transaction.objectStore(ObjectStoreName.CART);
-        return this.requestToPromise(cartStore.get(user_id));
+        return this.requestToPromise(cartStore.get(cart_id));
     }
 
+    /**
+     * @param {Cart} cart_data
+     * @returns {Promise<?>}
+     */
     async updateCart(cart_data) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.CART);
@@ -398,6 +464,7 @@ class FakeDatabase {
         return this.requestToPromise(cartStore.put(cart_data));
     }
 
+    /** @returns {Promise<Category[]>} */
     async getAllCategory() {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.CATEGORY);
@@ -409,6 +476,22 @@ class FakeDatabase {
         return this.requestToPromise(categoryStore.getAll());
     }
 
+    /**
+     * @param {string} id
+     * @returns {Promise<Category | undefined>}
+     */
+    async getCategoryById(id) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.CATEGORY);
+        const transaction = db.transaction(
+            ObjectStoreName.CATEGORY,
+            'readonly',
+        );
+        const categoryStore = transaction.objectStore(ObjectStoreName.CATEGORY);
+        return this.requestToPromise(categoryStore.get(id));
+    }
+
+    /** @returns {Promise<ImgStore[]>} */
     async getAllImgs() {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.IMG);
@@ -417,6 +500,10 @@ class FakeDatabase {
         return this.requestToPromise(imgStore.getAll());
     }
 
+    /**
+     * @param {string} id
+     * @returns {Promise<ImgStore>}
+     */
     async getImgById(id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.IMG);
@@ -425,6 +512,10 @@ class FakeDatabase {
         return this.requestToPromise(imgStore.get(id));
     }
 
+    /**
+     * @param {ImgStore} img
+     * @returns {Promise<?>}
+     */
     async addImg(img) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.IMG);
@@ -433,6 +524,10 @@ class FakeDatabase {
         return this.requestToPromise(imgStore.add(img));
     }
 
+    /**
+     * @param {ImgStore} img
+     * @returns {Promise<?>}
+     */
     async updateImg(img) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.IMG);
@@ -441,10 +536,15 @@ class FakeDatabase {
         return this.requestToPromise(imgStore.put(img));
     }
 
+    /** @returns {Promise<string[]>} */
     async getAllTinhThanPho() {
         return addressData.map((e) => e.Name);
     }
 
+    /**
+     * @param {string} name
+     * @returns {Promise<string[]>}
+     */
     async getAllTinhThanhByThanPho(name) {
         return (
             addressData
@@ -453,6 +553,11 @@ class FakeDatabase {
         );
     }
 
+    /**
+     * @param {string} pt
+     * @param {string} quan
+     * @returns {Promise<string[]>}
+     */
     async getAllpxByThinhTpAndQh(pt, quan) {
         const pts = addressData.find((e) => e.Name == pt);
         if (!pts) return [];
@@ -461,8 +566,7 @@ class FakeDatabase {
         return qh.Wards.map((e) => e.Name || '') || [];
     }
 
-    // tạo cho tôi hàm liên quan đến đơn hàng
-
+    /** @returns {Promise<Order[]>} */
     async getAllOrder() {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
@@ -471,6 +575,10 @@ class FakeDatabase {
         return this.requestToPromise(orderStore.getAll());
     }
 
+    /**
+     * @param {string} order_id
+     * @returns {Promise<Order | undefined>}
+     */
     async getOrderById(order_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
@@ -479,6 +587,10 @@ class FakeDatabase {
         return this.requestToPromise(orderStore.get(order_id));
     }
 
+    /**
+     * @param {Order} order
+     * @returns {Promise<?>}
+     */
     async addOrder(order) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
@@ -487,6 +599,10 @@ class FakeDatabase {
         return this.requestToPromise(orderStore.add(order));
     }
 
+    /**
+     * @param {Order} order
+     * @returns {Promise<?>}
+     */
     async updateOrder(order) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
@@ -495,6 +611,10 @@ class FakeDatabase {
         return this.requestToPromise(orderStore.put(order));
     }
 
+    /**
+     * @param {string} order_id
+     * @returns {Promise<?>}
+     */
     async deleteOrderById(order_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.ORDER);

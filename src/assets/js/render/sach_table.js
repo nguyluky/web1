@@ -10,18 +10,19 @@ import { showImgPreviewPopup } from './popupRender.js';
  */
 
 const cols = {
-    id: 'Id',
+    // id: 'Id',
     title: 'Title',
     base_price: 'Price',
+    category: 'Category',
     details: 'Details',
     thumbnal: 'Thumbnal',
     // imgs: 'imgs',
-    // category: 'Category',
     // option: 'Option',
 };
 let cacheSave = {};
 let cacheAdd = [];
 let cacheImg = {};
+
 /**
  * Hàm xử lý khi có thay đổi dữ liệu trên bảng (hàm callback)
  *
@@ -42,6 +43,7 @@ function onChangeHandle(data, key, newValue) {
         };
     }
 }
+
 /**
  * @param {Sach} value
  * @param {import('./baseRender.js').OnChange<Sach>?} onchange
@@ -72,7 +74,42 @@ function createRow(value, onchange = null) {
         };
         col.setAttribute('key', key);
 
-        if (key == 'details') {
+        if (key == 'category') {
+            const categoryContainer = document.createElement('div');
+            categoryContainer.className = 'category-container';
+
+            const a = value.category.map((e) => {
+                return fakeDatabase.getCategoryById(e).then((category) => {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'category';
+
+                    const s = document.createElement('span');
+                    s.textContent = category?.name || '';
+                    categoryDiv.appendChild(s);
+
+                    const i = document.createElement('i');
+                    i.className = 'fa-solid fa-xmark';
+                    categoryDiv.appendChild(i);
+
+                    categoryContainer.appendChild(categoryDiv);
+                });
+            });
+
+            Promise.all(a).then(() => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category add';
+
+                const i = document.createElement('i');
+                i.className = 'fa-solid fa-plus';
+                categoryDiv.appendChild(i);
+
+                categoryContainer.appendChild(categoryDiv);
+            });
+
+            col.appendChild(categoryContainer);
+
+            // col.textContent = value[key].join(', ');
+        } else if (key == 'details') {
             const details_wrapper = document.createElement('div');
             details_wrapper.className = 'details-wrapper';
 

@@ -3,7 +3,7 @@ import { renderTable, searchList } from './baseRender.js';
 /** @typedef {import('../until/type.js').Cart} Cart */
 
 const cols = {
-    id: 'Id',
+    // id: 'Id',
     user_id: 'User id',
     sach: 'Sách id',
     quantity: 'Số lượng',

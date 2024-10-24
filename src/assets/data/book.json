@@ -7,7 +7,7 @@
             "thumbnal": "10e98d84-ab78-5547-838e-b9dabacf15d3",
             "imgs": [],
             "base_price": 10000,
-            "category": []
+            "category": ["gtcn","gtcb", "gtnc", "bgpp", "btcn", "bgPDF", "tltks"]
         },
         {
             "id": "1",
@@ -16,7 +16,7 @@
             "thumbnal": "90da6890-8c45-5733-b3c2-8c6b203259bc",
             "imgs": [],
             "base_price": 0,
-            "category": []
+            "category": ["gtcn","gtcb", "gtnc","tltks"]
         },
         {
             "id": "2",
@@ -31,7 +31,7 @@
                 "c9054d73-4c13-5bb8-b0de-6780b0b58248"
             ],
             "base_price": 50000,
-            "category": []
+            "category": ["gtcn","gtcb", "gtnc","tltks", "bgpp", "bgPDF", "btcn"]
         },
         {
             "id": "3",
@@ -43,7 +43,7 @@
                 "65f5b8cf-4c77-5834-bc98-c5641b9a6b65"
             ],
             "base_price": 0,
-            "category": []
+            "category": ["gtcn","gtcb", "gtnc", "bgpp", "bgPDF", "btcn"]
         }
     ]
 }

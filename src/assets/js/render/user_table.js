@@ -7,7 +7,7 @@ import { searchList, renderTable, defaultRenderRow } from './baseRender.js';
 
 // Định nghĩa các cột trong bảng người dùng
 const cols = {
-    id: 'Id',
+    // id: 'Id',
     name: 'Name',
     passwd: 'Pass',
     email: 'Email',
