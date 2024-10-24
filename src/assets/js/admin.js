@@ -41,6 +41,7 @@ const btnMenu = document.getElementById('menu-btn');
 const btnAdd = document.getElementById('add-btn');
 const btnSave = document.getElementById('save-btn');
 const btnDelete = document.getElementById('delete-btn');
+const btnSignOut = document.getElementById('sign-out');
 // eslint-disable-next-line jsdoc/no-undefined-types
 const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
     document.getElementsByName('tab-selestion')
@@ -239,9 +240,16 @@ function setupMainButtonEvents() {
         }
     }
 
+    function handleButtonSignOut() {
+        window.localStorage.removeItem('isAdmin');
+        window.sessionStorage.removeItem('isAdmin');
+        location.href = '/admin/login.html';
+    }
+
     btnDelete?.addEventListener('click', handleButtonDelete);
     btnSave?.addEventListener('click', handleButtonSave);
     btnAdd?.addEventListener('click', HandleButtonAdd);
+    btnSignOut?.addEventListener('click', handleButtonSignOut);
 }
 
 function setupSiderBar() {
@@ -331,11 +339,11 @@ function setupSiderBar() {
      */
     function handleButtonMenu(event) {
         if (!this.classList.contains('active')) {
-            document.getElementById('drop-list')?.classList.add('show');
+            document.querySelector('.aside')?.classList.add('show');
             this.classList.add('active');
             return;
         }
-        document.getElementById('drop-list')?.classList.remove('show');
+        document.querySelector('.aside')?.classList.remove('show');
         this.classList.remove('active');
     }
 
