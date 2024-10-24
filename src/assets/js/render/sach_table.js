@@ -8,6 +8,8 @@ import { showImgPreviewPopup } from './popupRender.js';
  *
  * @typedef {import('../until/type.js').imgStore} imgStore
  *
+ * @typedef {import('./category_table.js').Category} Category
+ *
  */
 
 const cols = {
@@ -45,57 +47,126 @@ function onChangeHandle(data, key, newValue) {
 }
 
 /**
- *
- * @param {string[]} value
+ * @param {string[]} blackList
+ * @param {(category: Category) => any} callback
  * @returns {HTMLDivElement}
  */
-function createCategoryCell(value) {
+function createAddCategoryPopup(blackList, callback) {
+    const categoryPopup = document.createElement('div');
+    categoryPopup.className = 'category-popup';
+
+    fakeDatabase.getAllCategory().then((allCategory) => {
+        allCategory.forEach((category) => {
+            if (blackList.includes(category.id)) return;
+            const span = document.createElement('span');
+            span.textContent = category.name;
+
+            span.addEventListener('click', (event) => {
+                event.stopPropagation();
+                callback(category);
+            });
+
+            categoryPopup.appendChild(span);
+        });
+    });
+
+    return categoryPopup;
+}
+
+/**
+ *
+ * @param {string[]} value
+ * @param {(categorys: string[]) => any} onchange
+ * @returns {HTMLDivElement}
+ */
+function createCategoryCell(value, onchange) {
     const categoryContainer = document.createElement('div');
     categoryContainer.className = 'category-container';
 
     const categorys = [...value];
 
+    function handleRemoveCategory(categoryId) {
+        console.log('remove', categoryId);
+
+        categoryContainer
+            .querySelector('.category[category-id="' + categoryId + '"]')
+            ?.remove();
+        const index = categorys.findIndex((e) => e == categoryId);
+        if (index >= 0) {
+            categorys.splice(index, 1);
+            onchange(categorys);
+        }
+    }
+
+    function handleAddCategory(category) {
+        categoryContainer.querySelector('.category-popup')?.remove();
+        const categoryAdd = document.querySelector('.category.add');
+
+        categorys.push(category.id);
+        onchange(categorys);
+
+        const categoryDiv = createCategoryElement(category);
+        categoryContainer.insertBefore(categoryDiv, categoryAdd);
+    }
+
+    /**
+     *
+     * @param {Category | undefined} category
+     * @returns {HTMLDivElement}
+     */
+    function createCategoryElement(category) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category';
+        categoryDiv.setAttribute('category-id', category?.id || '');
+
+        const s = document.createElement('span');
+        s.textContent = category?.name || '';
+        categoryDiv.appendChild(s);
+
+        const i = document.createElement('i');
+        i.className = 'fa-solid fa-xmark';
+        categoryDiv.appendChild(i);
+
+        i.addEventListener('click', () => handleRemoveCategory(category?.id));
+
+        return categoryDiv;
+    }
+
     fakeDatabase.getAllCategory().then((allCategory) => {
         categorys.forEach((categoryMs) => {
             const category = allCategory.find((e) => e.id == categoryMs);
-            const categoryDiv = document.createElement('div');
-            categoryDiv.className = 'category';
-
-            const s = document.createElement('span');
-            s.textContent = category?.name || '';
-            categoryDiv.appendChild(s);
-
-            const i = document.createElement('i');
-            i.className = 'fa-solid fa-xmark';
-            categoryDiv.appendChild(i);
-
-            i.addEventListener('click', () => {
-                console.log('remove', categoryMs);
-            });
+            const categoryDiv = createCategoryElement(category);
 
             categoryContainer.appendChild(categoryDiv);
         });
 
-        const categoryDiv = document.createElement('div');
-        categoryDiv.className = 'category add';
+        const categoryAdd = document.createElement('div');
+        categoryAdd.className = 'category add';
 
-        categoryDiv.addEventListener('click', () => {
-            console.log('thêm click');
+        //TODO: không biết nên viết gì
+        categoryAdd.addEventListener('click', function () {
+            if (this.querySelector('.category-popup')) return;
+
+            const addPopup = createAddCategoryPopup(
+                categorys,
+                handleAddCategory,
+            );
+
+            this.appendChild(addPopup);
         });
 
         const s = document.createElement('span');
         s.textContent = 'Thêm';
-        categoryDiv.appendChild(s);
+        categoryAdd.appendChild(s);
 
         const i = document.createElement('i');
         i.className = 'fa-solid fa-plus';
-        categoryDiv.appendChild(i);
+        categoryAdd.appendChild(i);
 
         categoryContainer.contentEditable = 'false';
-        categoryContainer.appendChild(categoryDiv);
+        categoryContainer.appendChild(categoryAdd);
     });
 
-    // TODO: thêm vào kiểm tra thay đôi
     return categoryContainer;
 }
 
@@ -120,7 +191,13 @@ function createRow(value, onchange = null) {
 
         switch (key) {
             case 'category': {
-                const categoryContainer = createCategoryCell(value['category']);
+                const categoryContainer = createCategoryCell(
+                    value['category'],
+                    (category) => {
+                        // @ts-ignore
+                        onchange(value, 'category', category);
+                    },
+                );
                 col.appendChild(categoryContainer);
                 break;
             }

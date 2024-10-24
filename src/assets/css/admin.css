@@ -206,7 +206,7 @@ footer.footer {
 }
 
 .table-conten-wrapper {
-    height: calc(100% - 40px);
+    height: calc(100% - 70px);
     overflow: auto;
 }
 
@@ -281,8 +281,27 @@ td .category span {
 }
 
 td .category.add {
+    position: relative;
     display: none;
 }
+
+.category.add .category-popup {
+    z-index: 1;
+    position: absolute;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.19);
+}
+
+.category.add .category-popup > span {
+    padding: 3px 5px;
+    cursor: pointer;
+}
+
 td .category i {
     display: none;
     color: darkred;
@@ -351,7 +370,7 @@ tr:hover td[error]::before {
 
 td,
 th {
-    overflow: hidden;
+    /* overflow: hidden; */
     width: max-content;
     outline: none;
     top: 0;
