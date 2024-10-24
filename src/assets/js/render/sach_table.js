@@ -13,14 +13,11 @@ import { showImgPreviewPopup } from './popupRender.js';
  */
 
 const cols = {
-    // id: 'Id',
     title: 'Title',
     base_price: 'Price',
     category: 'Category',
     details: 'Details',
     thumbnal: 'Thumbnal',
-    // imgs: 'imgs',
-    // option: 'Option',
 };
 let cacheSave = {};
 let cacheAdd = [];
@@ -47,33 +44,6 @@ function onChangeHandle(data, key, newValue) {
 }
 
 /**
- * @param {string[]} blackList
- * @param {(category: Category) => any} callback
- * @returns {HTMLDivElement}
- */
-function createAddCategoryPopup(blackList, callback) {
-    const categoryPopup = document.createElement('div');
-    categoryPopup.className = 'category-popup';
-
-    fakeDatabase.getAllCategory().then((allCategory) => {
-        allCategory.forEach((category) => {
-            if (blackList.includes(category.id)) return;
-            const span = document.createElement('span');
-            span.textContent = category.name;
-
-            span.addEventListener('click', (event) => {
-                event.stopPropagation();
-                callback(category);
-            });
-
-            categoryPopup.appendChild(span);
-        });
-    });
-
-    return categoryPopup;
-}
-
-/**
  *
  * @param {string[]} value
  * @param {(categorys: string[]) => any} onchange
@@ -85,6 +55,37 @@ function createCategoryCell(value, onchange) {
 
     const categorys = [...value];
 
+    /**
+     * @param {string[]} blackList
+     * @param {(category: Category) => any} callback
+     * @returns {HTMLDivElement}
+     */
+    function createAddCategoryPopup(blackList, callback) {
+        const categoryPopup = document.createElement('div');
+        categoryPopup.className = 'category-popup';
+
+        fakeDatabase.getAllCategory().then((allCategory) => {
+            allCategory.forEach((category) => {
+                if (blackList.includes(category.id)) return;
+                const span = document.createElement('span');
+                span.textContent = category.name;
+
+                span.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    callback(category);
+                });
+
+                categoryPopup.appendChild(span);
+            });
+        });
+
+        return categoryPopup;
+    }
+
+    /**
+     *
+     * @param {string} categoryId
+     */
     function handleRemoveCategory(categoryId) {
         console.log('remove', categoryId);
 
@@ -98,9 +99,13 @@ function createCategoryCell(value, onchange) {
         }
     }
 
+    /**
+     *
+     * @param {Category} category
+     */
     function handleAddCategory(category) {
         categoryContainer.querySelector('.category-popup')?.remove();
-        const categoryAdd = document.querySelector('.category.add');
+        const categoryAdd = categoryContainer.querySelector('.category.add');
 
         categorys.push(category.id);
         onchange(categorys);
@@ -140,10 +145,16 @@ function createCategoryCell(value, onchange) {
             categoryContainer.appendChild(categoryDiv);
         });
 
+        // nút thêm category
         const categoryAdd = document.createElement('div');
         categoryAdd.className = 'category add';
+        const span = document.createElement('span');
+        span.textContent = 'Thêm';
+        categoryAdd.appendChild(span);
+        const i = document.createElement('i');
+        i.className = 'fa-solid fa-plus';
+        categoryAdd.appendChild(i);
 
-        //TODO: không biết nên viết gì
         categoryAdd.addEventListener('click', function () {
             if (this.querySelector('.category-popup')) return;
 
@@ -154,14 +165,6 @@ function createCategoryCell(value, onchange) {
 
             this.appendChild(addPopup);
         });
-
-        const s = document.createElement('span');
-        s.textContent = 'Thêm';
-        categoryAdd.appendChild(s);
-
-        const i = document.createElement('i');
-        i.className = 'fa-solid fa-plus';
-        categoryAdd.appendChild(i);
 
         categoryContainer.contentEditable = 'false';
         categoryContainer.appendChild(categoryAdd);
