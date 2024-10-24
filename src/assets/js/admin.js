@@ -253,7 +253,7 @@ function setupMainButtonEvents() {
 }
 
 function setupSiderBar() {
-    const drop_menu = document.getElementById('drop-list');
+    const drop_menu = document.querySelector('.aside');
 
     /**
      * Xử lý khi chuyển giữa các tab khác nhau
