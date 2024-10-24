@@ -119,3 +119,8 @@ export function createImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
 
     return popup;
 }
+
+/**
+ *
+ */
+export function createCategoryPopup() {}

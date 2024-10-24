@@ -7,6 +7,7 @@ import { showImgPreviewPopup } from './popupRender.js';
  * @typedef {import('../until/type.js').Sach} Sach
  *
  * @typedef {import('../until/type.js').imgStore} imgStore
+ *
  */
 
 const cols = {
@@ -29,8 +30,7 @@ let cacheImg = {};
  * @type {import('./baseRender.js').OnChange<Sach>}
  */
 function onChangeHandle(data, key, newValue) {
-    console.log('onchange called');
-
+    // console.log(newValue);
     if (cacheSave[data.id]) {
         cacheSave[data.id] = {
             ...cacheSave[data.id],
@@ -62,87 +62,130 @@ function createRow(value, onchange = null) {
 
     Object.keys(cols).forEach((key) => {
         const col = document.createElement('td');
-        col.oninput = (event) => {
-            if (onchange)
-                onchange(
-                    value,
-                    // @ts-ignore
-                    key,
-                    /** @type {HTMLTableCellElement} */ (event.target)
-                        .textContent,
-                );
-        };
-        col.setAttribute('key', key);
 
-        if (key == 'category') {
-            const categoryContainer = document.createElement('div');
-            categoryContainer.className = 'category-container';
+        switch (key) {
+            case 'category': {
+                const categoryContainer = document.createElement('div');
+                categoryContainer.className = 'category-container';
 
-            const a = value.category.map((e) => {
-                return fakeDatabase.getCategoryById(e).then((category) => {
+                const a = value['category'].map((e) => {
+                    return fakeDatabase.getCategoryById(e).then((category) => {
+                        const categoryDiv = document.createElement('div');
+                        categoryDiv.className = 'category';
+
+                        const s = document.createElement('span');
+                        s.textContent = category?.name || '';
+                        categoryDiv.appendChild(s);
+
+                        const i = document.createElement('i');
+                        i.className = 'fa-solid fa-xmark';
+                        categoryDiv.appendChild(i);
+
+                        categoryContainer.appendChild(categoryDiv);
+                    });
+                });
+
+                Promise.all(a).then(() => {
                     const categoryDiv = document.createElement('div');
-                    categoryDiv.className = 'category';
-
-                    const s = document.createElement('span');
-                    s.textContent = category?.name || '';
-                    categoryDiv.appendChild(s);
+                    categoryDiv.className = 'category add';
 
                     const i = document.createElement('i');
-                    i.className = 'fa-solid fa-xmark';
+                    i.className = 'fa-solid fa-plus';
                     categoryDiv.appendChild(i);
 
+                    const s = document.createElement('span');
+                    s.textContent = 'Thêm';
+                    categoryDiv.appendChild(s);
+
+                    categoryContainer.contentEditable = 'false';
                     categoryContainer.appendChild(categoryDiv);
                 });
-            });
 
-            Promise.all(a).then(() => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category add';
+                // TODO: thêm vào kiểm tra thay đôi
 
-                const i = document.createElement('i');
-                i.className = 'fa-solid fa-plus';
-                categoryDiv.appendChild(i);
+                col.setAttribute('key', 'category');
+                col.appendChild(categoryContainer);
 
-                categoryContainer.appendChild(categoryDiv);
-            });
+                break;
+            }
+            case 'details': {
+                const details_wrapper = document.createElement('div');
+                details_wrapper.className = 'details-wrapper';
+                details_wrapper.insertAdjacentHTML('beforeend', value[key]);
+                col.addEventListener('input', () => {
+                    onchange &&
+                        onchange(
+                            value,
+                            // @ts-ignore
+                            'details',
+                            details_wrapper.textContent || '',
+                        );
 
-            col.appendChild(categoryContainer);
+                    if (
+                        details_wrapper.textContent ==
+                        details_wrapper.getAttribute('default-value')
+                    )
+                        col.setAttribute('ischange', 'false');
+                    else col.setAttribute('ischange', 'true');
+                });
 
-            // col.textContent = value[key].join(', ');
-        } else if (key == 'details') {
-            const details_wrapper = document.createElement('div');
-            details_wrapper.className = 'details-wrapper';
+                details_wrapper.setAttribute('default-value', value[key]);
+                col.appendChild(details_wrapper);
+                col.setAttribute('key', 'details');
+                break;
+            }
+            case 'thumbnal': {
+                // tạo div bao ảnh
+                const img_wrapper = document.createElement('div');
+                img_wrapper.className = 'img-wrapper';
+                // tạo thẻ img hiển thị ảnh
+                const img = document.createElement('img');
+                fakeDatabase.getImgById(value[key]).then((imgS) => {
+                    img.src = imgS?.data || '../assets/img/default-image.png';
+                });
+                img_wrapper.appendChild(img);
+                img_wrapper.addEventListener('click', () => {
+                    if (col.getAttribute('contenteditable') !== 'true') return;
+                    showImgPreviewPopup(
+                        img.src,
+                        () => {},
+                        (base64) => {
+                            // lưu vào cache để lưu vào db
+                            cacheImg[value.thumbnal] = base64;
+                            img.src = base64;
+                        },
+                        () => {},
+                    );
+                });
+                col.appendChild(img_wrapper);
+                break;
+            }
+            default: {
+                col.insertAdjacentHTML('beforeend', value[key]);
+                col.oninput = (event) => {
+                    const target = /** @type {HTMLTableCellElement} */ (
+                        event.target
+                    );
 
-            // const pre = document.createElement('pre');
-            // pre.textContent = value[key];
-            details_wrapper.insertAdjacentHTML('beforeend', value[key]);
-            // details_wrapper.appendChild(pre);
-            col.appendChild(details_wrapper);
-        } else if (key == 'thumbnal') {
-            // tạo div bao ảnh
-            const img_wrapper = document.createElement('div');
-            img_wrapper.className = 'img-wrapper';
-            // tạo thẻ img hiển thị ảnh
-            const img = document.createElement('img');
-            fakeDatabase.getImgById(value[key]).then((imgS) => {
-                img.src = imgS?.data || '../assets/img/default-image.png';
-            });
-            img_wrapper.appendChild(img);
-            img_wrapper.addEventListener('click', () => {
-                if (col.getAttribute('contenteditable') !== 'true') return;
-                showImgPreviewPopup(
-                    img.src,
-                    () => {},
-                    (base64) => {
-                        // lưu vào cache để lưu vào db
-                        cacheImg[value.thumbnal] = base64;
-                        img.src = base64;
-                    },
-                    () => {},
-                );
-            });
-            col.appendChild(img_wrapper);
-        } else col.insertAdjacentHTML('beforeend', value[key]);
+                    if (onchange)
+                        onchange(
+                            value,
+                            // @ts-ignore
+                            key,
+                            target.textContent,
+                        );
+
+                    if (
+                        target.textContent ==
+                        target.getAttribute('default-value')
+                    )
+                        col.setAttribute('ischange', 'false');
+                    else col.setAttribute('ischange', 'true');
+                };
+                col.setAttribute('key', key);
+            }
+        }
+
         row.appendChild(col);
     });
 

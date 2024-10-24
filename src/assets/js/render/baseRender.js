@@ -21,10 +21,10 @@
  * @template {{ id: string }} T
  * @param {T} value - Dữ liệu của hàng.
  * @param {COLS<T>} cols - Định nghĩa các cột trong bảng.
- * @param {OnChange<T>?} [onchange] - Hàm gọi lại khi dữ liệu thay đổi.
+ * @param {OnChange<T>} [onchange] - Hàm gọi lại khi dữ liệu thay đổi.
  * @returns {HTMLTableRowElement} - Hàng bảng đã được tạo.
  */
-export function defaultRenderRow(value, cols, onchange = null) {
+export function defaultRenderRow(value, cols, onchange) {
     const row = document.createElement('tr');
     row.setAttribute('id-row', value.id);
 
@@ -50,6 +50,7 @@ export function defaultRenderRow(value, cols, onchange = null) {
                     target.textContent,
                 );
 
+            // TODO: nhớ thêm vào vào
             // Đánh dấu cột nếu dữ liệu đã thay đổi
             if (target.textContent == target.getAttribute('default-value'))
                 col.setAttribute('ischange', 'false');
@@ -127,7 +128,7 @@ function searchList(values, cols) {
     let result = values.filter((e) => {
         return Object.keys(cols).some((key) => {
             if (e[key] === undefined) return false;
-            return e[key]
+            return String(e[key])
                 .toUpperCase()
                 .includes(valueSearchInput.toUpperCase());
         });

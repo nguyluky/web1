@@ -280,13 +280,25 @@ td .category span {
     margin-right: 5px;
 }
 
+td .category.add {
+    display: none;
+}
 td .category i {
+    display: none;
     color: darkred;
     cursor: pointer;
 }
 
+td[contenteditable='true'] .category i {
+    display: inline;
+}
+
 td .category.add i {
     color: #3a84a7;
+}
+
+td[contenteditable='true'] .category.add {
+    display: block;
 }
 
 td[key='details'] {
@@ -639,7 +651,7 @@ body {
     }
 
     .brand-name {
-        padding: 20px 5px;
+        padding: 10px 5px;
     }
 }
 
