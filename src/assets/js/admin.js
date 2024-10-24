@@ -1,8 +1,8 @@
 import fakeDatabase from './db/fakeDBv1.js';
-import userRender from './render/user_table.js';
-import cartRender from './render/cart_table.js';
-import sachRender from './render/sach_table.js';
-import categoryRender from './render/category_table.js';
+import userRender from './render/userTable.js';
+import cartRender from './render/cartTable.js';
+import sachRender from './render/sachTable.js';
+import orderRender from './render/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
 
 /*  ------- ADMIN -------
@@ -59,7 +59,7 @@ const tabManagement = {
     user: userRender,
     cart: cartRender,
     sach: sachRender,
-    category: categoryRender,
+    order: orderRender,
 };
 
 /**
@@ -71,7 +71,7 @@ const fakeDBManagement = {
     user: () => fakeDatabase.getAllUserInfo(),
     cart: () => fakeDatabase.getALlCart(),
     sach: () => fakeDatabase.getAllSach(),
-    category: () => fakeDatabase.getAllCategory(),
+    origin: () => fakeDatabase.getAllOrder(),
 };
 
 // đặt lại tên biến phía duối cho tôi
@@ -145,6 +145,7 @@ async function renderManagement() {
         cart: 'Cart',
         sach: 'Sách',
         category: 'Category',
+        order: 'Order',
     };
     title.innerHTML = titleTabs[tab];
     let web_title = document.querySelector('head title');
@@ -266,13 +267,12 @@ function handlePopState(event) {
                 'Xác nhận sửa',
                 'Bạn có chắc là muốn sửa không',
                 () => {
-                    // buttonAddState.add();
-                    // buttonSaveState.edit();
-                    // updateMangement();
-                    // tabElements.forEach((e) => (e.checked = false));
-                    // this.checked = true;
-                    // tab = this.value;
-                    // renderManagement();
+                    buttonAddState.add();
+                    buttonSaveState.edit();
+                    updateMangement();
+
+                    // @ts-ignore
+                    history.back(1);
                 },
                 null,
             );

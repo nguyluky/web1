@@ -84,7 +84,7 @@ function createCategoryCell(value, onchange) {
 
     /**
      *
-     * @param {string} categoryId
+     * @param {string | undefined} categoryId
      */
     function handleRemoveCategory(categoryId) {
         console.log('remove', categoryId);

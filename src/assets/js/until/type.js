@@ -26,10 +26,8 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  * @typedef {{
  *     id: string;
  *     user_id: string;
- *     sach: number;
- *     option_id?: number;
+ *     sach: string;
  *     quantity: number;
- *     status: 'suly' | 'doixacnhan' | 'thanhcong';
  *     timecreate: Date;
  * }} Cart
  *

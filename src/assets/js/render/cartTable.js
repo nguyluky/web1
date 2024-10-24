@@ -1,15 +1,16 @@
 import { renderTable, searchList } from './baseRender.js';
 
-/** @typedef {import('../until/type.js').Category} Category */
+/** @typedef {import('../until/type.js').Cart} Cart */
 
 const cols = {
-    id: 'Id',
-    name: 'Name',
-    long_name: 'Long Name',
+    user_id: 'User id',
+    sach: 'Sách id',
+    quantity: 'Số lượng',
+    timecreate: 'Ngày thêm',
 };
 
-/** @param {Category[]} list */
-function renderCategory(list) {
+/** @param {Cart[]} list */
+function renderCart(list) {
     const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
@@ -18,21 +19,22 @@ function renderCategory(list) {
     renderTable(list, table, cols);
 }
 
-/** @param {Category[]} list */
-function searchCategory(list) {
+/** @param {Cart[]} list */
+function searchCart(list) {
     const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
+    const result = searchList(list, cols);
 
-    renderTable(searchList(list, cols), table, cols);
+    renderTable(result, table, cols);
 }
 
-/** @type {import('./baseRender.js').IntefaceRender<Category>} */
-const Category_ = {
+/** @type {import('./baseRender.js').IntefaceRender<Cart>} */
+const Cart_ = {
     cols,
-    renderTable: renderCategory,
-    search: searchCategory,
+    renderTable: renderCart,
+    search: searchCart,
     doSave: () => {
         throw new Error('Làm này đi, đồ lười');
     },
@@ -47,4 +49,4 @@ const Category_ = {
     },
 };
 
-export default Category_;
+export default Cart_;
