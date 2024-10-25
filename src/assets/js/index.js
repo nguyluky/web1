@@ -342,26 +342,27 @@ catergory_row.forEach((row) => {
     });
 });
 
-
 const Product_Data = await fakeDatabase.getAllSach();
 console.log(Product_Data);
 
-let Curent_Page=1;
-const Products_Per_page=8;
+let Curent_Page = 1;
+const Products_Per_page = 8;
 
-function displayProducts(){
-    const productlist=/**@type {HTMLElement}*/(document.querySelector('.product-container'));
-        productlist.innerHTML='';
+function displayProducts() {
+    const productlist = /**@type {HTMLElement}*/ (
+        document.querySelector('.product-container')
+    );
+    productlist.innerHTML = '';
 
-    const start = (Curent_Page - 1)*Products_Per_page;
+    const start = (Curent_Page - 1) * Products_Per_page;
     const end = start + Products_Per_page;
     const Products_To_Display = Product_Data.slice(start, end);
 
-    Products_To_Display.forEach(async product =>{
-        const Product_Item=document.createElement('div');
+    Products_To_Display.forEach(async (product) => {
+        const Product_Item = document.createElement('div');
         Product_Item.classList.add('product-card');
-        const img= await fakeDatabase.getImgById(product.thumbnal);
-        Product_Item.innerHTML=`
+        const img = await fakeDatabase.getImgById(product.thumbnal);
+        Product_Item.innerHTML = `
         <div class="product-img">
             <div class="discount-tag">-15%</div>
             <img
@@ -374,7 +375,11 @@ function displayProducts(){
         </div>
         <div class="product-price">
             <span class="sale-price">
-                ${String(product.base_price)} <sup>₫</sup></span
+                ${String(
+                    Math.round(
+                        product.base_price * (1 - product.discount * 0.01),
+                    ),
+                )} <sup>₫</sup></span
             >
             <span class="regular-price">
                 ${String(product.base_price)} <sup>₫</sup></span
@@ -391,7 +396,7 @@ function displayProducts(){
 }
 
 // Chuyển đến trang trước
-function prevPage(){
+function prevPage() {
     if (Curent_Page > 1) {
         Curent_Page--;
         displayProducts();
@@ -399,7 +404,7 @@ function prevPage(){
 }
 
 // Chuyển đến trang sau
-function nextPage(){
+function nextPage() {
     const totalPages = Math.ceil(Product_Data.length / Products_Per_page);
     if (Curent_Page < totalPages) {
         Curent_Page++;
@@ -408,7 +413,7 @@ function nextPage(){
 }
 
 // Chuyển đến trang cụ thể
-function goToPage(page){
+function goToPage(page) {
     Curent_Page = page;
     displayProducts();
 }
@@ -417,14 +422,14 @@ function goToPage(page){
 displayProducts();
 
 const Page_Nums = document.querySelectorAll('.page-sections__btns');
-Page_Nums.forEach(page =>{
-    page.addEventListener('click', ()=>{
-        if(!Number.isNaN(Number(page.innerHTML))){
+Page_Nums.forEach((page) => {
+    page.addEventListener('click', () => {
+        if (!Number.isNaN(Number(page.innerHTML))) {
             goToPage(page.innerHTML);
-        }else{
-            if(page.innerHTML=='<i class="fa-solid fa-angle-left"></i>'){
+        } else {
+            if (page.innerHTML == '<i class="fa-solid fa-angle-left"></i>') {
                 prevPage();
-            }else{
+            } else {
                 nextPage();
             }
         }

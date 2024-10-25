@@ -339,6 +339,7 @@ function addRow() {
         thumbnal: 'default',
         imgs: [],
         base_price: 0,
+        discount: 0,
         category: [],
     };
     cacheAdd.push(data);
