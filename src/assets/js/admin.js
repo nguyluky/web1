@@ -4,6 +4,7 @@ import cartRender from './render/cart_table.js';
 import sachRender from './render/sach_table.js';
 import categoryRender from './render/category_table.js';
 import { showPopup } from './render/popupRender.js';
+import formatLineChartData from './render/line_chart.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
@@ -129,9 +130,12 @@ const buttonSaveState = {
 /** Xử lý render dữ liệu tương ứng với tab hiện tại */
 async function renderManagement() {
     if (tab == 'dashboard') {
+        document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
+        formatLineChartData(document.getElementById('line-chart'));
         return;
     }
+    document.querySelector('.dashboard-wrapper')?.classList.add('hide');
     document.querySelector('.table-wrapper')?.classList.remove('hide');
     const title = document.getElementById('table-title-header');
     const input = /** @type {HTMLInputElement} */ (
@@ -164,12 +168,13 @@ function updateMangement() {
 }
 
 function handleContentOverflow() {
+    formatLineChartData(document.getElementById('line-chart'));
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
     if (!contentDiv) return;
     // Thay đổi nội dung dựa trên độ rộng
     if (width < 820) contentDiv.innerHTML = '...';
-    else contentDiv.innerHTML = 'Check<i class="fa-solid fa-filter">';
+    else contentDiv.innerHTML = 'Check';
 
     Array.from(document.getElementsByClassName('details-wrapper')).forEach(
         (e) => {

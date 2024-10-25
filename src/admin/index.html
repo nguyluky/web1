@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -66,13 +66,13 @@
                     <label class="container">
                         <div class="left-sidebar__btn" id="change-pass">
                             <i class="fa-solid fa-key"></i>
-                            <p><span>Passwork</span></p>
+                            <p><strong>Passwork</strong></p>
                         </div>
                     </label>
                     <label class="container">
                         <div class="left-sidebar__btn" id="sign-out">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                            <p><span>Sign out</span></p>
+                            <p><strong>Sign out</strong></p>
                         </div>
                     </label>
                 </div>
@@ -93,7 +93,17 @@
                     </div>
                 </div>
                 <div class="article-main">
-                    <div class="table-wrapper">
+                    <div class="dashboard-wrapper">
+                        <div class="line-chart-wrapper">
+                            <span>Doanh thu</span>
+                            <div id="line-chart"></div>
+                        </div>
+                        <div class="count" id="new-user"></div>
+                        <div class="count" id="sale-product"></div>
+                        <div class="chart"></div>
+                        <div class="chart"></div>
+                    </div>
+                    <div class="table-wrapper hide">
                         <div class="table-title">
                             <h3 id="table-title-header">User</h3>
                             <div class="search-block">
