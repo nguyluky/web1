@@ -8,17 +8,16 @@ import { showImgPreviewPopup } from './popupRender.js';
  *
  * @typedef {import('../until/type.js').imgStore} imgStore
  *
+ * @typedef {import('./category_table.js').Category} Category
+ *
  */
 
 const cols = {
-    // id: 'Id',
     title: 'Title',
     base_price: 'Price',
     category: 'Category',
     details: 'Details',
     thumbnal: 'Thumbnal',
-    // imgs: 'imgs',
-    // option: 'Option',
 };
 let cacheSave = {};
 let cacheAdd = [];
@@ -45,6 +44,136 @@ function onChangeHandle(data, key, newValue) {
 }
 
 /**
+ *
+ * @param {string[]} value
+ * @param {(categorys: string[]) => any} onchange
+ * @returns {HTMLDivElement}
+ */
+function createCategoryCell(value, onchange) {
+    const categoryContainer = document.createElement('div');
+    categoryContainer.className = 'category-container';
+
+    const categorys = [...value];
+
+    /**
+     * @param {string[]} blackList
+     * @param {(category: Category) => any} callback
+     * @returns {HTMLDivElement}
+     */
+    function createAddCategoryPopup(blackList, callback) {
+        const categoryPopup = document.createElement('div');
+        categoryPopup.className = 'category-popup';
+
+        fakeDatabase.getAllCategory().then((allCategory) => {
+            allCategory.forEach((category) => {
+                if (blackList.includes(category.id)) return;
+                const span = document.createElement('span');
+                span.textContent = category.name;
+
+                span.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    callback(category);
+                });
+
+                categoryPopup.appendChild(span);
+            });
+        });
+
+        return categoryPopup;
+    }
+
+    /**
+     *
+     * @param {string} categoryId
+     */
+    function handleRemoveCategory(categoryId) {
+        console.log('remove', categoryId);
+
+        categoryContainer
+            .querySelector('.category[category-id="' + categoryId + '"]')
+            ?.remove();
+        const index = categorys.findIndex((e) => e == categoryId);
+        if (index >= 0) {
+            categorys.splice(index, 1);
+            onchange(categorys);
+        }
+    }
+
+    /**
+     *
+     * @param {Category} category
+     */
+    function handleAddCategory(category) {
+        categoryContainer.querySelector('.category-popup')?.remove();
+        const categoryAdd = categoryContainer.querySelector('.category.add');
+
+        categorys.push(category.id);
+        onchange(categorys);
+
+        const categoryDiv = createCategoryElement(category);
+        categoryContainer.insertBefore(categoryDiv, categoryAdd);
+    }
+
+    /**
+     *
+     * @param {Category | undefined} category
+     * @returns {HTMLDivElement}
+     */
+    function createCategoryElement(category) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category';
+        categoryDiv.setAttribute('category-id', category?.id || '');
+
+        const s = document.createElement('span');
+        s.textContent = category?.name || '';
+        categoryDiv.appendChild(s);
+
+        const i = document.createElement('i');
+        i.className = 'fa-solid fa-xmark';
+        categoryDiv.appendChild(i);
+
+        i.addEventListener('click', () => handleRemoveCategory(category?.id));
+
+        return categoryDiv;
+    }
+
+    fakeDatabase.getAllCategory().then((allCategory) => {
+        categorys.forEach((categoryMs) => {
+            const category = allCategory.find((e) => e.id == categoryMs);
+            const categoryDiv = createCategoryElement(category);
+
+            categoryContainer.appendChild(categoryDiv);
+        });
+
+        // nút thêm category
+        const categoryAdd = document.createElement('div');
+        categoryAdd.className = 'category add';
+        const span = document.createElement('span');
+        span.textContent = 'Thêm';
+        categoryAdd.appendChild(span);
+        const i = document.createElement('i');
+        i.className = 'fa-solid fa-plus';
+        categoryAdd.appendChild(i);
+
+        categoryAdd.addEventListener('click', function () {
+            if (this.querySelector('.category-popup')) return;
+
+            const addPopup = createAddCategoryPopup(
+                categorys,
+                handleAddCategory,
+            );
+
+            this.appendChild(addPopup);
+        });
+
+        categoryContainer.contentEditable = 'false';
+        categoryContainer.appendChild(categoryAdd);
+    });
+
+    return categoryContainer;
+}
+
+/**
  * @param {Sach} value
  * @param {import('./baseRender.js').OnChange<Sach>?} onchange
  * @returns {HTMLTableRowElement} Row
@@ -65,47 +194,14 @@ function createRow(value, onchange = null) {
 
         switch (key) {
             case 'category': {
-                const categoryContainer = document.createElement('div');
-                categoryContainer.className = 'category-container';
-
-                const a = value['category'].map((e) => {
-                    return fakeDatabase.getCategoryById(e).then((category) => {
-                        const categoryDiv = document.createElement('div');
-                        categoryDiv.className = 'category';
-
-                        const s = document.createElement('span');
-                        s.textContent = category?.name || '';
-                        categoryDiv.appendChild(s);
-
-                        const i = document.createElement('i');
-                        i.className = 'fa-solid fa-xmark';
-                        categoryDiv.appendChild(i);
-
-                        categoryContainer.appendChild(categoryDiv);
-                    });
-                });
-
-                Promise.all(a).then(() => {
-                    const categoryDiv = document.createElement('div');
-                    categoryDiv.className = 'category add';
-
-                    const i = document.createElement('i');
-                    i.className = 'fa-solid fa-plus';
-                    categoryDiv.appendChild(i);
-
-                    const s = document.createElement('span');
-                    s.textContent = 'Thêm';
-                    categoryDiv.appendChild(s);
-
-                    categoryContainer.contentEditable = 'false';
-                    categoryContainer.appendChild(categoryDiv);
-                });
-
-                // TODO: thêm vào kiểm tra thay đôi
-
-                col.setAttribute('key', 'category');
+                const categoryContainer = createCategoryCell(
+                    value['category'],
+                    (category) => {
+                        // @ts-ignore
+                        onchange(value, 'category', category);
+                    },
+                );
                 col.appendChild(categoryContainer);
-
                 break;
             }
             case 'details': {
@@ -131,7 +227,6 @@ function createRow(value, onchange = null) {
 
                 details_wrapper.setAttribute('default-value', value[key]);
                 col.appendChild(details_wrapper);
-                col.setAttribute('key', 'details');
                 break;
             }
             case 'thumbnal': {
@@ -182,10 +277,9 @@ function createRow(value, onchange = null) {
                         col.setAttribute('ischange', 'false');
                     else col.setAttribute('ischange', 'true');
                 };
-                col.setAttribute('key', key);
             }
         }
-
+        col.setAttribute('key', 'category');
         row.appendChild(col);
     });
 

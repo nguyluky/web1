@@ -10,57 +10,18 @@
             href="../src/assets/fontawesome/css/all.min.css"
         />
 
-        <style>
-            .img-preview-wrapper {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-            }
-            .img-preview-wrapper img {
-                width: 100%;
-                aspect-ratio: 1/1;
-                object-fit: cover;
-            }
-
-            .file-upload-btn {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                cursor: pointer;
-                margin-top: 10px;
-            }
-
-            .file-upload-btn i {
-                margin-right: 5px;
-            }
-
-            .file-upload-btn input {
-                display: none;
-            }
-        </style>
+        <style></style>
     </head>
     <body>
         <div id="popup-wrapper">
             <div class="popup imgupload">
                 <div class="popup-header">
-                    <h1>Upload ảnh</h1>
+                    <h1>Category section</h1>
                     <button class="button_1">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
-                <div class="pupop-context">
-                    <div class="img-preview-wrapper">
-                        <img />
-                        <label class="file-upload-btn">
-                            <i class="fa-solid fa-file-arrow-up"></i>
-                            <span>Nhấp để upload</span>
-                            <input type="file" id="img" accept="image/*" />
-                        </label>
-                    </div>
-                </div>
+                <div class="pupop-context"></div>
                 <div class="popup-footer">
                     <button class="button_1 btn-primary">Cancel</button>
                     <button class="button_1 btn-ouline-primary">OK</button>
