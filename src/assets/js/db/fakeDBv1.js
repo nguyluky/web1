@@ -40,91 +40,125 @@ const dataLoaded = JSON.parse(
     [ObjectStoreName.IMG]: false,
     [ObjectStoreName.CATEGORY]: false,
     [ObjectStoreName.BOOK]: false,
+    [ObjectStoreName.CART]: false,
+    [ObjectStoreName.CATEGORY]: false,
 };
+
+/**
+ *
+ * @param {IDBRequest} request
+ * @returns {Promise<any>}
+ */
+async function requestToPromise(request) {
+    return new Promise((resolve, reject) => {
+        request.onsuccess = () => resolve(request.result);
+        // @ts-ignore
+        request.onerror = (event) => reject(event.target?.error);
+    });
+}
 
 function updateDataLoaded(storeName) {
     dataLoaded[storeName] = true;
     window.localStorage.setItem('dataLoaded', JSON.stringify(dataLoaded));
 }
 
+/**
+ * import {
+ */
+
 /** @param {IDBDatabase} db_ */
 function createObjectStore(db_) {
+    /**
+     * @type {{
+     *  name: ObjectStoreName,
+     *  keypath: string,
+     *  keys: {
+     *     keypath: string[] | string,
+     *     option?: IDBIndexParameters
+     *   }[]
+     * }[]}
+     */
+    const objectStoreItems = [
+        {
+            name: ObjectStoreName.USER,
+            keypath: 'id',
+            keys: [
+                { keypath: 'email', option: { unique: true } },
+                { keypath: 'name' },
+                { keypath: 'passwd' },
+                { keypath: 'phone_num', option: { unique: true } },
+                { keypath: 'rule' },
+                { keypath: ['email', 'passwd'], option: { unique: true } },
+            ],
+        },
+        {
+            name: ObjectStoreName.CART,
+            keypath: 'id',
+            keys: [
+                { keypath: 'user_id' },
+                { keypath: 'sach' },
+                { keypath: 'quantity' },
+                { keypath: 'timecreate' },
+            ],
+        },
+        {
+            name: ObjectStoreName.BOOK,
+            keypath: 'id',
+            keys: [
+                { keypath: 'title' },
+                { keypath: 'details' },
+                { keypath: 'thumbnal' },
+                { keypath: 'base_price' },
+                { keypath: 'category' },
+            ],
+        },
+        {
+            name: ObjectStoreName.CATEGORY,
+            keypath: 'id',
+            keys: [{ keypath: 'name' }, { keypath: 'long_name' }],
+        },
+        {
+            name: ObjectStoreName.IMG,
+            keypath: 'id',
+            keys: [{ keypath: 'data' }],
+        },
+        {
+            name: ObjectStoreName.ORDER,
+            keypath: 'id',
+            keys: [
+                { keypath: 'user_id' },
+                { keypath: 'items' },
+                { keypath: 'date' },
+                { keypath: 'state' },
+                { keypath: 'last_update' },
+                { keypath: 'is_pay' },
+                { keypath: 'total' },
+            ],
+        },
+    ];
     // ==================== Tạo các objectStore trong cơ sở dữ liệu ==================
 
-    //#region User
-    // Tạo objectStore cho user
-    const userObjStore_ = db_.createObjectStore(ObjectStoreName.USER, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    // Tạo các index để truy vấn dữ liệu user
-    userObjStore_.createIndex('email', 'email', { unique: true });
-    userObjStore_.createIndex('name', 'name', { unique: true });
-    userObjStore_.createIndex('passwd', 'passwd', { unique: false });
-    userObjStore_.createIndex('phone_num', 'phone_num', { unique: false });
-    userObjStore_.createIndex('rule', 'rule', { unique: false });
-    userObjStore_.createIndex('email_and_pass', ['email', 'passwd'], {
-        unique: true,
-    });
-    //#endregion
+    objectStoreItems.forEach((obj) => {
+        const objStore = db_.createObjectStore(obj.name, {
+            keyPath: obj.keypath,
+            autoIncrement: true,
+        });
 
-    //#region Tạo objectStore cho cart
-    const cartObjStore_ = db_.createObjectStore(ObjectStoreName.CART, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    cartObjStore_.createIndex('user_id', 'user_id', { unique: false });
-    cartObjStore_.createIndex('sach', 'sach', { unique: false });
-    cartObjStore_.createIndex('option_id', 'option_id', { unique: false });
-    cartObjStore_.createIndex('quantity', 'quantity', { unique: false });
-    cartObjStore_.createIndex('status', 'status', { unique: false });
-    cartObjStore_.createIndex('timecreate', 'timecreate', { unique: false });
-    //#endregion
+        obj.keys.forEach((index) => {
+            let nameKey = '';
+            if (typeof index.keypath == 'string') {
+                nameKey = index.keypath;
+            } else {
+                nameKey = index.keypath.join('_');
+            }
 
-    //#region Tạo objectStore cho book
-    const bookObjStore_ = db_.createObjectStore(ObjectStoreName.BOOK, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    bookObjStore_.createIndex('title', 'title', { unique: false });
-    bookObjStore_.createIndex('details', 'details', { unique: false });
-    bookObjStore_.createIndex('thumbnal', 'thumbnal', { unique: false });
-    bookObjStore_.createIndex('imgs', 'imgs', { unique: false });
-    bookObjStore_.createIndex('base_price', 'base_price', { unique: false });
-    bookObjStore_.createIndex('category', 'category', { unique: false });
-    bookObjStore_.createIndex('option', 'option', { unique: false });
-    //#endregion
+            objStore.createIndex(nameKey, index.keypath, index.option);
+        });
 
-    //#region Tạo objectStore cho category
-    const categoryStore_ = db_.createObjectStore(ObjectStoreName.CATEGORY, {
-        keyPath: 'id',
-        autoIncrement: true,
+        console.log(`tạo ${obj.name} thành công`);
     });
-    categoryStore_.createIndex('name', 'name', { unique: false });
-    categoryStore_.createIndex('long_name', 'long_name', { unique: false });
-
-    //#endregion
-    //#region Tạo objectStore cho img
-    const imgStore = db_.createObjectStore(ObjectStoreName.IMG, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    imgStore.createIndex('data', 'data');
-    //#endregion
-
-    // #region Tạo objectStore cho order
-    const orderStore = db_.createObjectStore(ObjectStoreName.ORDER, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    orderStore.createIndex('user_id', 'user_id', { unique: false });
-    orderStore.createIndex('items', 'items', { unique: false });
-    orderStore.createIndex('data', 'data', { unique: false });
-    orderStore.createIndex('state', 'state', { unique: false });
-    orderStore.createIndex('last_update', 'last_update', { unique: false });
-    orderStore.createIndex('is_pay', 'is_pay', { unique: false });
-    orderStore.createIndex('total', 'total', { unique: false });
 }
+
 async function loadUserData() {
     if (!dataLoaded[ObjectStoreName.USER]) {
         const data = await fetch('/assets/data/user.json').then((res) =>
@@ -176,7 +210,19 @@ async function loadBookData() {
         updateDataLoaded(ObjectStoreName.BOOK);
     }
 }
-async function loadOrder(params) {}
+async function loadCartData() {
+    if (!dataLoaded[ObjectStoreName.CART]) {
+        const data = await fetch('/assets/data/cart.json').then((res) =>
+            res.json(),
+        );
+        const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
+        const bookStore = transaction.objectStore(ObjectStoreName.CART);
+        data.data.forEach((e) => bookStore.add({ ...e }));
+        // await requestToPromise(transaction);
+        updateDataLoaded(ObjectStoreName.CART);
+    }
+}
+// async function loadOrder(params) {}
 
 req.onupgradeneeded = (event) => {
     isOnupgradeneeded = true;
@@ -241,13 +287,6 @@ class FakeDatabase {
         return !!db;
     }
 
-    async requestToPromise(request) {
-        return new Promise((resolve, reject) => {
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = (event) => reject(event.target.error);
-        });
-    }
-
     async awaitUntilReady() {
         while (!db) {
             await new Promise((resolve) => setTimeout(resolve, 500));
@@ -269,6 +308,9 @@ class FakeDatabase {
             case ObjectStoreName.BOOK:
                 await loadBookData();
                 break;
+            case ObjectStoreName.CART:
+                await loadCartData();
+                break;
             default:
                 break;
         }
@@ -283,7 +325,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.USER);
         const transaction = db.transaction(ObjectStoreName.USER, 'readonly');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(userStore.get(user_id));
+        return requestToPromise(userStore.get(user_id));
     }
 
     /** @returns {Promise<UserInfo[]>} */
@@ -292,7 +334,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.USER);
         const transaction = db.transaction(ObjectStoreName.USER, 'readonly');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(userStore.getAll());
+        return requestToPromise(userStore.getAll());
     }
 
     async deleteUserById(user_id) {
@@ -300,7 +342,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.USER);
         const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(userStore.delete(user_id));
+        return requestToPromise(userStore.delete(user_id));
     }
 
     /**
@@ -313,7 +355,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.USER);
         const transaction = db.transaction(ObjectStoreName.USER, 'readonly');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(
+        return requestToPromise(
             userStore.index('email_and_pass').get([email, password]),
         );
     }
@@ -327,9 +369,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.USER);
         const transaction = db.transaction(ObjectStoreName.USER, 'readonly');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(
-            userStore.index('phone_num').get(phone_num),
-        );
+        return requestToPromise(userStore.index('phone_num').get(phone_num));
     }
 
     async checkIfUserExists(email, phone_num) {
@@ -345,7 +385,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.USER);
         const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(userStore.add(userInfo));
+        return requestToPromise(userStore.add(userInfo));
     }
 
     /**
@@ -357,7 +397,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.USER);
         const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(userStore.put(userInfo));
+        return requestToPromise(userStore.put(userInfo));
     }
 
     /** @returns {Promise<Sach[]>} */
@@ -366,7 +406,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
         const transaction = db.transaction(ObjectStoreName.BOOK, 'readonly');
         const bookStore = transaction.objectStore(ObjectStoreName.BOOK);
-        return this.requestToPromise(bookStore.getAll());
+        return requestToPromise(bookStore.getAll());
     }
 
     /**
@@ -378,7 +418,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
         const transaction = db.transaction(ObjectStoreName.BOOK, 'readonly');
         const bookStore = transaction.objectStore(ObjectStoreName.BOOK);
-        return this.requestToPromise(bookStore.get(sach_id));
+        return requestToPromise(bookStore.get(sach_id));
     }
 
     /**
@@ -390,7 +430,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
         const transaction = db.transaction(ObjectStoreName.BOOK, 'readwrite');
         const bookStore = transaction.objectStore(ObjectStoreName.BOOK);
-        return this.requestToPromise(bookStore.add(bookInfo));
+        return requestToPromise(bookStore.add(bookInfo));
     }
 
     /**
@@ -402,7 +442,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
         const transaction = db.transaction(ObjectStoreName.BOOK, 'readwrite');
         const bookStore = transaction.objectStore(ObjectStoreName.BOOK);
-        return this.requestToPromise(bookStore.put(bookInfo));
+        return requestToPromise(bookStore.put(bookInfo));
     }
 
     /**
@@ -414,7 +454,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
         const transaction = db.transaction(ObjectStoreName.BOOK, 'readwrite');
         const bookStore = transaction.objectStore(ObjectStoreName.BOOK);
-        return this.requestToPromise(bookStore.delete(sach_id));
+        return requestToPromise(bookStore.delete(sach_id));
     }
 
     /** @returns {Promise<Cart[]>} */
@@ -423,7 +463,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.CART);
         const transaction = db.transaction(ObjectStoreName.CART, 'readonly');
         const cartStore = transaction.objectStore(ObjectStoreName.CART);
-        return this.requestToPromise(cartStore.getAll());
+        return requestToPromise(cartStore.getAll());
     }
 
     /**
@@ -435,9 +475,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.CART);
         const transaction = db.transaction(ObjectStoreName.CART, 'readonly');
         const cartStore = transaction.objectStore(ObjectStoreName.CART);
-        return this.requestToPromise(
-            cartStore.index('user_id').getAll(user_id),
-        );
+        return requestToPromise(cartStore.index('user_id').getAll(user_id));
     }
 
     /**
@@ -449,7 +487,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.CART);
         const transaction = db.transaction(ObjectStoreName.CART, 'readonly');
         const cartStore = transaction.objectStore(ObjectStoreName.CART);
-        return this.requestToPromise(cartStore.get(cart_id));
+        return requestToPromise(cartStore.get(cart_id));
     }
 
     /**
@@ -461,7 +499,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.CART);
         const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
         const cartStore = transaction.objectStore(ObjectStoreName.CART);
-        return this.requestToPromise(cartStore.put(cart_data));
+        return requestToPromise(cartStore.put(cart_data));
     }
 
     /** @returns {Promise<Category[]>} */
@@ -473,7 +511,7 @@ class FakeDatabase {
             'readonly',
         );
         const categoryStore = transaction.objectStore(ObjectStoreName.CATEGORY);
-        return this.requestToPromise(categoryStore.getAll());
+        return requestToPromise(categoryStore.getAll());
     }
 
     /**
@@ -488,7 +526,7 @@ class FakeDatabase {
             'readonly',
         );
         const categoryStore = transaction.objectStore(ObjectStoreName.CATEGORY);
-        return this.requestToPromise(categoryStore.get(id));
+        return requestToPromise(categoryStore.get(id));
     }
 
     /** @returns {Promise<ImgStore[]>} */
@@ -497,7 +535,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.IMG);
         const transaction = db.transaction(ObjectStoreName.IMG, 'readonly');
         const imgStore = transaction.objectStore(ObjectStoreName.IMG);
-        return this.requestToPromise(imgStore.getAll());
+        return requestToPromise(imgStore.getAll());
     }
 
     /**
@@ -509,7 +547,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.IMG);
         const transaction = db.transaction(ObjectStoreName.IMG, 'readonly');
         const imgStore = transaction.objectStore(ObjectStoreName.IMG);
-        return this.requestToPromise(imgStore.get(id));
+        return requestToPromise(imgStore.get(id));
     }
 
     /**
@@ -521,7 +559,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.IMG);
         const transaction = db.transaction(ObjectStoreName.IMG, 'readwrite');
         const imgStore = transaction.objectStore(ObjectStoreName.IMG);
-        return this.requestToPromise(imgStore.add(img));
+        return requestToPromise(imgStore.add(img));
     }
 
     /**
@@ -533,7 +571,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.IMG);
         const transaction = db.transaction(ObjectStoreName.IMG, 'readwrite');
         const imgStore = transaction.objectStore(ObjectStoreName.IMG);
-        return this.requestToPromise(imgStore.put(img));
+        return requestToPromise(imgStore.put(img));
     }
 
     /** @returns {Promise<string[]>} */
@@ -572,7 +610,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
         const transaction = db.transaction(ObjectStoreName.ORDER, 'readonly');
         const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
-        return this.requestToPromise(orderStore.getAll());
+        return requestToPromise(orderStore.getAll());
     }
 
     /**
@@ -584,7 +622,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
         const transaction = db.transaction(ObjectStoreName.ORDER, 'readonly');
         const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
-        return this.requestToPromise(orderStore.get(order_id));
+        return requestToPromise(orderStore.get(order_id));
     }
 
     /**
@@ -596,7 +634,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
         const transaction = db.transaction(ObjectStoreName.ORDER, 'readwrite');
         const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
-        return this.requestToPromise(orderStore.add(order));
+        return requestToPromise(orderStore.add(order));
     }
 
     /**
@@ -608,7 +646,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
         const transaction = db.transaction(ObjectStoreName.ORDER, 'readwrite');
         const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
-        return this.requestToPromise(orderStore.put(order));
+        return requestToPromise(orderStore.put(order));
     }
 
     /**
@@ -620,7 +658,7 @@ class FakeDatabase {
         await this.ensureDataLoaded(ObjectStoreName.ORDER);
         const transaction = db.transaction(ObjectStoreName.ORDER, 'readwrite');
         const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
-        return this.requestToPromise(orderStore.delete(order_id));
+        return requestToPromise(orderStore.delete(order_id));
     }
 }
 

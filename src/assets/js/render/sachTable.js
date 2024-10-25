@@ -1,6 +1,11 @@
 import fakeDatabase from '../db/fakeDBv1.js';
 import uuidv from '../until/uuid.js';
-import { renderTable, searchList } from './baseRender.js';
+import {
+    createCheckBox,
+    createTableSell,
+    renderTable,
+    searchList,
+} from './baseRender.js';
 import { showImgPreviewPopup } from './popupRender.js';
 
 /**
@@ -8,7 +13,7 @@ import { showImgPreviewPopup } from './popupRender.js';
  *
  * @typedef {import('../until/type.js').imgStore} imgStore
  *
- * @typedef {import('./category_table.js').Category} Category
+ * @typedef {import('../until/type.js').Category} Category
  *
  */
 
@@ -28,8 +33,11 @@ let cacheImg = {};
  *
  * @type {import('./baseRender.js').OnChange<Sach>}
  */
-function onChangeHandle(data, key, newValue) {
-    // console.log(newValue);
+function handleOnChange(data, key, newValue) {
+    if (key == 'base_price') {
+        newValue = +newValue;
+    }
+
     if (cacheSave[data.id]) {
         cacheSave[data.id] = {
             ...cacheSave[data.id],
@@ -84,7 +92,7 @@ function createCategoryCell(value, onchange) {
 
     /**
      *
-     * @param {string} categoryId
+     * @param {string | undefined} categoryId
      */
     function handleRemoveCategory(categoryId) {
         console.log('remove', categoryId);
@@ -183,16 +191,12 @@ function createCategoryCell(value, onchange) {
 function createRow(value, onchange = null) {
     const row = document.createElement('tr');
     row.setAttribute('id-row', value.id);
-    const col = document.createElement('td');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.value = value['id'];
-    checkbox.className = 'table-check-box';
-    col.appendChild(checkbox);
+
+    const col = createCheckBox(value['id']);
     row.appendChild(col);
 
     Object.keys(cols).forEach((key) => {
-        const col = document.createElement('td');
+        const col = createTableSell(key);
 
         switch (key) {
             case 'category': {
@@ -259,6 +263,7 @@ function createRow(value, onchange = null) {
             }
             default: {
                 col.insertAdjacentHTML('beforeend', value[key]);
+                col.setAttribute('default-value', value[key] || '');
                 col.oninput = (event) => {
                     const target = /** @type {HTMLTableCellElement} */ (
                         event.target
@@ -281,7 +286,6 @@ function createRow(value, onchange = null) {
                 };
             }
         }
-        col.setAttribute('key', 'category');
         row.appendChild(col);
     });
 
@@ -295,7 +299,7 @@ function renderSach(list) {
     );
     if (!table) return;
 
-    renderTable(list, table, cols, onChangeHandle, createRow);
+    renderTable(list, table, cols, handleOnChange, createRow);
     // nếu tràn ô thì thêm overflow
     Array.from(document.getElementsByClassName('details-wrapper')).forEach(
         (e) => {

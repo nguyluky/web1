@@ -1,8 +1,8 @@
 import fakeDatabase from './db/fakeDBv1.js';
-import userRender from './render/user_table.js';
-import cartRender from './render/cart_table.js';
-import sachRender from './render/sach_table.js';
-import categoryRender from './render/category_table.js';
+import userRender from './render/userTable.js';
+import cartRender from './render/cartTable.js';
+import sachRender from './render/sachTable.js';
+import orderRender from './render/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
 import formatLineChartData from './render/line_chart.js';
 
@@ -33,11 +33,14 @@ import formatLineChartData from './render/line_chart.js';
 const urlParams = new URLSearchParams(window.location.search);
 /** @type {string} */
 let tab = urlParams.get('tab') || 'dashboard';
-/** @type {HTMLElement | null} */ (
-    document.querySelector('input[name="tab-selestion"][value="' + tab + '"]')
-)?.click();
 
-//#region Các biến DOM quan trọng
+const tabElement = /** @type {HTMLInputElement | null} */ (
+    document.querySelector('input[name="tab-selestion"][value="' + tab + '"]')
+);
+if (tabElement && !tabElement.checked) {
+    tabElement.click();
+}
+
 const btnMenu = document.getElementById('menu-btn');
 const btnAdd = document.getElementById('add-btn');
 const btnSave = document.getElementById('save-btn');
@@ -60,7 +63,7 @@ const tabManagement = {
     user: userRender,
     cart: cartRender,
     sach: sachRender,
-    category: categoryRender,
+    order: orderRender,
 };
 
 /**
@@ -72,7 +75,7 @@ const fakeDBManagement = {
     user: () => fakeDatabase.getAllUserInfo(),
     cart: () => fakeDatabase.getALlCart(),
     sach: () => fakeDatabase.getAllSach(),
-    category: () => fakeDatabase.getAllCategory(),
+    origin: () => fakeDatabase.getAllOrder(),
 };
 
 // đặt lại tên biến phía duối cho tôi
@@ -149,6 +152,7 @@ async function renderManagement(inputValue = '') {
         cart: 'Cart',
         sach: 'Sách',
         category: 'Category',
+        order: 'Order',
     };
     title.innerHTML = titleTabs[tab];
     let web_title = document.querySelector('head title');
@@ -187,10 +191,9 @@ function handleContentOverflow() {
 
 function setupMainButtonEvents() {
     /**
-     * @param {MouseEvent} event
      * @this {HTMLElement}
      */
-    function handleButtonSave(event) {
+    function handleButtonSave() {
         const isEditMod = this.classList.contains('canedit');
         // nhấn nút Edit
         if (!isEditMod) {
@@ -226,10 +229,9 @@ function setupMainButtonEvents() {
     }
 
     /**
-     * @param {MouseEvent} event
      * @this {HTMLElement}
      */
-    function handleButtonDelete(event) {
+    function handleButtonDelete() {
         showPopup(
             'Xác nhận xóa',
             'Bạn có muốn xóa vĩnh viên các dòng hay không.',
@@ -242,10 +244,9 @@ function setupMainButtonEvents() {
     }
 
     /**
-     * @param {MouseEvent} event
      * @this {HTMLElement}
      */
-    function HandleButtonAdd(event) {
+    function HandleButtonAdd() {
         const isAddMode = this.classList.contains('btn-warning');
 
         if (isAddMode) {
@@ -283,13 +284,12 @@ function handlePopState(event) {
                 'Xác nhận sửa',
                 'Bạn có chắc là muốn sửa không',
                 () => {
-                    // buttonAddState.add();
-                    // buttonSaveState.edit();
-                    // updateMangement();
-                    // tabElements.forEach((e) => (e.checked = false));
-                    // this.checked = true;
-                    // tab = this.value;
-                    // renderManagement();
+                    buttonAddState.add();
+                    buttonSaveState.edit();
+                    updateMangement();
+
+                    // @ts-ignore
+                    history.back(1);
                 },
                 null,
             );
@@ -371,17 +371,16 @@ function setupSiderBar() {
 
     // hàm này đểm làm gì vậy tuấn
     // ?
-    function handleDropList(event) {
+    function handleDropList() {
         drop_menu?.classList.remove('show');
         // NOTE: không xóa dòng này -_-
         btnMenu?.classList.remove('active');
     }
 
     /**
-     * @param {MouseEvent} event
      * @this {HTMLElement}
      */
-    function handleButtonMenu(event) {
+    function handleButtonMenu() {
         if (!this.classList.contains('active')) {
             document.querySelector('.aside')?.classList.add('show');
             this.classList.add('active');
