@@ -3,7 +3,7 @@ import { validateUserInfo } from '../until/type.js';
 import uuidv from '../until/uuid.js';
 import { searchList, renderTable, defaultRenderRow } from './baseRender.js';
 
-/** @typedef {import('../db/fakeDb.js').UserInfo} UserInfo */
+/** @typedef {import('../until/type.js').UserInfo} UserInfo */
 
 // Định nghĩa các cột trong bảng người dùng
 const cols = {

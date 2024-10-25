@@ -11,67 +11,101 @@ function getPopupWrapper() {
 }
 
 /**
+ *
+ * @param {HTMLElement} popup
+ * @param {() => any} [onCancel]
+ * @returns {(this: HTMLElement, ev: MouseEvent) => any}
+ */
+function HandleClickOutSideBuilder(popup, onCancel) {
+    /**
+     *
+     * @this {HTMLElement}
+     * @param {MouseEvent} event
+     */
+    function handleClickOutSide(event) {
+        const target = /** @type {HTMLElement} */ (event.target);
+
+        console.log('click');
+
+        if (target.isSameNode(popup) || !target.contains(popup)) return;
+        target?.removeEventListener('click', handleClickOutSide);
+        this.innerHTML = '';
+        if (onCancel) onCancel();
+    }
+    return handleClickOutSide;
+}
+
+/**
  * Tạo và hiển thị một popup xác nhận.
  *
  * @param {string} title - Tiêu đề của popup.
  * @param {string} context - Nội dung của popup.
- * @param {(() => void)?} onOk - Hàm gọi lại khi người dùng nhấn OK.
- * @param {(() => void)?} onCancel - Hàm gọi lại khi người dùng nhấn Cancel.
+ * @param {() => void} [onOk] - Hàm gọi lại khi người dùng nhấn OK.
+ * @param {() => void} [onCancel] - Hàm gọi lại khi người dùng nhấn Cancel.
  */
 export function showPopup(title, context, onOk, onCancel) {
     const parder = getPopupWrapper();
+
+    const onCancelDeclaration = () => {
+        parder.innerHTML = '';
+        if (onCancel) onCancel();
+    };
+
+    const onOkDeclaration = () => {
+        parder.innerHTML = '';
+        if (onOk) onOk();
+    };
+
     const popup = createPopupBase(
         title,
         context,
-        () => {
-            parder.innerHTML = '';
-            if (onOk) onOk();
-        },
-        () => {
-            parder.innerHTML = '';
-            if (onCancel) onCancel();
-        },
+        onOkDeclaration,
+        onCancelDeclaration,
     );
 
     parder.appendChild(popup);
 
-    parder.onclick = (event) => {
-        const target = /** @type {HTMLElement} */ (event.target);
-        if (target.contains(popup)) {
-            parder.innerHTML = '';
-            if (onCancel) onCancel();
-        }
-    };
+    parder.addEventListener(
+        'click',
+        HandleClickOutSideBuilder(popup, onCancelDeclaration),
+    );
 }
 
 /**
  * @param {string} imgSrc
- * @param {((base64: string) => void)?} onChangeImg
- * @param {((base64: string) => void)?} onOk
- * @param {(() => void)?} onCancel
+ * @param {(base64: string) => void} [onChangeImg]
+ * @param {(base64: string) => void} [onOk]
+ * @param {() => void} [onCancel]
  */
 export function showImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
     const parder = getPopupWrapper();
+
+    const onChangeImgDeclaration = (base64) => {
+        parder.innerHTML = '';
+        if (onChangeImg) onChangeImg(base64);
+    };
+
+    const onOkDeclaration = (base64) => {
+        parder.innerHTML = '';
+        if (onOk) onOk(base64);
+    };
+
+    const onCancelDeclaration = () => {
+        parder.innerHTML = '';
+        if (onCancel) onCancel();
+    };
+
     const popup = createImgPreviewPopup(
         imgSrc,
-        onChangeImg,
-        (base64) => {
-            parder.innerHTML = '';
-            if (onOk) onOk(base64);
-        },
-        () => {
-            parder.innerHTML = '';
-            if (onCancel) onCancel();
-        },
+        onChangeImgDeclaration,
+        onOkDeclaration,
+        onCancelDeclaration,
     );
 
     parder.appendChild(popup);
 
-    parder.onclick = (event) => {
-        const target = /** @type {HTMLElement} */ (event.target);
-        if (target.contains(popup)) {
-            parder.innerHTML = '';
-            if (onCancel) onCancel();
-        }
-    };
+    parder.addEventListener(
+        'click',
+        HandleClickOutSideBuilder(popup, onCancelDeclaration),
+    );
 }

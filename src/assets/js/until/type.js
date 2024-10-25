@@ -28,7 +28,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     user_id: string;
  *     sach: string;
  *     quantity: number;
- *     timecreate: Date;
+ *     timecreate: Date | string;
  * }} Cart
  *
  *
@@ -77,7 +77,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     id: string;
  *     user_id: string;
  *     items: Cart[];
- *     data: Date;
+ *     date: Date;
  *     state: 'suly' | 'doixacnhan' | 'thanhcong';
  *     last_update: Date;
  *     is_pay: boolean;

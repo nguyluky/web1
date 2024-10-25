@@ -16,6 +16,33 @@
  */
 
 /**
+ *
+ * @param {string} value_id
+ * @returns {HTMLTableCellElement}
+ */
+export function createCheckBox(value_id) {
+    const col = document.createElement('td');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = value_id;
+    checkbox.className = 'table-check-box';
+    col.appendChild(checkbox);
+    return col;
+}
+
+/**
+ *
+ * @param {string} key_name
+ * @returns {HTMLTableCellElement}
+ */
+export function createTableSell(key_name) {
+    const col = document.createElement('td');
+    col.setAttribute('ischange', 'false');
+    col.setAttribute('key', key_name);
+    return col;
+}
+
+/**
  * Tạo một hàng bảng HTML dựa trên dữ liệu cung cấp.
  *
  * @template {{ id: string }} T
@@ -29,17 +56,12 @@ export function defaultRenderRow(value, cols, onchange) {
     row.setAttribute('id-row', value.id);
 
     // thêm check box
-    const col = document.createElement('td');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.value = value['id'];
-    checkbox.className = 'table-check-box';
-    col.appendChild(checkbox);
+    const col = createCheckBox(value['id']);
     row.appendChild(col);
 
     // thêm các phần khác
     Object.keys(cols).forEach((key) => {
-        const col = document.createElement('td');
+        const col = createTableSell(key);
         col.oninput = (event) => {
             const target = /** @type {HTMLTableCellElement} */ (event.target);
             if (onchange)
@@ -56,9 +78,6 @@ export function defaultRenderRow(value, cols, onchange) {
                 col.setAttribute('ischange', 'false');
             else col.setAttribute('ischange', 'true');
         };
-        // col.setAttribute('contenteditable', 'true');
-        col.setAttribute('ischange', 'false');
-        col.setAttribute('key', key);
         col.setAttribute('default-value', value[key] || '');
         col.insertAdjacentHTML('beforeend', value[key] || '');
         row.appendChild(col);
@@ -100,7 +119,7 @@ function renderTable(values, table, cols, onchange, cRenderRow) {
 
     table.appendChild(tableHeader);
 
-    values.forEach((value, index) => {
+    values.forEach((value) => {
         const row = cRenderRow
             ? cRenderRow(value, onchange)
             : defaultRenderRow(value, cols, onchange);

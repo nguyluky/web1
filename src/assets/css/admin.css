@@ -607,6 +607,20 @@ body {
     display: none;
 }
 
+.custom-datetime-input[type='datetime-local'] {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    width: min-content;
+    font-size: inherit;
+}
+.custom-datetime-input::-webkit-calendar-picker-indicator {
+    background-color: #ffffff;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
 @media screen and (max-width: 1200px) and (min-width: 750px) {
     .aside.show {
         position: absolute;

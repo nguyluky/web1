@@ -32,11 +32,14 @@ import { showPopup } from './render/popupRender.js';
 const urlParams = new URLSearchParams(window.location.search);
 /** @type {string} */
 let tab = urlParams.get('tab') || 'dashboard';
-/** @type {HTMLElement | null} */ (
-    document.querySelector('input[name="tab-selestion"][value="' + tab + '"]')
-)?.click();
 
-//#region Các biến DOM quan trọng
+const tabElement = /** @type {HTMLInputElement | null} */ (
+    document.querySelector('input[name="tab-selestion"][value="' + tab + '"]')
+);
+if (tabElement && !tabElement.checked) {
+    tabElement.click();
+}
+
 const btnMenu = document.getElementById('menu-btn');
 const btnAdd = document.getElementById('add-btn');
 const btnSave = document.getElementById('save-btn');
@@ -182,10 +185,9 @@ function handleContentOverflow() {
 
 function setupMainButtonEvents() {
     /**
-     * @param {MouseEvent} event
      * @this {HTMLElement}
      */
-    function handleButtonSave(event) {
+    function handleButtonSave() {
         const isEditMod = this.classList.contains('canedit');
         // nhấn nút Edit
         if (!isEditMod) {
@@ -210,10 +212,9 @@ function setupMainButtonEvents() {
     }
 
     /**
-     * @param {MouseEvent} event
      * @this {HTMLElement}
      */
-    function handleButtonDelete(event) {
+    function handleButtonDelete() {
         showPopup(
             'Xác nhận xóa',
             'Bạn có muốn xóa vĩnh viên các dòng hay không.',
@@ -226,10 +227,9 @@ function setupMainButtonEvents() {
     }
 
     /**
-     * @param {MouseEvent} event
      * @this {HTMLElement}
      */
-    function HandleButtonAdd(event) {
+    function HandleButtonAdd() {
         const isAddMode = this.classList.contains('btn-warning');
 
         if (isAddMode) {
@@ -354,17 +354,16 @@ function setupSiderBar() {
 
     // hàm này đểm làm gì vậy tuấn
     // ?
-    function handleDropList(event) {
+    function handleDropList() {
         drop_menu?.classList.remove('show');
         // NOTE: không xóa dòng này -_-
         btnMenu?.classList.remove('active');
     }
 
     /**
-     * @param {MouseEvent} event
      * @this {HTMLElement}
      */
-    function handleButtonMenu(event) {
+    function handleButtonMenu() {
         if (!this.classList.contains('active')) {
             document.querySelector('.aside')?.classList.add('show');
             this.classList.add('active');

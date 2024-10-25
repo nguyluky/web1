@@ -47,7 +47,7 @@ const dataLoaded = JSON.parse(
 /**
  *
  * @param {IDBRequest} request
- * @returns
+ * @returns {Promise<any>}
  */
 async function requestToPromise(request) {
     return new Promise((resolve, reject) => {
@@ -62,83 +62,101 @@ function updateDataLoaded(storeName) {
     window.localStorage.setItem('dataLoaded', JSON.stringify(dataLoaded));
 }
 
+/**
+ * import {
+ */
+
 /** @param {IDBDatabase} db_ */
 function createObjectStore(db_) {
+    /**
+     * @type {{
+     *  name: ObjectStoreName,
+     *  keypath: string,
+     *  keys: {
+     *     keypath: string[] | string,
+     *     option?: IDBIndexParameters
+     *   }[]
+     * }[]}
+     */
+    const objectStoreItems = [
+        {
+            name: ObjectStoreName.USER,
+            keypath: 'id',
+            keys: [
+                { keypath: 'email', option: { unique: true } },
+                { keypath: 'name' },
+                { keypath: 'passwd' },
+                { keypath: 'phone_num', option: { unique: true } },
+                { keypath: 'rule' },
+                { keypath: ['email', 'passwd'], option: { unique: true } },
+            ],
+        },
+        {
+            name: ObjectStoreName.CART,
+            keypath: 'id',
+            keys: [
+                { keypath: 'user_id' },
+                { keypath: 'sach' },
+                { keypath: 'quantity' },
+                { keypath: 'timecreate' },
+            ],
+        },
+        {
+            name: ObjectStoreName.BOOK,
+            keypath: 'id',
+            keys: [
+                { keypath: 'title' },
+                { keypath: 'details' },
+                { keypath: 'thumbnal' },
+                { keypath: 'base_price' },
+                { keypath: 'category' },
+            ],
+        },
+        {
+            name: ObjectStoreName.CATEGORY,
+            keypath: 'id',
+            keys: [{ keypath: 'name' }, { keypath: 'long_name' }],
+        },
+        {
+            name: ObjectStoreName.IMG,
+            keypath: 'id',
+            keys: [{ keypath: 'data' }],
+        },
+        {
+            name: ObjectStoreName.ORDER,
+            keypath: 'id',
+            keys: [
+                { keypath: 'user_id' },
+                { keypath: 'items' },
+                { keypath: 'date' },
+                { keypath: 'state' },
+                { keypath: 'last_update' },
+                { keypath: 'is_pay' },
+                { keypath: 'total' },
+            ],
+        },
+    ];
     // ==================== Tạo các objectStore trong cơ sở dữ liệu ==================
 
-    //#region User
-    // Tạo objectStore cho user
-    const userObjStore_ = db_.createObjectStore(ObjectStoreName.USER, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    // Tạo các index để truy vấn dữ liệu user
-    userObjStore_.createIndex('email', 'email', { unique: true });
-    userObjStore_.createIndex('name', 'name', { unique: true });
-    userObjStore_.createIndex('passwd', 'passwd', { unique: false });
-    userObjStore_.createIndex('phone_num', 'phone_num', { unique: false });
-    userObjStore_.createIndex('rule', 'rule', { unique: false });
-    userObjStore_.createIndex('email_and_pass', ['email', 'passwd'], {
-        unique: true,
-    });
-    //#endregion
+    objectStoreItems.forEach((obj) => {
+        const objStore = db_.createObjectStore(obj.name, {
+            keyPath: obj.keypath,
+            autoIncrement: true,
+        });
 
-    //#region Tạo objectStore cho cart
-    const cartObjStore_ = db_.createObjectStore(ObjectStoreName.CART, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    cartObjStore_.createIndex('user_id', 'user_id', { unique: false });
-    cartObjStore_.createIndex('sach', 'sach', { unique: false });
-    cartObjStore_.createIndex('option_id', 'option_id', { unique: false });
-    cartObjStore_.createIndex('quantity', 'quantity', { unique: false });
-    cartObjStore_.createIndex('status', 'status', { unique: false });
-    cartObjStore_.createIndex('timecreate', 'timecreate', { unique: false });
-    //#endregion
+        obj.keys.forEach((index) => {
+            let nameKey = '';
+            if (typeof index.keypath == 'string') {
+                nameKey = index.keypath;
+            } else {
+                nameKey = index.keypath.join('_');
+            }
 
-    //#region Tạo objectStore cho book
-    const bookObjStore_ = db_.createObjectStore(ObjectStoreName.BOOK, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    bookObjStore_.createIndex('title', 'title', { unique: false });
-    bookObjStore_.createIndex('details', 'details', { unique: false });
-    bookObjStore_.createIndex('thumbnal', 'thumbnal', { unique: false });
-    bookObjStore_.createIndex('imgs', 'imgs', { unique: false });
-    bookObjStore_.createIndex('base_price', 'base_price', { unique: false });
-    bookObjStore_.createIndex('category', 'category', { unique: false });
-    bookObjStore_.createIndex('option', 'option', { unique: false });
-    //#endregion
+            objStore.createIndex(nameKey, index.keypath, index.option);
+        });
 
-    //#region Tạo objectStore cho category
-    const categoryStore_ = db_.createObjectStore(ObjectStoreName.CATEGORY, {
-        keyPath: 'id',
-        autoIncrement: true,
+        console.log(`tạo ${obj.name} thành công`);
     });
-    categoryStore_.createIndex('name', 'name', { unique: false });
-    categoryStore_.createIndex('long_name', 'long_name', { unique: false });
-
-    //#endregion
-    //#region Tạo objectStore cho img
-    const imgStore = db_.createObjectStore(ObjectStoreName.IMG, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    imgStore.createIndex('data', 'data');
-    //#endregion
-
-    // #region Tạo objectStore cho order
-    const orderStore = db_.createObjectStore(ObjectStoreName.ORDER, {
-        keyPath: 'id',
-        autoIncrement: true,
-    });
-    orderStore.createIndex('user_id', 'user_id', { unique: false });
-    orderStore.createIndex('items', 'items', { unique: false });
-    orderStore.createIndex('data', 'data', { unique: false });
-    orderStore.createIndex('state', 'state', { unique: false });
-    orderStore.createIndex('last_update', 'last_update', { unique: false });
-    orderStore.createIndex('is_pay', 'is_pay', { unique: false });
-    orderStore.createIndex('total', 'total', { unique: false });
 }
 
 async function loadUserData() {
@@ -199,7 +217,7 @@ async function loadCartData() {
         );
         const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
         const bookStore = transaction.objectStore(ObjectStoreName.CART);
-        data.data.forEach((e) => bookStore.add(e));
+        data.data.forEach((e) => bookStore.add({ ...e }));
         // await requestToPromise(transaction);
         updateDataLoaded(ObjectStoreName.CART);
     }
