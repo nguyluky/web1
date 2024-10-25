@@ -132,7 +132,9 @@ function createCategoryCell(value, onchange) {
         i.className = 'fa-solid fa-xmark';
         categoryDiv.appendChild(i);
 
-        i.addEventListener('click', () => handleRemoveCategory(category?.id));
+        i.addEventListener('click', () => {
+            if (category) handleRemoveCategory(category.id);
+        });
 
         return categoryDiv;
     }

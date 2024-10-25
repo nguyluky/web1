@@ -39,7 +39,7 @@ export function showPopup(title, context, onOk, onCancel) {
         const target = /** @type {HTMLElement} */ (event.target);
         if (target.contains(popup)) {
             parder.innerHTML = '';
-            if (onCancel) onCancel();
+            // if (onCancel) onCancel();
         }
     };
 }
