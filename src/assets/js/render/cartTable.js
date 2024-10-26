@@ -134,7 +134,7 @@ function searchCart(list) {
     if (!table) return;
     const result = searchList(list, cols);
 
-    renderTable(result, table, cols);
+    renderTable(result, table, cols, handleOnChangeRow, createRowCart);
 }
 
 async function cartDoSave() {

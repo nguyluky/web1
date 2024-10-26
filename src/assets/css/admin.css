@@ -609,10 +609,16 @@ td .custom-datetime-input[type='datetime-local'] {
     background-color: transparent;
     width: fit-content;
     font-size: inherit;
+    pointer-events: none;
 }
 td .custom-datetime-input::-webkit-calendar-picker-indicator {
     display: none;
 }
+
+td[contenteditable='true'] {
+    pointer-events: all;
+}
+
 td[contenteditable='true']
     .custom-datetime-input::-webkit-calendar-picker-indicator {
     background-color: #ffffff;

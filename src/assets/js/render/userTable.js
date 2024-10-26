@@ -24,6 +24,7 @@ const cols = {
     phone_num: 'Phone',
     rule: 'Rule',
     status: 'Status',
+    datecreated: 'Ngày tạo',
 };
 
 /**
@@ -202,6 +203,7 @@ function addUser() {
         phone_num: '',
         rule: 'user',
         status: 'active',
+        datecreated: new Date(),
     };
 
     // Lưu người dùng mới vào cache

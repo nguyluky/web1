@@ -41,6 +41,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     phone_num: string;
  *     rule: 'admin' | 'user';
  *     status: 'active' | 'ban';
+ *     datecreated: Date;
  * }} UserInfo
  */
 
@@ -77,7 +78,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  * @typedef {{
  *     id: string;
  *     user_id: string;
- *     items: Cart[];
+ *     items: Omit<Cart, 'id'>[];
  *     date: Date;
  *     state: 'suly' | 'doixacnhan' | 'thanhcong';
  *     last_update: Date;
