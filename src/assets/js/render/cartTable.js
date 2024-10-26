@@ -1,9 +1,14 @@
 import fakeDatabase from '../db/fakeDBv1.js';
+import { validataCart } from '../until/type.js';
 import {
     createCheckBox,
     createTableSell,
+    getRowsSeletion,
+    removeRowById,
     renderTable,
     searchList,
+    tableClearErrorKey,
+    tableShowErrorKey,
 } from './baseRender.js';
 
 /** @typedef {import('../until/type.js').Cart} Cart */
@@ -14,6 +19,33 @@ const cols = {
     quantity: 'Số lượng',
     timecreate: 'Ngày thêm',
 };
+
+/**
+ * @type {{
+ * [Key: string]: Cart;
+ * }}
+ */
+const cacheSave = {};
+
+/**
+ * Hàm xử lý khi có thay đổi dữ liệu trên bảng (hàm callback)
+ *
+ * @type {import('./baseRender.js').OnChange<Cart>}
+ */
+function handleOnChangeRow(data, key, newValue) {
+    if (cacheSave[data.id]) {
+        cacheSave[data.id] = {
+            ...cacheSave[data.id],
+            [key]: newValue,
+        };
+        return;
+    }
+
+    cacheSave[data.id] = {
+        ...data,
+        [key]: newValue,
+    };
+}
 
 /**
  *
@@ -61,13 +93,16 @@ function createRowCart(value, onchange) {
     const dateTimeInput = document.createElement('input');
     dateTimeInput.type = 'datetime-local';
     dateTimeInput.className = 'custom-datetime-input';
-    const dateTimeStringValue =
+    const dateTimeStringValue = (
         typeof value['timecreate'] == 'string'
             ? value['timecreate']
-            : value['timecreate'].toISOString().replace('Z', '');
+            : value['timecreate'].toISOString()
+    )
+        .split('.')[0]
+        .replace('Z', '');
 
     tdDate.setAttribute('default-value', dateTimeStringValue);
-    dateTimeInput.value = dateTimeStringValue.split('.')[0];
+    dateTimeInput.value = dateTimeStringValue;
 
     dateTimeInput.addEventListener('change', () => {
         console.log(dateTimeInput.value);
@@ -79,15 +114,6 @@ function createRowCart(value, onchange) {
     tr.appendChild(tdDate);
 
     return tr;
-}
-
-/**
- * Hàm xử lý khi có thay đổi dữ liệu trên bảng (hàm callback)
- *
- * @type {import('./baseRender.js').OnChange<Cart>}
- */
-function handleOnChangeRow(data, key, newValue) {
-    // console.log(data, key, newValue);
 }
 
 /** @param {Cart[]} list */
@@ -111,16 +137,45 @@ function searchCart(list) {
     renderTable(result, table, cols);
 }
 
+async function cartDoSave() {
+    const saveValues = Object.values(cacheSave);
+    let hasError = false;
+    saveValues.forEach((cart) => {
+        const errors = validataCart(cart);
+
+        if (!errors.length) return;
+
+        hasError = true;
+        errors.forEach((error) => {
+            tableShowErrorKey(cart.id, error.key, error.msg);
+        });
+    });
+
+    if (hasError) {
+        throw Error('Có lỗi xảy ra');
+    }
+
+    saveValues.forEach((cart) => {
+        fakeDatabase.updateCart(cart);
+    });
+
+    tableClearErrorKey();
+
+    document.querySelectorAll('#content_table td').forEach((e) => {
+        e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
+        e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
+        e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
+    });
+}
+
 /** @type {import('./baseRender.js').IntefaceRender<Cart>} */
 const Cart_ = {
     cols,
     renderTable: renderCart,
     search: searchCart,
-    doSave: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
+    doSave: cartDoSave,
     addRow: () => {
-        throw new Error('Làm này đi, đồ lười');
+        throw new Error('Tam thời chưa cần thiết cho lắm');
     },
     removeRows: () => {
         throw new Error('Làm này đi, đồ lười');

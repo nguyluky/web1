@@ -15,6 +15,29 @@
  * @typedef {(data: T, key: keyof T, newValue: T[key]) => void} OnChange
  */
 
+// ==================Error show & hide===================
+/**
+ *
+ * @param {string} id
+ * @param {string} key
+ * @param {string} msg
+ */
+export function tableShowErrorKey(id, key, msg) {
+    const col = document?.querySelector(`tr[id-row="${id}"] td[key="${key}"]`);
+    col?.setAttribute('error', msg);
+}
+
+/**
+ * xóa toàn bộ error
+ */
+export function tableClearErrorKey() {
+    document
+        .querySelectorAll('td[error]')
+        .forEach((e) => e.removeAttribute('error'));
+}
+
+// ===================Create element function==================
+
 /**
  *
  * @param {string} value_id
@@ -51,7 +74,7 @@ export function createTableSell(key_name) {
  * @param {OnChange<T>} [onchange] - Hàm gọi lại khi dữ liệu thay đổi.
  * @returns {HTMLTableRowElement} - Hàng bảng đã được tạo.
  */
-export function defaultRenderRow(value, cols, onchange) {
+export function createDefaultRow(value, cols, onchange) {
     const row = document.createElement('tr');
     row.setAttribute('id-row', value.id);
 
@@ -122,7 +145,7 @@ function renderTable(values, table, cols, onchange, cRenderRow) {
     values.forEach((value) => {
         const row = cRenderRow
             ? cRenderRow(value, onchange)
-            : defaultRenderRow(value, cols, onchange);
+            : createDefaultRow(value, cols, onchange);
         table.appendChild(row);
     });
 }
@@ -154,6 +177,57 @@ function searchList(values, cols) {
     });
 
     return result;
+}
+
+/**
+ *
+ * @param {HTMLTableElement} table
+ * @param {HTMLTableRowElement} row
+ */
+export function defaultAddRow(table, row) {
+    row.setAttribute('isAddCache', 'true');
+
+    // Cho phép chỉnh sửa các ô trong hàng mới
+    row.querySelectorAll('td[key]').forEach((e) =>
+        e.setAttribute('contenteditable', 'true'),
+    );
+
+    // Thêm hàng mới lên đầu bảng
+    table.insertBefore(row, table.childNodes[1]);
+
+    row.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'start',
+    });
+}
+
+/**
+ * remove row add templay
+ */
+export function defaultRemoveAddRow() {
+    document.querySelector(`tr[isAddCache="true"]`)?.remove();
+}
+
+/**
+ * @returns {string[]}
+ */
+export function getRowsSeletion() {
+    return Array.from(document.querySelectorAll('tr'))
+        .filter((tr) => {
+            return /**@type {HTMLInputElement}*/ (
+                tr.querySelector('input[type="checkbox"]')
+            )?.checked;
+        })
+        .map((row) => row.getAttribute('id-row') || '');
+}
+
+/**
+ *
+ * @param {string} id
+ */
+export function removeRowById(id) {
+    document.querySelector(`tr[id-row='${id}']`)?.remove();
 }
 
 /**

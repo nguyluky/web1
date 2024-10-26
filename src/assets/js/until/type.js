@@ -122,6 +122,27 @@ export function validateUserInfo(userInfo) {
 }
 
 /**
+ *
+ * @param {Cart} cart
+ * @returns {{
+ *     key: string;
+ *     msg: string;
+ * }[]}
+ */
+export function validataCart(cart) {
+    const errors = [];
+
+    if (cart.quantity <= 0) {
+        errors.push({
+            key: 'quantity',
+            msg: 'số lượng sách không được bé hơn 1',
+        });
+    }
+
+    return errors;
+}
+
+/**
  * @readonly
  * @enum {string}
  */

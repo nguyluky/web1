@@ -4,7 +4,7 @@ import cartRender from './render/cartTable.js';
 import sachRender from './render/sachTable.js';
 import orderRender from './render/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
-import formatLineChartData from './render/line_chart.js';
+import formatLineChartData from './render/lineChart.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
@@ -135,7 +135,8 @@ async function renderManagement() {
     if (tab == 'dashboard') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
-        formatLineChartData(document.getElementById('line-chart'));
+        const chart = document.getElementById('line-chart');
+        chart && formatLineChartData(chart);
         return;
     }
     document.querySelector('.dashboard-wrapper')?.classList.add('hide');
@@ -172,7 +173,8 @@ function updateMangement() {
 }
 
 function handleContentOverflow() {
-    formatLineChartData(document.getElementById('line-chart'));
+    const chart = document.getElementById('line-chart');
+    chart && formatLineChartData(chart);
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
     if (!contentDiv) return;
@@ -201,19 +203,14 @@ function setupMainButtonEvents() {
         }
 
         // nếu nhấn nút save
-        showPopup(
-            'Xác nhận sửa',
-            'Bạn có chắc là muốn sửa không',
-            () => {
-                updateMangement()
-                    .then(() => {
-                        buttonAddState.add();
-                        buttonSaveState.edit();
-                    })
-                    .catch(() => {});
-            },
-            null,
-        );
+        showPopup('Xác nhận sửa', 'Bạn có chắc là muốn sửa không', () => {
+            updateMangement()
+                .then(() => {
+                    buttonAddState.add();
+                    buttonSaveState.edit();
+                })
+                .catch(() => {});
+        });
     }
 
     /**
@@ -227,7 +224,6 @@ function setupMainButtonEvents() {
                 tabManagement[tab].removeRows();
                 // console.log('ok');
             },
-            null,
         );
     }
 
@@ -268,19 +264,14 @@ function handlePopState(event) {
     if (isEditMode) {
         if (event.state?.tab != tab) {
             history.go(1);
-            showPopup(
-                'Xác nhận sửa',
-                'Bạn có chắc là muốn sửa không',
-                () => {
-                    buttonAddState.add();
-                    buttonSaveState.edit();
-                    updateMangement();
+            showPopup('Xác nhận sửa', 'Bạn có chắc là muốn sửa không', () => {
+                buttonAddState.add();
+                buttonSaveState.edit();
+                updateMangement();
 
-                    // @ts-ignore
-                    history.back(1);
-                },
-                null,
-            );
+                // @ts-ignore
+                history.back(1);
+            });
         }
 
         return;
@@ -312,21 +303,16 @@ function setupSiderBar() {
 
         if (isEditMode) {
             this.checked = false;
-            showPopup(
-                'Xác nhận sửa',
-                'Bạn có chắc là muốn sửa không',
-                () => {
-                    buttonAddState.add();
-                    buttonSaveState.edit();
-                    updateMangement();
+            showPopup('Xác nhận sửa', 'Bạn có chắc là muốn sửa không', () => {
+                buttonAddState.add();
+                buttonSaveState.edit();
+                updateMangement();
 
-                    tabElements.forEach((e) => (e.checked = false));
-                    this.checked = true;
-                    tab = this.value;
-                    renderManagement();
-                },
-                null,
-            );
+                tabElements.forEach((e) => (e.checked = false));
+                this.checked = true;
+                tab = this.value;
+                renderManagement();
+            });
 
             return;
         }

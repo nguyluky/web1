@@ -502,6 +502,14 @@ class FakeDatabase {
         return requestToPromise(cartStore.put(cart_data));
     }
 
+    async deleteCardById(cart_id) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.CART);
+        const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
+        const cartStore = transaction.objectStore(ObjectStoreName.CART);
+        return requestToPromise(cartStore.delete(cart_id));
+    }
+
     /** @returns {Promise<Category[]>} */
     async getAllCategory() {
         if (!db) await this.awaitUntilReady();

@@ -603,17 +603,22 @@ body {
     display: none;
 }
 
-.custom-datetime-input[type='datetime-local'] {
+td .custom-datetime-input[type='datetime-local'] {
     border: none;
     outline: none;
     background-color: transparent;
     width: fit-content;
     font-size: inherit;
 }
-.custom-datetime-input::-webkit-calendar-picker-indicator {
+td .custom-datetime-input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+td[contenteditable='true']
+    .custom-datetime-input::-webkit-calendar-picker-indicator {
     background-color: #ffffff;
     padding: 5px;
     cursor: pointer;
+    display: block;
     border-radius: 3px;
 }
 
@@ -807,7 +812,7 @@ body {
     width: 50%;
     height: 300px;
     background-color: var(--bg_sidebar);
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 0 20px 20px 20px;
     box-sizing: border-box;
 }
@@ -827,24 +832,24 @@ body {
 }
 
 .data-point {
-    background-color: white;
-    border: 2px solid lightblue;
+    background-color: #0a68f4;
+    box-sizing: border-box;
     border-radius: 50%;
-    bottom: calc(var(--y) - 8px);
     height: 12px;
-    left: calc(var(--x) - 8px);
-    position: absolute;
     width: 12px;
+    bottom: calc(var(--y) - 6px);
+    left: calc(var(--x) - 6px);
+    position: absolute;
     z-index: 1;
 }
 
 .line-segment {
-    background-color: blue;
-    bottom: var(--y);
-    height: 3px;
-    left: var(--x);
+    background-color: #0a68f4;
+    bottom: calc(var(--y) - 1px);
+    height: 2px;
+    left: calc(var(--x));
     position: absolute;
+    transform-origin: 0 50%;
     transform: rotate(calc(var(--angle) * 1deg));
-    transform-origin: left bottom;
     width: calc(var(--hypotenuse) * 1px);
 }
