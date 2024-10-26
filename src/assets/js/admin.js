@@ -75,7 +75,7 @@ const fakeDBManagement = {
     user: () => fakeDatabase.getAllUserInfo(),
     cart: () => fakeDatabase.getALlCart(),
     sach: () => fakeDatabase.getAllSach(),
-    origin: () => fakeDatabase.getAllOrder(),
+    order: () => fakeDatabase.getAllOrder(),
 };
 
 // đặt lại tên biến phía duối cho tôi
@@ -131,6 +131,7 @@ const buttonSaveState = {
 };
 
 /** Xử lý render dữ liệu tương ứng với tab hiện tại */
+/** @param {string} inputValue */
 async function renderManagement(inputValue = '') {
     if (tab == 'dashboard') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
@@ -192,9 +193,7 @@ function handleContentOverflow() {
 }
 
 function setupMainButtonEvents() {
-    /**
-     * @this {HTMLElement}
-     */
+    /** @this {HTMLElement} */
     function handleButtonSave() {
         const isEditMod = this.classList.contains('canedit');
         // nhấn nút Edit
@@ -230,9 +229,7 @@ function setupMainButtonEvents() {
         );
     }
 
-    /**
-     * @this {HTMLElement}
-     */
+    /** @this {HTMLElement} */
     function handleButtonDelete() {
         showPopup(
             'Xác nhận xóa',
@@ -244,9 +241,7 @@ function setupMainButtonEvents() {
         );
     }
 
-    /**
-     * @this {HTMLElement}
-     */
+    /** @this {HTMLElement} */
     function HandleButtonAdd() {
         const isAddMode = this.classList.contains('btn-warning');
 
@@ -271,10 +266,7 @@ function setupMainButtonEvents() {
     btnSignOut?.addEventListener('click', handleButtonSignOut);
 }
 
-/**
- *
- * @param {PopStateEvent} event
- */
+/** @param {PopStateEvent} event */
 function handlePopState(event) {
     const isEditMode = btnSave?.classList.contains('canedit');
 
@@ -368,9 +360,7 @@ function setupSiderBar() {
         btnMenu?.classList.remove('active');
     }
 
-    /**
-     * @this {HTMLElement}
-     */
+    /** @this {HTMLElement} */
     function handleButtonMenu() {
         if (!this.classList.contains('active')) {
             document.querySelector('.aside')?.classList.add('show');

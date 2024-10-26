@@ -11,6 +11,9 @@ import {
     defaultRemoveAddRow,
     getRowsSeletion,
     removeRowById,
+    createCheckBox,
+    createTableSell,
+    createDateTableCell,
 } from './baseRender.js';
 
 /** @typedef {import('../until/type.js').UserInfo} UserInfo */
@@ -23,8 +26,8 @@ const cols = {
     email: 'Email',
     phone_num: 'Phone',
     rule: 'Rule',
-    status: 'Status',
     datecreated: 'Ngày tạo',
+    status: 'Status',
 };
 
 /**
@@ -139,10 +142,85 @@ async function userDoSave() {
     document.querySelectorAll('#content_table td').forEach((e) => {
         e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
         e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
-        e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
+
+        // TODO:
+        if (e.getAttribute('key') == 'datecreated') {
+            const input = e.querySelector('input');
+            e.setAttribute(
+                'default-value',
+                String(new Date(input?.value || '')),
+            );
+        } else e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
     });
 
     return true;
+}
+
+/**
+ *
+ * @param {UserInfo} value
+ * @param {import('./baseRender.js').OnChange<UserInfo>} [onchange]
+ * @returns {HTMLTableRowElement}
+ */
+function createRow(value, onchange) {
+    const row = document.createElement('tr');
+    row.setAttribute('id-row', value.id);
+
+    const col = createCheckBox(value['id']);
+    row.appendChild(col);
+
+    Object.keys(cols).forEach((key) => {
+        const col = createTableSell(key);
+
+        switch (key) {
+            case 'datecreated': {
+                const inputDate = createDateTableCell(
+                    value['datecreated'],
+                    (value_) => {
+                        onchange && onchange(value, 'datecreated', value_);
+
+                        if (
+                            String(value_) == col.getAttribute('default-value')
+                        ) {
+                            col.setAttribute('ischange', 'false');
+                        } else {
+                            col.setAttribute('ischange', 'true');
+                        }
+                    },
+                );
+
+                col.appendChild(inputDate);
+                col.setAttribute('default-value', String(value['datecreated']));
+                break;
+            }
+            default: {
+                col.insertAdjacentHTML('beforeend', value[key]);
+                col.setAttribute('default-value', value[key] || '');
+                col.oninput = (event) => {
+                    const target = /** @type {HTMLTableCellElement} */ (
+                        event.target
+                    );
+                    onchange &&
+                        onchange(
+                            value,
+                            // @ts-ignore
+                            key,
+                            target.textContent,
+                        );
+
+                    if (
+                        target.textContent ==
+                        target.getAttribute('default-value')
+                    )
+                        col.setAttribute('ischange', 'false');
+                    else col.setAttribute('ischange', 'true');
+                };
+            }
+        }
+        row.appendChild(col);
+    });
+
+    return row;
 }
 
 /**
@@ -155,8 +233,7 @@ function renderUser(list) {
         document.getElementById('content_table')
     );
     if (!table) return;
-
-    renderTable(list, table, cols, onChangeHandle);
+    renderTable(list, table, cols, onChangeHandle, createRow);
 }
 
 /**

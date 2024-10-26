@@ -615,7 +615,7 @@ td .custom-datetime-input::-webkit-calendar-picker-indicator {
     display: none;
 }
 
-td[contenteditable='true'] {
+td[contenteditable='true'] .custom-datetime-input[type='datetime-local'] {
     pointer-events: all;
 }
 

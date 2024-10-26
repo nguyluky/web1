@@ -101,7 +101,6 @@ function createRowCart(value, onchange) {
         .split('.')[0]
         .replace('Z', '');
 
-    tdDate.setAttribute('default-value', dateTimeStringValue);
     dateTimeInput.value = dateTimeStringValue;
 
     dateTimeInput.addEventListener('change', () => {
@@ -132,9 +131,16 @@ function searchCart(list) {
         document.getElementById('content_table')
     );
     if (!table) return;
-    const result = searchList(list, cols);
+    const result = searchList(list, cols).map((e) => e.id);
 
-    renderTable(result, table, cols, handleOnChangeRow, createRowCart);
+    document.querySelectorAll('#content_table > tr[id-row]').forEach((e) => {
+        const id = e.getAttribute('id-row') || '';
+        if (result.includes(id)) {
+            /** @type {HTMLElement} */ (e).style.display = '';
+        } else {
+            /** @type {HTMLElement} */ (e).style.display = 'none';
+        }
+    });
 }
 
 async function cartDoSave() {

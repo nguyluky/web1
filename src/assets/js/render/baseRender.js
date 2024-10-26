@@ -1,11 +1,4 @@
 /**
- * File này định nghĩa các chức năng để render bảng dữ liệu (table), tìm kiếm dữ
- * liệu (search), và hiển thị popup xác nhận. File sử dụng các kiểu dữ liệu tổng
- * quát (generic types) để áp dụng cho nhiều loại dữ liệu khác nhau, dựa vào các
- * đặc tính chung như id.
- */
-
-/**
  * @template T
  * @typedef {{ [P in keyof Partial<T>]: string }} COLS
  */
@@ -108,6 +101,35 @@ export function createDefaultRow(value, cols, onchange) {
 
     return row;
 }
+
+/**
+ *
+ * @param {string | Date} value
+ * @param {(value: Date) => any} onchange
+ * @returns {HTMLInputElement}
+ */
+export function createDateTableCell(value, onchange) {
+    const dateTimeInput = document.createElement('input');
+    dateTimeInput.type = 'datetime-local';
+    dateTimeInput.className = 'custom-datetime-input';
+    const dateTimeStringValue = (
+        typeof value == 'string' ? value : value.toISOString()
+    )
+        .split('.')[0]
+        .replace('Z', '');
+
+    dateTimeInput.value = dateTimeStringValue;
+
+    dateTimeInput.addEventListener('change', () => {
+        console.log(dateTimeInput.value);
+        const date = new Date(dateTimeInput.value);
+        onchange(date);
+    });
+
+    return dateTimeInput;
+}
+
+// ====================Render====================
 
 /**
  * @template {{ id: string }} T
