@@ -1,5 +1,5 @@
 /**
- * @typedef {import("../until/type").Order} Order
+ * @typedef {import("../../until/type").Order} Order
  */
 
 import { renderTable, searchList } from './baseRender.js';
@@ -12,6 +12,8 @@ const cols = {
     is_pay: 'Pay',
     total: 'Total',
 };
+
+function createRow(value, onchange) {}
 
 /**
  *
@@ -45,7 +47,7 @@ function searchOrder(list) {
 }
 
 /**
- * @type {import("./baseRender").IntefaceRender<Order>}
+ * @type {import("./baseRender.js").IntefaceRender<Order>}
  */
 const order = {
     cols,

@@ -33,6 +33,19 @@ export function tableClearErrorKey() {
 
 /**
  *
+ * @param {HTMLElement} element
+ * @returns {HTMLTableCellElement | undefined}
+ */
+function getTableCell(element) {
+    while (element && element.tagName != 'TD') {
+        element = /**@type {HTMLElement}*/ (element.parentElement);
+    }
+
+    return /**@type {HTMLTableCellElement} */ (element);
+}
+
+/**
+ *
  * @param {string} value_id
  * @returns {HTMLTableCellElement}
  */
@@ -124,9 +137,51 @@ export function createDateTableCell(value, onchange) {
         console.log(dateTimeInput.value);
         const date = new Date(dateTimeInput.value);
         onchange(date);
+
+        const col = getTableCell(dateTimeInput);
+
+        if (!col) return;
+        if (String(date) == col.getAttribute('default-value')) {
+            col.setAttribute('ischange', 'false');
+        } else {
+            col.setAttribute('ischange', 'true');
+        }
     });
 
     return dateTimeInput;
+}
+
+/**
+ *
+ * @param {string} value
+ * @param {{title: string, value: string}[]} options
+ * @param {(value: string) => any} onchange
+ * @returns {HTMLElement}
+ */
+export function createOpstionCell(value, options, onchange) {
+    const select = document.createElement('select');
+
+    options.forEach((e) => {
+        const op = document.createElement('option');
+        op.value = e.value;
+        op.textContent = e.title;
+        select.appendChild(op);
+    });
+
+    select.value = value;
+    select.addEventListener('change', () => {
+        onchange(select.value);
+
+        const col = getTableCell(select);
+        if (!col) return;
+        if (String(select.value) == col.getAttribute('default-value')) {
+            col.setAttribute('ischange', 'false');
+        } else {
+            col.setAttribute('ischange', 'true');
+        }
+    });
+
+    return select;
 }
 
 // ====================Render====================

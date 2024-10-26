@@ -1,17 +1,17 @@
-import fakeDatabase from '../db/fakeDBv1.js';
-import { validataCart } from '../until/type.js';
+import fakeDatabase from '../../db/fakeDBv1.js';
+import { validataCart } from '../../until/type.js';
 import {
     createCheckBox,
     createTableSell,
-    getRowsSeletion,
-    removeRowById,
     renderTable,
     searchList,
     tableClearErrorKey,
     tableShowErrorKey,
 } from './baseRender.js';
 
-/** @typedef {import('../until/type.js').Cart} Cart */
+/**
+ * @typedef {import('../../until/type.js').Cart} Cart
+ * */
 
 const cols = {
     user_id: 'User id',

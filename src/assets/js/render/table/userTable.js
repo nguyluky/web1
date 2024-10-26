@@ -1,6 +1,6 @@
-import fakeDatabase from '../db/fakeDBv1.js';
-import { validateUserInfo } from '../until/type.js';
-import uuidv from '../until/uuid.js';
+import fakeDatabase from '../../db/fakeDBv1.js';
+import { validateUserInfo } from '../../until/type.js';
+import uuidv from '../../until/uuid.js';
 import {
     searchList,
     renderTable,
@@ -14,9 +14,10 @@ import {
     createCheckBox,
     createTableSell,
     createDateTableCell,
+    createOpstionCell,
 } from './baseRender.js';
 
-/** @typedef {import('../until/type.js').UserInfo} UserInfo */
+/** @typedef {import('../../until/type.js').UserInfo} UserInfo */
 
 // Định nghĩa các cột trong bảng người dùng
 const cols = {
@@ -25,9 +26,9 @@ const cols = {
     passwd: 'Pass',
     email: 'Email',
     phone_num: 'Phone',
+    status: 'Status',
     rule: 'Rule',
     datecreated: 'Ngày tạo',
-    status: 'Status',
 };
 
 /**
@@ -143,13 +144,17 @@ async function userDoSave() {
         e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
         e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
 
+        const key = e.getAttribute('key');
         // TODO:
-        if (e.getAttribute('key') == 'datecreated') {
+        if (key == 'datecreated') {
             const input = e.querySelector('input');
             e.setAttribute(
                 'default-value',
                 String(new Date(input?.value || '')),
             );
+        } else if (key == 'rule' || key == 'status') {
+            const select = e.querySelector('select');
+            e.setAttribute('default-value', select?.value || '');
         } else e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
     });
 
@@ -173,24 +178,47 @@ function createRow(value, onchange) {
         const col = createTableSell(key);
 
         switch (key) {
+            case 'status': {
+                const option = createOpstionCell(
+                    value['status'],
+                    [
+                        { title: 'Đang hoạt động', value: 'active' },
+                        { title: 'Bị cấm', value: 'ban' },
+                    ],
+                    (va) => {
+                        onchange && onchange(value, 'status', va);
+                    },
+                );
+
+                col.setAttribute('default-value', value['status'] || '');
+                col.appendChild(option);
+                break;
+            }
+            case 'rule': {
+                const option = createOpstionCell(
+                    value['rule'],
+                    [
+                        { title: 'user', value: 'user' },
+                        { title: 'admin', value: 'admin' },
+                    ],
+                    (va) => {
+                        onchange && onchange(value, 'rule', va);
+                    },
+                );
+
+                col.setAttribute('default-value', value['rule'] || '');
+                col.appendChild(option);
+                break;
+            }
             case 'datecreated': {
                 const inputDate = createDateTableCell(
                     value['datecreated'],
                     (value_) => {
                         onchange && onchange(value, 'datecreated', value_);
-
-                        if (
-                            String(value_) == col.getAttribute('default-value')
-                        ) {
-                            col.setAttribute('ischange', 'false');
-                        } else {
-                            col.setAttribute('ischange', 'true');
-                        }
                     },
                 );
-
-                col.appendChild(inputDate);
                 col.setAttribute('default-value', String(value['datecreated']));
+                col.appendChild(inputDate);
                 break;
             }
             default: {

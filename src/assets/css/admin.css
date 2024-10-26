@@ -281,6 +281,21 @@ td .category.add {
     display: none;
 }
 
+td > select {
+    border: none;
+    background: none;
+    font-size: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    pointer-events: none;
+}
+
+td[contenteditable='true'] > select {
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    pointer-events: all;
+}
+
 .category.add .category-popup {
     z-index: 1;
     position: absolute;

@@ -78,7 +78,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  * @typedef {{
  *     id: string;
  *     user_id: string;
- *     items: Omit<Cart, 'id'>[];
+ *     items: Omit<Cart, 'id'| 'user_id' | 'timecreate'>[];
  *     date: Date;
  *     state: 'suly' | 'doixacnhan' | 'thanhcong';
  *     last_update: Date;

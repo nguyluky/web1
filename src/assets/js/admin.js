@@ -1,8 +1,8 @@
 import fakeDatabase from './db/fakeDBv1.js';
-import userRender from './render/userTable.js';
-import cartRender from './render/cartTable.js';
-import sachRender from './render/sachTable.js';
-import orderRender from './render/orderTabel.js';
+import userRender from './render/table/userTable.js';
+import cartRender from './render/table/cartTable.js';
+import sachRender from './render/table/sachTable.js';
+import orderRender from './render/table/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
 import formatLineChartData from './render/lineChart.js';
 
@@ -56,7 +56,7 @@ const loadingTable = document.getElementById('loading');
  * Quản lý các hàm render và cập nhật dữ liệu cho từng tab
  *
  * @type {{
- *     [Key: string]: import('./render/baseRender.js').IntefaceRender<?>;
+ *     [Key: string]: import('./render/table/baseRender.js').IntefaceRender<?>;
  * }}
  */
 const tabManagement = {
