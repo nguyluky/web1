@@ -1,11 +1,4 @@
 /**
- * File này định nghĩa các chức năng để render bảng dữ liệu (table), tìm kiếm dữ
- * liệu (search), và hiển thị popup xác nhận. File sử dụng các kiểu dữ liệu tổng
- * quát (generic types) để áp dụng cho nhiều loại dữ liệu khác nhau, dựa vào các
- * đặc tính chung như id.
- */
-
-/**
  * @template T
  * @typedef {{ [P in keyof Partial<T>]: string }} COLS
  */
@@ -14,6 +7,42 @@
  * @template T
  * @typedef {(data: T, key: keyof T, newValue: T[key]) => void} OnChange
  */
+
+// ==================Error show & hide===================
+/**
+ *
+ * @param {string} id
+ * @param {string} key
+ * @param {string} msg
+ */
+export function tableShowErrorKey(id, key, msg) {
+    const col = document?.querySelector(`tr[id-row="${id}"] td[key="${key}"]`);
+    col?.setAttribute('error', msg);
+}
+
+/**
+ * xóa toàn bộ error
+ */
+export function tableClearErrorKey() {
+    document
+        .querySelectorAll('td[error]')
+        .forEach((e) => e.removeAttribute('error'));
+}
+
+// ===================Create element function==================
+
+/**
+ *
+ * @param {HTMLElement} element
+ * @returns {HTMLTableCellElement | undefined}
+ */
+function getTableCell(element) {
+    while (element && element.tagName != 'TD') {
+        element = /**@type {HTMLElement}*/ (element.parentElement);
+    }
+
+    return /**@type {HTMLTableCellElement} */ (element);
+}
 
 /**
  *
@@ -51,7 +80,7 @@ export function createTableSell(key_name) {
  * @param {OnChange<T>} [onchange] - Hàm gọi lại khi dữ liệu thay đổi.
  * @returns {HTMLTableRowElement} - Hàng bảng đã được tạo.
  */
-export function defaultRenderRow(value, cols, onchange) {
+export function createDefaultRow(value, cols, onchange) {
     const row = document.createElement('tr');
     row.setAttribute('id-row', value.id);
 
@@ -85,6 +114,77 @@ export function defaultRenderRow(value, cols, onchange) {
 
     return row;
 }
+
+/**
+ *
+ * @param {string | Date} value
+ * @param {(value: Date) => any} onchange
+ * @returns {HTMLInputElement}
+ */
+export function createDateTableCell(value, onchange) {
+    const dateTimeInput = document.createElement('input');
+    dateTimeInput.type = 'datetime-local';
+    dateTimeInput.className = 'custom-datetime-input';
+    const dateTimeStringValue = (
+        typeof value == 'string' ? value : value.toISOString()
+    )
+        .split('.')[0]
+        .replace('Z', '');
+
+    dateTimeInput.value = dateTimeStringValue;
+
+    dateTimeInput.addEventListener('change', () => {
+        console.log(dateTimeInput.value);
+        const date = new Date(dateTimeInput.value);
+        onchange(date);
+
+        const col = getTableCell(dateTimeInput);
+
+        if (!col) return;
+        if (String(date) == col.getAttribute('default-value')) {
+            col.setAttribute('ischange', 'false');
+        } else {
+            col.setAttribute('ischange', 'true');
+        }
+    });
+
+    return dateTimeInput;
+}
+
+/**
+ *
+ * @param {string} value
+ * @param {{title: string, value: string}[]} options
+ * @param {(value: string) => any} onchange
+ * @returns {HTMLElement}
+ */
+export function createOpstionCell(value, options, onchange) {
+    const select = document.createElement('select');
+
+    options.forEach((e) => {
+        const op = document.createElement('option');
+        op.value = e.value;
+        op.textContent = e.title;
+        select.appendChild(op);
+    });
+
+    select.value = value;
+    select.addEventListener('change', () => {
+        onchange(select.value);
+
+        const col = getTableCell(select);
+        if (!col) return;
+        if (String(select.value) == col.getAttribute('default-value')) {
+            col.setAttribute('ischange', 'false');
+        } else {
+            col.setAttribute('ischange', 'true');
+        }
+    });
+
+    return select;
+}
+
+// ====================Render====================
 
 /**
  * @template {{ id: string }} T
@@ -122,7 +222,7 @@ function renderTable(values, table, cols, onchange, cRenderRow) {
     values.forEach((value) => {
         const row = cRenderRow
             ? cRenderRow(value, onchange)
-            : defaultRenderRow(value, cols, onchange);
+            : createDefaultRow(value, cols, onchange);
         table.appendChild(row);
     });
 }
@@ -154,6 +254,57 @@ function searchList(values, cols) {
     });
 
     return result;
+}
+
+/**
+ *
+ * @param {HTMLTableElement} table
+ * @param {HTMLTableRowElement} row
+ */
+export function defaultAddRow(table, row) {
+    row.setAttribute('isAddCache', 'true');
+
+    // Cho phép chỉnh sửa các ô trong hàng mới
+    row.querySelectorAll('td[key]').forEach((e) =>
+        e.setAttribute('contenteditable', 'true'),
+    );
+
+    // Thêm hàng mới lên đầu bảng
+    table.insertBefore(row, table.childNodes[1]);
+
+    row.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'start',
+    });
+}
+
+/**
+ * remove row add templay
+ */
+export function defaultRemoveAddRow() {
+    document.querySelector(`tr[isAddCache="true"]`)?.remove();
+}
+
+/**
+ * @returns {string[]}
+ */
+export function getRowsSeletion() {
+    return Array.from(document.querySelectorAll('tr'))
+        .filter((tr) => {
+            return /**@type {HTMLInputElement}*/ (
+                tr.querySelector('input[type="checkbox"]')
+            )?.checked;
+        })
+        .map((row) => row.getAttribute('id-row') || '');
+}
+
+/**
+ *
+ * @param {string} id
+ */
+export function removeRowById(id) {
+    document.querySelector(`tr[id-row='${id}']`)?.remove();
 }
 
 /**

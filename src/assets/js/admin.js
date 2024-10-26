@@ -1,10 +1,10 @@
 import fakeDatabase from './db/fakeDBv1.js';
-import userRender from './render/userTable.js';
-import cartRender from './render/cartTable.js';
-import sachRender from './render/sachTable.js';
-import orderRender from './render/orderTabel.js';
+import userRender from './render/table/userTable.js';
+import cartRender from './render/table/cartTable.js';
+import sachRender from './render/table/sachTable.js';
+import orderRender from './render/table/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
-import { formatLineChartData, hoverPoint } from './render/line_chart.js';
+import { formatLineChartData, hoverPoint } from './render/lineChart.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
@@ -56,7 +56,7 @@ const loadingTable = document.getElementById('loading');
  * Quản lý các hàm render và cập nhật dữ liệu cho từng tab
  *
  * @type {{
- *     [Key: string]: import('./render/baseRender.js').IntefaceRender<?>;
+ *     [Key: string]: import('./render/table/baseRender.js').IntefaceRender<?>;
  * }}
  */
 const tabManagement = {
@@ -75,7 +75,7 @@ const fakeDBManagement = {
     user: () => fakeDatabase.getAllUserInfo(),
     cart: () => fakeDatabase.getALlCart(),
     sach: () => fakeDatabase.getAllSach(),
-    origin: () => fakeDatabase.getAllOrder(),
+    order: () => fakeDatabase.getAllOrder(),
 };
 
 // đặt lại tên biến phía duối cho tôi
@@ -131,11 +131,13 @@ const buttonSaveState = {
 };
 
 /** Xử lý render dữ liệu tương ứng với tab hiện tại */
+/** @param {string} inputValue */
 async function renderManagement(inputValue = '') {
     if (tab == 'dashboard') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
-        formatLineChartData(document.getElementById('line-chart'));
+        const chart = document.getElementById('line-chart');
+        chart && formatLineChartData(chart);
         hoverPoint();
         return;
     }
@@ -174,7 +176,8 @@ function updateMangement() {
 }
 
 function handleContentOverflow() {
-    formatLineChartData(document.getElementById('line-chart'));
+    const chart = document.getElementById('line-chart');
+    chart && formatLineChartData(chart);
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
     if (!contentDiv) return;
@@ -191,9 +194,7 @@ function handleContentOverflow() {
 }
 
 function setupMainButtonEvents() {
-    /**
-     * @this {HTMLElement}
-     */
+    /** @this {HTMLElement} */
     function handleButtonSave() {
         const isEditMod = this.classList.contains('canedit');
         // nhấn nút Edit
@@ -229,9 +230,7 @@ function setupMainButtonEvents() {
         );
     }
 
-    /**
-     * @this {HTMLElement}
-     */
+    /** @this {HTMLElement} */
     function handleButtonDelete() {
         showPopup(
             'Xác nhận xóa',
@@ -240,13 +239,10 @@ function setupMainButtonEvents() {
                 tabManagement[tab].removeRows();
                 // console.log('ok');
             },
-            undefined,
         );
     }
 
-    /**
-     * @this {HTMLElement}
-     */
+    /** @this {HTMLElement} */
     function HandleButtonAdd() {
         const isAddMode = this.classList.contains('btn-warning');
 
@@ -271,29 +267,21 @@ function setupMainButtonEvents() {
     btnSignOut?.addEventListener('click', handleButtonSignOut);
 }
 
-/**
- *
- * @param {PopStateEvent} event
- */
+/** @param {PopStateEvent} event */
 function handlePopState(event) {
     const isEditMode = btnSave?.classList.contains('canedit');
 
     if (isEditMode) {
         if (event.state?.tab != tab) {
             history.go(1);
-            showPopup(
-                'Xác nhận sửa',
-                'Bạn có chắc là muốn sửa không',
-                () => {
-                    buttonAddState.add();
-                    buttonSaveState.edit();
-                    updateMangement();
+            showPopup('Xác nhận sửa', 'Bạn có chắc là muốn sửa không', () => {
+                buttonAddState.add();
+                buttonSaveState.edit();
+                updateMangement();
 
-                    // @ts-ignore
-                    history.back(1);
-                },
-                undefined,
-            );
+                // @ts-ignore
+                history.back(1);
+            });
         }
 
         return;
@@ -325,21 +313,16 @@ function setupSiderBar() {
 
         if (isEditMode) {
             this.checked = false;
-            showPopup(
-                'Xác nhận sửa',
-                'Bạn có chắc là muốn sửa không',
-                () => {
-                    buttonAddState.add();
-                    buttonSaveState.edit();
-                    updateMangement();
+            showPopup('Xác nhận sửa', 'Bạn có chắc là muốn sửa không', () => {
+                buttonAddState.add();
+                buttonSaveState.edit();
+                updateMangement();
 
-                    tabElements.forEach((e) => (e.checked = false));
-                    this.checked = true;
-                    tab = this.value;
-                    renderManagement();
-                },
-                undefined,
-            );
+                tabElements.forEach((e) => (e.checked = false));
+                this.checked = true;
+                tab = this.value;
+                renderManagement();
+            });
 
             return;
         }
@@ -378,9 +361,7 @@ function setupSiderBar() {
         btnMenu?.classList.remove('active');
     }
 
-    /**
-     * @this {HTMLElement}
-     */
+    /** @this {HTMLElement} */
     function handleButtonMenu() {
         if (!this.classList.contains('active')) {
             document.querySelector('.aside')?.classList.add('show');

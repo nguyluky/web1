@@ -41,6 +41,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     phone_num: string;
  *     rule: 'admin' | 'user';
  *     status: 'active' | 'ban';
+ *     datecreated: Date;
  * }} UserInfo
  */
 
@@ -77,7 +78,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  * @typedef {{
  *     id: string;
  *     user_id: string;
- *     items: Cart[];
+ *     items: Omit<Cart, 'id'| 'user_id' | 'timecreate'>[];
  *     date: Date;
  *     state: 'suly' | 'doixacnhan' | 'thanhcong';
  *     last_update: Date;
@@ -118,6 +119,27 @@ export function validateUserInfo(userInfo) {
 
     if (!validateNumberPhone(userInfo.phone_num))
         errors.push({ key: 'phone_num', msg: 'Số điện thoại không hợp lệ' });
+
+    return errors;
+}
+
+/**
+ *
+ * @param {Cart} cart
+ * @returns {{
+ *     key: string;
+ *     msg: string;
+ * }[]}
+ */
+export function validataCart(cart) {
+    const errors = [];
+
+    if (cart.quantity <= 0) {
+        errors.push({
+            key: 'quantity',
+            msg: 'số lượng sách không được bé hơn 1',
+        });
+    }
 
     return errors;
 }

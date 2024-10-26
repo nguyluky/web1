@@ -41,7 +41,19 @@ const dataLoaded = JSON.parse(
     [ObjectStoreName.CATEGORY]: false,
     [ObjectStoreName.BOOK]: false,
     [ObjectStoreName.CART]: false,
-    [ObjectStoreName.CATEGORY]: false,
+    [ObjectStoreName.ORDER]: false,
+};
+
+/**
+ * @type {{[Key: ObjectStoreName] : string}}
+ */
+const fileData = {
+    [ObjectStoreName.USER]: '/assets/data/user.json',
+    [ObjectStoreName.IMG]: '/assets/data/img.json',
+    [ObjectStoreName.CATEGORY]: '/assets/data/category.json',
+    [ObjectStoreName.BOOK]: '/assets/data/book.json',
+    [ObjectStoreName.CART]: '/assets/data/cart.json',
+    [ObjectStoreName.ORDER]: '/assets/data/order.json',
 };
 
 /**
@@ -88,6 +100,7 @@ function createObjectStore(db_) {
                 { keypath: 'passwd' },
                 { keypath: 'phone_num', option: { unique: true } },
                 { keypath: 'rule' },
+                { keypath: 'datecreated' },
                 { keypath: ['email', 'passwd'], option: { unique: true } },
             ],
         },
@@ -296,24 +309,26 @@ class FakeDatabase {
 
     /** @param {ObjectStoreName} objectStoreName */
     async ensureDataLoaded(objectStoreName) {
-        switch (objectStoreName) {
-            case ObjectStoreName.USER:
-                await loadUserData();
-                break;
-            case ObjectStoreName.IMG:
-                await loadImgData();
-                break;
-            case ObjectStoreName.CATEGORY:
-                await loadCategoryData();
-                break;
-            case ObjectStoreName.BOOK:
-                await loadBookData();
-                break;
-            case ObjectStoreName.CART:
-                await loadCartData();
-                break;
-            default:
-                break;
+        if (!dataLoaded[objectStoreName]) {
+            const data = await fetch(fileData[objectStoreName]).then((res) =>
+                res.json(),
+            );
+            const transaction = db.transaction(objectStoreName, 'readwrite');
+            const userStore = transaction.objectStore(objectStoreName);
+            data.data.forEach((e) => {
+                Object.keys(e).forEach((key) => {
+                    if (
+                        typeof e[key] == 'string' &&
+                        e[key].match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/)
+                    ) {
+                        console.log(e[key]);
+                        e[key] = new Date(e[key]);
+                    }
+                });
+                userStore.add(e);
+            });
+            // await requestToPromise(transaction);
+            updateDataLoaded(objectStoreName);
         }
     }
 
@@ -501,6 +516,14 @@ class FakeDatabase {
         const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
         const cartStore = transaction.objectStore(ObjectStoreName.CART);
         return requestToPromise(cartStore.put(cart_data));
+    }
+
+    async deleteCardById(cart_id) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.CART);
+        const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
+        const cartStore = transaction.objectStore(ObjectStoreName.CART);
+        return requestToPromise(cartStore.delete(cart_id));
     }
 
     /** @returns {Promise<Category[]>} */

@@ -1,9 +1,23 @@
-import fakeDatabase from '../db/fakeDBv1.js';
-import { validateUserInfo } from '../until/type.js';
-import uuidv from '../until/uuid.js';
-import { searchList, renderTable, defaultRenderRow } from './baseRender.js';
+import fakeDatabase from '../../db/fakeDBv1.js';
+import { validateUserInfo } from '../../until/type.js';
+import uuidv from '../../until/uuid.js';
+import {
+    searchList,
+    renderTable,
+    createDefaultRow,
+    tableShowErrorKey,
+    tableClearErrorKey,
+    defaultAddRow,
+    defaultRemoveAddRow,
+    getRowsSeletion,
+    removeRowById,
+    createCheckBox,
+    createTableSell,
+    createDateTableCell,
+    createOpstionCell,
+} from './baseRender.js';
 
-/** @typedef {import('../until/type.js').UserInfo} UserInfo */
+/** @typedef {import('../../until/type.js').UserInfo} UserInfo */
 
 // Định nghĩa các cột trong bảng người dùng
 const cols = {
@@ -12,8 +26,9 @@ const cols = {
     passwd: 'Pass',
     email: 'Email',
     phone_num: 'Phone',
-    rule: 'Rule',
     status: 'Status',
+    rule: 'Rule',
+    datecreated: 'Ngày tạo',
 };
 
 /**
@@ -53,17 +68,6 @@ function onChangeHandle(data, key, newValue) {
     }
 }
 
-/**
- * @param {string} id
- * @param {string} key
- * @param {string} msg
- */
-function showErrorKey(id, key, msg) {
-    const row = document.querySelector(`tr[id-row="${id}"]`);
-    const col = row?.querySelector(`td[key="${key}"]`);
-    col?.setAttribute('error', msg);
-}
-
 /** Hàm lưu lại các chỉnh sửa và người dùng mới vào database */
 /** @returns {Promise<boolean>} */
 async function userDoSave() {
@@ -78,7 +82,7 @@ async function userDoSave() {
         errors.forEach((e) => {
             const { key, msg } = e;
             hasError = true;
-            showErrorKey(value.id, key, msg);
+            tableShowErrorKey(value.id, key, msg);
         });
     });
 
@@ -94,7 +98,7 @@ async function userDoSave() {
                     ee.message.match(/'([^']+)'/)?.[0]
                 );
                 if (key) {
-                    showErrorKey(
+                    tableShowErrorKey(
                         e.id,
                         key.replace(/'/g, ''),
                         'Email đã tồn tại',
@@ -114,7 +118,7 @@ async function userDoSave() {
                     ee.message.match(/'([^']+)'/)?.[0]
                 );
                 if (key) {
-                    showErrorKey(
+                    tableShowErrorKey(
                         e.id,
                         key.replace(/'/g, ''),
                         'Email đã tồn tại',
@@ -134,17 +138,117 @@ async function userDoSave() {
     cacheAdd = [];
     cacheSave = {};
 
-    document
-        .querySelectorAll('td[error]')
-        .forEach((e) => e.removeAttribute('error'));
+    tableClearErrorKey();
 
     document.querySelectorAll('#content_table td').forEach((e) => {
         e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
         e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
-        e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
+
+        const key = e.getAttribute('key');
+        // TODO:
+        if (key == 'datecreated') {
+            const input = e.querySelector('input');
+            e.setAttribute(
+                'default-value',
+                String(new Date(input?.value || '')),
+            );
+        } else if (key == 'rule' || key == 'status') {
+            const select = e.querySelector('select');
+            e.setAttribute('default-value', select?.value || '');
+        } else e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
     });
 
     return true;
+}
+
+/**
+ *
+ * @param {UserInfo} value
+ * @param {import('./baseRender.js').OnChange<UserInfo>} [onchange]
+ * @returns {HTMLTableRowElement}
+ */
+function createRow(value, onchange) {
+    const row = document.createElement('tr');
+    row.setAttribute('id-row', value.id);
+
+    const col = createCheckBox(value['id']);
+    row.appendChild(col);
+
+    Object.keys(cols).forEach((key) => {
+        const col = createTableSell(key);
+
+        switch (key) {
+            case 'status': {
+                const option = createOpstionCell(
+                    value['status'],
+                    [
+                        { title: 'Đang hoạt động', value: 'active' },
+                        { title: 'Bị cấm', value: 'ban' },
+                    ],
+                    (va) => {
+                        onchange && onchange(value, 'status', va);
+                    },
+                );
+
+                col.setAttribute('default-value', value['status'] || '');
+                col.appendChild(option);
+                break;
+            }
+            case 'rule': {
+                const option = createOpstionCell(
+                    value['rule'],
+                    [
+                        { title: 'user', value: 'user' },
+                        { title: 'admin', value: 'admin' },
+                    ],
+                    (va) => {
+                        onchange && onchange(value, 'rule', va);
+                    },
+                );
+
+                col.setAttribute('default-value', value['rule'] || '');
+                col.appendChild(option);
+                break;
+            }
+            case 'datecreated': {
+                const inputDate = createDateTableCell(
+                    value['datecreated'],
+                    (value_) => {
+                        onchange && onchange(value, 'datecreated', value_);
+                    },
+                );
+                col.setAttribute('default-value', String(value['datecreated']));
+                col.appendChild(inputDate);
+                break;
+            }
+            default: {
+                col.insertAdjacentHTML('beforeend', value[key]);
+                col.setAttribute('default-value', value[key] || '');
+                col.oninput = (event) => {
+                    const target = /** @type {HTMLTableCellElement} */ (
+                        event.target
+                    );
+                    onchange &&
+                        onchange(
+                            value,
+                            // @ts-ignore
+                            key,
+                            target.textContent,
+                        );
+
+                    if (
+                        target.textContent ==
+                        target.getAttribute('default-value')
+                    )
+                        col.setAttribute('ischange', 'false');
+                    else col.setAttribute('ischange', 'true');
+                };
+            }
+        }
+        row.appendChild(col);
+    });
+
+    return row;
 }
 
 /**
@@ -157,8 +261,7 @@ function renderUser(list) {
         document.getElementById('content_table')
     );
     if (!table) return;
-
-    renderTable(list, table, cols, onChangeHandle);
+    renderTable(list, table, cols, onChangeHandle, createRow);
 }
 
 /**
@@ -205,49 +308,36 @@ function addUser() {
         phone_num: '',
         rule: 'user',
         status: 'active',
+        datecreated: new Date(),
     };
 
     // Lưu người dùng mới vào cache
     cacheAdd.push(data);
 
     // Tạo một hàng mới cho người dùng trong bảng
-    const row = defaultRenderRow(data, cols, (data, key, values) => {
+    const row = createRow(data, (data, key, values) => {
         cacheAdd[0] = {
             ...cacheAdd[0],
             [key]: values,
         };
     });
 
-    // Cho phép chỉnh sửa các ô trong hàng mới
-    row.querySelectorAll('td:not(:has(input[type="checkbox"]))').forEach((e) =>
-        e.setAttribute('contenteditable', 'true'),
-    );
-
-    // Thêm hàng mới lên đầu bảng
-    table.insertBefore(row, table.childNodes[1]);
-    /** @type {HTMLElement} */ (table.parentNode).scrollTo({
-        top: 0,
-        behavior: 'smooth',
-    });
+    defaultAddRow(table, row);
 }
 
 /** Hủy hành động thêm người dùng mới và xóa hàng vừa thêm */
 function cancelAdd() {
-    document.querySelector(`tr[id-row="${cacheAdd[0].id}"]`)?.remove();
+    defaultRemoveAddRow();
     cacheAdd = [];
 }
 
 /** Xóa các người dùng đã được chọn trong bảng */
 function removeRows() {
-    document.querySelectorAll('tr').forEach((e) => {
-        let cb = /** @type {HTMLInputElement | null} */ (
-            e.querySelector('input[type="checkbox"]')
-        );
-        if (cb?.checked) {
-            let rowID = e.getAttribute('id-row');
-            if (rowID) fakeDatabase.deleteUserById(rowID);
-            e.remove();
-        }
+    const selections = getRowsSeletion();
+
+    selections.forEach((id) => {
+        fakeDatabase.deleteSachById(id);
+        removeRowById(id);
     });
 }
 

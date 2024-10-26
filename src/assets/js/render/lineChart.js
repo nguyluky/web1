@@ -6,6 +6,11 @@ const chartValues = [
     { value: 40 },
 ];
 
+/**
+ *
+ * @param {HTMLElement} container
+ * @param {{value: number}[]} values
+ */
 function formatLineChartData(container, values = chartValues) {
     const widgetHeight = container.clientHeight;
     const widgetWidth = container.clientWidth;

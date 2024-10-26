@@ -56,8 +56,10 @@ main.main {
 }
 
 .article {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0px;
     box-sizing: border-box;
-    width: 100%;
     height: 100%;
     position: relative;
 }
@@ -251,6 +253,21 @@ td .category span {
 td .category.add {
     position: relative;
     display: none;
+}
+
+td > select {
+    border: none;
+    background: none;
+    font-size: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    pointer-events: none;
+}
+
+td[contenteditable='true'] > select {
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    pointer-events: all;
 }
 
 .category.add .category-popup {
@@ -575,17 +592,28 @@ body {
     display: none;
 }
 
-.custom-datetime-input[type='datetime-local'] {
+td .custom-datetime-input[type='datetime-local'] {
     border: none;
     outline: none;
     background-color: transparent;
-    width: min-content;
+    width: fit-content;
     font-size: inherit;
+    pointer-events: none;
 }
-.custom-datetime-input::-webkit-calendar-picker-indicator {
+td .custom-datetime-input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+td[contenteditable='true'] .custom-datetime-input[type='datetime-local'] {
+    pointer-events: all;
+}
+
+td[contenteditable='true']
+    .custom-datetime-input::-webkit-calendar-picker-indicator {
     background-color: #ffffff;
     padding: 5px;
     cursor: pointer;
+    display: block;
     border-radius: 3px;
 }
 

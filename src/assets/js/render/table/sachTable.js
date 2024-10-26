@@ -1,19 +1,19 @@
-import fakeDatabase from '../db/fakeDBv1.js';
-import uuidv from '../until/uuid.js';
+import fakeDatabase from '../../db/fakeDBv1.js';
+import uuidv from '../../until/uuid.js';
 import {
     createCheckBox,
     createTableSell,
     renderTable,
     searchList,
 } from './baseRender.js';
-import { showImgPreviewPopup } from './popupRender.js';
+import { showImgPreviewPopup } from '../popupRender.js';
 
 /**
- * @typedef {import('../until/type.js').Sach} Sach
+ * @typedef {import('../../until/type.js').Sach} Sach
  *
- * @typedef {import('../until/type.js').imgStore} imgStore
+ * @typedef {import('../../until/type.js').imgStore} imgStore
  *
- * @typedef {import('../until/type.js').Category} Category
+ * @typedef {import('../../until/type.js').Category} Category
  *
  */
 
