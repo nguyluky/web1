@@ -4,7 +4,7 @@ import cartRender from './render/cartTable.js';
 import sachRender from './render/sachTable.js';
 import orderRender from './render/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
-import formatLineChartData from './render/line_chart.js';
+import { formatLineChartData, hoverPoint } from './render/line_chart.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
@@ -136,6 +136,7 @@ async function renderManagement(inputValue = '') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
         formatLineChartData(document.getElementById('line-chart'));
+        hoverPoint();
         return;
     }
     document.querySelector('.dashboard-wrapper')?.classList.add('hide');
@@ -239,7 +240,7 @@ function setupMainButtonEvents() {
                 tabManagement[tab].removeRows();
                 // console.log('ok');
             },
-            null,
+            undefined,
         );
     }
 
@@ -291,7 +292,7 @@ function handlePopState(event) {
                     // @ts-ignore
                     history.back(1);
                 },
-                null,
+                undefined,
             );
         }
 
@@ -337,7 +338,7 @@ function setupSiderBar() {
                     tab = this.value;
                     renderManagement();
                 },
-                null,
+                undefined,
             );
 
             return;

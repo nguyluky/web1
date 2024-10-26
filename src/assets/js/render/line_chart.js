@@ -83,4 +83,20 @@ function createListItem(item) {
   `;
 }
 
-export default formatLineChartData;
+function getPointData(point) {
+    const popup = document.createElement('div');
+    popup.innerHTML = point.getAttribute('data-value');
+    return popup;
+}
+
+function hoverPoint() {
+    document.querySelectorAll('.data-point').forEach((point) => {
+        point.addEventListener('mouseover', () => {
+            point.appendChild(getPointData(point));
+        });
+        point.addEventListener('mouseout', () => {
+            if (point.firstChild) point.removeChild(point.firstChild);
+        });
+    });
+}
+export { formatLineChartData, hoverPoint };

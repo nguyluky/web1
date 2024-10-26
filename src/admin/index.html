@@ -107,65 +107,81 @@
                     <div class="dashboard-wrapper">
                         <div class="line-chart-wrapper">
                             <span>Doanh thu</span>
+                            <div id="vertical-axis" style="--row: 4">
+                                <span>60</span>
+                                <span>45</span>
+                                <span>30</span>
+                                <span>15</span>
+                            </div>
                             <div id="line-chart"></div>
+                            <div id="horizontal-axis"></div>
                         </div>
                         <div class="count" id="new-user"></div>
                         <div class="count" id="sale-product"></div>
                         <div class="chart" id="cart-chart"></div>
                         <div class="chart" id="user-chart">
-                            <span>Bảng xếp hạng</span>
-                            <table id="user-rank">
+                            <div><span>LEADERBOARD</span></div>
+                            <table>
                                 <thead>
-                                    <th>Rank</th>
-                                    <th>User name</th>
-                                    <th>Chi tiêu</th>
+                                    <tr>
+                                        <td>Rank</td>
+                                        <td>Name</td>
+                                        <td>Expenditure</td>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="rank rank1">
+                                    <tr style="--row-cl: #3366cc">
                                         <td>
                                             <img
                                                 src="../assets/img/rank1.png"
                                                 alt=""
                                             />
                                         </td>
-                                        <td>Tuấn 😎</td>
-                                        <td></td>
+                                        <td>Trăng đã ngủ xin đừng đánh thức</td>
+                                        <td>###,###</td>
                                     </tr>
-                                    <tr class="rank rank2">
+                                    <tr style="--row-cl: #127ac4">
                                         <td>
                                             <img
                                                 src="../assets/img/rank2.png"
                                                 alt=""
                                             />
                                         </td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>
+                                            Tình đã chết rồi nhắc lại thêm đau
+                                        </td>
+                                        <td>###,###</td>
                                     </tr>
-                                    <tr class="rank rank3">
+                                    <tr style="--row-cl: #167d8e">
                                         <td>
                                             <img
                                                 src="../assets/img/rank3.png"
                                                 alt=""
                                             />
                                         </td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>Tay ôm nửa mảnh trăng sầu</td>
+                                        <td>###,###</td>
                                     </tr>
-                                    <tr class="rank">
+                                    <tr style="--row-cl: #44c06b">
+                                        <td>#4</td>
                                         <td>
-                                            <img src="" alt="" />
+                                            Có yêu mới biết tình đầu khó quên
                                         </td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>###,###</td>
                                     </tr>
-                                    <tr class="rank">
-                                        <td>
-                                            <img src="" alt="" />
-                                        </td>
+                                    <tr style="--row-cl: #8ec461">
+                                        <td>#5</td>
                                         <td></td>
-                                        <td></td>
+                                        <td>###,###</td>
                                     </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3">
+                                            Lâu lâu thơ tí, đừng méc ai
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
