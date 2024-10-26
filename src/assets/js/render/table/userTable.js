@@ -315,7 +315,7 @@ function addUser() {
     cacheAdd.push(data);
 
     // Tạo một hàng mới cho người dùng trong bảng
-    const row = createDefaultRow(data, cols, (data, key, values) => {
+    const row = createRow(data, (data, key, values) => {
         cacheAdd[0] = {
             ...cacheAdd[0],
             [key]: values,
