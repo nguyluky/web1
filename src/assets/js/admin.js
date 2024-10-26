@@ -131,7 +131,7 @@ const buttonSaveState = {
 };
 
 /** Xử lý render dữ liệu tương ứng với tab hiện tại */
-async function renderManagement() {
+async function renderManagement(inputValue = '') {
     if (tab == 'dashboard') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
@@ -145,7 +145,7 @@ async function renderManagement() {
     const input = /** @type {HTMLInputElement} */ (
         document.getElementById('search-input')
     );
-    input.value = '';
+    input.value = inputValue;
     if (!title || !input) return;
 
     const titleTabs = {
@@ -163,6 +163,7 @@ async function renderManagement() {
     const data = fakeDBManagement[tab] ? await fakeDBManagement[tab]() : [];
     loadingTable && (loadingTable.style.display = 'none');
     tabManagement[tab].renderTable(data);
+    tabManagement[tab].search(data);
     input.oninput = () => tabManagement[tab].search(data);
 }
 
@@ -203,14 +204,30 @@ function setupMainButtonEvents() {
         }
 
         // nếu nhấn nút save
-        showPopup('Xác nhận sửa', 'Bạn có chắc là muốn sửa không', () => {
-            updateMangement()
-                .then(() => {
-                    buttonAddState.add();
-                    buttonSaveState.edit();
-                })
-                .catch(() => {});
-        });
+        showPopup(
+            'Xác nhận sửa',
+            'Bạn có chắc là muốn sửa không',
+            () => {
+                updateMangement()
+                    .then(() => {
+                        buttonAddState.add();
+                        buttonSaveState.edit();
+                    })
+                    .catch(() => {});
+            },
+            () => {
+                renderManagement(
+                    /** @type {HTMLInputElement} */ (
+                        document.getElementById('search-input')
+                    )?.value,
+                )
+                    .then(() => {
+                        buttonAddState.add();
+                        buttonSaveState.edit();
+                    })
+                    .catch(() => {});
+            },
+        );
     }
 
     /**

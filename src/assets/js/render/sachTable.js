@@ -140,7 +140,9 @@ function createCategoryCell(value, onchange) {
         i.className = 'fa-solid fa-xmark';
         categoryDiv.appendChild(i);
 
-        i.addEventListener('click', () => handleRemoveCategory(category?.id));
+        i.addEventListener('click', () => {
+            if (category) handleRemoveCategory(category.id);
+        });
 
         return categoryDiv;
     }
@@ -337,6 +339,7 @@ function addRow() {
         thumbnal: 'default',
         imgs: [],
         base_price: 0,
+        discount: 0,
         category: [],
     };
     cacheAdd.push(data);

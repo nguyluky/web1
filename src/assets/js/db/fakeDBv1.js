@@ -109,6 +109,7 @@ function createObjectStore(db_) {
                 { keypath: 'details' },
                 { keypath: 'thumbnal' },
                 { keypath: 'base_price' },
+                { keypath: 'discount' },
                 { keypath: 'category' },
             ],
         },

@@ -8,6 +8,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     thumbnal: string;
  *     imgs: string[];
  *     base_price: number;
+ *     discount: number;
  *     category: string[];
  * }} Sach
  */
