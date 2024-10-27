@@ -366,7 +366,7 @@ function displayProducts() {
     Products_To_Display.forEach(async (product) => {
         const Product_Item = document.createElement('div');
         Product_Item.classList.add('product-card');
-        const img = await fakeDatabase.getImgById(product.thumbnal);
+        const img = await fakeDatabase.getImgById(product.thumbnail);
         let hide = '';
         if(product.discount==0) hide = 'hide';
         Product_Item.innerHTML = `
