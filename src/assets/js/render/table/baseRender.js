@@ -160,7 +160,6 @@ export function createDateTableCell(value, onchange) {
  */
 export function createOpstionCell(value, options, onchange) {
     const select = document.createElement('select');
-
     options.forEach((e) => {
         const op = document.createElement('option');
         op.value = e.value;
@@ -170,6 +169,7 @@ export function createOpstionCell(value, options, onchange) {
 
     select.value = value;
     select.addEventListener('change', () => {
+        console.log('change status');
         onchange(select.value);
 
         const col = getTableCell(select);

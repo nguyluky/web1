@@ -27,8 +27,6 @@ const cols = {
     email: 'Email',
     phone_num: 'Phone',
     status: 'Status',
-    rule: 'Rule',
-    datecreated: 'Ngày tạo',
 };
 
 /**
@@ -176,7 +174,6 @@ function createRow(value, onchange) {
 
     Object.keys(cols).forEach((key) => {
         const col = createTableSell(key);
-
         switch (key) {
             case 'status': {
                 const option = createOpstionCell(
@@ -189,11 +186,11 @@ function createRow(value, onchange) {
                         onchange && onchange(value, 'status', va);
                     },
                 );
-
+                col.removeAttribute('key');
                 col.setAttribute('default-value', value['status'] || '');
                 col.appendChild(option);
                 break;
-            }
+            } /*
             case 'rule': {
                 const option = createOpstionCell(
                     value['rule'],
@@ -220,7 +217,7 @@ function createRow(value, onchange) {
                 col.setAttribute('default-value', String(value['datecreated']));
                 col.appendChild(inputDate);
                 break;
-            }
+            }*/
             default: {
                 col.insertAdjacentHTML('beforeend', value[key]);
                 col.setAttribute('default-value', value[key] || '');
@@ -298,7 +295,8 @@ function addUser() {
     if (!table) {
         throw new Error('cái đéo gì vậy');
     }
-
+    const now = new Date();
+    console.log(now);
     /** @type {UserInfo} */
     const data = {
         id: uuidv(8),
@@ -308,7 +306,7 @@ function addUser() {
         phone_num: '',
         rule: 'user',
         status: 'active',
-        datecreated: new Date(),
+        datecreated: now,
     };
 
     // Lưu người dùng mới vào cache
@@ -321,7 +319,7 @@ function addUser() {
             [key]: values,
         };
     });
-
+    row.querySelector('select')?.classList.add('allow-change');
     defaultAddRow(table, row);
 }
 

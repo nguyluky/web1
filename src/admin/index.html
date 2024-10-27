@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vn">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="../assets/fontawesome/css/all.min.css" />
         <script type="module" src="../assets/js/admin.js" defer></script>
         <link rel="icon" href="../assets/img/favicon.png" />
-        <script src="../assets/js/loginhandle.js"></script>
+        <script src="../assets/js/admin_login.js"></script>
     </head>
     <body>
         <main class="main">
@@ -77,7 +77,7 @@
                     <label class="container">
                         <div class="left-sidebar__btn" id="change-pass">
                             <i class="fa-solid fa-key"></i>
-                            <p><strong>Passwork</strong></p>
+                            <p><strong>Password</strong></p>
                         </div>
                     </label>
                     <label class="container">
@@ -120,69 +120,65 @@
                         <div class="count" id="sale-product"></div>
                         <div class="chart" id="cart-chart"></div>
                         <div class="chart" id="user-chart">
-                            <div><span>LEADERBOARD</span></div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Rank</td>
-                                        <td>Name</td>
-                                        <td>Expenditure</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style="--row-cl: #3366cc">
-                                        <td>
+                            <div class="leaderboard-title">
+                                <span>LEADERBOARD</span>
+                            </div>
+                            <div class="leaderboard-table">
+                                <div class="leaderboard-head">
+                                    <div>
+                                        <div>Rank</div>
+                                        <div>Name</div>
+                                        <div>Total</div>
+                                    </div>
+                                </div>
+                                <div class="leaderboard-body">
+                                    <div style="--row-cl: #3366cc">
+                                        <div>
                                             <img
                                                 src="../assets/img/rank1.png"
                                                 alt=""
                                             />
-                                        </td>
-                                        <td>Trăng đã ngủ xin đừng đánh thức</td>
-                                        <td>###,###</td>
-                                    </tr>
-                                    <tr style="--row-cl: #127ac4">
-                                        <td>
+                                        </div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div style="--row-cl: #127ac4">
+                                        <div>
                                             <img
                                                 src="../assets/img/rank2.png"
                                                 alt=""
                                             />
-                                        </td>
-                                        <td>
-                                            Tình đã chết rồi nhắc lại thêm đau
-                                        </td>
-                                        <td>###,###</td>
-                                    </tr>
-                                    <tr style="--row-cl: #167d8e">
-                                        <td>
+                                        </div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div style="--row-cl: #167d8e">
+                                        <div>
                                             <img
                                                 src="../assets/img/rank3.png"
                                                 alt=""
                                             />
-                                        </td>
-                                        <td>Tay ôm nửa mảnh trăng sầu</td>
-                                        <td>###,###</td>
-                                    </tr>
-                                    <tr style="--row-cl: #44c06b">
-                                        <td>#4</td>
-                                        <td>
-                                            Có yêu mới biết tình đầu khó quên
-                                        </td>
-                                        <td>###,###</td>
-                                    </tr>
-                                    <tr style="--row-cl: #8ec461">
-                                        <td>#5</td>
-                                        <td></td>
-                                        <td>###,###</td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="3">
-                                            Lâu lâu thơ tí, đừng méc ai
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                        </div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div style="--row-cl: #44c06b">
+                                        <div>#4</div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div style="--row-cl: #8ec461">
+                                        <div>#5</div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                                <div class="leaderboard-foot">
+                                    <div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-wrapper hide">
