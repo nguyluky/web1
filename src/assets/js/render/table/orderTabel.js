@@ -2,18 +2,68 @@
  * @typedef {import("../../until/type").Order} Order
  */
 
-import { renderTable, searchList } from './baseRender.js';
+import fakeDatabase from '../../db/fakeDBv1.js';
+import {
+    createCheckBox,
+    createDefaultRow,
+    createOpstionCell,
+    createTableSellWrapper,
+    renderTable,
+    searchList,
+} from './baseRender.js';
 
 const cols = {
     user_id: 'User id',
     state: 'State',
-    data: 'Date',
+    date: 'Date',
     last_update: 'Last Update',
     is_pay: 'Pay',
     total: 'Total',
 };
 
-function createRow(value, onchange) {}
+/**
+ *
+ * @param {Order} value
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange]
+ * @returns {HTMLTableRowElement}
+ */
+function createRow(value, onchange) {
+    const tr = document.createElement('tr');
+    tr.setAttribute('id-row', value.id);
+
+    const check = createCheckBox(value.id);
+    tr.appendChild(check);
+
+    const tdUserName = createTableSellWrapper('user_id');
+    fakeDatabase.getUserInfoByUserId(value['user_id']).then((user) => {
+        tdUserName.textContent = user?.name || '';
+    });
+    tdUserName.removeAttribute('key');
+    tr.appendChild(tdUserName);
+
+    const cellState = createTableSellWrapper('state');
+    const state = createOpstionCell(
+        value.state,
+        [
+            { title: 'suly', value: 'suly' },
+            { title: 'doixacnhan', value: 'doixacnhan' },
+            { title: 'thanhcong', value: 'thanhcong' },
+            { title: 'huy', value: 'huy' },
+        ],
+        () => {},
+    );
+    cellState.appendChild(state);
+    tr.appendChild(cellState);
+
+    return tr;
+}
+
+/**
+ * @type {import('./baseRender.js').OnChange<Order>}
+ */
+function handleOnChangeRow(data, key, newValue) {
+    console.log(data);
+}
 
 /**
  *
@@ -25,7 +75,7 @@ function renderOrder(list) {
     );
     if (!table) return;
 
-    renderTable(list, table, cols);
+    renderTable(list, table, cols, handleOnChangeRow, createRow);
 }
 
 /** @param {Order[]} list */

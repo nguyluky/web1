@@ -2,7 +2,7 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import uuidv from '../../until/uuid.js';
 import {
     createCheckBox,
-    createTableSell,
+    createTableSellWrapper,
     renderTable,
     searchList,
 } from './baseRender.js';
@@ -196,7 +196,7 @@ function createRow(value, onchange = null) {
     row.appendChild(col);
 
     Object.keys(cols).forEach((key) => {
-        const col = createTableSell(key);
+        const col = createTableSellWrapper(key);
 
         switch (key) {
             case 'category': {

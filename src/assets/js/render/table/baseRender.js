@@ -5,6 +5,11 @@
 
 /**
  * @template T
+ * @typedef {(value: T) => any} cellChange
+ */
+
+/**
+ * @template T
  * @typedef {(data: T, key: keyof T, newValue: T[key]) => void} OnChange
  */
 
@@ -60,18 +65,6 @@ export function createCheckBox(value_id) {
 }
 
 /**
- *
- * @param {string} key_name
- * @returns {HTMLTableCellElement}
- */
-export function createTableSell(key_name) {
-    const col = document.createElement('td');
-    col.setAttribute('ischange', 'false');
-    col.setAttribute('key', key_name);
-    return col;
-}
-
-/**
  * Tạo một hàng bảng HTML dựa trên dữ liệu cung cấp.
  *
  * @template {{ id: string }} T
@@ -90,29 +83,59 @@ export function createDefaultRow(value, cols, onchange) {
 
     // thêm các phần khác
     Object.keys(cols).forEach((key) => {
-        const col = createTableSell(key);
-        col.oninput = (event) => {
-            const target = /** @type {HTMLTableCellElement} */ (event.target);
-            if (onchange)
-                onchange(
-                    value,
-                    // @ts-ignore
-                    key,
-                    target.textContent,
-                );
-
-            // TODO: nhớ thêm vào vào
-            // Đánh dấu cột nếu dữ liệu đã thay đổi
-            if (target.textContent == target.getAttribute('default-value'))
-                col.setAttribute('ischange', 'false');
-            else col.setAttribute('ischange', 'true');
-        };
-        col.setAttribute('default-value', value[key] || '');
-        col.insertAdjacentHTML('beforeend', value[key] || '');
+        const col = createTextSell(key, value[key], (nv) => {
+            // @ts-ignore
+            onchange && onchange(value, key, nv);
+        });
         row.appendChild(col);
     });
 
     return row;
+}
+
+/**
+ *
+ * @param {string} key_name
+ * @returns {HTMLTableCellElement}
+ */
+export function createTableSellWrapper(key_name) {
+    const col = document.createElement('td');
+    col.setAttribute('ischange', 'false');
+    col.setAttribute('key', key_name);
+    return col;
+}
+
+/**
+ *
+ * @param {string} key
+ * @param {string} value
+ * @param {(value: string) => any} onchange
+ * @param {boolean} [canEdit]
+ * @returns
+ */
+
+export function createTextSell(key, value, onchange, canEdit = true) {
+    const td = document.createElement('td');
+    td.setAttribute('ischange', 'false');
+
+    const input = document.createElement('input');
+    input.value = value;
+
+    td.appendChild(input);
+
+    input.addEventListener('change', () => {
+        onchange(input.value);
+
+        if (input.value == td.getAttribute('default-value'))
+            td.setAttribute('ischange', 'false');
+        else td.setAttribute('ischange', 'true');
+    });
+
+    td.setAttribute('type', 'string');
+    td.setAttribute('key', key);
+    td.setAttribute('default-value', value);
+
+    return td;
 }
 
 /**

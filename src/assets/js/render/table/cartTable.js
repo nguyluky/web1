@@ -2,7 +2,7 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import { validataCart } from '../../until/type.js';
 import {
     createCheckBox,
-    createTableSell,
+    createTableSellWrapper,
     renderTable,
     searchList,
     tableClearErrorKey,
@@ -60,14 +60,14 @@ function createRowCart(value, onchange) {
     const td = createCheckBox(value['id']);
     tr.appendChild(td);
 
-    const tdUserName = createTableSell('user_id');
+    const tdUserName = createTableSellWrapper('user_id');
     fakeDatabase.getUserInfoByUserId(value['user_id']).then((user) => {
         tdUserName.textContent = user?.name || '';
     });
     tdUserName.removeAttribute('key');
     tr.appendChild(tdUserName);
 
-    const tdSach = createTableSell('sach');
+    const tdSach = createTableSellWrapper('sach');
     fakeDatabase.getSachById(value['sach']).then((sach) => {
         tdSach.textContent = sach?.title || '';
     });
@@ -75,7 +75,7 @@ function createRowCart(value, onchange) {
     tdSach.style.minWidth = '100px';
     tr.appendChild(tdSach);
 
-    const tdSoLuong = createTableSell('quantity');
+    const tdSoLuong = createTableSellWrapper('quantity');
     tdSoLuong.textContent = value['quantity'] + '';
     tdSoLuong.setAttribute('default-value', value['quantity'] + '');
     tr.appendChild(tdSoLuong);
@@ -89,7 +89,7 @@ function createRowCart(value, onchange) {
             : td.setAttribute('ischange', 'true');
     });
 
-    const tdDate = createTableSell('timecreate');
+    const tdDate = createTableSellWrapper('timecreate');
     const dateTimeInput = document.createElement('input');
     dateTimeInput.type = 'datetime-local';
     dateTimeInput.className = 'custom-datetime-input';
