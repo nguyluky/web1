@@ -22,7 +22,7 @@ const cols = {
     base_price: 'Price',
     category: 'Category',
     details: 'Details',
-    thumbnal: 'Thumbnal',
+    thumbnail: 'Thumbnail',
 };
 let cacheSave = {};
 let cacheAdd = [];
@@ -235,7 +235,7 @@ function createRow(value, onchange = null) {
                 col.appendChild(details_wrapper);
                 break;
             }
-            case 'thumbnal': {
+            case 'thumbnail': {
                 // tạo div bao ảnh
                 const img_wrapper = document.createElement('div');
                 img_wrapper.className = 'img-wrapper';
@@ -252,8 +252,10 @@ function createRow(value, onchange = null) {
                         () => {},
                         (base64) => {
                             // lưu vào cache để lưu vào db
-                            cacheImg[value.thumbnal] = base64;
-                            img.src = base64;
+                            if (base64 != '') {
+                                cacheImg[value.thumbnail] = base64;
+                                img.src = base64;
+                            }
                         },
                         () => {},
                     );
@@ -336,7 +338,7 @@ function addRow() {
         id: uuidv(36),
         title: '',
         details: '',
-        thumbnal: 'default',
+        thumbnail: 'default',
         imgs: [],
         base_price: 0,
         discount: 0,
@@ -392,8 +394,8 @@ async function saveBook() {
             document.querySelector(`tr[id-row="${e.id}"] .img-wrapper img`)
         ).src;
         if (source != '../assets/img/default-image.png') {
-            e.thumbnal = uuidv(36);
-            let img_id = e.thumbnal;
+            e.thumbnail = uuidv(36);
+            let img_id = e.thumbnail;
             let img = {
                 id: img_id,
                 data: source,

@@ -81,7 +81,6 @@ export function showImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
     const parder = getPopupWrapper();
 
     const onChangeImgDeclaration = (base64) => {
-        parder.innerHTML = '';
         if (onChangeImg) onChangeImg(base64);
     };
 

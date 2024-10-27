@@ -4,7 +4,7 @@ import cartRender from './render/table/cartTable.js';
 import sachRender from './render/table/sachTable.js';
 import orderRender from './render/table/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
-import { formatLineChartData, hoverPoint } from './render/lineChart.js';
+import { formatLineChartData, renderLeaderboard } from './render/lineChart.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
@@ -117,6 +117,9 @@ const buttonSaveState = {
         document.querySelectorAll('#content_table td[key]').forEach((td) => {
             td.setAttribute('contenteditable', 'false');
         });
+        document
+            .querySelectorAll('select')
+            .forEach((e) => e.classList.remove('allow-change'));
     },
     /* Đổi trạng thái nút thành "Lưu" và cho phép chỉnh sửa */
     save: () => {
@@ -127,6 +130,9 @@ const buttonSaveState = {
         document.querySelectorAll('#content_table td[key]').forEach((td) => {
             td.setAttribute('contenteditable', 'true');
         });
+        document
+            .querySelectorAll('select')
+            .forEach((e) => e.classList.add('allow-change'));
     },
 };
 
@@ -138,7 +144,7 @@ async function renderManagement(inputValue = '') {
         document.querySelector('.table-wrapper')?.classList.add('hide');
         const chart = document.getElementById('line-chart');
         chart && formatLineChartData(chart);
-        hoverPoint();
+        renderLeaderboard();
         return;
     }
     document.querySelector('.dashboard-wrapper')?.classList.add('hide');

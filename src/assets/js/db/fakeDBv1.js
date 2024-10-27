@@ -120,7 +120,7 @@ function createObjectStore(db_) {
             keys: [
                 { keypath: 'title' },
                 { keypath: 'details' },
-                { keypath: 'thumbnal' },
+                { keypath: 'thumbnail' },
                 { keypath: 'base_price' },
                 { keypath: 'discount' },
                 { keypath: 'category' },
@@ -636,7 +636,6 @@ class FakeDatabase {
         const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
         return requestToPromise(orderStore.getAll());
     }
-
     /**
      * @param {string} order_id
      * @returns {Promise<Order | undefined>}
