@@ -142,9 +142,6 @@ async function renderManagement(inputValue = '') {
     if (tab == 'dashboard') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
-        const chart = document.getElementById('line-chart');
-        chart && formatLineChartData(chart);
-        renderLeaderboard();
         return;
     }
     document.querySelector('.dashboard-wrapper')?.classList.add('hide');
@@ -392,6 +389,9 @@ function setupSiderBar() {
 /** Main funstion */
 async function main() {
     //
+    const chart = document.getElementById('line-chart');
+    chart && formatLineChartData(chart);
+    renderLeaderboard();
     setupMainButtonEvents();
     setupSiderBar();
     renderManagement();

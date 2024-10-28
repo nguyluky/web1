@@ -74,7 +74,6 @@ function formatLineChartData(container, values = chartValues) {
         container.appendChild(listItem);
     });
     hoverPoint();
-    renderLeaderboard();
 }
 const maxValue = (values) => {
     let max = 0;
@@ -111,15 +110,42 @@ function hoverPoint() {
         );
     });
 }
-
+/**@param {import('../until/type.js').Order} order */
+function creatOrderInfo(order) {
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    details.appendChild(summary);
+    summary.innerHTML = `Mã đơn: ${order.id}`;
+    let head = document.createElement('div');
+    let ma = document.createElement('div');
+    head.appendChild(ma);
+    ma.innerHTML = `Mã sách`;
+    let sl = document.createElement('div');
+    sl.innerHTML = `Số lượng`;
+    head.appendChild(sl);
+    details.appendChild(head);
+    order.items.forEach((item) => {
+        let product = document.createElement('div');
+        let product_name = document.createElement('div');
+        product.appendChild(product_name);
+        product_name.innerHTML = item.sach;
+        let product_quantify = document.createElement('div');
+        product_quantify.innerHTML = `${item.quantity}`;
+        product.appendChild(product_quantify);
+        details.appendChild(product);
+    });
+    return details;
+}
 async function renderLeaderboard() {
     const alldata = await fakeDatabase.getAllOrder();
     let array = [];
     const data = alldata.filter((e) => e.state == 'thanhcong');
     data.forEach((e) => {
         const index = array.findIndex((element) => element.id == e.user_id);
-        if (index != -1) array[index].total += e.total;
-        else array.push({ id: e.user_id, total: e.total });
+        if (index != -1) {
+            array[index].total += e.total;
+            array[index].order.push(e.id);
+        } else array.push({ id: e.user_id, total: e.total, order: [e.id] });
     });
     array.sort((a, b) => b.total - a.total);
     array.slice(0, 5).forEach(async (e, i) => {
@@ -131,9 +157,22 @@ async function renderLeaderboard() {
             `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(3)`,
         );
         if (user && name && total) {
+            e['name'] = user.name;
             name.textContent = user.name;
             total.textContent = e.total;
         }
+    });
+    const showOrder = document.querySelector('.info-order');
+    document.querySelectorAll('.leaderboard-body > div').forEach((e, i) => {
+        e.addEventListener('click', () => {
+            while (showOrder?.firstChild)
+                showOrder.removeChild(showOrder.firstChild);
+            array[i].order.forEach(async (id) => {
+                let orderData = await fakeDatabase.getOrderById(id);
+                if (!orderData) return;
+                showOrder?.appendChild(creatOrderInfo(orderData));
+            });
+        });
     });
 }
 export { formatLineChartData, renderLeaderboard };

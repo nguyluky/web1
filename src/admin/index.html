@@ -105,78 +105,95 @@
                 </div>
                 <div class="article-main">
                     <div class="dashboard-wrapper">
-                        <div class="line-chart-wrapper">
-                            <span>Doanh thu</span>
-                            <div id="vertical-axis" style="--row: 4">
-                                <span>60</span>
-                                <span>45</span>
-                                <span>30</span>
-                                <span>15</span>
+                        <div class="dashboard-left">
+                            <div class="line-chart-wrapper">
+                                <span>Doanh thu</span>
+                                <div id="vertical-axis" style="--row: 4">
+                                    <span>60</span>
+                                    <span>45</span>
+                                    <span>30</span>
+                                    <span>15</span>
+                                </div>
+                                <div id="line-chart"></div>
+                                <div id="horizontal-axis"></div>
                             </div>
-                            <div id="line-chart"></div>
-                            <div id="horizontal-axis"></div>
+                            <div class="chart" id="cart-chart"></div>
                         </div>
-                        <div class="count" id="new-user"></div>
-                        <div class="count" id="sale-product"></div>
-                        <div class="chart" id="cart-chart"></div>
-                        <div class="chart" id="user-chart">
-                            <div class="leaderboard-title">
-                                <span>LEADERBOARD</span>
+                        <div class="dashboard-right">
+                            <div class="count-group">
+                                <div class="count" id="new-user">
+                                    <div class="num">100</div>
+                                    <div class="count-info">USER</div>
+                                </div>
+                                <div class="count" id="sale-product">
+                                    <div class="num">100</div>
+                                    <div class="count-info">PRODUCT</div>
+                                </div>
                             </div>
-                            <div class="leaderboard-table">
-                                <div class="leaderboard-head">
-                                    <div>
-                                        <div>Rank</div>
-                                        <div>Name</div>
-                                        <div>Total</div>
+                            <div class="chart" id="user-chart">
+                                <div class="leaderboard-title">
+                                    <span>LEADERBOARD</span>
+                                </div>
+                                <div class="leaderboard-table">
+                                    <div class="leaderboard-head">
+                                        <div>
+                                            <div>Rank</div>
+                                            <div>Name</div>
+                                            <div>Total</div>
+                                        </div>
+                                    </div>
+                                    <div class="leaderboard-body">
+                                        <div style="--row-cl: #3366cc">
+                                            <div>
+                                                <img
+                                                    src="../assets/img/rank1.png"
+                                                    alt=""
+                                                />
+                                            </div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div style="--row-cl: #127ac4">
+                                            <div>
+                                                <img
+                                                    src="../assets/img/rank2.png"
+                                                    alt=""
+                                                />
+                                            </div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div style="--row-cl: #167d8e">
+                                            <div>
+                                                <img
+                                                    src="../assets/img/rank3.png"
+                                                    alt=""
+                                                />
+                                            </div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div style="--row-cl: #44c06b">
+                                            <div>#4</div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <div style="--row-cl: #8ec461">
+                                            <div>#5</div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                    </div>
+                                    <div class="leaderboard-foot">
+                                        <div>
+                                            <div></div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="leaderboard-body">
-                                    <div style="--row-cl: #3366cc">
-                                        <div>
-                                            <img
-                                                src="../assets/img/rank1.png"
-                                                alt=""
-                                            />
-                                        </div>
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div style="--row-cl: #127ac4">
-                                        <div>
-                                            <img
-                                                src="../assets/img/rank2.png"
-                                                alt=""
-                                            />
-                                        </div>
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div style="--row-cl: #167d8e">
-                                        <div>
-                                            <img
-                                                src="../assets/img/rank3.png"
-                                                alt=""
-                                            />
-                                        </div>
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div style="--row-cl: #44c06b">
-                                        <div>#4</div>
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div style="--row-cl: #8ec461">
-                                        <div>#5</div>
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                </div>
-                                <div class="leaderboard-foot">
-                                    <div>
-                                        <div></div>
-                                    </div>
+                            </div>
+                            <div class="info-order">
+                                <div style="text-align: center">
+                                    Chọn người dùng để xem thông tin
                                 </div>
                             </div>
                         </div>
