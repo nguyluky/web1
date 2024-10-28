@@ -178,13 +178,10 @@ export class StringTableCell extends BaseTableCell {
 
     updateDisable() {
         if (this.disable) {
-            this.querySelector('span')?.setAttribute(
-                'contenteditable',
-                'false',
-            );
+            this.querySelector('div')?.setAttribute('contenteditable', 'false');
             this.defaultValue = this.value;
         } else {
-            this.querySelector('span')?.setAttribute('contenteditable', 'true');
+            this.querySelector('div')?.setAttribute('contenteditable', 'true');
         }
     }
 
@@ -194,7 +191,7 @@ export class StringTableCell extends BaseTableCell {
     }
 
     connectedCallback() {
-        const span = document.createElement('span');
+        const span = document.createElement('div');
         span.className = 'custom-text-input';
         span.setAttribute('contenteditable', this.disable ? 'false' : 'true');
         span.textContent = this.value;
@@ -575,13 +572,10 @@ export class BlockTextCell extends BaseTableCell {
 
     updateDisable() {
         if (this.disable) {
-            this.querySelector('span')?.setAttribute(
-                'contenteditable',
-                'false',
-            );
+            this.querySelector('div')?.setAttribute('contenteditable', 'false');
             this.defaultValue = this.value;
         } else {
-            this.querySelector('span')?.setAttribute('contenteditable', 'true');
+            this.querySelector('div')?.setAttribute('contenteditable', 'true');
         }
     }
 
@@ -591,7 +585,7 @@ export class BlockTextCell extends BaseTableCell {
     }
 
     connectedCallback() {
-        const span = document.createElement('span');
+        const span = document.createElement('div');
         span.className = 'block-text-input';
         span.setAttribute('contenteditable', this.disable ? 'false' : 'true');
         span.textContent = this.value;

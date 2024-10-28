@@ -278,8 +278,11 @@ function searchUser(list) {
     });
 }
 
-/** Hàm thêm một người dùng mới vào bảng */
-function addUser() {
+/**
+ * thêm một row vào bản
+ *
+ */
+function addRow() {
     const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
@@ -340,7 +343,7 @@ const user_ = {
     renderTable: rendererUser,
     doSave: userDoSave,
     search: searchUser,
-    addRow: addUser,
+    addRow,
     removeRows,
     cancelAdd,
 };

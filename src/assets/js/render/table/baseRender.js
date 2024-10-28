@@ -4,6 +4,7 @@
  */
 
 import {
+    BaseTableCell,
     BlockTextCell,
     DatetimeTableCell,
     ImgThumbnailCell,
@@ -308,9 +309,9 @@ export function defaultAddRow(table, row) {
     row.setAttribute('isAddCache', 'true');
 
     // Cho phép chỉnh sửa các ô trong hàng mới
-    row.querySelectorAll('td[key]').forEach((e) =>
-        e.setAttribute('contenteditable', 'true'),
-    );
+    /**@type {NodeListOf<BaseTableCell>} */ (
+        row.querySelectorAll('td')
+    ).forEach((e) => (e.disable = false));
 
     // Thêm hàng mới lên đầu bảng
     table.insertBefore(row, table.childNodes[1]);
