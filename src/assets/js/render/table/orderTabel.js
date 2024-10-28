@@ -5,9 +5,10 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import {
     createCheckBox,
-    createDefaultRow,
+    createDateTableCell,
+    createImgThumbnailCell,
     createOpstionCell,
-    createTableSellWrapper,
+    createTextSell,
     renderTable,
     searchList,
 } from './baseRender.js';
@@ -34,15 +35,21 @@ function createRow(value, onchange) {
     const check = createCheckBox(value.id);
     tr.appendChild(check);
 
-    const tdUserName = createTableSellWrapper('user_id');
+    const tdUserName = createTextSell(
+        'user_id',
+        value['user_id'],
+        (nv) => {
+            onchange && onchange(value, 'user_id', nv);
+        },
+        false,
+    );
     fakeDatabase.getUserInfoByUserId(value['user_id']).then((user) => {
-        tdUserName.textContent = user?.name || '';
+        tdUserName.value = user?.name || '';
     });
-    tdUserName.removeAttribute('key');
     tr.appendChild(tdUserName);
 
-    const cellState = createTableSellWrapper('state');
-    const state = createOpstionCell(
+    const cellState = createOpstionCell(
+        'state',
         value.state,
         [
             { title: 'suly', value: 'suly' },
@@ -50,11 +57,43 @@ function createRow(value, onchange) {
             { title: 'thanhcong', value: 'thanhcong' },
             { title: 'huy', value: 'huy' },
         ],
-        () => {},
+        (nv) => {
+            onchange && onchange(value, 'state', nv);
+        },
     );
-    cellState.appendChild(state);
     tr.appendChild(cellState);
 
+    const date = createDateTableCell('date', value.date, (nv) => {
+        onchange && onchange(value, 'date', nv);
+    });
+    tr.appendChild(date);
+
+    const lastUpdate = createDateTableCell(
+        'last_update',
+        value.last_update,
+        (nv) => {
+            onchange && onchange(value, 'last_update', nv);
+        },
+    );
+    tr.appendChild(lastUpdate);
+
+    const cellIsPay = createOpstionCell(
+        'is_pay',
+        value.is_pay ? '1' : '0',
+        [
+            { title: 'Chưa thanh toán', value: '0' },
+            { title: 'Đã thanh toán', value: '1' },
+        ],
+        (nv) => {
+            onchange && onchange(value, 'is_pay', nv == '1');
+        },
+    );
+    tr.appendChild(cellIsPay);
+
+    const total = createTextSell('total', value.total + '', (nv) => {
+        onchange && onchange(value, 'total', parseInt(nv));
+    });
+    tr.appendChild(total);
     return tr;
 }
 

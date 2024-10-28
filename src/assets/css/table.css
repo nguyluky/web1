@@ -1,0 +1,146 @@
+.custom-text-input {
+    outline: none;
+    color: gray;
+}
+
+.block-text-input {
+    outline: none;
+    color: gray;
+    white-space: pre;
+}
+
+.custom-datetime-input {
+    font-size: inherit;
+    outline: none;
+    background: none;
+    border: none;
+    color: gray;
+    width: 220px;
+}
+
+.custom-select {
+    outline: none;
+    font-size: inherit;
+    color: gray;
+    outline: none;
+    background: none;
+    border: none;
+}
+
+.block-text-input:not([contenteditable='true']),
+.custom-text-input:not([contenteditable='true']),
+.custom-select:disabled,
+.custom-datetime-input:disabled {
+    color: black;
+}
+
+td .category-container {
+    max-width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+td .category {
+    text-wrap: nowrap;
+    display: flex;
+    padding: 3px;
+    background: #efefef;
+    border-radius: 4px;
+    width: fit-content;
+    align-items: center;
+}
+
+td .category span {
+    margin-right: 5px;
+}
+
+td .category.add {
+    position: relative;
+    display: none;
+}
+
+.category.add .category-popup {
+    z-index: 1;
+    position: absolute;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.19);
+}
+
+.img-thumbnail-wrapper {
+    display: flex;
+    justify-content: center;
+    height: 150px;
+}
+
+.img-thumbnail-wrapper img {
+    height: 100%;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tags-container .tag {
+    padding: 3px;
+    background: #efefef;
+    border-radius: 4px;
+    width: max-content;
+}
+
+.tags-container .tag span {
+    margin-right: 5px;
+}
+
+.tags-container .tag i {
+    /* display: none; */
+    color: darkred;
+    cursor: pointer;
+}
+
+.tags-container .tag i:hover {
+    color: red;
+}
+
+.tags-container .tag.tag-add {
+    cursor: pointer;
+}
+
+.tags-container .tag.tag-add i {
+    color: #3a84a7;
+    margin-right: 5px;
+}
+
+.tag-input-wrapper .tag-input {
+    outline: none;
+    border: none;
+    background: none;
+    display: none;
+    background-color: #efefef;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.tag-input-wrapper {
+    position: relative;
+}
+
+.tag-input-wrapper .tag-dropdown {
+    position: absolute;
+    padding: 5px;
+    top: 100%;
+    left: 0;
+    transform: translateY(5px);
+    background: #efefef;
+    border-radius: 4px;
+    display: none;
+    z-index: 1;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.19);
+}

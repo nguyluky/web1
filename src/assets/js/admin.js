@@ -5,6 +5,7 @@ import sachRender from './render/table/sachTable.js';
 import orderRender from './render/table/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
 import { formatLineChartData, hoverPoint } from './render/lineChart.js';
+import { BaseTableCell } from './render/table/CustomElement.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
@@ -114,9 +115,9 @@ const buttonSaveState = {
         btnSave &&
             (btnSave.innerHTML =
                 '<i class="fa-solid fa-pen"></i><span>Edit</span>');
-        document.querySelectorAll('#content_table td[key]').forEach((td) => {
-            td.setAttribute('contenteditable', 'false');
-        });
+        /**@type {NodeListOf<BaseTableCell>}*/ (
+            document.querySelectorAll('td')
+        ).forEach((e) => (e.disable = true));
     },
     /* Đổi trạng thái nút thành "Lưu" và cho phép chỉnh sửa */
     save: () => {
@@ -124,9 +125,9 @@ const buttonSaveState = {
             (btnSave.innerHTML =
                 '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>');
         btnSave?.classList.add('canedit');
-        document.querySelectorAll('#content_table td[key]').forEach((td) => {
-            td.setAttribute('contenteditable', 'true');
-        });
+        /**@type {NodeListOf<BaseTableCell>}*/ (
+            document.querySelectorAll('td')
+        ).forEach((e) => (e.disable = false));
     },
 };
 

@@ -11,10 +11,9 @@ import {
     getRowsSeletion,
     removeRowById,
     createCheckBox,
-    createTableSellWrapper,
-    createDateTableCell,
     createOpstionCell,
     createTextSell,
+    createDateTableCell,
 } from './baseRender.js';
 
 /** @typedef {import('../../until/type.js').UserInfo} UserInfo */
@@ -177,64 +176,66 @@ function creatorRow(value, onchange) {
     const col = createCheckBox(value['id']);
     row.appendChild(col);
 
-    Object.keys(cols).forEach((key) => {
-        switch (key) {
-            case 'status': {
-                const col = createTableSellWrapper(key);
-                const option = createOpstionCell(
-                    value['status'],
-                    [
-                        { title: 'Đang hoạt động', value: 'active' },
-                        { title: 'Bị cấm', value: 'ban' },
-                    ],
-                    (va) => {
-                        onchange && onchange(value, 'status', va);
-                    },
-                );
-
-                col.setAttribute('default-value', value['status'] || '');
-                col.appendChild(option);
-                row.appendChild(col);
-
-                break;
-            }
-            case 'rule': {
-                const col = createTableSellWrapper(key);
-                const option = createOpstionCell(
-                    value['rule'],
-                    [
-                        { title: 'user', value: 'user' },
-                        { title: 'admin', value: 'admin' },
-                    ],
-                    (va) => {
-                        onchange && onchange(value, 'rule', va);
-                    },
-                );
-
-                col.setAttribute('default-value', value['rule'] || '');
-                col.appendChild(option);
-                row.appendChild(col);
-                break;
-            }
-            case 'datecreated': {
-                const col = createTableSellWrapper(key);
-                const inputDate = createDateTableCell(
-                    value['datecreated'],
-                    (value_) => {
-                        onchange && onchange(value, 'datecreated', value_);
-                    },
-                );
-                col.setAttribute('default-value', String(value['datecreated']));
-                col.appendChild(inputDate);
-                row.appendChild(col);
-                break;
-            }
-            default: {
-                const col = createTextSell(key, value[key], () => {});
-            }
-        }
-        row.appendChild(col);
+    const userName = createTextSell('name', value['name'], (va) => {
+        onchange && onchange(value, 'name', va);
     });
+    row.appendChild(userName);
+
+    const passwd = createTextSell('passwd', value['passwd'], (va) => {
+        onchange && onchange(value, 'passwd', va);
+    });
+    row.appendChild(passwd);
+
+    const email = createTextSell('email', value['email'], (va) => {
+        onchange && onchange(value, 'email', va);
+    });
+    row.appendChild(email);
+
+    const phone_num = createTextSell('phone_num', value['phone_num'], (va) => {
+        onchange && onchange(value, 'phone_num', va);
+    });
+    row.appendChild(phone_num);
+
+    const rule = createOpstionCell(
+        'rule',
+        value['rule'],
+        [
+            {
+                title: 'User',
+                value: 'user',
+            },
+            {
+                title: 'Admin',
+                value: 'admin',
+            },
+        ],
+        (va) => {
+            onchange && onchange(value, 'rule', va);
+        },
+    );
+    row.appendChild(rule);
+
+    const datecreated = createDateTableCell(
+        'datecreated',
+        value['datecreated'],
+        (va) => {
+            onchange && onchange(value, 'datecreated', va);
+        },
+    );
+    row.appendChild(datecreated);
+
+    const status = createOpstionCell(
+        'status',
+        value['status'],
+        [
+            { title: 'Active', value: 'active' },
+            { title: 'Block', value: 'ban' },
+        ],
+        (va) => {
+            onchange && onchange(value, 'status', va);
+        },
+    );
+    row.appendChild(status);
 
     return row;
 }

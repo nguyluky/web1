@@ -1,6 +1,8 @@
 @import url('./share.css');
 @import url('./dot-spinner.css');
 @import url('./admin_dashboard.css');
+@import url('./table.css');
+
 :root {
     --bg_body: #efefef;
     --bg_sidebar: #fff;
@@ -229,80 +231,11 @@ th {
     object-fit: contain;
 }
 
-td .category-container {
-    max-width: 400px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-td .category {
-    text-wrap: nowrap;
-    display: flex;
-    padding: 3px;
-    background: #efefef;
-    border-radius: 4px;
-    width: fit-content;
-    align-items: center;
-}
-
-td .category span {
-    margin-right: 5px;
-}
-
-td .category.add {
-    position: relative;
-    display: none;
-}
-
-td > select {
-    border: none;
-    background: none;
-    font-size: inherit;
-    /* pointer-events: none; */
-}
-
-td[contenteditable='true'] > select {
-    /* pointer-events: all; */
-}
-
-.category.add .category-popup {
-    z-index: 1;
-    position: absolute;
-    width: max-content;
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-    border-radius: 4px;
-    background: #fff;
-    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.19);
-}
-
-.category.add .category-popup > span {
-    padding: 3px 5px;
-    cursor: pointer;
-}
-
-td .category i {
-    display: none;
-    color: darkred;
-    cursor: pointer;
-}
-
-td[contenteditable='true'] .category i {
-    display: inline;
-}
-
-td .category.add i {
-    color: #3a84a7;
-}
-
-td[contenteditable='true'] .category.add {
-    display: block;
-}
-
 td[key='details'] {
-    position: relative;
+    max-width: 500px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow-x: scroll;
 }
 
 tr:has(td[error]) {
@@ -586,31 +519,6 @@ body {
 
 .file-upload-btn input {
     display: none;
-}
-
-td .custom-datetime-input[type='datetime-local'] {
-    border: none;
-    outline: none;
-    background-color: transparent;
-    width: fit-content;
-    font-size: inherit;
-    pointer-events: none;
-}
-td .custom-datetime-input::-webkit-calendar-picker-indicator {
-    display: none;
-}
-
-td[contenteditable='true'] .custom-datetime-input[type='datetime-local'] {
-    pointer-events: all;
-}
-
-td[contenteditable='true']
-    .custom-datetime-input::-webkit-calendar-picker-indicator {
-    background-color: #ffffff;
-    padding: 5px;
-    cursor: pointer;
-    display: block;
-    border-radius: 3px;
 }
 
 @media screen and (max-width: 1200px) and (min-width: 750px) {

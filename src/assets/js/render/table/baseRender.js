@@ -3,6 +3,15 @@
  * @typedef {{ [P in keyof Partial<T>]: string }} COLS
  */
 
+import {
+    BlockTextCell,
+    DatetimeTableCell,
+    ImgThumbnailCell,
+    OptionTableCell,
+    StringTableCell,
+    TagsInputCell,
+} from './CustomElement.js';
+
 /**
  * @template T
  * @typedef {(value: T) => any} cellChange
@@ -35,19 +44,6 @@ export function tableClearErrorKey() {
 }
 
 // ===================Create element function==================
-
-/**
- *
- * @param {HTMLElement} element
- * @returns {HTMLTableCellElement | undefined}
- */
-function getTableCell(element) {
-    while (element && element.tagName != 'TD') {
-        element = /**@type {HTMLElement}*/ (element.parentElement);
-    }
-
-    return /**@type {HTMLTableCellElement} */ (element);
-}
 
 /**
  *
@@ -95,14 +91,102 @@ export function createDefaultRow(value, cols, onchange) {
 
 /**
  *
- * @param {string} key_name
+ * @param {string} key
+ * @param {string} value
+ * @param {(value: string) => any} onchange
+ * @param {boolean} [canEdit]
+ * @returns {StringTableCell}
+ */
+export function createTextSell(key, value, onchange, canEdit = true) {
+    // ? what is "IS"
+    // https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements
+    const td = /**@type {StringTableCell} */ (
+        document.createElement('td', { is: 'string-cell' })
+    );
+
+    td.disable = true;
+    td.canEdit = canEdit;
+    td.value = value;
+    td.defaultValue = value;
+
+    td.setAttribute('key', key);
+    td.addEventListener('change', () => onchange(td.value));
+    return td;
+}
+
+/**
+ * @param {string} key
+ * @param {string | Date} value
+ * @param {(value: Date) => any} onchange
  * @returns {HTMLTableCellElement}
  */
-export function createTableSellWrapper(key_name) {
-    const col = document.createElement('td');
-    col.setAttribute('ischange', 'false');
-    col.setAttribute('key', key_name);
-    return col;
+export function createDateTableCell(key, value, onchange) {
+    const data = typeof value == 'string' ? new Date(value) : value;
+
+    // ? what is "IS"
+    // https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements
+    const td = /**@type {DatetimeTableCell} */ (
+        document.createElement('td', { is: 'datetime-cell' })
+    );
+    td.disable = true;
+    td.value = data;
+    td.defaultValue = data;
+
+    td.setAttribute('key', key);
+    td.addEventListener('change', () => onchange(td.value));
+    return td;
+}
+
+/**
+ *
+ * @param {string} key
+ * @param {string} value
+ * @param {{title: string, value: string}[]} options
+ * @param {(value: string) => any} onchange
+ * @returns {HTMLTableCellElement}
+ */
+export function createOpstionCell(key, value, options, onchange) {
+    // ? what is "IS"
+    // https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements
+    const td = /**@type {OptionTableCell} */ (
+        document.createElement('td', { is: 'option-cell' })
+    );
+    td.setAttribute('key', key);
+    td.disable = true;
+    td.value = value;
+    td.defaultValue = value;
+    td.values = options;
+    td.addEventListener('change', () => onchange(td.value));
+    return td;
+}
+
+/**
+ * @typedef {import('./CustomElement.js').Tag} Tag
+ */
+
+/**
+ *
+ * @param {string} key
+ * @param {string[]} value
+ * @param {Tag[]} tags
+ * @param {(value: string[]) => any} onchange
+ * @returns {TagsInputCell}
+ */
+export function createTagsCell(key, value, tags, onchange) {
+    // ? what is "IS"
+    // https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements
+    const td = /**@type {TagsInputCell} */ (
+        document.createElement('td', { is: 'tags-cell' })
+    );
+
+    td.setAttribute('key', key);
+    td.disable = true;
+    td.value = value;
+    td.defaultValue = value;
+    td.allTags = tags;
+    td.addEventListener('change', () => onchange(td.value));
+
+    return td;
 }
 
 /**
@@ -110,101 +194,37 @@ export function createTableSellWrapper(key_name) {
  * @param {string} key
  * @param {string} value
  * @param {(value: string) => any} onchange
- * @param {boolean} [canEdit]
- * @returns
+ * @returns {ImgThumbnailCell}
  */
-
-export function createTextSell(key, value, onchange, canEdit = true) {
-    const td = document.createElement('td');
-    td.setAttribute('ischange', 'false');
-
-    const input = document.createElement('input');
-    input.value = value;
-
-    td.appendChild(input);
-
-    input.addEventListener('change', () => {
-        onchange(input.value);
-
-        if (input.value == td.getAttribute('default-value'))
-            td.setAttribute('ischange', 'false');
-        else td.setAttribute('ischange', 'true');
-    });
-
-    td.setAttribute('type', 'string');
+export function createImgThumbnailCell(key, value, onchange) {
+    const td = /**@type {ImgThumbnailCell}*/ (
+        document.createElement('td', { is: 'img-thumbnail-cell' })
+    );
     td.setAttribute('key', key);
-    td.setAttribute('default-value', value);
-
+    td.disable = true;
+    td.value = value;
+    td.defaultValue = value;
     return td;
 }
 
 /**
  *
- * @param {string | Date} value
- * @param {(value: Date) => any} onchange
- * @returns {HTMLInputElement}
- */
-export function createDateTableCell(value, onchange) {
-    const dateTimeInput = document.createElement('input');
-    dateTimeInput.type = 'datetime-local';
-    dateTimeInput.className = 'custom-datetime-input';
-    const dateTimeStringValue = (
-        typeof value == 'string' ? value : value.toISOString()
-    )
-        .split('.')[0]
-        .replace('Z', '');
-
-    dateTimeInput.value = dateTimeStringValue;
-
-    dateTimeInput.addEventListener('change', () => {
-        console.log(dateTimeInput.value);
-        const date = new Date(dateTimeInput.value);
-        onchange(date);
-
-        const col = getTableCell(dateTimeInput);
-
-        if (!col) return;
-        if (String(date) == col.getAttribute('default-value')) {
-            col.setAttribute('ischange', 'false');
-        } else {
-            col.setAttribute('ischange', 'true');
-        }
-    });
-
-    return dateTimeInput;
-}
-
-/**
- *
+ * @param {string} key
  * @param {string} value
- * @param {{title: string, value: string}[]} options
  * @param {(value: string) => any} onchange
- * @returns {HTMLElement}
+ * @returns
  */
-export function createOpstionCell(value, options, onchange) {
-    const select = document.createElement('select');
+export function createBlockTextCell(key, value, onchange) {
+    const td = /**@type {BlockTextCell} */ (
+        document.createElement('td', { is: 'block-text-cell' })
+    );
+    td.setAttribute('key', key);
+    td.disable = true;
+    td.value = value;
+    td.defaultValue = value;
+    td.addEventListener('change', () => onchange(td.value));
 
-    options.forEach((e) => {
-        const op = document.createElement('option');
-        op.value = e.value;
-        op.textContent = e.title;
-        select.appendChild(op);
-    });
-
-    select.value = value;
-    select.addEventListener('change', () => {
-        onchange(select.value);
-
-        const col = getTableCell(select);
-        if (!col) return;
-        if (String(select.value) == col.getAttribute('default-value')) {
-            col.setAttribute('ischange', 'false');
-        } else {
-            col.setAttribute('ischange', 'true');
-        }
-    });
-
-    return select;
+    return td;
 }
 
 // ====================Render====================
