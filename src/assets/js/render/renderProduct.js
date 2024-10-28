@@ -4,7 +4,7 @@ const Product_Data = await fakeDatabase.getAllSach();
 //tính số trang
 let Current_Page = 1;
 const Products_Per_page = 8;
-const totalPages = 10//Math.ceil(Product_Data.length / Products_Per_page);
+const totalPages = Math.ceil(Product_Data.length / Products_Per_page);
 //nếu số trang > 1
 if (totalPages > 1) createPagination();
 // tạo Pagination
@@ -23,24 +23,7 @@ function createPagination() {
         document.querySelector('.pagination__page')
     );
     paginationPage.innerHTML = ``;
-
-    let beforepages = Current_Page - 2;
-    let afterpages = Current_Page + 2;
-
-    if(Current_Page == 2){
-        beforepages = Current_Page - 1;
-    }
-    if(Current_Page == 1){
-        beforepages = Current_Page;
-    }
-    if(Current_Page == totalPages - 1){
-        afterpages = Current_Page + 1;
-    }
-    if(Current_Page == totalPages){
-        afterpages = totalPages;
-    }
-
-    for (let i = beforepages; i <= afterpages; i++) {
+    for (let i = 1; i <= (totalPages < 5 ? totalPages : 5); i++) {
         paginationPage.innerHTML += `<button class="pagination__btns page ${
             i == 1 ? 'active-page' : ''
         }">${i}</button>`;
@@ -100,11 +83,21 @@ function displayProducts() {
 }
 //
 function activePage() {
+    let firstPage = 1;
+    let lastPage = totalPages;
+    if (totalPages > 5) {
+        if (Current_Page > totalPages - 2) firstPage = totalPages - 4;
+        else if (Current_Page > 3) {
+            firstPage = Current_Page - 2;
+            lastPage = firstPage + 4;
+        }
+    }
     const getAllPage = document.querySelectorAll('.pagination__btns.page');
-    getAllPage.forEach((e) => {
+    getAllPage.forEach((e, i) => {
+        e.innerHTML = `${firstPage + i}`;
         e.classList.remove('active-page');
+        if (e.innerHTML == String(Current_Page)) e.classList.add('active-page');
     });
-    getAllPage[Current_Page - 1].classList.add('active-page');
 }
 // Chuyển đến trang trước
 function prevPage() {
@@ -139,14 +132,11 @@ function setupPaginationListeners() {
         page.addEventListener('click', () => {
             if (page.classList.contains('page')) {
                 goToPage(Number(page.innerHTML));
-                createPagination()
             } else {
                 if (page.innerHTML.includes('fa-angle-left')) {
                     prevPage();
-                    createPagination()
                 } else if (page.innerHTML.includes('fa-angle-right')) {
                     nextPage();
-                    createPagination()
                 }
             }
         });
