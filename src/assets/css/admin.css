@@ -543,8 +543,7 @@ body {
     .aside.show .left-sidebar {
         width: 160px;
     }
-    .aside.show .left-sidebar,
-    .aside.show .option {
+    .aside.show .left-sidebar {
         padding-inline: 10px;
     }
     .left-sidebar {
@@ -567,20 +566,11 @@ body {
     .article-main {
         margin: 0;
     }
-    .option {
-        padding: 10px 5px;
-    }
 }
 
 @media screen and (max-width: 1200px) {
     .table-check-box {
         width: 15px;
-    }
-    .aside.show .option span {
-        display: initial;
-    }
-    .option span {
-        display: none;
     }
 
     .brand-name {
@@ -632,8 +622,7 @@ body {
         position: absolute;
         height: auto;
         z-index: 50;
-        box-shadow:
-            0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
             0 6px 20px 0 rgba(0, 0, 0, 0.19);
         border-radius: 0;
         padding: 0;
@@ -652,9 +641,6 @@ body {
     #drop-list .left-sidebar__btn {
         border-radius: 0;
         font-weight: 300;
-    }
-    .option {
-        padding: 0;
     }
     .brand-name {
         position: absolute;

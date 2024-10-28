@@ -146,7 +146,7 @@ aside.aside {
     cursor: pointer;
 }
 
-.page-sections__btns{
+.pagination__btns{
     cursor: pointer;
     width: 25px;
     height: 20px;
@@ -158,15 +158,25 @@ aside.aside {
     background-color: rgb(255, 255, 255);
 }
 
-.page-sections__btns:hover{
+.pagination__btns:hover{
     color: #189eff;
 }
-.page-sections{
+
+.active-page{
+    color: #189eff;
+}
+
+.pagination{
     margin-top: 40px;
     background-color: white;
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 20px;
+}
+
+.pagination__page{
+    display: flex;
+    gap: 20px;
 }
 
 

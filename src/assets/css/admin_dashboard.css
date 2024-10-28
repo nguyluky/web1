@@ -7,7 +7,7 @@
     display: grid;
     grid-template-columns: 4fr 1fr 1fr;
     gap: 25px;
-    overflow: scroll;
+    overflow: auto;
     box-sizing: border-box;
 }
 .dashboard-wrapper::-webkit-scrollbar {
@@ -101,59 +101,54 @@
     padding: 20px;
     box-sizing: border-box;
 }
-#user-chart div {
+.leaderboard-title {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
     font-size: 28px;
-    text-align: center;
     text-shadow: 5px 2px 3px #aaa;
     font-weight: 900;
     letter-spacing: 2px;
+    text-align: center;
 }
-#user-chart table {
-    border-spacing: 0 8px;
+.leaderboard-table {
     color: #fff;
-    font-size: 18px; /* Slightly smaller font size for better readability */
+    font-size: 18px;
     width: 100%;
-    table-layout: fixed;
-    border-collapse: separate; /* Ensure spacing between rows */
 }
-
-#user-chart thead tr,
-#user-chart tfoot tr {
+.leaderboard-table > div > div > div {
+    padding: 10px;
+}
+.leaderboard-head > div,
+.leaderboard-body > div {
+    display: grid;
+    grid-template-columns: 70px 1fr 70px;
+    margin-bottom: 8px;
+}
+.leaderboard-head,
+.leaderboard-foot {
+    text-align: center;
     background-color: #444;
     color: #fff;
 }
-#user-chart thead td {
-    text-align: center;
+.leaderboard-head div div {
     font-weight: 600;
 }
-#user-chart tbody tr {
+.leaderboard-body div {
     background: var(--row-cl);
-    transition: background 0.3s; /* Smooth background color transition */
+    transition: background 0.3s;
 }
 
-#user-chart tbody tr:hover {
+.leaderboard-body > div:hover {
     opacity: 0.8;
 }
 
-#user-chart tr > * {
-    box-sizing: border-box;
+.leaderboard-body > div > div:nth-child(1),
+.leaderboard-body > div > div:nth-child(3) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
-#user-chart tr td:first-child {
-    width: 70px;
-    text-align: center;
-}
-
-#user-chart tr td:last-child {
-    width: 140px;
-    text-align: center;
-}
-
-#user-chart img {
+.leaderboard-body img {
     height: 20px;
-    aspect-ratio: 1/1;
-    vertical-align: middle;
 }

@@ -1,3 +1,5 @@
+import fakeDatabase from '../db/fakeDBv1.js';
+
 const chartValues = [
     { value: 25 },
     { value: 60 },
@@ -71,6 +73,8 @@ function formatLineChartData(container, values = chartValues) {
         listItem.innerHTML = markup;
         container.appendChild(listItem);
     });
+    hoverPoint();
+    renderLeaderboard();
 }
 const maxValue = (values) => {
     let max = 0;
@@ -97,11 +101,39 @@ function getPointData(point) {
 function hoverPoint() {
     document.querySelectorAll('.data-point').forEach((point) => {
         point.addEventListener('mouseover', () => {
+            while (point.firstChild) point.removeChild(point.firstChild);
             point.appendChild(getPointData(point));
         });
-        point.addEventListener('mouseout', () => {
-            if (point.firstChild) point.removeChild(point.firstChild);
-        });
+        point.addEventListener('mouseout', () =>
+            setTimeout(() => {
+                if (point.firstChild) point.removeChild(point.firstChild);
+            }, 3000),
+        );
     });
 }
-export { formatLineChartData, hoverPoint };
+
+async function renderLeaderboard() {
+    const alldata = await fakeDatabase.getAllOrder();
+    let array = [];
+    const data = alldata.filter((e) => e.state == 'thanhcong');
+    data.forEach((e) => {
+        const index = array.findIndex((element) => element.id == e.user_id);
+        if (index != -1) array[index].total += e.total;
+        else array.push({ id: e.user_id, total: e.total });
+    });
+    array.sort((a, b) => b.total - a.total);
+    array.slice(0, 5).forEach(async (e, i) => {
+        const user = await fakeDatabase.getUserInfoByUserId(e.id);
+        const name = document.querySelector(
+            `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(2)`,
+        );
+        const total = document.querySelector(
+            `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(3)`,
+        );
+        if (user && name && total) {
+            name.textContent = user.name;
+            total.textContent = e.total;
+        }
+    });
+}
+export { formatLineChartData, renderLeaderboard };

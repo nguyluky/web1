@@ -5,7 +5,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     id: string;
  *     title: string;
  *     details: string;
- *     thumbnal: string;
+ *     thumbnail: string;
  *     imgs: string[];
  *     base_price: number;
  *     discount: number;

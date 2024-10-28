@@ -28,9 +28,9 @@ const cols = {
     passwd: 'Pass',
     email: 'Email',
     phone_num: 'Phone',
+    status: 'Status',
     rule: 'Rule',
     datecreated: 'Ngày tạo',
-    status: 'Status',
 };
 
 /**
@@ -290,7 +290,8 @@ function addRow() {
     if (!table) {
         throw new Error('cái đéo gì vậy');
     }
-
+    const now = new Date();
+    console.log(now);
     /** @type {UserInfo} */
     const data = {
         id: uuidv(8),
@@ -300,7 +301,7 @@ function addRow() {
         phone_num: '',
         rule: 'user',
         status: 'active',
-        datecreated: new Date(),
+        datecreated: now,
     };
 
     // Lưu người dùng mới vào cache
@@ -313,7 +314,7 @@ function addRow() {
             [key]: values,
         };
     });
-
+    row.querySelector('select')?.classList.add('allow-change');
     defaultAddRow(table, row);
 }
 

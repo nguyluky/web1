@@ -25,7 +25,7 @@ const cols = {
     base_price: 'Price',
     category: 'Category',
     details: 'Details',
-    thumbnal: 'Thumbnal',
+    thumbnail: 'Thumbnail',
 };
 let cacheSave = {};
 let cacheAdd = [];
@@ -101,7 +101,7 @@ function createRow(value, onchange = null) {
     row.appendChild(details);
 
     const thumbnail = createImgThumbnailCell('thumbnail', '', (a) => {});
-    fakeDatabase.getImgById(value.thumbnal).then((img) => {
+    fakeDatabase.getImgById(value.thumbnail).then((img) => {
         thumbnail.value = img?.data || '';
     });
     row.appendChild(thumbnail);
@@ -153,7 +153,7 @@ function addRow() {
         id: uuidv(36),
         title: '',
         details: '',
-        thumbnal: 'default',
+        thumbnail: 'default',
         imgs: [],
         base_price: 0,
         discount: 0,
@@ -209,8 +209,8 @@ async function saveBook() {
             document.querySelector(`tr[id-row="${e.id}"] .img-wrapper img`)
         ).src;
         if (source != '../assets/img/default-image.png') {
-            e.thumbnal = uuidv(36);
-            let img_id = e.thumbnal;
+            e.thumbnail = uuidv(36);
+            let img_id = e.thumbnail;
             let img = {
                 id: img_id,
                 data: source,
