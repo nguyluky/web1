@@ -4,7 +4,7 @@ const Product_Data = await fakeDatabase.getAllSach();
 //tính số trang
 let Current_Page = 1;
 const Products_Per_page = 8;
-const totalPages = Math.ceil(Product_Data.length / Products_Per_page);
+const totalPages = 10//Math.ceil(Product_Data.length / Products_Per_page);
 //nếu số trang > 1
 if (totalPages > 1) createPagination();
 // tạo Pagination
@@ -23,7 +23,24 @@ function createPagination() {
         document.querySelector('.pagination__page')
     );
     paginationPage.innerHTML = ``;
-    for (let i = 1; i <= totalPages; i++) {
+
+    let beforepages = Current_Page - 2;
+    let afterpages = Current_Page + 2;
+
+    if(Current_Page == 2){
+        beforepages = Current_Page - 1;
+    }
+    if(Current_Page == 1){
+        beforepages = Current_Page;
+    }
+    if(Current_Page == totalPages - 1){
+        afterpages = Current_Page + 1;
+    }
+    if(Current_Page == totalPages){
+        afterpages = totalPages;
+    }
+
+    for (let i = beforepages; i <= afterpages; i++) {
         paginationPage.innerHTML += `<button class="pagination__btns page ${
             i == 1 ? 'active-page' : ''
         }">${i}</button>`;
@@ -122,11 +139,14 @@ function setupPaginationListeners() {
         page.addEventListener('click', () => {
             if (page.classList.contains('page')) {
                 goToPage(Number(page.innerHTML));
+                createPagination()
             } else {
                 if (page.innerHTML.includes('fa-angle-left')) {
                     prevPage();
+                    createPagination()
                 } else if (page.innerHTML.includes('fa-angle-right')) {
                     nextPage();
+                    createPagination()
                 }
             }
         });
