@@ -4,7 +4,6 @@ import uuidv from '../../until/uuid.js';
 import {
     searchList,
     renderTable,
-    createDefaultRow,
     tableShowErrorKey,
     tableClearErrorKey,
     defaultAddRow,
@@ -12,14 +11,17 @@ import {
     getRowsSeletion,
     removeRowById,
     createCheckBox,
-    createTableSell,
-    createDateTableCell,
     createOpstionCell,
+    createTextSell,
+    createDateTableCell,
 } from './baseRender.js';
 
 /** @typedef {import('../../until/type.js').UserInfo} UserInfo */
 
 // Định nghĩa các cột trong bảng người dùng
+/**
+ * @type {import('./baseRender.js').COLS<UserInfo>}
+ */
 const cols = {
     // id: 'Id',
     name: 'Name',
@@ -27,6 +29,8 @@ const cols = {
     email: 'Email',
     phone_num: 'Phone',
     status: 'Status',
+    rule: 'Rule',
+    datecreated: 'Ngày tạo',
 };
 
 /**
@@ -165,85 +169,73 @@ async function userDoSave() {
  * @param {import('./baseRender.js').OnChange<UserInfo>} [onchange]
  * @returns {HTMLTableRowElement}
  */
-function createRow(value, onchange) {
+function creatorRow(value, onchange) {
     const row = document.createElement('tr');
     row.setAttribute('id-row', value.id);
 
     const col = createCheckBox(value['id']);
     row.appendChild(col);
 
-    Object.keys(cols).forEach((key) => {
-        const col = createTableSell(key);
-        switch (key) {
-            case 'status': {
-                const option = createOpstionCell(
-                    value['status'],
-                    [
-                        { title: 'Đang hoạt động', value: 'active' },
-                        { title: 'Bị cấm', value: 'ban' },
-                    ],
-                    (va) => {
-                        onchange && onchange(value, 'status', va);
-                    },
-                );
-                col.removeAttribute('key');
-                col.setAttribute('default-value', value['status'] || '');
-                col.appendChild(option);
-                break;
-            } /*
-            case 'rule': {
-                const option = createOpstionCell(
-                    value['rule'],
-                    [
-                        { title: 'user', value: 'user' },
-                        { title: 'admin', value: 'admin' },
-                    ],
-                    (va) => {
-                        onchange && onchange(value, 'rule', va);
-                    },
-                );
-
-                col.setAttribute('default-value', value['rule'] || '');
-                col.appendChild(option);
-                break;
-            }
-            case 'datecreated': {
-                const inputDate = createDateTableCell(
-                    value['datecreated'],
-                    (value_) => {
-                        onchange && onchange(value, 'datecreated', value_);
-                    },
-                );
-                col.setAttribute('default-value', String(value['datecreated']));
-                col.appendChild(inputDate);
-                break;
-            }*/
-            default: {
-                col.insertAdjacentHTML('beforeend', value[key]);
-                col.setAttribute('default-value', value[key] || '');
-                col.oninput = (event) => {
-                    const target = /** @type {HTMLTableCellElement} */ (
-                        event.target
-                    );
-                    onchange &&
-                        onchange(
-                            value,
-                            // @ts-ignore
-                            key,
-                            target.textContent,
-                        );
-
-                    if (
-                        target.textContent ==
-                        target.getAttribute('default-value')
-                    )
-                        col.setAttribute('ischange', 'false');
-                    else col.setAttribute('ischange', 'true');
-                };
-            }
-        }
-        row.appendChild(col);
+    const userName = createTextSell('name', value['name'], (va) => {
+        onchange && onchange(value, 'name', va);
     });
+    row.appendChild(userName);
+
+    const passwd = createTextSell('passwd', value['passwd'], (va) => {
+        onchange && onchange(value, 'passwd', va);
+    });
+    row.appendChild(passwd);
+
+    const email = createTextSell('email', value['email'], (va) => {
+        onchange && onchange(value, 'email', va);
+    });
+    row.appendChild(email);
+
+    const phone_num = createTextSell('phone_num', value['phone_num'], (va) => {
+        onchange && onchange(value, 'phone_num', va);
+    });
+    row.appendChild(phone_num);
+
+    const rule = createOpstionCell(
+        'rule',
+        value['rule'],
+        [
+            {
+                title: 'User',
+                value: 'user',
+            },
+            {
+                title: 'Admin',
+                value: 'admin',
+            },
+        ],
+        (va) => {
+            onchange && onchange(value, 'rule', va);
+        },
+    );
+    row.appendChild(rule);
+
+    const datecreated = createDateTableCell(
+        'datecreated',
+        value['datecreated'],
+        (va) => {
+            onchange && onchange(value, 'datecreated', va);
+        },
+    );
+    row.appendChild(datecreated);
+
+    const status = createOpstionCell(
+        'status',
+        value['status'],
+        [
+            { title: 'Active', value: 'active' },
+            { title: 'Block', value: 'ban' },
+        ],
+        (va) => {
+            onchange && onchange(value, 'status', va);
+        },
+    );
+    row.appendChild(status);
 
     return row;
 }
@@ -253,12 +245,12 @@ function createRow(value, onchange) {
  *
  * @param {UserInfo[]} list - Danh sách người dùng cần hiển thị
  */
-function renderUser(list) {
+function rendererUser(list) {
     const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
     if (!table) return;
-    renderTable(list, table, cols, onChangeHandle, createRow);
+    renderTable(list, table, cols, onChangeHandle, creatorRow);
 }
 
 /**
@@ -313,7 +305,7 @@ function addUser() {
     cacheAdd.push(data);
 
     // Tạo một hàng mới cho người dùng trong bảng
-    const row = createRow(data, (data, key, values) => {
+    const row = creatorRow(data, (data, key, values) => {
         cacheAdd[0] = {
             ...cacheAdd[0],
             [key]: values,
@@ -346,7 +338,7 @@ function removeRows() {
  */
 const user_ = {
     cols,
-    renderTable: renderUser,
+    renderTable: rendererUser,
     doSave: userDoSave,
     search: searchUser,
     addRow: addUser,

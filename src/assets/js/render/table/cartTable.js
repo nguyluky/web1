@@ -2,7 +2,8 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import { validataCart } from '../../until/type.js';
 import {
     createCheckBox,
-    createTableSell,
+    createDateTableCell,
+    createTextSell,
     renderTable,
     searchList,
     tableClearErrorKey,
@@ -60,39 +61,33 @@ function createRowCart(value, onchange) {
     const td = createCheckBox(value['id']);
     tr.appendChild(td);
 
-    const tdUserName = createTableSell('user_id');
+    const tdUserName = createTextSell(
+        'user_id',
+        value['user_id'],
+        (nv) => {},
+        false,
+    );
     fakeDatabase.getUserInfoByUserId(value['user_id']).then((user) => {
-        tdUserName.textContent = user?.name || '';
+        tdUserName.value = user?.name || '';
     });
-    tdUserName.removeAttribute('key');
     tr.appendChild(tdUserName);
 
-    const tdSach = createTableSell('sach');
+    const tdSach = createTextSell('sach', value['sach'], (nv) => {}, false);
     fakeDatabase.getSachById(value['sach']).then((sach) => {
-        tdSach.textContent = sach?.title || '';
+        tdSach.value = sach?.title || '';
     });
-    tdSach.removeAttribute('key');
     tdSach.style.minWidth = '100px';
     tr.appendChild(tdSach);
 
-    const tdSoLuong = createTableSell('quantity');
-    tdSoLuong.textContent = value['quantity'] + '';
-    tdSoLuong.setAttribute('default-value', value['quantity'] + '');
+    const tdSoLuong = createTextSell(
+        'quantity',
+        value['quantity'] + '',
+        (nv) => {
+            onchange && onchange(value, 'quantity', +nv);
+        },
+    );
     tr.appendChild(tdSoLuong);
 
-    tdSoLuong.addEventListener('input', () => {
-        onchange &&
-            onchange(value, 'quantity', +(tdSoLuong.textContent || '0'));
-
-        tdSoLuong.getAttribute('default-value') == tdSoLuong.textContent
-            ? td.setAttribute('ischange', 'false')
-            : td.setAttribute('ischange', 'true');
-    });
-
-    const tdDate = createTableSell('timecreate');
-    const dateTimeInput = document.createElement('input');
-    dateTimeInput.type = 'datetime-local';
-    dateTimeInput.className = 'custom-datetime-input';
     const dateTimeStringValue = (
         typeof value['timecreate'] == 'string'
             ? value['timecreate']
@@ -101,15 +96,13 @@ function createRowCart(value, onchange) {
         .split('.')[0]
         .replace('Z', '');
 
-    dateTimeInput.value = dateTimeStringValue;
-
-    dateTimeInput.addEventListener('change', () => {
-        console.log(dateTimeInput.value);
-        const date = new Date(dateTimeInput.value);
-        onchange && onchange(value, 'timecreate', date);
-    });
-
-    tdDate.appendChild(dateTimeInput);
+    const tdDate = createDateTableCell(
+        'timecreate',
+        dateTimeStringValue,
+        (nv) => {
+            onchange && onchange(value, 'timecreate', nv);
+        },
+    );
     tr.appendChild(tdDate);
 
     return tr;

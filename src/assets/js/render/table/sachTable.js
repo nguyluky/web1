@@ -1,8 +1,11 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import uuidv from '../../until/uuid.js';
 import {
+    createBlockTextCell,
     createCheckBox,
-    createTableSell,
+    createImgThumbnailCell,
+    createTagsCell,
+    createTextSell,
     renderTable,
     searchList,
 } from './baseRender.js';
@@ -52,138 +55,6 @@ function handleOnChange(data, key, newValue) {
 }
 
 /**
- *
- * @param {string[]} value
- * @param {(categorys: string[]) => any} onchange
- * @returns {HTMLDivElement}
- */
-function createCategoryCell(value, onchange) {
-    const categoryContainer = document.createElement('div');
-    categoryContainer.className = 'category-container';
-
-    const categorys = [...value];
-
-    /**
-     * @param {string[]} blackList
-     * @param {(category: Category) => any} callback
-     * @returns {HTMLDivElement}
-     */
-    function createAddCategoryPopup(blackList, callback) {
-        const categoryPopup = document.createElement('div');
-        categoryPopup.className = 'category-popup';
-
-        fakeDatabase.getAllCategory().then((allCategory) => {
-            allCategory.forEach((category) => {
-                if (blackList.includes(category.id)) return;
-                const span = document.createElement('span');
-                span.textContent = category.name;
-
-                span.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    callback(category);
-                });
-
-                categoryPopup.appendChild(span);
-            });
-        });
-
-        return categoryPopup;
-    }
-
-    /**
-     *
-     * @param {string | undefined} categoryId
-     */
-    function handleRemoveCategory(categoryId) {
-        console.log('remove', categoryId);
-
-        categoryContainer
-            .querySelector('.category[category-id="' + categoryId + '"]')
-            ?.remove();
-        const index = categorys.findIndex((e) => e == categoryId);
-        if (index >= 0) {
-            categorys.splice(index, 1);
-            onchange(categorys);
-        }
-    }
-
-    /**
-     *
-     * @param {Category} category
-     */
-    function handleAddCategory(category) {
-        categoryContainer.querySelector('.category-popup')?.remove();
-        const categoryAdd = categoryContainer.querySelector('.category.add');
-
-        categorys.push(category.id);
-        onchange(categorys);
-
-        const categoryDiv = createCategoryElement(category);
-        categoryContainer.insertBefore(categoryDiv, categoryAdd);
-    }
-
-    /**
-     *
-     * @param {Category | undefined} category
-     * @returns {HTMLDivElement}
-     */
-    function createCategoryElement(category) {
-        const categoryDiv = document.createElement('div');
-        categoryDiv.className = 'category';
-        categoryDiv.setAttribute('category-id', category?.id || '');
-
-        const s = document.createElement('span');
-        s.textContent = category?.name || '';
-        categoryDiv.appendChild(s);
-
-        const i = document.createElement('i');
-        i.className = 'fa-solid fa-xmark';
-        categoryDiv.appendChild(i);
-
-        i.addEventListener('click', () => {
-            if (category) handleRemoveCategory(category.id);
-        });
-
-        return categoryDiv;
-    }
-
-    fakeDatabase.getAllCategory().then((allCategory) => {
-        categorys.forEach((categoryMs) => {
-            const category = allCategory.find((e) => e.id == categoryMs);
-            const categoryDiv = createCategoryElement(category);
-
-            categoryContainer.appendChild(categoryDiv);
-        });
-
-        // nút thêm category
-        const categoryAdd = document.createElement('div');
-        categoryAdd.className = 'category add';
-        const span = document.createElement('span');
-        span.textContent = 'Thêm';
-        categoryAdd.appendChild(span);
-        const i = document.createElement('i');
-        i.className = 'fa-solid fa-plus';
-        categoryAdd.appendChild(i);
-
-        categoryAdd.addEventListener('click', function () {
-            if (this.querySelector('.category-popup')) return;
-
-            const addPopup = createAddCategoryPopup(
-                categorys,
-                handleAddCategory,
-            );
-
-            this.appendChild(addPopup);
-        });
-
-        categoryContainer.contentEditable = 'false';
-        categoryContainer.appendChild(categoryAdd);
-    });
-
-    return categoryContainer;
-}
-
-/**
  * @param {Sach} value
  * @param {import('./baseRender.js').OnChange<Sach>?} onchange
  * @returns {HTMLTableRowElement} Row
@@ -195,101 +66,45 @@ function createRow(value, onchange = null) {
     const col = createCheckBox(value['id']);
     row.appendChild(col);
 
-    Object.keys(cols).forEach((key) => {
-        const col = createTableSell(key);
-
-        switch (key) {
-            case 'category': {
-                const categoryContainer = createCategoryCell(
-                    value['category'],
-                    (category) => {
-                        // @ts-ignore
-                        onchange(value, 'category', category);
-                    },
-                );
-                col.appendChild(categoryContainer);
-                break;
-            }
-            case 'details': {
-                const details_wrapper = document.createElement('div');
-                details_wrapper.className = 'details-wrapper';
-                details_wrapper.insertAdjacentHTML('beforeend', value[key]);
-                col.addEventListener('input', () => {
-                    onchange &&
-                        onchange(
-                            value,
-                            // @ts-ignore
-                            'details',
-                            details_wrapper.textContent || '',
-                        );
-
-                    if (
-                        details_wrapper.textContent ==
-                        details_wrapper.getAttribute('default-value')
-                    )
-                        col.setAttribute('ischange', 'false');
-                    else col.setAttribute('ischange', 'true');
-                });
-
-                details_wrapper.setAttribute('default-value', value[key]);
-                col.appendChild(details_wrapper);
-                break;
-            }
-            case 'thumbnail': {
-                // tạo div bao ảnh
-                const img_wrapper = document.createElement('div');
-                img_wrapper.className = 'img-wrapper';
-                // tạo thẻ img hiển thị ảnh
-                const img = document.createElement('img');
-                fakeDatabase.getImgById(value[key]).then((imgS) => {
-                    img.src = imgS?.data || '../assets/img/default-image.png';
-                });
-                img_wrapper.appendChild(img);
-                img_wrapper.addEventListener('click', () => {
-                    if (col.getAttribute('contenteditable') !== 'true') return;
-                    showImgPreviewPopup(
-                        img.src,
-                        () => {},
-                        (base64) => {
-                            // lưu vào cache để lưu vào db
-                            if (base64 != '') {
-                                cacheImg[value.thumbnail] = base64;
-                                img.src = base64;
-                            }
-                        },
-                        () => {},
-                    );
-                });
-                col.appendChild(img_wrapper);
-                break;
-            }
-            default: {
-                col.insertAdjacentHTML('beforeend', value[key]);
-                col.setAttribute('default-value', value[key] || '');
-                col.oninput = (event) => {
-                    const target = /** @type {HTMLTableCellElement} */ (
-                        event.target
-                    );
-
-                    if (onchange)
-                        onchange(
-                            value,
-                            // @ts-ignore
-                            key,
-                            target.textContent,
-                        );
-
-                    if (
-                        target.textContent ==
-                        target.getAttribute('default-value')
-                    )
-                        col.setAttribute('ischange', 'false');
-                    else col.setAttribute('ischange', 'true');
-                };
-            }
-        }
-        row.appendChild(col);
+    const title = createTextSell('title', value['title'], (nv) => {
+        onchange && onchange(value, 'title', nv);
     });
+    title.style.minWidth = '100px';
+    row.appendChild(title);
+
+    const base_price = createTextSell(
+        'base_price',
+        value['base_price'] + '',
+        (nv) => {
+            onchange && onchange(value, 'base_price', +nv);
+        },
+    );
+    row.appendChild(base_price);
+
+    const category = createTagsCell('category', value['category'], [], (nv) => {
+        // onchange && onchange(value, 'category', nv);
+        console.log(nv);
+    });
+    fakeDatabase.getAllCategory().then((allCategory) => {
+        category.allTags = allCategory.map((e) => {
+            return {
+                value: e.id,
+                title: e.name,
+            };
+        });
+    });
+    row.appendChild(category);
+
+    const details = createBlockTextCell('details', value['details'], (nv) => {
+        onchange && onchange(value, 'details', nv);
+    });
+    row.appendChild(details);
+
+    const thumbnail = createImgThumbnailCell('thumbnail', '', (a) => {});
+    fakeDatabase.getImgById(value.thumbnail).then((img) => {
+        thumbnail.value = img?.data || '';
+    });
+    row.appendChild(thumbnail);
 
     return row;
 }
