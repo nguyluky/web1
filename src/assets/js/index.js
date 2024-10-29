@@ -342,7 +342,6 @@ catergory_row.forEach((row) => {
         const catergory_sub_row = row.parentElement?.querySelector(
             '.catergory__row--sub',
         );
-        console.log(catergory_sub_row);
         catergory_sub_row?.classList.toggle('show');
     });
 });
