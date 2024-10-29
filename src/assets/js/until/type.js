@@ -5,22 +5,15 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     id: string;
  *     title: string;
  *     details: string;
- *     thumbnal: string;
+ *     thumbnail: string;
  *     imgs: string[];
  *     base_price: number;
+ *     discount: number;
  *     category: string[];
- *     option?: Option[];
  * }} Sach
  */
 
 /**
- * @typedef {{
- *     id: string;
- *     short_name: string;
- *     long_name: string;
- *     img?: string;
- *     price: number;
- * }} Option
  *
  *
  * @typedef {{
@@ -34,11 +27,9 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  * @typedef {{
  *     id: string;
  *     user_id: string;
- *     sach: number;
- *     option_id?: number;
+ *     sach: string;
  *     quantity: number;
- *     status: 'suly' | 'doixacnhan' | 'thanhcong';
- *     timecreate: Date;
+ *     timecreate: Date | string;
  * }} Cart
  *
  *
@@ -48,7 +39,9 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     name: string;
  *     passwd: string;
  *     phone_num: string;
- *     rule?: 'admin' | 'user';
+ *     rule: 'admin' | 'user';
+ *     status: 'active' | 'ban';
+ *     datecreated: Date;
  * }} UserInfo
  */
 
@@ -79,6 +72,19 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     Name?: string;
  *     Level: Level;
  * }} Ward
+ */
+
+/**
+ * @typedef {{
+ *     id: string;
+ *     user_id: string;
+ *     items: Omit<Cart, 'id'| 'user_id' | 'timecreate'>[];
+ *     date: Date;
+ *     state: 'suly' | 'doixacnhan' | 'thanhcong';
+ *     last_update: Date;
+ *     is_pay: boolean;
+ *     total: number;
+ * }} Order
  */
 
 /**
@@ -113,6 +119,27 @@ export function validateUserInfo(userInfo) {
 
     if (!validateNumberPhone(userInfo.phone_num))
         errors.push({ key: 'phone_num', msg: 'Số điện thoại không hợp lệ' });
+
+    return errors;
+}
+
+/**
+ *
+ * @param {Cart} cart
+ * @returns {{
+ *     key: string;
+ *     msg: string;
+ * }[]}
+ */
+export function validataCart(cart) {
+    const errors = [];
+
+    if (cart.quantity <= 0) {
+        errors.push({
+            key: 'quantity',
+            msg: 'số lượng sách không được bé hơn 1',
+        });
+    }
 
     return errors;
 }

@@ -1,4 +1,8 @@
 import fakeDatabase from './db/fakeDBv1.js';
+import {
+    displayProducts,
+    setupPaginationListeners,
+} from './render/renderProduct.js';
 import removeDiacritics from './until/removeDiacritics.js';
 
 //#region khai bao bien
@@ -326,19 +330,18 @@ function initializeAccountPopup() {
 function main() {
     initializeLocationPopup();
     initializeAccountPopup();
+    displayProducts();
+    setupPaginationListeners();
 }
 
 main();
 
-
-
 const catergory_row = document.querySelectorAll('.catergory__row--header');
-catergory_row.forEach(row =>{
-    console.log(row);
-    row.addEventListener('click', () =>{
-    const catergory_sub_row = row.parentElement?.querySelector('.catergory__row--sub');
-    console.log(catergory_sub_row);
-    catergory_sub_row?.classList.toggle('show');
-    })
+catergory_row.forEach((row) => {
+    row.addEventListener('click', () => {
+        const catergory_sub_row = row.parentElement?.querySelector(
+            '.catergory__row--sub',
+        );
+        catergory_sub_row?.classList.toggle('show');
+    });
 });
-    

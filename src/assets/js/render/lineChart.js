@@ -1,0 +1,186 @@
+import fakeDatabase from '../db/fakeDBv1.js';
+
+const chartValues = [
+    { value: 25 },
+    { value: 60 },
+    { value: 45 },
+    { value: 50 },
+    { value: 40 },
+];
+
+/**
+ *
+ * @param {HTMLElement} container
+ * @param {{value: number}[]} values
+ */
+function formatLineChartData(container, values = chartValues) {
+    const widgetHeight = container.clientHeight;
+    const widgetWidth = container.clientWidth;
+    container.style.cssText = `--widgetHeight: ${widgetHeight}px; --widgetWidth: ${widgetWidth}px`;
+    const pointSize = 16;
+
+    const base = (widgetWidth - pointSize * 2) / (values.length - 1);
+
+    const topMostPoint = maxValue(values);
+    let leftOffset = pointSize; //padding for left axis labels
+    let nextPoint = 0;
+    let rise = 0;
+    let cssValues = [];
+
+    for (var i = 0, len = values.length - 1; i < len; i++) {
+        var currentValue = {
+            left: 0,
+            bottom: 0,
+            hypotenuse: 0,
+            angle: 0,
+            value: 0,
+        };
+
+        currentValue.value = values[i].value;
+        currentValue.left = leftOffset;
+        leftOffset += base;
+
+        currentValue.bottom =
+            (widgetHeight - pointSize) * (currentValue.value / topMostPoint);
+        nextPoint =
+            (widgetHeight - pointSize) * (values[i + 1].value / topMostPoint);
+
+        rise = currentValue.bottom - nextPoint;
+        currentValue.hypotenuse = Math.sqrt(base * base + rise * rise);
+        currentValue.angle = radiansToDegrees(
+            Math.asin(rise / currentValue.hypotenuse),
+        );
+
+        cssValues.push(currentValue);
+    }
+
+    var lastPoint = {
+        left: leftOffset,
+        bottom:
+            (widgetHeight - pointSize) *
+            (values[values.length - 1].value / topMostPoint),
+        hypotenuse: 0,
+        angle: 0,
+        value: values[values.length - 1].value,
+    };
+
+    cssValues.push(lastPoint);
+    while (container.firstChild) container.removeChild(container.firstChild);
+    cssValues.forEach((item) => {
+        let markup = createListItem(item);
+        let listItem = document.createElement('div');
+        listItem.style.cssText = `--x: ${item.left}px; --y: ${item.bottom}px`;
+        listItem.innerHTML = markup;
+        container.appendChild(listItem);
+    });
+    hoverPoint();
+}
+const maxValue = (values) => {
+    let max = 0;
+    values.forEach((e) => {
+        max = max > e.value ? max : e.value;
+    });
+    return max;
+};
+const radiansToDegrees = (rads) => rads * (180 / Math.PI);
+
+function createListItem(item) {
+    return `
+  <div class="data-point" data-value="${item.value}"></div>
+  <div class="line-segment" style="--hypotenuse: ${item.hypotenuse}; --angle:${item.angle};"></div>
+  `;
+}
+
+function getPointData(point) {
+    const popup = document.createElement('div');
+    popup.innerHTML = point.getAttribute('data-value');
+    return popup;
+}
+
+function hoverPoint() {
+    let timeoutId;
+    let lastHover;
+    document.querySelectorAll('.data-point').forEach((point, i, arr) => {
+        point.addEventListener('mouseover', () => {
+            if (lastHover) {
+                if (lastHover.firstChild)
+                    lastHover.removeChild(lastHover.firstChild);
+            }
+            if (timeoutId) clearTimeout(timeoutId);
+            while (point.firstChild) point.removeChild(point.firstChild);
+            point.appendChild(getPointData(point));
+            lastHover = arr[i];
+        });
+        point.addEventListener('mouseout', () => {
+            timeoutId = setTimeout(() => {
+                if (point.firstChild) point.removeChild(point.firstChild);
+            }, 3000);
+        });
+    });
+}
+/**@param {import('../until/type.js').Order} order */
+function creatOrderInfo(order) {
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    details.appendChild(summary);
+    summary.innerHTML = `Mã đơn: ${order.id}`;
+    let head = document.createElement('div');
+    let ma = document.createElement('div');
+    head.appendChild(ma);
+    ma.innerHTML = `Mã sách`;
+    let sl = document.createElement('div');
+    sl.innerHTML = `Số lượng`;
+    head.appendChild(sl);
+    details.appendChild(head);
+    order.items.forEach((item) => {
+        let product = document.createElement('div');
+        let product_name = document.createElement('div');
+        product.appendChild(product_name);
+        product_name.innerHTML = item.sach;
+        let product_quantify = document.createElement('div');
+        product_quantify.innerHTML = `${item.quantity}`;
+        product.appendChild(product_quantify);
+        details.appendChild(product);
+    });
+    return details;
+}
+async function renderLeaderboard() {
+    const alldata = await fakeDatabase.getAllOrder();
+    let array = [];
+    const data = alldata.filter((e) => e.state == 'thanhcong');
+    data.forEach((e) => {
+        const index = array.findIndex((element) => element.id == e.user_id);
+        if (index != -1) {
+            array[index].total += e.total;
+            array[index].order.push(e.id);
+        } else array.push({ id: e.user_id, total: e.total, order: [e.id] });
+    });
+    array.sort((a, b) => b.total - a.total);
+    array.slice(0, 5).forEach(async (e, i) => {
+        const user = await fakeDatabase.getUserInfoByUserId(e.id);
+        const name = document.querySelector(
+            `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(2)`,
+        );
+        const total = document.querySelector(
+            `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(3)`,
+        );
+        if (user && name && total) {
+            e['name'] = user.name;
+            name.textContent = user.name;
+            total.textContent = e.total;
+        }
+    });
+    const showOrder = document.querySelector('.info-order');
+    document.querySelectorAll('.leaderboard-body > div').forEach((e, i) => {
+        e.addEventListener('click', () => {
+            while (showOrder?.firstChild)
+                showOrder.removeChild(showOrder.firstChild);
+            array[i].order.forEach(async (id) => {
+                let orderData = await fakeDatabase.getOrderById(id);
+                if (!orderData) return;
+                showOrder?.appendChild(creatOrderInfo(orderData));
+            });
+        });
+    });
+}
+export { formatLineChartData, renderLeaderboard };

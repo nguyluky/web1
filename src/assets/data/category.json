@@ -1,90 +1,75 @@
 {
     "data": [
         {
-            "id": "mc",
-            "name": "môn chung",
-            "long_name": "môn chung"
+            "id": "gtcb",
+            "name": "Giáo trình cơ bản",
+            "long_name": ""
         },
         {
-            "id": "hoidap",
-            "name": "hỏi đáp",
-            "long_name": "hỏi đáp"
+            "id": "gtnc",
+            "name": "Giáo trình nâng cao",
+            "long_name": ""
         },
         {
-            "id": "QD",
-            "name": "Khoa Quản trị Kinh doanh"
+            "id": "gtcn",
+            "name": "Giáo trình chuyên ngành",
+            "long_name": ""
         },
         {
-            "id": "VD",
-            "name": "Khoa Văn hoá và Du lịch"
+            "id": "bgpp",
+            "name": "Bài giản Powderpoint",
+            "long_name": ""
         },
         {
-            "id": "KT",
-            "name": "Khoa SP Kĩ thuật"
+            "id": "bgPDF",
+            "name": "Bài giản PDF",
+            "long_name": ""
         },
         {
-            "id": "09",
-            "name": "Phòng Giáo dục thường xuyên"
+            "id": "dtdaclc",
+            "name": "Đề thi và đáp án CLC",
+            "long_name": "Đề thi vào đáp án chất lương cao"
         },
         {
-            "id": "CT",
-            "name": "Khoa Công nghệ thông tin"
+            "id": "dtddtdaclcadt",
+            "name": "Đề thi và đại đáp ĐT",
+            "long_name": "Đề thi vào đáp án chất đại trà"
         },
         {
-            "id": "TT",
-            "name": "Khoa Thư viện - Văn phòng"
+            "id": "btcn",
+            "name": "Bài tập cá nhân",
+            "long_name": ""
+        }, 
+        {
+            "id": "btn",
+            "name": "Bài tập nhóm",
+            "long_name": ""
         },
         {
-            "id": "GM",
-            "name": "Khoa Giáo dục Mầm non"
+            "id": "tltks",
+            "name": "Tài liệu tham khảo sách",
+            "long_name": ""
         },
         {
-            "id": "NN",
-            "name": "Khoa Ngoại ngữ"
+            "id": "tltkk",
+            "name": "Tài liệu tham khảo khác",
+            "long_name": ""
         },
         {
-            "id": "XH",
-            "name": "Khoa SP Khoa học Xã hội"
+            "id": "lvtn",
+            "name": "Luận văn tốt nghiệp",
+            "long_name": ""
         },
         {
-            "id": "TD",
-            "name": "Khoa Toán - ứng dụng"
+            "id": "lvts",
+            "name": "Luận văn thạc sĩ",
+            "long_name": ""
         },
         {
-            "id": "TE",
-            "name": "Khoa Tài chính - Kế toán"
-        },
-        {
-            "id": "QG",
-            "name": "Khoa Giáo dục"
-        },
-        {
-            "id": "MO",
-            "name": "Khoa Môi trường"
-        },
-        {
-            "id": "TN",
-            "name": "Khoa SP Khoa học Tự nhiên"
-        },
-        {
-            "id": "GT",
-            "name": "Khoa Giáo dục Tiểu học"
-        },
-        {
-            "id": "NT",
-            "name": "Khoa Nghệ thuật"
-        },
-        {
-            "id": "LU",
-            "name": "Khoa Luật"
-        },
-        {
-            "id": "DV",
-            "name": "Khoa Điện tử viễn thông"
-        },
-        {
-            "id": "LC",
-            "name": "Khoa Giáo dục chính trị"
+            "id": "lvtns",
+            "name": "Luận văn tiến sĩ",
+            "long_name": ""
         }
+
     ]
 }
