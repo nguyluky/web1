@@ -2,16 +2,22 @@ import fakeDatabase from '../db/fakeDBv1.js';
 //get data
 const Product_Data = await fakeDatabase.getAllSach();
 //tính số trang
-let Current_Page = 1;
+let Current_Page;
 const Products_Per_page = 8;
-const totalPages = Math.ceil(Product_Data.length / Products_Per_page);
+let totalPages = Math.ceil(Product_Data.length / Products_Per_page);;
 //nếu số trang > 1
-if (totalPages > 1) createPagination();
+//  if (totalPages > 1) 
+createPagination();
 // tạo Pagination
 function createPagination() {
+    Current_Page=1;
     const pagination = /**@type {HTMLElement}*/ (
         document.querySelector('.pagination')
     );
+    if(totalPages < 2){
+        pagination.innerHTML=``;
+        return;
+    }
     pagination.innerHTML = `<button class="pagination__btns arrows">
         <i class="fa-solid fa-angle-left"></i>
     </button>
@@ -28,6 +34,8 @@ function createPagination() {
             i == 1 ? 'active-page' : ''
         }">${i}</button>`;
     }
+
+    setupPaginationListeners();
 }
 // create product card
 async function createProduct(product) {
@@ -66,7 +74,7 @@ async function createProduct(product) {
     return Product_Item;
 }
 // render products
-function displayProducts() {
+function displayProducts(data=Product_Data) {
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
@@ -74,7 +82,7 @@ function displayProducts() {
 
     const start = (Current_Page - 1) * Products_Per_page;
     const end = start + Products_Per_page;
-    const Products_To_Display = Product_Data.slice(start, end);
+    const Products_To_Display = data.slice(start, end);
 
     Products_To_Display.forEach(async (product) => {
         const productItem = await createProduct(product);
@@ -82,7 +90,7 @@ function displayProducts() {
     });
 }
 //
-function activePage() {
+function activePage(data=Product_Data) {
     let firstPage = 1;
     let lastPage = totalPages;
     if (totalPages > 5) {
@@ -142,5 +150,26 @@ function setupPaginationListeners() {
         });
     });
 }
+
+
+const sub_header = document.querySelectorAll(".catergory__row--sub-header");
+
+sub_header.forEach(e =>{
+    const sub = /**@type {HTMLElement}*/(e);
+    sub.addEventListener('click', ev =>{
+        let product_in_category = [];
+        Product_Data.forEach(products =>{
+            products.category.forEach(category =>{
+                if(category.includes(String(sub.dataset.value))){
+                    product_in_category.push(products);
+                }
+            });
+        });
+        totalPages = Math.ceil(product_in_category.length / Products_Per_page);
+        displayProducts(product_in_category);
+        createPagination();
+    });
+});
+
 
 export { setupPaginationListeners, displayProducts };
