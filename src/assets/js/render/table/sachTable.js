@@ -20,6 +20,7 @@ import { showImgPreviewPopup } from '../popupRender.js';
 const cols = {
     title: 'Title',
     base_price: 'Price',
+    discount: 'Discount',
     category: 'Category',
     details: 'Details',
     thumbnail: 'Thumbnail',

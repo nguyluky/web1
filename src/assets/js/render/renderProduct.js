@@ -1,24 +1,19 @@
 import fakeDatabase from '../db/fakeDBv1.js';
-//get data
+
 const Product_Data = await fakeDatabase.getAllSach();
-//tính số trang
-let Current_Page;
-const Products_Per_page = 8;
-let totalPages = Math.ceil(Product_Data.length / Products_Per_page);;
-//nếu số trang > 1
-//  if (totalPages > 1) 
-createPagination();
-// tạo Pagination
+let data = Product_Data;
+let Current_Page = 1;
+let Products_Per_page = 8;
+let totalPages = Math.ceil(Product_Data.length / Products_Per_page);
 function createPagination() {
-    Current_Page=1;
     const pagination = /**@type {HTMLElement}*/ (
         document.querySelector('.pagination')
     );
-    if(totalPages < 2){
-        pagination.innerHTML=``;
+    if (totalPages < 2) {
+        pagination.innerHTML = ``;
         return;
     }
-    pagination.innerHTML = `<button class="pagination__btns arrows">
+    pagination.innerHTML = `<button class="pagination__btns arrows disable">
         <i class="fa-solid fa-angle-left"></i>
     </button>
     <div class="pagination__page"></div>
@@ -34,7 +29,6 @@ function createPagination() {
             i == 1 ? 'active-page' : ''
         }">${i}</button>`;
     }
-
     setupPaginationListeners();
 }
 // create product card
@@ -46,7 +40,7 @@ async function createProduct(product) {
         <div class="product-img">
             <div class="discount-tag ${
                 product.discount == 0 ? 'hide' : ''
-            }">-${String(product.discount)}%</div>
+            }">-${String(product.discount * 100)}%</div>
             <img
                 src="${img.data}"
                 alt=""
@@ -58,9 +52,7 @@ async function createProduct(product) {
         <div class="product-price">
             <span class="sale-price">
                 ${String(
-                    Math.round(
-                        product.base_price * (1 - product.discount * 0.01),
-                    ),
+                    Math.round(product.base_price * (1 - product.discount)),
                 )} <sup>₫</sup></span>
             <span class="regular-price ${product.discount == 0 ? 'hide' : ''}">
                 ${String(product.base_price)} <sup>₫</sup></span>
@@ -74,7 +66,7 @@ async function createProduct(product) {
     return Product_Item;
 }
 // render products
-function displayProducts(data=Product_Data) {
+function displayProducts(data = Product_Data) {
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
@@ -90,29 +82,31 @@ function displayProducts(data=Product_Data) {
     });
 }
 //
-function activePage(data=Product_Data) {
+function updatePagination() {
     let firstPage = 1;
-    let lastPage = totalPages;
     if (totalPages > 5) {
         if (Current_Page > totalPages - 2) firstPage = totalPages - 4;
-        else if (Current_Page > 3) {
-            firstPage = Current_Page - 2;
-            lastPage = firstPage + 4;
-        }
+        else if (Current_Page > 3) firstPage = Current_Page - 2;
     }
     const getAllPage = document.querySelectorAll('.pagination__btns.page');
+    const getAllArrow = document.querySelectorAll('.pagination__btns.arrows');
+    getAllArrow.forEach((e) => {
+        e.classList.remove('disable');
+    });
+    if (Current_Page == 1) getAllArrow[0].classList.add('disable');
+    if (Current_Page == totalPages) getAllArrow[1].classList.add('disable');
     getAllPage.forEach((e, i) => {
         e.innerHTML = `${firstPage + i}`;
         e.classList.remove('active-page');
         if (e.innerHTML == String(Current_Page)) e.classList.add('active-page');
     });
+    displayProducts(data);
 }
 // Chuyển đến trang trước
 function prevPage() {
     if (Current_Page > 1) {
         Current_Page--;
-        displayProducts();
-        activePage();
+        updatePagination();
     }
 }
 
@@ -120,17 +114,16 @@ function prevPage() {
 function nextPage() {
     if (Current_Page < totalPages) {
         Current_Page++;
-        displayProducts();
-        activePage();
+        updatePagination();
     }
 }
 
 // Chuyển đến trang cụ thể
+/**@param {Number} page  */
 function goToPage(page) {
     if (Current_Page != page) {
         Current_Page = page;
-        displayProducts();
-        activePage();
+        updatePagination();
     }
 }
 
@@ -150,26 +143,29 @@ function setupPaginationListeners() {
         });
     });
 }
+function renderProduct() {
+    console.log('call renderProduct');
+    // default
+    displayProducts();
+    createPagination();
+    // khi chọn danh mục
+    const sub_header = document.querySelectorAll('.catergory__row--sub-header');
 
-
-const sub_header = document.querySelectorAll(".catergory__row--sub-header");
-
-sub_header.forEach(e =>{
-    const sub = /**@type {HTMLElement}*/(e);
-    sub.addEventListener('click', ev =>{
-        let product_in_category = [];
-        Product_Data.forEach(products =>{
-            products.category.forEach(category =>{
-                if(category.includes(String(sub.dataset.value))){
-                    product_in_category.push(products);
-                }
-            });
+    sub_header.forEach((sub) => {
+        sub.addEventListener('click', (ev) => {
+            const category = /**@type {HTMLElement}*/ (sub).dataset.value;
+            if (category) {
+                data = Product_Data.filter((e) => {
+                    return e.category.indexOf(category) != -1;
+                });
+                totalPages = Math.ceil(data.length / Products_Per_page);
+                console.log('data', data);
+            }
+            Current_Page = 1;
+            displayProducts(data);
+            createPagination();
         });
-        totalPages = Math.ceil(product_in_category.length / Products_Per_page);
-        displayProducts(product_in_category);
-        createPagination();
     });
-});
+}
 
-
-export { setupPaginationListeners, displayProducts };
+export default renderProduct;

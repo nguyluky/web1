@@ -16,7 +16,7 @@
 
 aside.aside {
     height: 800px;
-    min-width: 240px;
+    min-width: 235px;
 }
 
 .aside .aside-box {
@@ -46,6 +46,10 @@ aside.aside {
 
 .article {
     height: max-content;
+    min-height: 800px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: max-content 1fr max-content;
 }
 .article-header {
     margin-bottom: 30px;
@@ -147,8 +151,8 @@ aside.aside {
 
 .pagination__btns {
     cursor: pointer;
-    width: 25px;
-    height: 20px;
+    width: 40px;
+    height: 25px;
     text-align: center;
     font-size: 15px;
     font-weight: 500;
@@ -160,22 +164,28 @@ aside.aside {
 .pagination__btns:hover {
     color: #189eff;
 }
-
+.pagination__btns.arrows.disable {
+    color: #888;
+    pointer-events: none;
+}
 .active-page {
     color: #189eff;
+    font-weight: 700;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
 }
 
 .pagination {
-    margin-top: 40px;
+    margin-top: 35px;
     background-color: white;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
 }
 
 .pagination__page {
     display: flex;
-    gap: 20px;
+    gap: 10px;
 }
 
 /* @media screen and (max-width: 1100px) {

@@ -1,8 +1,5 @@
 import fakeDatabase from './db/fakeDBv1.js';
-import {
-    displayProducts,
-    setupPaginationListeners,
-} from './render/renderProduct.js';
+import renderProduct from './render/renderProduct.js';
 import removeDiacritics from './until/removeDiacritics.js';
 
 //#region khai bao bien
@@ -330,8 +327,7 @@ function initializeAccountPopup() {
 function main() {
     initializeLocationPopup();
     initializeAccountPopup();
-    displayProducts();
-    setupPaginationListeners();
+    renderProduct();
 }
 
 main();
