@@ -2,7 +2,6 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import { validataCart } from '../../until/type.js';
 import {
     createCheckBox,
-    createTableSell,
     renderTable,
     searchList,
     tableClearErrorKey,
@@ -48,71 +47,59 @@ function handleOnChangeRow(data, key, newValue) {
 }
 
 /**
- *
+ * @param {HTMLTableRowElement} row
  * @param {Cart} value
  * @param {import('./baseRender.js').OnChange<Cart>} [onchange]
- * @returns {HTMLTableRowElement}
  */
-function createRowCart(value, onchange) {
-    const tr = document.createElement('tr');
-    tr.setAttribute('id-row', value.id);
-
-    const td = createCheckBox(value['id']);
-    tr.appendChild(td);
-
-    const tdUserName = createTableSell('user_id');
-    fakeDatabase.getUserInfoByUserId(value['user_id']).then((user) => {
-        tdUserName.textContent = user?.name || '';
-    });
-    tdUserName.removeAttribute('key');
-    tr.appendChild(tdUserName);
-
-    const tdSach = createTableSell('sach');
-    fakeDatabase.getSachById(value['sach']).then((sach) => {
-        tdSach.textContent = sach?.title || '';
-    });
-    tdSach.removeAttribute('key');
-    tdSach.style.minWidth = '100px';
-    tr.appendChild(tdSach);
-
-    const tdSoLuong = createTableSell('quantity');
-    tdSoLuong.textContent = value['quantity'] + '';
-    tdSoLuong.setAttribute('default-value', value['quantity'] + '');
-    tr.appendChild(tdSoLuong);
-
-    tdSoLuong.addEventListener('input', () => {
-        onchange &&
-            onchange(value, 'quantity', +(tdSoLuong.textContent || '0'));
-
-        tdSoLuong.getAttribute('default-value') == tdSoLuong.textContent
-            ? td.setAttribute('ischange', 'false')
-            : td.setAttribute('ischange', 'true');
-    });
-
-    const tdDate = createTableSell('timecreate');
-    const dateTimeInput = document.createElement('input');
-    dateTimeInput.type = 'datetime-local';
-    dateTimeInput.className = 'custom-datetime-input';
-    const dateTimeStringValue = (
-        typeof value['timecreate'] == 'string'
-            ? value['timecreate']
-            : value['timecreate'].toISOString()
-    )
-        .split('.')[0]
-        .replace('Z', '');
-
-    dateTimeInput.value = dateTimeStringValue;
-
-    dateTimeInput.addEventListener('change', () => {
-        console.log(dateTimeInput.value);
-        const date = new Date(dateTimeInput.value);
-        onchange && onchange(value, 'timecreate', date);
-    });
-
-    tdDate.appendChild(dateTimeInput);
-    tr.appendChild(tdDate);
-
-    return tr;
+function createRowCart(row, value, onchange) {
+    // const tr = document.createElement('tr');
+    // tr.setAttribute('id-row', value.id);
+    // const td = createCheckBox(value['id']);
+    // tr.appendChild(td);
+    // const tdUserName = createTableSell('user_id');
+    // fakeDatabase.getUserInfoByUserId(value['user_id']).then((user) => {
+    //     tdUserName.textContent = user?.name || '';
+    // });
+    // tdUserName.removeAttribute('key');
+    // tr.appendChild(tdUserName);
+    // const tdSach = createTableSell('sach');
+    // fakeDatabase.getSachById(value['sach']).then((sach) => {
+    //     tdSach.textContent = sach?.title || '';
+    // });
+    // tdSach.removeAttribute('key');
+    // tdSach.style.minWidth = '100px';
+    // tr.appendChild(tdSach);
+    // const tdSoLuong = createTableSell('quantity');
+    // tdSoLuong.textContent = value['quantity'] + '';
+    // tdSoLuong.setAttribute('default-value', value['quantity'] + '');
+    // tr.appendChild(tdSoLuong);
+    // tdSoLuong.addEventListener('input', () => {
+    //     onchange &&
+    //         onchange(value, 'quantity', +(tdSoLuong.textContent || '0'));
+    //     tdSoLuong.getAttribute('default-value') == tdSoLuong.textContent
+    //         ? td.setAttribute('ischange', 'false')
+    //         : td.setAttribute('ischange', 'true');
+    // });
+    // const tdDate = createTableSell('timecreate');
+    // const dateTimeInput = document.createElement('input');
+    // dateTimeInput.type = 'datetime-local';
+    // dateTimeInput.className = 'custom-datetime-input';
+    // const dateTimeStringValue = (
+    //     typeof value['timecreate'] == 'string'
+    //         ? value['timecreate']
+    //         : value['timecreate'].toISOString()
+    // )
+    //     .split('.')[0]
+    //     .replace('Z', '');
+    // dateTimeInput.value = dateTimeStringValue;
+    // dateTimeInput.addEventListener('change', () => {
+    //     console.log(dateTimeInput.value);
+    //     const date = new Date(dateTimeInput.value);
+    //     onchange && onchange(value, 'timecreate', date);
+    // });
+    // tdDate.appendChild(dateTimeInput);
+    // tr.appendChild(tdDate);
+    // return tr;
 }
 
 /** @param {Cart[]} list */

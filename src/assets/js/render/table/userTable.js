@@ -4,7 +4,7 @@ import uuidv from '../../until/uuid.js';
 import {
     searchList,
     renderTable,
-    createDefaultRow,
+    renderDefaultRow,
     tableShowErrorKey,
     tableClearErrorKey,
     defaultAddRow,
@@ -12,9 +12,10 @@ import {
     getRowsSeletion,
     removeRowById,
     createCheckBox,
-    createTableSell,
-    createDateTableCell,
-    createOpstionCell,
+    createOptionTabelCell,
+    createTextTableCell,
+    createRow,
+    createNumberTableCell,
 } from './baseRender.js';
 
 /** @typedef {import('../../until/type.js').UserInfo} UserInfo */
@@ -160,92 +161,38 @@ async function userDoSave() {
 }
 
 /**
- *
+ * @param {HTMLTableRowElement} row
  * @param {UserInfo} value
  * @param {import('./baseRender.js').OnChange<UserInfo>} [onchange]
- * @returns {HTMLTableRowElement}
  */
-function createRow(value, onchange) {
-    const row = document.createElement('tr');
-    row.setAttribute('id-row', value.id);
-
-    const col = createCheckBox(value['id']);
-    row.appendChild(col);
-
+function renderRow(row, value, onchange) {
     Object.keys(cols).forEach((key) => {
-        const col = createTableSell(key);
         switch (key) {
             case 'status': {
-                const option = createOpstionCell(
-                    value['status'],
+                const optionCell = createOptionTabelCell(
+                    'status',
+                    value.status,
                     [
-                        { title: 'Đang hoạt động', value: 'active' },
-                        { title: 'Bị cấm', value: 'ban' },
+                        { title: 'Active', value: 'active' },
+                        { title: 'Ban', value: 'ban' },
                     ],
                     (va) => {
                         onchange && onchange(value, 'status', va);
                     },
                 );
-                col.removeAttribute('key');
-                col.setAttribute('default-value', value['status'] || '');
-                col.appendChild(option);
-                break;
-            } /*
-            case 'rule': {
-                const option = createOpstionCell(
-                    value['rule'],
-                    [
-                        { title: 'user', value: 'user' },
-                        { title: 'admin', value: 'admin' },
-                    ],
-                    (va) => {
-                        onchange && onchange(value, 'rule', va);
-                    },
-                );
 
-                col.setAttribute('default-value', value['rule'] || '');
-                col.appendChild(option);
+                row.appendChild(optionCell);
                 break;
             }
-            case 'datecreated': {
-                const inputDate = createDateTableCell(
-                    value['datecreated'],
-                    (value_) => {
-                        onchange && onchange(value, 'datecreated', value_);
-                    },
-                );
-                col.setAttribute('default-value', String(value['datecreated']));
-                col.appendChild(inputDate);
-                break;
-            }*/
             default: {
-                col.insertAdjacentHTML('beforeend', value[key]);
-                col.setAttribute('default-value', value[key] || '');
-                col.oninput = (event) => {
-                    const target = /** @type {HTMLTableCellElement} */ (
-                        event.target
-                    );
-                    onchange &&
-                        onchange(
-                            value,
-                            // @ts-ignore
-                            key,
-                            target.textContent,
-                        );
-
-                    if (
-                        target.textContent ==
-                        target.getAttribute('default-value')
-                    )
-                        col.setAttribute('ischange', 'false');
-                    else col.setAttribute('ischange', 'true');
-                };
+                const col = createTextTableCell(key, value[key], (nv) => {
+                    // @ts-ignore
+                    onchange && onchange(value, key, nv);
+                });
+                row.appendChild(col);
             }
         }
-        row.appendChild(col);
     });
-
-    return row;
 }
 
 /**
@@ -258,7 +205,7 @@ function renderUser(list) {
         document.getElementById('content_table')
     );
     if (!table) return;
-    renderTable(list, table, cols, onChangeHandle, createRow);
+    renderTable(list, table, cols, onChangeHandle, renderRow);
 }
 
 /**
@@ -313,13 +260,18 @@ function addUser() {
     cacheAdd.push(data);
 
     // Tạo một hàng mới cho người dùng trong bảng
-    const row = createRow(data, (data, key, values) => {
-        cacheAdd[0] = {
-            ...cacheAdd[0],
-            [key]: values,
-        };
-    });
-    row.querySelector('select')?.classList.add('allow-change');
+    const row = createRow(
+        data,
+        cols,
+        (data, key, values) => {
+            cacheAdd[0] = {
+                ...cacheAdd[0],
+                [key]: values,
+            };
+        },
+        renderRow,
+    );
+
     defaultAddRow(table, row);
 }
 

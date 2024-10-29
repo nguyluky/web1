@@ -1,12 +1,16 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import uuidv from '../../until/uuid.js';
 import {
+    createBlockTextTabelCell,
     createCheckBox,
-    createTableSell,
+    createRow,
+    createTextTableCell,
+    defaultAddRow,
     renderTable,
     searchList,
 } from './baseRender.js';
 import { showImgPreviewPopup } from '../popupRender.js';
+import { createImgPreviewPopup } from '../popupFactory.js';
 
 /**
  * @typedef {import('../../until/type.js').Sach} Sach
@@ -55,12 +59,17 @@ function handleOnChange(data, key, newValue) {
  *
  * @param {string[]} value
  * @param {(categorys: string[]) => any} onchange
- * @returns {HTMLDivElement}
+ * @returns {HTMLTableCellElement}
  */
-function createCategoryCell(value, onchange) {
+function createCategoryCell(key, value, onchange) {
+    const td = document.createElement('td');
+    td.setAttribute('contenteditable', 'false');
+    td.setAttribute('key', key);
+    td.setAttribute('ctype', 'category');
+
     const categoryContainer = document.createElement('div');
     categoryContainer.className = 'category-container';
-
+    td.appendChild(categoryContainer);
     const categorys = [...value];
 
     /**
@@ -180,128 +189,111 @@ function createCategoryCell(value, onchange) {
         categoryContainer.appendChild(categoryAdd);
     });
 
-    return categoryContainer;
+    return td;
 }
 
 /**
+ *
+ * @param {string} key
+ * @param {string} value
+ * @param {(base64: string) => any} onchange
+ * @returns {HTMLTableCellElement}
+ */
+function createThumbnail(key, value, onchange) {
+    const td = document.createElement('td');
+    td.setAttribute('contenteditable', 'false');
+    td.setAttribute('key', key);
+    td.setAttribute('ctype', 'img-thumbnail');
+
+    // tạo div bao ảnh
+    const img_wrapper = document.createElement('div');
+    img_wrapper.className = 'img-wrapper';
+    // tạo thẻ img hiển thị ảnh
+    const img = document.createElement('img');
+    fakeDatabase.getImgById(value).then((imgS) => {
+        img.src = imgS?.data || '../assets/img/default-image.png';
+    });
+    img_wrapper.appendChild(img);
+    img_wrapper.addEventListener('click', () => {
+        if (td.getAttribute('contenteditable') !== 'true') return;
+        showImgPreviewPopup(
+            img.src,
+            () => {},
+            (base64) => {
+                onchange && onchange(base64);
+                img.src = base64;
+            },
+            () => {},
+        );
+    });
+
+    td.appendChild(img_wrapper);
+
+    return td;
+}
+
+/**
+ * @param {HTMLTableRowElement} row
  * @param {Sach} value
  * @param {import('./baseRender.js').OnChange<Sach>?} onchange
- * @returns {HTMLTableRowElement} Row
  */
-function createRow(value, onchange = null) {
-    const row = document.createElement('tr');
-    row.setAttribute('id-row', value.id);
-
-    const col = createCheckBox(value['id']);
-    row.appendChild(col);
-
+function renderRow(row, value, onchange = null) {
     Object.keys(cols).forEach((key) => {
-        const col = createTableSell(key);
-
         switch (key) {
             case 'category': {
-                const categoryContainer = createCategoryCell(
-                    value['category'],
-                    (category) => {
-                        // @ts-ignore
-                        onchange(value, 'category', category);
+                const category = createCategoryCell(
+                    'category',
+                    value.category,
+                    (nv) => {
+                        onchange && onchange(value, 'category', nv);
                     },
                 );
-                col.appendChild(categoryContainer);
+                row.appendChild(category);
                 break;
             }
             case 'details': {
-                const details_wrapper = document.createElement('div');
-                details_wrapper.className = 'details-wrapper';
-                details_wrapper.insertAdjacentHTML('beforeend', value[key]);
-                col.addEventListener('input', () => {
-                    onchange &&
-                        onchange(
-                            value,
-                            // @ts-ignore
-                            'details',
-                            details_wrapper.textContent || '',
-                        );
-
-                    if (
-                        details_wrapper.textContent ==
-                        details_wrapper.getAttribute('default-value')
-                    )
-                        col.setAttribute('ischange', 'false');
-                    else col.setAttribute('ischange', 'true');
-                });
-
-                details_wrapper.setAttribute('default-value', value[key]);
-                col.appendChild(details_wrapper);
+                const detail = createBlockTextTabelCell(
+                    'details',
+                    value.details,
+                    (nv) => {
+                        onchange && onchange(value, 'details', nv);
+                    },
+                );
+                row.appendChild(detail);
                 break;
             }
             case 'thumbnail': {
-                // tạo div bao ảnh
-                const img_wrapper = document.createElement('div');
-                img_wrapper.className = 'img-wrapper';
-                // tạo thẻ img hiển thị ảnh
-                const img = document.createElement('img');
-                fakeDatabase.getImgById(value[key]).then((imgS) => {
-                    img.src = imgS?.data || '../assets/img/default-image.png';
-                    
-                });
-                img_wrapper.appendChild(img);
-                img_wrapper.addEventListener('click', () => {
-                    if (col.getAttribute('contenteditable') !== 'true') return;
-                    showImgPreviewPopup(
-                        img.src,
-                        () => {
-                            console.log('ok')
-                        },
-                        (base64) => {
-                            // lưu vào cache để lưu vào db
-                            if (base64 != '') {
-                                cacheImg[value.thumbnail] = base64;
-                                img.src = base64;
-                            }
+                const imgThumbnail = createThumbnail(
+                    'thumbnail',
+                    value.thumbnail,
+                    (base64) => {
+                        // onchange && onchange(value, 'thumbnail', base64);
+                        cacheImg[value.thumbnail] = base64;
+                        // TODO: thêm kiểm tran thay đôi rồi thêm ischange
+                    },
+                );
 
-                            if (img.src != base64) {
-                                col.setAttribute('ischange', 'true');
-                            }
-                            else {
-                                col.setAttribute('ischange', 'false');
-                            }
-                        },
-                        () => {},
-                    );
+                row.appendChild(imgThumbnail);
+
+                break;
+            }
+            case 'title': {
+                const col = createTextTableCell('title', value.title, (nv) => {
+                    onchange && onchange(value, 'title', nv);
                 });
-                col.appendChild(img_wrapper);
+                col.style.minWidth = '100px';
+                row.appendChild(col);
                 break;
             }
             default: {
-                col.insertAdjacentHTML('beforeend', value[key]);
-                col.setAttribute('default-value', value[key] || '');
-                col.oninput = (event) => {
-                    const target = /** @type {HTMLTableCellElement} */ (
-                        event.target
-                    );
-
-                    if (onchange)
-                        onchange(
-                            value,
-                            // @ts-ignore
-                            key,
-                            target.textContent,
-                        );
-
-                    if (
-                        target.textContent ==
-                        target.getAttribute('default-value')
-                    )
-                        col.setAttribute('ischange', 'false');
-                    else col.setAttribute('ischange', 'true');
-                };
+                const col = createTextTableCell(key, value[key], (nv) => {
+                    // @ts-ignore
+                    onchange && onchange(value, key, nv);
+                });
+                row.appendChild(col);
             }
         }
-        row.appendChild(col);
     });
-
-    return row;
 }
 
 /** @param {Sach[]} list */
@@ -311,7 +303,7 @@ function renderSach(list) {
     );
     if (!table) return;
 
-    renderTable(list, table, cols, handleOnChange, createRow);
+    renderTable(list, table, cols, handleOnChange, renderRow);
     // nếu tràn ô thì thêm overflow
     Array.from(document.getElementsByClassName('details-wrapper')).forEach(
         (e) => {
@@ -355,20 +347,16 @@ function addRow() {
         category: [],
     };
     cacheAdd.push(data);
-
-    let row = createRow(data, (data, key, values) => {
-        cacheAdd[0][key] = values;
-    });
-    row.querySelectorAll('td:not(:has(input[type="checkbox"]))').forEach(
-        (e) => {
-            e.setAttribute('contenteditable', 'true');
+    let row = createRow(
+        data,
+        cols,
+        (data, key, values) => {
+            cacheAdd[0][key] = values;
         },
+        renderRow,
     );
-    table.insertBefore(row, table.childNodes[1]);
-    /** @type {HTMLElement} */ (table.parentNode).scrollTo({
-        top: 0,
-        behavior: 'smooth',
-    });
+
+    defaultAddRow(table, row);
 }
 
 function cancelAdd() {
@@ -439,7 +427,6 @@ async function saveBook() {
 const Sach_ = {
     cols,
     renderTable: renderSach,
-    renderRow: createRow,
     search: searchSach,
     doSave: saveBook,
     addRow,

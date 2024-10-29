@@ -338,11 +338,10 @@ tr:hover td[error]::before {
     overflow-y: auto;
     height: 200px;
     max-width: 400px;
-    text-wrap: wrap;
-    white-space: pre-wrap; /* Since CSS 2.1 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
+    white-space: pre; /* Since CSS 2.1 */
+    white-space: -moz-pre; /* Mozilla, since 1999 */
+    white-space: -pre; /* Opera 4-6 */
+    white-space: -o-pre; /* Opera 7 */
     word-wrap: break-word;
 }
 
@@ -759,6 +758,10 @@ td[contenteditable='true']
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
         gap: 10px 0;
         justify-content: unset;
+    }
+
+    .table-conten-wrapper {
+        height: calc(100% - 70px);
     }
 
     #table-title-header {
