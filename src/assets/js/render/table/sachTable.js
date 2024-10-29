@@ -244,18 +244,28 @@ function createRow(value, onchange = null) {
                 const img = document.createElement('img');
                 fakeDatabase.getImgById(value[key]).then((imgS) => {
                     img.src = imgS?.data || '../assets/img/default-image.png';
+                    
                 });
                 img_wrapper.appendChild(img);
                 img_wrapper.addEventListener('click', () => {
                     if (col.getAttribute('contenteditable') !== 'true') return;
                     showImgPreviewPopup(
                         img.src,
-                        () => {},
+                        () => {
+                            console.log('ok')
+                        },
                         (base64) => {
                             // lưu vào cache để lưu vào db
                             if (base64 != '') {
                                 cacheImg[value.thumbnail] = base64;
                                 img.src = base64;
+                            }
+
+                            if (img.src != base64) {
+                                col.setAttribute('ischange', 'true');
+                            }
+                            else {
+                                col.setAttribute('ischange', 'false');
                             }
                         },
                         () => {},

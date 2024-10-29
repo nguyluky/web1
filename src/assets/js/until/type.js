@@ -80,7 +80,7 @@ import { validateEmail, validateNumberPhone } from './validata.js';
  *     user_id: string;
  *     items: Omit<Cart, 'id'| 'user_id' | 'timecreate'>[];
  *     date: Date;
- *     state: 'suly' | 'doixacnhan' | 'thanhcong';
+ *     state: 'doixacnhan' | 'daxacnhan' | 'danggiaohang' | 'giaohangthanhcong' | 'huy';
  *     last_update: Date;
  *     is_pay: boolean;
  *     total: number;
