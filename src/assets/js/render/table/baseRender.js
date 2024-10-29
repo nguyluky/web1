@@ -64,7 +64,7 @@ export function createTextTableCell(key, value, onchange, canEditable = true) {
 /**
  *
  * @param {string} key
- * @param {Date} value
+ * @param {Date | string} value
  * @param {(nv: Date) => any} [onchange ]
  * @param {boolean} [canEditable ]
  * @returns
@@ -79,7 +79,7 @@ export function createDateTimeTableCell(
     td.setAttribute('contenteditable', 'false');
     td.setAttribute('key', key);
     td.setAttribute('ctype', 'date-time');
-    td.setAttribute('default-value', value.toISOString());
+    td.setAttribute('default-value', String(value));
 
     if (!canEditable) td.setAttribute('can-editable', 'false');
     else td.setAttribute('can-editable', 'true');
@@ -101,7 +101,7 @@ export function createDateTimeTableCell(
 
         onchange && onchange(date);
 
-        if (date.toISOString() == td.getAttribute('default-value'))
+        if (String(date) == td.getAttribute('default-value'))
             td.setAttribute('ischange', 'false');
         else td.setAttribute('ischange', 'true');
     });

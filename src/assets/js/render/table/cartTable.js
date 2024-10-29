@@ -2,6 +2,8 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import { validataCart } from '../../until/type.js';
 import {
     createCheckBox,
+    createDateTimeTableCell,
+    createTextTableCell,
     renderTable,
     searchList,
     tableClearErrorKey,
@@ -51,7 +53,65 @@ function handleOnChangeRow(data, key, newValue) {
  * @param {Cart} value
  * @param {import('./baseRender.js').OnChange<Cart>} [onchange]
  */
-function createRowCart(row, value, onchange) {
+function createRow(row, value, onchange) {
+    Object.keys(cols).forEach((key) => {
+        switch (key) {
+            case 'user_id': {
+                const user_id = createTextTableCell(
+                    'user_id',
+                    value.user_id,
+                    (nv) => {
+                        onchange && onchange(value, 'user_id', nv);
+                    },
+                );
+
+                fakeDatabase.getUserInfoByUserId(value.user_id).then((user) => {
+                    user_id.textContent = user?.name || '';
+                    user_id.setAttribute('default-value', user?.name || '');
+                });
+
+                row.appendChild(user_id);
+
+                break;
+            }
+            case 'sach': {
+                const sachCell = createTextTableCell(
+                    'sach',
+                    value.sach,
+                    (nv) => {
+                        onchange && onchange(value, 'sach', nv);
+                    },
+                );
+
+                fakeDatabase.getSachById(value.sach).then((sach) => {
+                    sachCell.textContent = sach?.title || '';
+                    sachCell.setAttribute('default-value', sach?.title || '');
+                });
+
+                row.appendChild(sachCell);
+
+                break;
+            }
+            case 'timecreate': {
+                const date = createDateTimeTableCell(
+                    key,
+                    value.timecreate,
+                    (nv) => {
+                        onchange && onchange(value, 'timecreate', nv);
+                    },
+                );
+                row.appendChild(date);
+                break;
+            }
+            default: {
+                const col = createTextTableCell(key, value[key], (nv) => {
+                    // @ts-ignore
+                    onchange && onchange(value, key, nv);
+                });
+                row.appendChild(col);
+            }
+        }
+    });
     // const tr = document.createElement('tr');
     // tr.setAttribute('id-row', value.id);
     // const td = createCheckBox(value['id']);
@@ -109,7 +169,7 @@ function renderCart(list) {
     );
     if (!table) return;
 
-    renderTable(list, table, cols, handleOnChangeRow, createRowCart);
+    renderTable(list, table, cols, handleOnChangeRow, createRow);
 }
 
 /** @param {Cart[]} list */

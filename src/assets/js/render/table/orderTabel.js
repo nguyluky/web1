@@ -130,60 +130,6 @@ function renderRow(row, value, onchange) {
             }
         }
     });
-    // const userCell = createTableSell('user_id');
-    // fakeDatabase.getUserInfoByUserId(value.user_id).then((user) => {
-    //     userCell.textContent = user?.name || 'Không tìm thấy người dùng';
-    // });
-    // row.appendChild(userCell);
-    // const state = createTableSell('state');
-    // // TODO: không có gì
-    // const stateOpstion = createOpstionCell(
-    //     value.state,
-    //     [
-    //         { title: 'Đợi xác nhận', value: 'doixacnhan' },
-    //         { title: 'Đã xác nhận', value: 'daxacnhan' },
-    //         { title: 'Đang giao hàng', value: 'danggiaohang' },
-    //         { title: 'Giao hàng thành công', value: 'giaohangthanhcong' },
-    //         { title: 'Hủy', value: 'Huy' },
-    //     ],
-    //     (nv) => {
-    //         onchange && onchange(value, 'state', nv);
-    //     },
-    // );
-    // state.append(stateOpstion);
-    // row.appendChild(state);
-    // const date = createTableSell('date');
-    // const dateinput = createDateTableCell(value.date, (nv) => {
-    //     onchange && onchange(value, 'date', nv);
-    // });
-    // date.appendChild(dateinput);
-    // row.appendChild(date);
-    // const dateLast = createTableSell('last_update');
-    // const dateinputLast = createDateTableCell(value.last_update, (nv) => {
-    //     onchange && onchange(value, 'last_update', nv);
-    // });
-    // dateLast.appendChild(dateinputLast);
-    // row.appendChild(dateLast);
-    // const ispay = createTableSell('is_pay');
-    // const payOpstion = createOpstionCell(
-    //     value.is_pay ? 'true' : 'flase',
-    //     [
-    //         { title: 'Thành công', value: 'true' },
-    //         { title: 'Chưa thanh toán', value: 'false' },
-    //     ],
-    //     (nv) => {
-    //         onchange && onchange(value, 'is_pay', nv == 'true');
-    //     },
-    // );
-    // ispay.appendChild(payOpstion);
-    // row.appendChild(ispay);
-    // const total = createTableSell('total');
-    // total.textContent = value.total + '';
-    // total.addEventListener('input', () => {
-    //     onchange && onchange(value, 'total', +(total.textContent || 0));
-    // });
-    // row.appendChild(total);
-    // return row;
 }
 
 /**
