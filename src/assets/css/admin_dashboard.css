@@ -49,8 +49,9 @@
 }
 .data-point div {
     position: absolute;
-    top: 0;
-    left: 5px;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%);
     padding: 10px;
     background-color: rgba(68, 68, 68, 0.8);
     color: #fff;
@@ -93,7 +94,7 @@
     left: var(--x);
     position: absolute;
     transform: rotate(calc(var(--angle) * 1deg));
-    transform-origin: left bottom;
+    transform-origin: left 50%;
     width: calc(var(--hypotenuse) * 1px);
 }
 .count-group {

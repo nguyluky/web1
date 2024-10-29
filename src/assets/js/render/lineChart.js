@@ -19,7 +19,7 @@ function formatLineChartData(container, values = chartValues) {
     container.style.cssText = `--widgetHeight: ${widgetHeight}px; --widgetWidth: ${widgetWidth}px`;
     const pointSize = 16;
 
-    const base = (widgetWidth - pointSize / 2) / values.length;
+    const base = (widgetWidth - pointSize * 2) / (values.length - 1);
 
     const topMostPoint = maxValue(values);
     let leftOffset = pointSize; //padding for left axis labels
@@ -98,16 +98,24 @@ function getPointData(point) {
 }
 
 function hoverPoint() {
-    document.querySelectorAll('.data-point').forEach((point) => {
+    let timeoutId;
+    let lastHover;
+    document.querySelectorAll('.data-point').forEach((point, i, arr) => {
         point.addEventListener('mouseover', () => {
+            if (lastHover) {
+                if (lastHover.firstChild)
+                    lastHover.removeChild(lastHover.firstChild);
+            }
+            if (timeoutId) clearTimeout(timeoutId);
             while (point.firstChild) point.removeChild(point.firstChild);
             point.appendChild(getPointData(point));
+            lastHover = arr[i];
         });
-        point.addEventListener('mouseout', () =>
-            setTimeout(() => {
+        point.addEventListener('mouseout', () => {
+            timeoutId = setTimeout(() => {
                 if (point.firstChild) point.removeChild(point.firstChild);
-            }, 3000),
-        );
+            }, 3000);
+        });
     });
 }
 /**@param {import('../until/type.js').Order} order */
