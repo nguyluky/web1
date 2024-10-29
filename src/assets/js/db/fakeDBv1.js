@@ -1,5 +1,6 @@
 import uuidv4 from '../until/uuid.js';
 import addressData from './addressDb.js';
+import { isEmail, isPhone } from '../test.js';
 
 const ObjectStoreName = {
     USER: 'userStore',
@@ -165,6 +166,9 @@ req.onsuccess = () => {
 };
 
 class FakeDatabase {
+    // getUserInfoByPhoneOrEmail(arg0) {
+    //     throw new Error('Method not implemented.');
+    // }
     isReady() {
         return !!db;
     }
@@ -245,6 +249,20 @@ class FakeDatabase {
         );
     }
 
+    async getUserInfoByPhoneOrEmail(phone_email) {
+        if (!db) await this.awaitUntilReady();
+        const data = db
+            .transaction(ObjectStoreName.USER, 'readonly')
+            .objectStore(ObjectStoreName.USER);
+        let userget;
+        if (isEmail(phone_email)) {
+            userget = data.index('email').get(phone_email);
+        } else {
+            userget = data.index('phone_num').get(phone_email);
+        }
+        return await this.requestToPromise(userget);
+    }
+
     async addUserInfo(userInfo) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
@@ -267,7 +285,8 @@ class FakeDatabase {
         };
         const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
-        return this.requestToPromise(userStore.add(userInfo));
+        await this.requestToPromise(userStore.add(userInfo));
+        return userInfo;
     }
 
     async updateUserInfo(userInfo) {

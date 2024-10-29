@@ -28,14 +28,23 @@
 
 .left-content-heading {
     box-sizing: border-box;
+    margin-bottom: 12px;
     padding: 8px 16px;
     width: 100%;
     height: 36px;
-    display: grid;
+    /* display: grid; */
     /* grid-template-columns: 484px 180px 120px 120px 20px; */
-    grid-template-columns: 24.2fr 9fr 6fr 6fr 20px;
+    /* grid-template-columns: 24.2fr 9fr 6fr 6fr 20px; */
     /* column-gap: 24px; */
+    /* align-items: center; */
+}
+
+.item-grid {
+    display: grid;
+    /* grid-template-columns: 24.2fr 9fr 6fr 6fr 20px; */
+    grid-template-columns: 20fr 10fr 6fr 6fr 20px;
     align-items: center;
+    column-gap: 2.4%;
 }
 
 .left-content-heading > label {
@@ -167,6 +176,151 @@ input[type='checkbox'] {
     margin-right: 8px;
 }
 
+/* cart-book */
+.cart-seller-items {
+    background-color: white;
+}
+
+.cart-seller-name {
+    box-sizing: border-box;
+    padding: 16px;
+    background-color: white;
+}
+
+.cart-seller-name label {
+    display: flex;
+    align-items: center;
+    margin: 0px;
+}
+
+.cart-item {
+    padding: 16px 16px;
+}
+
+.home-icon {
+    width: 15px;
+    margin-right: 5px;
+}
+
+.book-pic {
+    text-align: center;
+}
+.book-pic img {
+    width: 60px;
+}
+
+.cart-item-figure {
+    display: grid;
+    grid-template-columns: 18px 80px 1fr;
+    column-gap: 12px;
+    align-items: center;
+}
+.book-title {
+    font-size: 14px;
+    color: rgb(39, 39, 42);
+    font-weight: 400;
+}
+.book-info {
+    display: grid;
+    row-gap: 5px;
+}
+
+.book-delivery-time {
+    display: flex;
+    align-content: center;
+}
+
+.delivery-text {
+    font-size: 13px;
+    color: rgb(39, 39, 42);
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.cart-item-delete-btn i {
+    font-size: 17px;
+    color: rgb(128, 128, 137);
+    cursor: pointer;
+}
+
+.car-icon {
+    width: 35px;
+    margin-right: 5px;
+}
+
+.cart-item-amount,
+.discount-price {
+    color: rgb(255, 66, 78);
+    font-weight: 600;
+}
+.cart-price-note {
+    font-size: 12px;
+    color: rgb(128, 128, 137);
+    /* text-decoration: line-through; */
+    font-weight: 400;
+    margin-left: 3px;
+}
+.original-price {
+    font-size: 12px;
+    color: rgb(128, 128, 137);
+    text-decoration: line-through;
+    font-weight: 400;
+    margin-left: 3px;
+}
+
+.quanity-form {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.quanity-form .quanity-num {
+    width: 32px;
+    font-size: 14px;
+    height: 24px;
+    text-align: center;
+    border-top: 0;
+    border-bottom: 0;
+    border-left: 1px solid rgb(200, 200, 200);
+    border-right: 1px solid rgb(200, 200, 200);
+}
+
+.dscr-quanity,
+.inc-quanity {
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 18px;
+    background-color: transparent;
+    cursor: pointer;
+    color: rgb(171, 170, 170);
+    font-size: 20px;
+    font-weight: 300;
+    outline: none;
+    border: none;
+}
+
+.button_1 {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    color: white;
+    background-color: rgb(255, 66, 78);
+    border-radius: 8px;
+    width: 13px;
+    height: 13px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 15px;
+    top: 3px;
+    right: 1px;
+}
+
 @media screen and (max-width: 1000px) {
     .main-cart-content {
         grid-template-columns: 1fr;
@@ -188,5 +342,11 @@ input[type='checkbox'] {
 
     .left-content-heading {
         grid-template-columns: 1fr auto;
+    }
+
+    .cart-items {
+        /* display: flex;
+        flex-direction: column; */
+        grid-template-columns: ;
     }
 }

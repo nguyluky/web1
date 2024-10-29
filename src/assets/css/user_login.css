@@ -170,6 +170,9 @@
     margin: auto;
 }
 /* sign-up */
+.sign-up-heading {
+    margin-top: 20px;
+}
 /* .sign-up-body {
     width: 800px;
     height: 420px;
@@ -179,11 +182,11 @@
 } */
 
 .input-info .input-group {
-    margin-top: 35px;
+    margin-top: 20px;
 }
 /* input sign up */
 #name,
-#login-password,
+#input-name,
 #password,
 #input-password,
 #input-email {

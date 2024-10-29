@@ -1,22 +1,28 @@
-// @ts-nocheck
-
-function isEmail(value) {
+export function isEmail(value) {
     const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return regexEmail.test(value) ? true : false;
 }
 
-function isPhone(value) {
+export function isPhone(value) {
     const regexTel = /(84[3|5|7|8|9]|0[3|5|7|8|9])+([0-9]{8})\b/g;
     return regexTel.test(value) ? true : false;
 }
 
-function validator(options) {
+export function validator(options) {
     const form = document.querySelector(options.form);
-
+    let selectorRules = {};
     function validate(inputElement, rule) {
-        const errorMessage = rule.test(inputElement.value);
-        const errorElement = inputElement.parentElement.nextElementSibling;
         const parentElement = inputElement.parentElement;
+        const errorElement = parentElement.nextElementSibling;
+        const rules = selectorRules[rule.selector];
+        let errorMessage;
+
+        for (let i = 0; i < rules.length; i++) {
+            errorMessage = rules[i](inputElement.value);
+            if (errorMessage) {
+                break;
+            }
+        }
         if (errorMessage && errorElement.classList.contains('form-error')) {
             parentElement.classList.remove('input-fill');
             parentElement.classList.add('input-error');
@@ -33,15 +39,21 @@ function validator(options) {
             e.preventDefault();
             let isValidForm = true;
             const data = {};
-
             options.rules.forEach((rule) => {
-                const inputElement = form.querySelector(rule.selector);
+                if (Array.isArray(selectorRules[rule.selector])) {
+                    selectorRules[rule.selector].push(rule.test);
+                } else {
+                    selectorRules[rule.selector] = [rule.test];
+                }
+
+                let inputElement = form.querySelector(rule.selector);
                 const isValid = validate(inputElement, rule);
                 data[rule.selector] = inputElement?.value;
                 if (!isValid) {
                     isValidForm = false;
                 }
             });
+
             if (isValidForm) {
                 options.onSubmit(data);
             }
@@ -73,21 +85,37 @@ validator.minLength = function (selector, min) {
     return {
         selector: selector,
         test: function (value) {
-            return value.length > min
+            return value.length >= min
                 ? undefined
-                : `Vui lòng nhập tối thiểu ${min} kí tự`;
+                : `Vui lòng nhập ít nhất ${min} kí tự`;
         },
     };
 };
 
-validator.isConfirmPass = function (selector) {
+validator.isCorrectPassword = function (selector, userPassword) {
     return {
         selector: selector,
-        test: function (value)
-    }
-}
+        test: function (value) {
+            return value === userPassword
+                ? undefined
+                : 'Mật khẩu không trùng khớp';
+        },
+    };
+};
 
-function showSignIn(modal) {
+validator.checkName = (selector) => {
+    return {
+        selector: selector,
+        test: (value) => {
+            const regex = /[!@#$%^&*(),.?":{}|<>0-9]/g;
+            return regex.test(value)
+                ? 'Tên không được chứa số hoặc kí tự đặc biệt'
+                : undefined;
+        },
+    };
+};
+
+export function showSignIn(modal) {
     if (modal) {
         modal.innerHTML = `
             <div class="modal-overlay"></div>
@@ -119,10 +147,6 @@ function showSignIn(modal) {
                             />
                         </form>
 
-                        <p class="login-email">
-                            <!-- <a href="#">Đăng nhập bằng email</a> -->
-                            Đăng nhập bằng email
-                        </p>
                     </div>
                 </div>
 
@@ -130,10 +154,11 @@ function showSignIn(modal) {
                     <img src="./assets/img/logov1.png" alt="" />
                 </div>
             </div>`;
+        // inputFill();
     }
 }
 
-function showCreateAccount(modal) {
+export function showCreateAccount(modal) {
     if (modal) {
         modal.innerHTML = `
             <div class="modal-overlay"></div>
@@ -158,8 +183,8 @@ function showCreateAccount(modal) {
                                     >
                                     <input
                                         type="text"
-                                        id="name"
-                                        placeholder="Gồm 2 từ trở lên, không bao gồm số và kí tự đặc biệt"
+                                        id="input-name"
+                                        placeholder="Không bao gồm số và kí tự đặc biệt"
                                     />
                                 </div>
                                 <span class="form-error"></span>
@@ -167,8 +192,8 @@ function showCreateAccount(modal) {
                                     <label for="password">Đặt mật khẩu</label>
                                     <input
                                         type="password"
-                                        id="password"
-                                        placeholder="Từ 8 đến 32 kí tự, gồm chữ và số"
+                                        id="input-password"
+                                        placeholder="Nhập 8 kí tự trở lên"
                                     />
                                 </div>
                                 <span class="form-error"></span>
@@ -187,10 +212,11 @@ function showCreateAccount(modal) {
                 </div>
             </div>
         `;
+        inputFill();
     }
 }
 
-function showInputPassword(modal) {
+export function showInputPassword(modal) {
     if (modal) {
         modal.innerHTML = `
             <div class="modal-overlay"></div>
@@ -210,13 +236,15 @@ function showInputPassword(modal) {
                             <p></p>
                         </div>
                         <form actiọn="" class="input-auth-form">
-                            <div class="input-group input-fill">
+                            <div class="input-group">
                                 <input
                                     type="password"
-                                    id="login-password"
+                                    id="input-password"
                                     placeholder="Mật khẩu"
                                 />
                             </div>
+                            <span class="form-error"></span>
+
                             <input
                                 type="submit"
                                 id="btn-login-password"
@@ -231,20 +259,25 @@ function showInputPassword(modal) {
                 </div>
             </div>
         `;
+        inputFill();
     }
 }
 
-// const inputs = document.querySelectorAll('input');
-// inputs.forEach((input) => {
-//     input.addEventListener('input', () => {
-//         const parentInput = input.parentElement;
-//         const errorElement = parentInput?.nextElementSibling;
-//         parentInput?.classList.add('input-fill');
-//         if (errorElement) {
-//             errorElement.innerHTML = '';
-//         }
-//         if (!input.value) {
-//             parentInput?.classList.remove('input-fill');
-//         }
-//     });
-// });
+export function inputFill() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach((input) => {
+        input.addEventListener('input', () => {
+            const parentInput = input.parentElement;
+            const errorElement = parentInput?.nextElementSibling;
+
+            parentInput?.classList.add('input-fill');
+            if (errorElement && errorElement.classList.contains('form-error')) {
+                errorElement.innerHTML = '';
+                parentInput?.classList.remove('input-error');
+            }
+            if (!input.value) {
+                parentInput?.classList.remove('input-fill');
+            }
+        });
+    });
+}
