@@ -106,7 +106,7 @@ export function createTextSell(key, value, onchange, canEdit = true) {
     );
 
     td.disable = true;
-    td.canEdit = canEdit;
+    td.canEditable = canEdit;
     td.value = value;
     td.defaultValue = value;
 

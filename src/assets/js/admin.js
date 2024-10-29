@@ -118,9 +118,6 @@ const buttonSaveState = {
         /**@type {NodeListOf<BaseTableCell>}*/ (
             document.querySelectorAll('td')
         ).forEach((e) => (e.disable = true));
-        document.querySelectorAll('#content_table td[key]').forEach((td) => {
-            td.setAttribute('contenteditable', 'false');
-        });
         document
             .querySelectorAll('select')
             .forEach((e) => e.classList.remove('allow-change'));
@@ -134,9 +131,6 @@ const buttonSaveState = {
         /**@type {NodeListOf<BaseTableCell>}*/ (
             document.querySelectorAll('td')
         ).forEach((e) => (e.disable = false));
-        document.querySelectorAll('#content_table td[key]').forEach((td) => {
-            td.setAttribute('contenteditable', 'true');
-        });
     },
 };
 

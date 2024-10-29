@@ -15,6 +15,7 @@ import {
     createTextSell,
     createDateTableCell,
 } from './baseRender.js';
+import { baseRenderTable } from './baseRenderTable.js';
 
 /** @typedef {import('../../until/type.js').UserInfo} UserInfo */
 
@@ -334,18 +335,42 @@ function removeRows() {
     });
 }
 
+// /**
+//  * Đối tượng quản lý toàn bộ các thao tác liên quan đến người dùng
+//  *
+//  * @type {import('./baseRender.js').IntefaceRender<UserInfo>}
+//  */
+// const user_ = {
+//     cols,
+//     renderTable: rendererUser,
+//     doSave: userDoSave,
+//     search: searchUser,
+//     addRow,
+//     removeRows,
+//     cancelAdd,
+// };
+// export default user_;
+
 /**
- * Đối tượng quản lý toàn bộ các thao tác liên quan đến người dùng
- *
- * @type {import('./baseRender.js').IntefaceRender<UserInfo>}
+ * @extends {baseRenderTable}
  */
-const user_ = {
-    cols,
-    renderTable: rendererUser,
-    doSave: userDoSave,
-    search: searchUser,
-    addRow,
-    removeRows,
-    cancelAdd,
-};
-export default user_;
+class UserTable extends baseRenderTable {
+    constructor(tableSelection, loaderSelection) {
+        super(tableSelection, loaderSelection);
+
+        this.cols.push({ key: 'name', title: 'Name' });
+        this.cols.push({ key: 'passwd', title: 'Pass' });
+        this.cols.push({ key: 'email', title: 'Email' });
+        this.cols.push({ key: 'phone_num', title: 'Phone' });
+        this.cols.push({ key: 'status', title: 'Status' });
+        this.cols.push({ key: 'rule', title: 'Rule' });
+        this.cols.push({ key: 'datecreated', title: 'Ngày tạo' });
+    }
+
+    async getData() {
+        return await fakeDatabase.getAllUserInfo();
+    }
+}
+
+const userTable = new UserTable('#content_table', '#loading');
+export default userTable;

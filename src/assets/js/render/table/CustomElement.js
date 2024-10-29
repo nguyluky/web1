@@ -121,7 +121,7 @@ export class BaseTableCell extends HTMLTableCellElement {
      * @public
      */
     set disable(value) {
-        if (this._canEdit == false) {
+        if (this._canEditable == false) {
             this._disable = true;
         } else this._disable = value;
         this.updateDisable();
@@ -131,23 +131,23 @@ export class BaseTableCell extends HTMLTableCellElement {
      * @type {boolean}
      * @private
      */
-    _canEdit;
+    _canEditable = true;
 
     /**
      * @returns {boolean}
      * @public
      */
-    get canEdit() {
-        return this._canEdit;
+    get canEditable() {
+        return this._canEditable;
     }
 
     /**
      * @param {boolean} value
      * @public
      */
-    set canEdit(value) {
-        this._canEdit = value;
-        if (this.canEdit == false) {
+    set canEditable(value) {
+        this._canEditable = value;
+        if (this.canEditable == false) {
             this.disable = true;
         }
     }
@@ -186,7 +186,7 @@ export class StringTableCell extends BaseTableCell {
     }
 
     updateValue() {
-        const span = this.querySelector('span');
+        const span = this.querySelector('div');
         span && (span.textContent = this.value);
     }
 
@@ -255,7 +255,7 @@ export class DatetimeTableCell extends BaseTableCell {
         const dateTimeInput = document.createElement('input');
         dateTimeInput.className = 'custom-datetime-input';
         dateTimeInput.type = 'datetime-local';
-        dateTimeInput.disabled = this.disable || !this.canEdit;
+        dateTimeInput.disabled = this.disable || !this.canEditable;
         dateTimeInput.value = this.value.toISOString().slice(0, 16);
 
         dateTimeInput.addEventListener('change', () => {
@@ -365,7 +365,7 @@ export class OptionTableCell extends BaseTableCell {
 
     connectedCallback() {
         const select = document.createElement('select');
-        select.disabled = this.disable || !this.canEdit;
+        select.disabled = this.disable || !this.canEditable;
         select.className = 'custom-select';
 
         this.renderOptions(select);
