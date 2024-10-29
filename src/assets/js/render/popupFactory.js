@@ -87,6 +87,10 @@ export function createImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
     buttonUpload.appendChild(text);
     text.textContent = 'Upload Image';
 
+
+    // const clearButton = 
+
+
     const inputUpload = document.createElement('input');
     inputUpload.setAttribute('type', 'file');
     inputUpload.setAttribute('id', 'img');
