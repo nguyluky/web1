@@ -5,13 +5,14 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import {
     createCheckBox,
-    createDateTimeTableCell,
-    createNumberTableCell,
-    createOptionTabelCell,
-    createTextTableCell,
     renderTable,
     searchList,
+    tableClearErrorKey,
 } from './baseRender.js';
+import { createOptionTabelCell } from './customCell.js';
+import { createNumberTableCell } from './customCell.js';
+import { createDateTimeTableCell } from './customCell.js';
+import { createTextTableCell } from './customCell.js';
 
 const cols = {
     user_id: 'User id',
@@ -22,7 +23,14 @@ const cols = {
     total: 'Total',
 };
 
+/**
+ * @type {{[key: string] : Order}}
+ */
 const cacheEdit = {};
+
+/**
+ * @type {Order[]}
+ */
 const cacheAdd = [];
 
 /**
@@ -161,6 +169,22 @@ function searchOrder(list) {
             /** @type {HTMLElement} */ (e).style.display = 'none';
         }
     });
+}
+
+async function doSave() {
+    const updateValues = Object.values(cacheEdit);
+    const addValues = Object.values(cacheAdd);
+
+    const promiseUpdate = updateValues.map((e) => {
+        return fakeDatabase.updateOrder(e);
+    });
+
+    await Promise.all(promiseUpdate);
+
+    // TODO: làm phần thêm order
+    // NOTE: tại chưa biết là admin có được phét thêm order cho người dùng được không
+
+    tableClearErrorKey();
 }
 
 /**

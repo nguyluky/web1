@@ -2,13 +2,15 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import { validataCart } from '../../until/type.js';
 import {
     createCheckBox,
-    createDateTimeTableCell,
-    createTextTableCell,
+    getAllRowsSeletion,
+    removeRowById,
     renderTable,
     searchList,
     tableClearErrorKey,
     tableShowErrorKey,
 } from './baseRender.js';
+import { createDateTimeTableCell } from './customCell.js';
+import { createTextTableCell } from './customCell.js';
 
 /**
  * @typedef {import('../../until/type.js').Cart} Cart
@@ -112,54 +114,6 @@ function createRow(row, value, onchange) {
             }
         }
     });
-    // const tr = document.createElement('tr');
-    // tr.setAttribute('id-row', value.id);
-    // const td = createCheckBox(value['id']);
-    // tr.appendChild(td);
-    // const tdUserName = createTableSell('user_id');
-    // fakeDatabase.getUserInfoByUserId(value['user_id']).then((user) => {
-    //     tdUserName.textContent = user?.name || '';
-    // });
-    // tdUserName.removeAttribute('key');
-    // tr.appendChild(tdUserName);
-    // const tdSach = createTableSell('sach');
-    // fakeDatabase.getSachById(value['sach']).then((sach) => {
-    //     tdSach.textContent = sach?.title || '';
-    // });
-    // tdSach.removeAttribute('key');
-    // tdSach.style.minWidth = '100px';
-    // tr.appendChild(tdSach);
-    // const tdSoLuong = createTableSell('quantity');
-    // tdSoLuong.textContent = value['quantity'] + '';
-    // tdSoLuong.setAttribute('default-value', value['quantity'] + '');
-    // tr.appendChild(tdSoLuong);
-    // tdSoLuong.addEventListener('input', () => {
-    //     onchange &&
-    //         onchange(value, 'quantity', +(tdSoLuong.textContent || '0'));
-    //     tdSoLuong.getAttribute('default-value') == tdSoLuong.textContent
-    //         ? td.setAttribute('ischange', 'false')
-    //         : td.setAttribute('ischange', 'true');
-    // });
-    // const tdDate = createTableSell('timecreate');
-    // const dateTimeInput = document.createElement('input');
-    // dateTimeInput.type = 'datetime-local';
-    // dateTimeInput.className = 'custom-datetime-input';
-    // const dateTimeStringValue = (
-    //     typeof value['timecreate'] == 'string'
-    //         ? value['timecreate']
-    //         : value['timecreate'].toISOString()
-    // )
-    //     .split('.')[0]
-    //     .replace('Z', '');
-    // dateTimeInput.value = dateTimeStringValue;
-    // dateTimeInput.addEventListener('change', () => {
-    //     console.log(dateTimeInput.value);
-    //     const date = new Date(dateTimeInput.value);
-    //     onchange && onchange(value, 'timecreate', date);
-    // });
-    // tdDate.appendChild(dateTimeInput);
-    // tr.appendChild(tdDate);
-    // return tr;
 }
 
 /** @param {Cart[]} list */
@@ -221,21 +175,21 @@ async function cartDoSave() {
     });
 }
 
+function removeRows() {
+    const rows = getAllRowsSeletion();
+    rows.forEach((id) => {
+        fakeDatabase.deleteCardById(id);
+        removeRowById(id);
+    });
+}
+
 /** @type {import('./baseRender.js').IntefaceRender<Cart>} */
 const Cart_ = {
     cols,
     renderTable: renderCart,
     search: searchCart,
     doSave: cartDoSave,
-    addRow: () => {
-        throw new Error('Tam thời chưa cần thiết cho lắm');
-    },
-    removeRows: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
-    cancelAdd: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
+    removeRows: removeRows,
 };
 
 export default Cart_;

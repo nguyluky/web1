@@ -1,14 +1,14 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import uuidv from '../../until/uuid.js';
 import {
-    createBlockTextTabelCell,
     createCheckBox,
     createRow,
-    createTextTableCell,
     defaultAddRow,
     renderTable,
     searchList,
 } from './baseRender.js';
+import { createBlockTextTabelCell } from './customCell.js';
+import { createTextTableCell } from './customCell.js';
 import { showImgPreviewPopup } from '../popupRender.js';
 import { createImgPreviewPopup } from '../popupFactory.js';
 

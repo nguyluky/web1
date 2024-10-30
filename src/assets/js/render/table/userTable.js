@@ -9,14 +9,14 @@ import {
     tableClearErrorKey,
     defaultAddRow,
     defaultRemoveAddRow,
-    getRowsSeletion,
+    getAllRowsSeletion,
     removeRowById,
     createCheckBox,
-    createOptionTabelCell,
-    createTextTableCell,
     createRow,
-    createNumberTableCell,
 } from './baseRender.js';
+import { createOptionTabelCell } from './customCell.js';
+import { createNumberTableCell } from './customCell.js';
+import { createTextTableCell } from './customCell.js';
 
 /** @typedef {import('../../until/type.js').UserInfo} UserInfo */
 
@@ -283,7 +283,7 @@ function cancelAdd() {
 
 /** Xóa các người dùng đã được chọn trong bảng */
 function removeRows() {
-    const selections = getRowsSeletion();
+    const selections = getAllRowsSeletion();
 
     selections.forEach((id) => {
         fakeDatabase.deleteSachById(id);
