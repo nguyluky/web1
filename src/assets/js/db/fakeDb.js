@@ -9,7 +9,6 @@
  *
  * @typedef {import('../until/type.js').imgStore} imgStore
  */
-
 import uuidv4 from '../until/uuid.js';
 import addressData from './addressDb.js';
 
@@ -306,6 +305,17 @@ class FakeDatabase {
         return await this.requestToPromise(userget);
     }
 
+    /** @param {string} phone_num */
+    async getUserInfoByPhoneNum(phone_num) {
+        if (!db) await this.awaitUntilReady();
+        const data = db
+            .transaction(ObjectStoreName.USER, 'readonly')
+            .objectStore(ObjectStoreName.USER);
+
+        const userget = data.index('phone_num').get(phone_num);
+        return await this.requestToPromise(userget);
+    }
+
     /**
      * @param {string} phone_num
      * @returns {Promise<UserInfo | undefined>}
@@ -317,15 +327,6 @@ class FakeDatabase {
             .objectStore(ObjectStoreName.USER);
 
         const userget = data.index('phone_num').get(phone_num);
-        return await this.requestToPromise(userget);
-    }
-
-    async getUserInfodByEmail(email) {
-        if (!db) await this.awaitUntilReady();
-        const data = db
-            .transaction(ObjectStoreName.USER, 'readonly')
-            .objectStore(ObjectStoreName.USER);
-        const userget = data.index('email').get(email);
         return await this.requestToPromise(userget);
     }
 

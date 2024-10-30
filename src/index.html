@@ -13,7 +13,7 @@
         />
         <title>We sell books</title>
         <script type="module" defer src="./assets/js/index.js"></script>
-        <!-- <script type="module" defer src="./assets/js/user-login.js"></script> -->
+        <script type="module" defer src="./assets/js/user-login.js"></script>
         <link rel="stylesheet" href="./assets/css/index.css" />
         <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css" />
         <link rel="icon" href="./assets/img/favicon.png" />
@@ -49,15 +49,14 @@
                         <i class="fa-regular fa-face-smile-wink"></i>
                         <span>Tài khoản</span>
                         <!-- dropdown-pos-center-bottom có thì làm thêm css  -->
-                        <!-- <div
+                        <div
                             class="dropdown-btn-content dropdown-pos-left-bottom"
                         >
-                            //thêm vòa đi
+                            <!-- thêm vòa đi -->
                             <p>Thông tin tài khoản</p>
-                            fdfdfsdfsdf
                             <p>Đơn hàng của tôi</p>
                             <p>Đăng xuất</p>
-                        </div> -->
+                        </div>
                     </button>
 
                     <div class="line"></div>
@@ -67,8 +66,6 @@
                 </div>
             </div>
         </header>
-        <div class="modal js-modal"></div>
-
         <main class="main">
             <div class="main_wapper">
                 <aside class="aside">
@@ -76,9 +73,7 @@
                         <div class="catergory__header">Danh mục</div>
                         <div class="catergory__content">
                             <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Giáo trình
-                                </div>
+                                <div class="catergory__row--header">Giáo trình</div> 
                                 <div class="catergory__row--sub">
                                     <li><span>Cơ bản</span></li>
                                     <li><span>Nâng cao</span></li>
@@ -86,45 +81,35 @@
                                 </div>
                             </div>
                             <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Bài giảng
-                                </div>
+                                <div class="catergory__row--header">Bài giảng</div>
                                 <div class="catergory__row--sub">
                                     <li><span>Powderpoint</span></li>
                                     <li><span>PDF</span></li>
                                 </div>
                             </div>
                             <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Đề thi và đáp án
-                                </div>
+                                <div class="catergory__row--header">Đề thi và đáp án</div>
                                 <div class="catergory__row--sub">
                                     <li><span>Chất lượng cao</span></li>
                                     <li><span>Đại trà</span></li>
                                 </div>
                             </div>
                             <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Bài tập lớn
-                                </div>
+                                <div class="catergory__row--header">Bài tập lớn</div>
                                 <div class="catergory__row--sub">
                                     <li><span>Cá nhân</span></li>
                                     <li><span>Nhóm</span></li>
                                 </div>
                             </div>
                             <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Tài liệu tham khảo
-                                </div>
+                                <div class="catergory__row--header">Tài liệu tham khảo</div>
                                 <div class="catergory__row--sub">
                                     <li><span>Sách tham khảo</span></li>
                                     <li><span>Tài liệu điện tử</span></li>
                                 </div>
                             </div>
                             <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Luận văn
-                                </div>
+                                <div class="catergory__row--header">Luận văn</div>
                                 <div class="catergory__row--sub">
                                     <li><span>Tốt nghiệp</span></li>
                                     <li><span>Thạc sĩ</span></li>
@@ -411,16 +396,12 @@
                         </div> -->
                     </div>
                     <div class="page-sections">
-                        <button class="page-sections__btns previous">
-                            <i class="fa-solid fa-angle-left"></i>
-                        </button>
+                        <button class="page-sections__btns previous"><i class="fa-solid fa-angle-left"></i></button>
                         <button class="page-sections__btns first">1</button>
                         <button class="page-sections__btns second">2</button>
                         <button class="page-sections__btns third">3</button>
                         <button class="page-sections__btns etc">...</button>
-                        <button class="page-sections__btns next">
-                            <i class="fa-solid fa-angle-right"></i>
-                        </button>
+                        <button class="page-sections__btns next"><i class="fa-solid fa-angle-right"></i></button>
                     </div>
                 </article>
             </div>
@@ -562,6 +543,52 @@
                     </div>
                 </div>
                 <button class="popup-btn">GIAO ĐẾN ĐỊA CHỈ NÀY</button>
+            </div>
+        </div>
+        <div class="modal" id="js-modal">
+            <div class="modal-overlay"></div>
+
+            <div class="modal-body modal-demo">
+                <button id="btn-exit">
+                    <img src="./assets/img/exit.png" alt="" />
+                </button>
+                <div class="modal-body-left">
+                    <div class="auth-form">
+                        <button id="back-btn" class="hide">
+                            <img src="./assets/img/back.png" alt="" />
+                        </button>
+                        <div class="heading">
+                            <h4>Xin chào,</h4>
+                            <p>
+                                Đăng nhập hoặc
+                                <a href="sign_up.html">Tạo tài khoản</a>
+                            </p>
+                        </div>
+                        <form action="" class="input-auth-form">
+                            <div class="input-group">
+                                <input
+                                    type="tel"
+                                    id="input-phone"
+                                    placeholder="Số điện thoại"
+                                />
+                            </div>
+                            <span class="form-error"></span>
+                            <input
+                                type="submit"
+                                value="Tiếp tục"
+                                id="btn-submit"
+                            />
+                        </form>
+
+                        <p class="link">
+                            <a href="loginEmail.html">Đăng nhập bằng email</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="modal-body-right">
+                    <img src="./assets/img/logov1.png" alt="" />
+                </div>
             </div>
         </div>
     </body>
