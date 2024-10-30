@@ -5,6 +5,7 @@ let data = Product_Data;
 let Current_Page = 1;
 let Products_Per_page = 8;
 let totalPages = Math.ceil(Product_Data.length / Products_Per_page);
+
 function createPagination() {
     const pagination = /**@type {HTMLElement}*/ (
         document.querySelector('.pagination')
@@ -36,13 +37,15 @@ async function createProduct(product) {
     const Product_Item = document.createElement('div');
     Product_Item.classList.add('product-card');
     const img = await fakeDatabase.getImgById(product.thumbnail);
+    let source = './assets/img/default-image.png';
+    if (img) source = img.data;
     Product_Item.innerHTML = `
         <div class="product-img">
             <div class="discount-tag ${
                 product.discount == 0 ? 'hide' : ''
             }">-${String(product.discount * 100)}%</div>
             <img
-                src="${img.data}"
+                src="${source}"
                 alt=""
             />
         </div>
@@ -70,13 +73,21 @@ function displayProducts(data = Product_Data) {
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
+    const header = /**@type {HTMLElement}*/ (
+        document.querySelector('.article-header')
+    );
     productlist.innerHTML = '';
-
+    if (data.length == 0) {
+        header.style.display = 'none';
+        return;
+    }
+    header.style.display = '';
     const start = (Current_Page - 1) * Products_Per_page;
     const end = start + Products_Per_page;
     const Products_To_Display = data.slice(start, end);
 
     Products_To_Display.forEach(async (product) => {
+        console.log(product);
         const productItem = await createProduct(product);
         productlist.appendChild(productItem);
     });
