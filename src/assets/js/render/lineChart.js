@@ -146,8 +146,9 @@ function creatOrderInfo(order) {
 }
 async function renderLeaderboard() {
     const alldata = await fakeDatabase.getAllOrder();
+    await fakeDatabase.getAllUserInfo();
     let array = [];
-    const data = alldata.filter((e) => e.state == 'thanhcong');
+    const data = alldata.filter((e) => e.state == 'giaohangthanhcong');
     data.forEach((e) => {
         const index = array.findIndex((element) => element.id == e.user_id);
         if (index != -1) {
