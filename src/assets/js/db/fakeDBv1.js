@@ -1,3 +1,5 @@
+import { isEmail } from '../test.js';
+import uuidv from '../until/uuid.js';
 import addressData from './addressDb.js';
 
 /**
@@ -374,6 +376,56 @@ class FakeDatabase {
         return requestToPromise(
             userStore.index('email_and_pass').get([email, password]),
         );
+    }
+
+    /**
+     * Được dùng cho người dùng khi tạo tài khoản
+     *
+     * @param {string} password
+     * @param {string} display_name
+     * @param {string} std
+     * @param {string} email
+     * @returns {Promise<UserInfo>}
+     */
+    async createUserInfo(password, display_name, std, email) {
+        if (!db) await this.awaitUntilReady();
+
+        const user_id = uuidv();
+
+        /**
+         * @type {UserInfo}
+         */
+        const data = {
+            id: user_id,
+            name: display_name,
+            email,
+            passwd: password,
+            phone_num: std,
+            rule: 'user',
+            status: 'active',
+            datecreated: new Date(),
+        };
+
+        const data_ = db
+            .transaction(ObjectStoreName.USER, 'readwrite')
+            .objectStore(ObjectStoreName.USER);
+
+        await requestToPromise(data_.add(data));
+        return data;
+    }
+
+    async getUserInfoByPhoneOrEmail(phone_email) {
+        if (!db) await this.awaitUntilReady();
+        const data = db
+            .transaction(ObjectStoreName.USER, 'readonly')
+            .objectStore(ObjectStoreName.USER);
+        let userget;
+        if (isEmail(phone_email)) {
+            userget = data.index('email').get(phone_email);
+        } else {
+            userget = data.index('phone_num').get(phone_email);
+        }
+        return await requestToPromise(userget);
     }
 
     /**
