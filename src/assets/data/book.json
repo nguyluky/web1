@@ -1,146 +1,38 @@
 {
     "data": [
         {
-            "id": "07819b53-b89c-5f23-992f-ba64a3e7679d",
+            "id": "0",
             "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
             "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
-            "thumbnal": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
             "imgs": [],
             "base_price": 10000,
-            "category": [],
-            "option": [
-                {
-                    "id": "236f4380-2ff4-53a5-9d2d-9e0a82ffee32",
-                    "short_name": "Kinh tế vi mô",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "236f4381-2ff4-53a5-9d2d-9e0a82ffee33",
-                    "short_name": "Kinh tế vĩ mô",
-                    "long_name": "",
-                    "price": 17000
-                },
-                {
-                    "id": "236f4382-2ff4-53a5-9d2d-9e0a82ffee34",
-                    "short_name": "Lí thuyết tài chính tiền tệ",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "236f4383-2ff4-53a5-9d2d-9e0a82ffee35",
-                    "short_name": "Combo sách toán cao cấp C1",
-                    "long_name": "",
-                    "price": 35000
-                },
-                {
-                    "id": "236f4384-2ff4-53a5-9d2d-9e0a82ffee36",
-                    "short_name": "Xác suất thống kê",
-                    "long_name": "",
-                    "price": 15000
-                },
-                {
-                    "id": "236f4385-2ff4-53a5-9d2d-9e0a82ffee37",
-                    "short_name": "Quốc phòng I",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "236f4386-2ff4-53a5-9d2d-9e0a82ffee38",
-                    "short_name": "Quốc phòng II",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "236f4387-2ff4-53a5-9d2d-9e0a82ffee39",
-                    "short_name": "Bộ sách tiếng anh I",
-                    "long_name": "",
-                    "price": 50000
-                },
-                {
-                    "id": "236f4388-2ff4-53a5-9d2d-9e0a82ffee40",
-                    "short_name": "Pháp luật đại cương + hỏi đáp",
-                    "long_name": "",
-                    "price": 25000
-                },
-                {
-                    "id": "236f4389-2ff4-53a5-9d2d-9e0a82ffee41",
-                    "short_name": "CNXHKH + hỏi đáp",
-                    "long_name": "",
-                    "price": 45000
-                },
-                {
-                    "id": "236f4390-2ff4-53a5-9d2d-9e0a82ffee42",
-                    "short_name": "Hỏi đáp triết học",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "236f4391-2ff4-53a5-9d2d-9e0a82ffee43",
-                    "short_name": "Kinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập",
-                    "long_name": "",
-                    "price": 47000
-                },
-                {
-                    "id": "236f4392-2ff4-53a5-9d2d-9e0a82ffee44",
-                    "short_name": "Quy hoạch tuyến tính",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "236f4393-2ff4-53a5-9d2d-9e0a82ffee45",
-                    "short_name": "Thị trường tài chính",
-                    "long_name": "",
-                    "price": 17000
-                },
-                {
-                    "id": "236f4394-2ff4-53a5-9d2d-9e0a82ffee46",
-                    "short_name": "Nguyên lí thống kê kinh tế",
-                    "long_name": "",
-                    "price": 17000
-                },
-                {
-                    "id": "236f4395-2ff4-53a5-9d2d-9e0a82ffee47",
-                    "short_name": "Kinh tế lượng",
-                    "long_name": "",
-                    "price": 10000
-                }
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
             ]
         },
         {
-            "id": "0012f7be-ae2f-5b7b-9667-71db3f0cbba4",
+            "id": "1",
             "title": "Sách chuyên ngành NNA",
             "details": "● Sách chuyên ngành NNA\n1. Thư tín thương mại 25k\n2. Tiếng Anh văn phòng 10k \n3. Tiếng Trung 1,2 đã làm gần hết bài tập 20k\n4. ...( mình tìm ra sẽ update thêm (dưới cmt chẳng hạn 🥲))",
-            "thumbnal": "90da6890-8c45-5733-b3c2-8c6b203259bc",
+            "thumbnail": "90da6890-8c45-5733-b3c2-8c6b203259bc",
             "imgs": [],
             "base_price": 0,
-            "category": [],
-            "option": [
-                {
-                    "id": "ae45b251-dfc9-53bc-86c3-4af34ad60040",
-                    "short_name": "Thư tín thương mại",
-                    "long_name": "",
-                    "price": 25000
-                },
-                {
-                    "id": "8adca929-b314-54e0-9df6-16c80279cc64",
-                    "short_name": "Tiếng Anh văn phòng",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "e9cf62e4-0a1d-5924-8d95-9abb6c68d7d4",
-                    "short_name": "Tiếng Trung 1,2 ",
-                    "long_name": "",
-                    "price": 20000
-                }
-            ]
+            "discount": 0.15,
+            "category": ["gtcn", "gtcb", "gtnc", "tltks"]
         },
         {
-            "id": "8842d4c1-8db4-5627-b758-1f570b991cf7",
+            "id": "2",
             "title": "Kinh tế lượng (ngành TC-KT)",
             "details": "Pass hàng hot Kinh tế lượng (ngành TC-KT) \n-Slide bài giảng (thầy Hiếu, Cô Cẩm \n- Tài liệu bài tập có đáp án Stu (mình ôn trong này đi thi đề có ra 1 câu y chang)\n- Các bài giải đề các năm trước mình\n- Vở ghi tóm tắt các công thức và vài ví dụ để lấy điểm cộng\nYêu thương tất cả 50k",
-            "thumbnal": "90da6890-8c45-5733-b3c2-8c6b203259bc",
+            "thumbnail": "90da6890-8c45-5733-b3c2-8c6b203259bc",
             "imgs": [
                 "14051265-974c-5ab9-b82a-c4afe5cb3c7b",
                 "5856be02-d0cc-55de-b051-4a3920c46b54",
@@ -149,81 +41,325 @@
                 "c9054d73-4c13-5bb8-b0de-6780b0b58248"
             ],
             "base_price": 50000,
-            "category": []
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "tltks",
+                "bgpp",
+                "bgPDF",
+                "btcn"
+            ]
         },
         {
-            "id": "153adb3a-245d-551f-b6e5-793e2ad2edcf",
+            "id": "3",
             "title": "QP I, Lịch sử văn minh thế giới, Văn học Anh Mỹ, và các môn khác",
             "details": "Góc pass sách ạ 🥰🤗\nMình đang muốn pass giáo trình những môn sau ạ:\n+QP I và QP II: đồng giá 10k\n+Lịch sử văn minh thế giới: 25k\n+Văn học anh mỹ: 10k\n+Chuyên đề bài thi quốc tế: 15k\n+ Chủ nghĩa xã hội khoa học 25k\n+ Ngữ nghĩa học 10k\n+ Ngôn ngữ XHKH 15k\n+ Pháp Luật Đại Cương 25k\n+ Kinh tế chính trị Mác Lê Nin 25k",
-            "thumbnal": "87d650e9-8e92-5559-9f9e-df5b11b8aa83",
+            "thumbnail": "87d650e9-8e92-5559-9f9e-df5b11b8aa83",
             "imgs": [
                 "c636597a-0ec4-5942-bcba-5745aece620e",
                 "65f5b8cf-4c77-5834-bc98-c5641b9a6b65"
             ],
             "base_price": 0,
-            "category": [],
-            "option": [
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f883a",
-                    "short_name": "QP I",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f883b",
-                    "short_name": "QP II",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f883c",
-                    "short_name": "Lịch sử văn minh thế giới",
-                    "long_name": "",
-                    "price": 25000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f883d",
-                    "short_name": "Văn học Anh Mỹ",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f883e",
-                    "short_name": "Chuyên đề bài thi quốc tế",
-                    "long_name": "",
-                    "price": 15000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f883f",
-                    "short_name": "Chủ nghĩa xã hội khoa học",
-                    "long_name": "",
-                    "price": 25000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f8840",
-                    "short_name": "Ngữ nghĩa học",
-                    "long_name": "",
-                    "price": 10000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f8841",
-                    "short_name": "Ngôn ngữ XHKH",
-                    "long_name": "",
-                    "price": 15000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f8842",
-                    "short_name": "Pháp luật đại cương",
-                    "long_name": "",
-                    "price": 25000
-                },
-                {
-                    "id": "cb5adb3e-6f20-53b4-be53-1089c02f8843",
-                    "short_name": "Kinh tế chính trị Mác Lê Nin",
-                    "long_name": "",
-                    "price": 25000
-                }
+            "discount": 0.0,
+            "category": ["gtcn", "gtcb", "gtnc", "bgpp", "bgPDF", "btcn"]
+        },
+        {
+            "id": "4",
+            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
+            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
+            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "imgs": [],
+            "base_price": 10000,
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
             ]
+        },
+        {
+            "id": "5",
+            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
+            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
+            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "imgs": [],
+            "base_price": 10000,
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
+            ]
+        },
+        {
+            "id": "6",
+            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
+            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
+            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "imgs": [],
+            "base_price": 10000,
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
+            ]
+        },
+        {
+            "id": "7",
+            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
+            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
+            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "imgs": [],
+            "base_price": 10000,
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
+            ]
+        },
+        {
+            "id": "8",
+            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
+            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
+            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "imgs": [],
+            "base_price": 10000,
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
+            ]
+        },
+        {
+            "id": "9",
+            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
+            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
+            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "imgs": [],
+            "base_price": 10000,
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
+            ]
+        },
+        {
+            "id": "10",
+            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
+            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
+            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "imgs": [],
+            "base_price": 10000,
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
+            ]
+        },
+
+        {
+            "id": "11",
+            "title": "Tiếng Việt Thực Hành",
+            "details": "Cuốn sách này cung cấp hướng dẫn chi tiết về cách sử dụng tiếng Việt trong các tình huống thực tế hàng ngày. Nó bao gồm các bài tập thực hành, ví dụ minh họa và các bài kiểm tra để giúp người học nắm vững ngữ pháp và từ vựng tiếng Việt.",
+            "thumbnail": "2f065f66-ef38-41cd-8022-5098540263f3",
+            "imgs": [],
+            "base_price": 25000,
+            "discount": 0.15,
+            "category": ["gtcb", "tltks"]
+        },
+        {
+            "id": "12",
+            "title": "Toán Cao Cấp",
+            "details": "Giáo trình này dành cho sinh viên đại học, cung cấp kiến thức về các khái niệm toán học cao cấp như giải tích, đại số tuyến tính và phương trình vi phân. Nó bao gồm các bài giảng lý thuyết, bài tập thực hành và các ví dụ minh họa để giúp sinh viên hiểu rõ hơn về các khái niệm toán học phức tạp.",
+            "thumbnail": "6ed5ff73-1050-47c5-8315-305c3d4018a1",
+            "imgs": [],
+            "base_price": 30000,
+            "discount": 0.2,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "13",
+            "title": "Tội Phạm Học",
+            "details": "Cuốn sách này nghiên cứu về tội phạm học, bao gồm các lý thuyết về nguyên nhân và hậu quả của tội phạm, các phương pháp phòng chống tội phạm và các chính sách hình sự. Nó cung cấp một cái nhìn toàn diện về tội phạm học và các vấn đề liên quan, giúp người đọc hiểu rõ hơn về lĩnh vực này.",
+            "thumbnail": "f65c8fcb-1b12-4c9a-9da6-1507b560871e",
+            "imgs": [],
+            "base_price": 35000,
+            "discount": 0.1,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "14",
+            "title": "Tổng Quan Du Lịch",
+            "details": "Giáo trình này cung cấp một cái nhìn tổng quan về ngành du lịch, bao gồm các khái niệm cơ bản, lịch sử phát triển và các xu hướng hiện tại trong ngành du lịch. Nó cũng bao gồm các bài tập thực hành và các ví dụ minh họa để giúp sinh viên hiểu rõ hơn về ngành du lịch và các cơ hội nghề nghiệp trong lĩnh vực này.",
+            "thumbnail": "d7fd68f4-6697-44b0-a033-21bddb6e00b1",
+            "imgs": [],
+            "base_price": 20000,
+            "discount": 0.25,
+            "category": ["gtcb", "tltks"]
+        },
+        {
+            "id": "15",
+            "title": "Xác Suất Thống Kê",
+            "details": "Cuốn sách này cung cấp kiến thức về xác suất và thống kê, bao gồm các khái niệm cơ bản, các phương pháp thống kê và các ứng dụng thực tế. Nó bao gồm các bài giảng lý thuyết, bài tập thực hành và các ví dụ minh họa để giúp sinh viên hiểu rõ hơn về các khái niệm xác suất và thống kê.",
+            "thumbnail": "7c9bb693-678e-4e45-b1d5-5f53ed4ab1b3",
+            "imgs": [],
+            "base_price": 15000,
+            "discount": 0.3,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "16",
+            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
+            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
+            "thumbnail": "537bdd80-80d7-4997-b188-2d860a0ecb2f",
+            "imgs": [],
+            "base_price": 10000,
+            "discount": 0.15,
+            "category": [
+                "gtcn",
+                "gtcb",
+                "gtnc",
+                "bgpp",
+                "btcn",
+                "bgPDF",
+                "tltks"
+            ]
+        },
+        {
+            "id": "22",
+            "title": "Tài liệu học tập môn - Luật tố tụng hình sự",
+            "details": "Chưa thêm",
+            "thumbnail": "b8ca4fb2-ff08-4661-8578-014480100f96",
+            "imgs": [],
+            "base_price": 30000,
+            "discount": 0.1,
+            "category": ["gtcn", "gtnc", "tltks"]
+        },
+        {
+            "id": "24",
+            "title": "Marketing Căn Bản",
+            "details": "Giáo trình này cung cấp kiến thức cơ bản về marketing, bao gồm các khái niệm, chiến lược và phương pháp tiếp thị. Nó là tài liệu học tập hữu ích cho sinh viên ngành kinh tế và quản trị kinh doanh, giúp họ nắm vững các nguyên tắc cơ bản và ứng dụng thực tế trong lĩnh vực marketing.",
+            "thumbnail": "ca4c2d8f-48f9-4648-9383-b77ffd0a3b4e",
+            "imgs": [],
+            "base_price": 28000,
+            "discount": 0.2,
+            "category": ["gtcb", "tltks"]
+        },
+        {
+            "id": "25",
+            "title": "Kinh Tế Lượng",
+            "details": "Cuốn sách này cung cấp kiến thức về kinh tế lượng, bao gồm các phương pháp phân tích định lượng và các ứng dụng thực tế trong kinh tế học. Nó là tài liệu học tập quan trọng cho sinh viên ngành kinh tế và tài chính, giúp họ hiểu rõ hơn về các mô hình kinh tế và cách áp dụng chúng trong nghiên cứu và thực tiễn.",
+            "thumbnail": "a42bc8fc-7946-4d33-b526-759d73e284aa",
+            "imgs": [],
+            "base_price": 35000,
+            "discount": 0,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "26",
+            "title": "Quản Trị Nhân Lực",
+            "details": "Giáo trình này cung cấp kiến thức về quản trị nhân lực, bao gồm các khái niệm, chiến lược và phương pháp quản lý nhân sự. Nó là tài liệu học tập hữu ích cho sinh viên ngành quản trị kinh doanh và những người làm việc trong lĩnh vực nhân sự, giúp họ nắm vững các kỹ năng cần thiết để quản lý và phát triển nguồn nhân lực hiệu quả.",
+            "thumbnail": "3a8942c1-bd47-4e05-a68b-414b6740ad25",
+            "imgs": [],
+            "base_price": 30000,
+            "discount": 0.15,
+            "category": ["gtcn", "tltks"]
+        },
+
+        {
+            "id": "27",
+            "title": "Quản Trị Tài Chính",
+            "details": "Cuốn sách này cung cấp kiến thức về quản trị tài chính, bao gồm các khái niệm cơ bản, chiến lược và phương pháp quản lý tài chính trong doanh nghiệp. Nó là tài liệu học tập quan trọng cho sinh viên ngành quản trị kinh doanh và tài chính, giúp họ nắm vững các kỹ năng cần thiết để quản lý tài chính hiệu quả.",
+            "thumbnail": "3b7634f0-7454-41e4-9678-b7ae05490d34",
+            "imgs": [],
+            "base_price": 33000,
+            "discount": 0.1,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "28",
+            "title": "Quản Trị Văn Phòng",
+            "details": "Giáo trình này cung cấp kiến thức về quản trị văn phòng, bao gồm các khái niệm, chiến lược và phương pháp quản lý văn phòng hiệu quả. Nó là tài liệu học tập hữu ích cho sinh viên ngành quản trị kinh doanh và những người làm việc trong lĩnh vực hành chính văn phòng.",
+            "thumbnail": "cc7c13d2-2063-426b-a61e-bd7f3d1e918e",
+            "imgs": [],
+            "base_price": 29000,
+            "discount": 0.2,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "29",
+            "title": "Quốc Phòng I",
+            "details": "Cuốn sách này cung cấp kiến thức về quốc phòng và an ninh, bao gồm các khái niệm cơ bản, chiến lược và phương pháp bảo vệ an ninh quốc gia. Nó là tài liệu học tập quan trọng cho sinh viên ngành quốc phòng và an ninh, giúp họ hiểu rõ hơn về các vấn đề liên quan đến bảo vệ tổ quốc.",
+            "thumbnail": "a259a289-f3fc-45e0-9f87-6dcd8c528b3f",
+            "imgs": [],
+            "base_price": 25000,
+            "discount": 0.15,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "30",
+            "title": "Quy Hoạch Tuyến Tính",
+            "details": "Cuốn sách này cung cấp kiến thức về quy hoạch tuyến tính, bao gồm các phương pháp và ứng dụng thực tế trong kinh tế và quản lý. Nó là tài liệu học tập quan trọng cho sinh viên ngành kinh tế và quản trị kinh doanh, giúp họ hiểu rõ hơn về các mô hình quy hoạch và cách áp dụng chúng trong thực tiễn.",
+            "thumbnail": "d495fe66-9eb8-4e56-bfd3-c2e0157b4e81",
+            "imgs": [],
+            "base_price": 27000,
+            "discount": 0.1,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "31",
+            "title": "Sách Luật",
+            "details": "Cuốn sách này cung cấp kiến thức về các quy định pháp luật, bao gồm các điều luật, quy trình tố tụng và các ví dụ thực tế. Nó là tài liệu học tập quan trọng cho sinh viên ngành luật và những người làm việc trong lĩnh vực pháp lý, giúp họ nắm vững các quy định pháp luật và áp dụng chúng trong thực tiễn.",
+            "thumbnail": "9657207f-d3ca-4d7e-bde6-9b653399edcc",
+            "imgs": [],
+            "base_price": 30000,
+            "discount": 0.2,
+            "category": ["gtcn", "tltks"]
+        },
+        {
+            "id": "36",
+            "title": "Quản Trị Rủi Ro",
+            "details": "Cuốn sách này cung cấp kiến thức về quản trị rủi ro, bao gồm các phương pháp đánh giá và quản lý rủi ro trong kinh doanh. Nó là tài liệu học tập quan trọng cho sinh viên ngành quản trị kinh doanh và tài chính, giúp họ hiểu rõ hơn về các loại rủi ro và cách thức quản lý chúng để đảm bảo hoạt động kinh doanh hiệu quả.",
+            "thumbnail": "3da0f0e4-0c3c-4f91-83bb-10a0c507ea96",
+            "imgs": [],
+            "base_price": 27000,
+            "discount": 0.1,
+            "category": ["gtcn", "tltks", "lvtn"]
         }
     ]
 }

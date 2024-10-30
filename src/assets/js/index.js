@@ -1,4 +1,6 @@
 import FakeDatabase from './db/fakeDBv1.js';
+import fakeDatabase from './db/fakeDBv1.js';
+import renderProduct from './render/renderProduct.js';
 import removeDiacritics from './until/removeDiacritics.js';
 import {
     validator,
@@ -182,3 +184,20 @@ function backSignIn() {
         };
     }
 }
+function main() {
+    initializeLocationPopup();
+    initializeAccountPopup();
+    renderProduct();
+}
+
+main();
+
+const catergory_row = document.querySelectorAll('.catergory__row--header');
+catergory_row.forEach((row) => {
+    row.addEventListener('click', () => {
+        const catergory_sub_row = row.parentElement?.querySelector(
+            '.catergory__row--sub',
+        );
+        catergory_sub_row?.classList.toggle('show');
+    });
+});
