@@ -8,6 +8,7 @@ import {
     formatLineChartData,
     renderLeaderboard,
 } from './render/dashboardRender.js';
+import { tableEditOff, tableEditOn } from './render/table/customCell.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
@@ -117,12 +118,14 @@ const buttonSaveState = {
         btnSave &&
             (btnSave.innerHTML =
                 '<i class="fa-solid fa-pen"></i><span>Edit</span>');
-        document.querySelectorAll('#content_table td[key]').forEach((td) => {
-            td.setAttribute('contenteditable', 'false');
-        });
-        document
-            .querySelectorAll('select')
-            .forEach((e) => e.classList.remove('allow-change'));
+
+        tableEditOff('#content_table td');
+        // document.querySelectorAll('#content_table td[key]').forEach((td) => {
+        //     td.setAttribute('contenteditable', 'false');
+        // });
+        // document
+        //     .querySelectorAll('select')
+        //     .forEach((e) => e.classList.remove('allow-change'));
     },
     /* Đổi trạng thái nút thành "Lưu" và cho phép chỉnh sửa */
     save: () => {
@@ -130,12 +133,15 @@ const buttonSaveState = {
             (btnSave.innerHTML =
                 '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>');
         btnSave?.classList.add('canedit');
-        document.querySelectorAll('#content_table td[key]').forEach((td) => {
-            td.setAttribute('contenteditable', 'true');
-        });
-        document
-            .querySelectorAll('select')
-            .forEach((e) => e.classList.add('allow-change'));
+
+        tableEditOn('#content_table td');
+
+        // document.querySelectorAll('#content_table td[key]').forEach((td) => {
+        //     td.setAttribute('contenteditable', 'true');
+        // });
+        // document
+        //     .querySelectorAll('select')
+        //     .forEach((e) => e.classList.add('allow-change'));
     },
 };
 
@@ -245,7 +251,7 @@ function setupMainButtonEvents() {
             'Xác nhận xóa',
             'Bạn có muốn xóa vĩnh viên các dòng hay không.',
             () => {
-                tabManagement[tab].removeRows();
+                tabManagement[tab].removeRows?.();
                 // console.log('ok');
             },
         );
@@ -257,10 +263,10 @@ function setupMainButtonEvents() {
 
         if (isAddMode) {
             buttonAddState.add();
-            tabManagement[tab].cancelAdd();
+            tabManagement[tab].cancelAdd?.();
         } else {
             buttonAddState.cancel();
-            tabManagement[tab].addRow();
+            tabManagement[tab].addRow?.();
         }
     }
 

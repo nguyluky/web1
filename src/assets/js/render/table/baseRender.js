@@ -3,6 +3,8 @@
  * @typedef {{ [P in keyof Partial<T>]: string }} COLS
  */
 
+import { createTextTableCell } from './customCell.js';
+
 /**
  * @template T
  * @typedef {(data: T, key: keyof T, newValue: T[key]) => void} OnChange
@@ -29,164 +31,6 @@ export function tableClearErrorKey() {
         .forEach((e) => e.removeAttribute('error'));
 }
 
-// ===================Create element function==================
-
-/**
- *
- * @param {string} key
- * @param {string} value
- * @param {(nv: string) => any} [onchange]
- * @param {boolean} [canEditable]
- * @returns
- */
-export function createTextTableCell(key, value, onchange, canEditable = true) {
-    const td = document.createElement('td');
-    td.textContent = value;
-    td.setAttribute('contenteditable', 'false');
-    td.setAttribute('key', key);
-    td.setAttribute('ctype', 'text');
-    td.setAttribute('default-value', value);
-
-    if (!canEditable) td.setAttribute('can-editable', 'false');
-    else td.setAttribute('can-editable', 'true');
-
-    td.addEventListener('input', () => {
-        onchange && onchange(td.textContent || '');
-
-        if (td.textContent == td.getAttribute('default-value'))
-            td.setAttribute('ischange', 'false');
-        else td.setAttribute('ischange', 'true');
-    });
-
-    return td;
-}
-
-/**
- *
- * @param {string} key
- * @param {Date | string} value
- * @param {(nv: Date) => any} [onchange ]
- * @param {boolean} [canEditable ]
- * @returns
- */
-export function createDateTimeTableCell(
-    key,
-    value,
-    onchange,
-    canEditable = true,
-) {
-    const td = document.createElement('td');
-    td.setAttribute('contenteditable', 'false');
-    td.setAttribute('key', key);
-    td.setAttribute('ctype', 'date-time');
-    td.setAttribute('default-value', String(value));
-
-    if (!canEditable) td.setAttribute('can-editable', 'false');
-    else td.setAttribute('can-editable', 'true');
-
-    const dateTimeInput = document.createElement('input');
-    dateTimeInput.type = 'datetime-local';
-    dateTimeInput.className = 'custom-datetime-input';
-    const dateTimeStringValue = (
-        typeof value == 'string' ? value : value.toISOString()
-    )
-        .split('.')[0]
-        .replace('Z', '');
-
-    dateTimeInput.value = dateTimeStringValue;
-
-    dateTimeInput.addEventListener('change', () => {
-        console.log(dateTimeInput.value);
-        const date = new Date(dateTimeInput.value);
-
-        onchange && onchange(date);
-
-        if (String(date) == td.getAttribute('default-value'))
-            td.setAttribute('ischange', 'false');
-        else td.setAttribute('ischange', 'true');
-    });
-
-    td.appendChild(dateTimeInput);
-
-    return td;
-}
-
-/**
- *
- * @param {string} key
- * @param {number} value
- * @param {(nv: number) => any} [onchange]
- * @param {boolean} [canEditable]
- */
-export function createNumberTableCell(
-    key,
-    value,
-    onchange,
-    canEditable = true,
-) {
-    const td = document.createElement('td');
-    td.setAttribute('contenteditable', 'false');
-    td.setAttribute('key', key);
-    td.setAttribute('ctype', 'number');
-    td.setAttribute('default-value', value + '');
-    td.textContent = value + '';
-
-    if (!canEditable) td.setAttribute('can-editable', 'false');
-    else td.setAttribute('can-editable', 'true');
-
-    td.addEventListener('keypress', (e) => {
-        if (isNaN(+String.fromCharCode(e.which))) e.preventDefault();
-    });
-
-    td.addEventListener('input', () => {
-        onchange && onchange(+(td.textContent || '0'));
-
-        if (td.textContent == td.getAttribute('default-value'))
-            td.setAttribute('ischange', 'false');
-        else td.setAttribute('ischange', 'true');
-    });
-
-    return td;
-}
-
-/**
- *
- * @param {string} key
- * @param {string} value
- * @param {{title: string, value: string}[]} options
- * @param {(nv: string) => any} [onchange]
- */
-export function createOptionTabelCell(key, value, options, onchange) {
-    const td = document.createElement('td');
-    td.setAttribute('contenteditable', 'false');
-    td.setAttribute('key', key);
-    td.setAttribute('ctype', 'option');
-    td.setAttribute('default-value', value);
-
-    const select = document.createElement('select');
-    options.forEach((e) => {
-        const op = document.createElement('option');
-        op.value = e.value;
-        op.textContent = e.title;
-        select.appendChild(op);
-    });
-
-    select.value = value;
-    select.addEventListener('change', () => {
-        console.log('change status');
-
-        onchange && onchange(select.value);
-
-        if (select.value == td.getAttribute('default-value'))
-            td.setAttribute('ischange', 'false');
-        else td.setAttribute('ischange', 'true');
-    });
-
-    td.appendChild(select);
-
-    return td;
-}
-
 /**
  *
  * @param {string} value_id
@@ -200,36 +44,6 @@ export function createCheckBox(value_id) {
     checkbox.className = 'table-check-box';
     col.appendChild(checkbox);
     return col;
-}
-
-/**
- *
- * @param {string} key
- * @param {string} value
- * @param {(nv: string) => any} onchange
- * @returns
- */
-export function createBlockTextTabelCell(key, value, onchange) {
-    const td = document.createElement('td');
-    td.setAttribute('contenteditable', 'false');
-    td.setAttribute('key', key);
-    td.setAttribute('ctype', 'block-text');
-    td.setAttribute('default-value', value);
-
-    const details_wrapper = document.createElement('div');
-    details_wrapper.className = 'details-wrapper';
-    details_wrapper.insertAdjacentHTML('beforeend', value);
-
-    details_wrapper.addEventListener('input', () => {
-        onchange && onchange(details_wrapper.textContent || '');
-
-        if (details_wrapper.textContent == td.getAttribute('default-value'))
-            td.setAttribute('ischange', 'false');
-        else td.setAttribute('ischange', 'true');
-    });
-
-    td.appendChild(details_wrapper);
-    return td;
 }
 
 // ====================Render====================
@@ -379,7 +193,7 @@ export function defaultRemoveAddRow() {
 /**
  * @returns {string[]}
  */
-export function getRowsSeletion() {
+export function getAllRowsSeletion() {
     return Array.from(document.querySelectorAll('tr'))
         .filter((tr) => {
             return /**@type {HTMLInputElement}*/ (
@@ -407,9 +221,9 @@ export function removeRowById(id) {
  *     renderRow?: (value: T) => HTMLTableRowElement;
  *     doSave: () => Promise<?>;
  *     search: (list: T[]) => void;
- *     addRow: () => void;
- *     removeRows: () => void;
- *     cancelAdd: () => void;
+ *     addRow?: () => void;
+ *     removeRows?: () => void;
+ *     cancelAdd?: () => void;
  * }} IntefaceRender
  */
 

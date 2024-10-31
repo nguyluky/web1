@@ -179,17 +179,17 @@ function checkMatchpassword(passwordInput, cfPasswordInput) {
     return false;
 }
 
-// form?.addEventListener('input', (e) => {
+// // form?.addEventListener('input', (e) => {
+// //     e.preventDefault();
+// // });
+// form?.addEventListener('submit', async function (e) {
 //     e.preventDefault();
+//     const tel = document.querySelector('#input-phone');
+//     if (tel) {
+//         let isPhoneCorrect = await checkPhoneNum(tel);
+//         if (isPhoneCorrect != '') changePopup(inputPass);
+//     }
 // });
-form?.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const tel = document.querySelector('#input-phone');
-    if (tel) {
-        let isPhoneCorrect = await checkPhoneNum(tel);
-        if (isPhoneCorrect != '') changePopup(inputPass);
-    }
-});
-btnBack?.addEventListener('click', () => {
-    changePopup(inputPhone);
-});
+// btnBack?.addEventListener('click', () => {
+//     changePopup(inputPhone);
+// });
