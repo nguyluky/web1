@@ -164,13 +164,14 @@ function renderProduct() {
 
     sub_header.forEach((sub) => {
         sub.addEventListener('click', (ev) => {
+            sub_header.forEach((e) => e.removeAttribute('selected'));
+            sub.setAttribute('selected', 'true');
             const category = /**@type {HTMLElement}*/ (sub).dataset.value;
             if (category) {
                 data = Product_Data.filter((e) => {
                     return e.category.indexOf(category) != -1;
                 });
                 totalPages = Math.ceil(data.length / Products_Per_page);
-                console.log('data', data);
             }
             Current_Page = 1;
             displayProducts(data);

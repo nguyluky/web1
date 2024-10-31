@@ -261,7 +261,7 @@
             ]
         },
         {
-            "id": "22",
+            "id": "17",
             "title": "Tài liệu học tập môn - Luật tố tụng hình sự",
             "details": "Chưa thêm",
             "thumbnail": "b8ca4fb2-ff08-4661-8578-014480100f96",
@@ -271,7 +271,7 @@
             "category": ["gtcn", "gtnc", "tltks"]
         },
         {
-            "id": "24",
+            "id": "18",
             "title": "Marketing Căn Bản",
             "details": "Giáo trình này cung cấp kiến thức cơ bản về marketing, bao gồm các khái niệm, chiến lược và phương pháp tiếp thị. Nó là tài liệu học tập hữu ích cho sinh viên ngành kinh tế và quản trị kinh doanh, giúp họ nắm vững các nguyên tắc cơ bản và ứng dụng thực tế trong lĩnh vực marketing.",
             "thumbnail": "ca4c2d8f-48f9-4648-9383-b77ffd0a3b4e",
@@ -281,7 +281,7 @@
             "category": ["gtcb", "tltks"]
         },
         {
-            "id": "25",
+            "id": "19",
             "title": "Kinh Tế Lượng",
             "details": "Cuốn sách này cung cấp kiến thức về kinh tế lượng, bao gồm các phương pháp phân tích định lượng và các ứng dụng thực tế trong kinh tế học. Nó là tài liệu học tập quan trọng cho sinh viên ngành kinh tế và tài chính, giúp họ hiểu rõ hơn về các mô hình kinh tế và cách áp dụng chúng trong nghiên cứu và thực tiễn.",
             "thumbnail": "a42bc8fc-7946-4d33-b526-759d73e284aa",
@@ -291,7 +291,7 @@
             "category": ["gtcn", "tltks"]
         },
         {
-            "id": "26",
+            "id": "20",
             "title": "Quản Trị Nhân Lực",
             "details": "Giáo trình này cung cấp kiến thức về quản trị nhân lực, bao gồm các khái niệm, chiến lược và phương pháp quản lý nhân sự. Nó là tài liệu học tập hữu ích cho sinh viên ngành quản trị kinh doanh và những người làm việc trong lĩnh vực nhân sự, giúp họ nắm vững các kỹ năng cần thiết để quản lý và phát triển nguồn nhân lực hiệu quả.",
             "thumbnail": "3a8942c1-bd47-4e05-a68b-414b6740ad25",
@@ -302,7 +302,7 @@
         },
 
         {
-            "id": "27",
+            "id": "21",
             "title": "Quản Trị Tài Chính",
             "details": "Cuốn sách này cung cấp kiến thức về quản trị tài chính, bao gồm các khái niệm cơ bản, chiến lược và phương pháp quản lý tài chính trong doanh nghiệp. Nó là tài liệu học tập quan trọng cho sinh viên ngành quản trị kinh doanh và tài chính, giúp họ nắm vững các kỹ năng cần thiết để quản lý tài chính hiệu quả.",
             "thumbnail": "3b7634f0-7454-41e4-9678-b7ae05490d34",
@@ -312,7 +312,7 @@
             "category": ["gtcn", "tltks"]
         },
         {
-            "id": "28",
+            "id": "22",
             "title": "Quản Trị Văn Phòng",
             "details": "Giáo trình này cung cấp kiến thức về quản trị văn phòng, bao gồm các khái niệm, chiến lược và phương pháp quản lý văn phòng hiệu quả. Nó là tài liệu học tập hữu ích cho sinh viên ngành quản trị kinh doanh và những người làm việc trong lĩnh vực hành chính văn phòng.",
             "thumbnail": "cc7c13d2-2063-426b-a61e-bd7f3d1e918e",
@@ -322,7 +322,7 @@
             "category": ["gtcn", "tltks"]
         },
         {
-            "id": "29",
+            "id": "23",
             "title": "Quốc Phòng I",
             "details": "Cuốn sách này cung cấp kiến thức về quốc phòng và an ninh, bao gồm các khái niệm cơ bản, chiến lược và phương pháp bảo vệ an ninh quốc gia. Nó là tài liệu học tập quan trọng cho sinh viên ngành quốc phòng và an ninh, giúp họ hiểu rõ hơn về các vấn đề liên quan đến bảo vệ tổ quốc.",
             "thumbnail": "a259a289-f3fc-45e0-9f87-6dcd8c528b3f",
@@ -332,7 +332,7 @@
             "category": ["gtcn", "tltks"]
         },
         {
-            "id": "30",
+            "id": "24",
             "title": "Quy Hoạch Tuyến Tính",
             "details": "Cuốn sách này cung cấp kiến thức về quy hoạch tuyến tính, bao gồm các phương pháp và ứng dụng thực tế trong kinh tế và quản lý. Nó là tài liệu học tập quan trọng cho sinh viên ngành kinh tế và quản trị kinh doanh, giúp họ hiểu rõ hơn về các mô hình quy hoạch và cách áp dụng chúng trong thực tiễn.",
             "thumbnail": "d495fe66-9eb8-4e56-bfd3-c2e0157b4e81",
@@ -342,7 +342,7 @@
             "category": ["gtcn", "tltks"]
         },
         {
-            "id": "31",
+            "id": "25",
             "title": "Sách Luật",
             "details": "Cuốn sách này cung cấp kiến thức về các quy định pháp luật, bao gồm các điều luật, quy trình tố tụng và các ví dụ thực tế. Nó là tài liệu học tập quan trọng cho sinh viên ngành luật và những người làm việc trong lĩnh vực pháp lý, giúp họ nắm vững các quy định pháp luật và áp dụng chúng trong thực tiễn.",
             "thumbnail": "9657207f-d3ca-4d7e-bde6-9b653399edcc",
@@ -352,7 +352,7 @@
             "category": ["gtcn", "tltks"]
         },
         {
-            "id": "36",
+            "id": "26",
             "title": "Quản Trị Rủi Ro",
             "details": "Cuốn sách này cung cấp kiến thức về quản trị rủi ro, bao gồm các phương pháp đánh giá và quản lý rủi ro trong kinh doanh. Nó là tài liệu học tập quan trọng cho sinh viên ngành quản trị kinh doanh và tài chính, giúp họ hiểu rõ hơn về các loại rủi ro và cách thức quản lý chúng để đảm bảo hoạt động kinh doanh hiệu quả.",
             "thumbnail": "3da0f0e4-0c3c-4f91-83bb-10a0c507ea96",

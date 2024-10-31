@@ -5,12 +5,14 @@
             "user_id": "0",
             "items": [
                 {
-                    "sach": "101",
-                    "quantity": 2
+                    "sach": "1",
+                    "quantity": 2,
+                    "total": 100
                 },
                 {
-                    "sach": "102",
-                    "quantity": 1
+                    "sach": "2",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T10:00:00Z",
@@ -24,8 +26,9 @@
             "user_id": "6",
             "items": [
                 {
-                    "sach": "103",
-                    "quantity": 3
+                    "sach": "3",
+                    "quantity": 3,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T11:00:00Z",
@@ -39,8 +42,9 @@
             "user_id": "7",
             "items": [
                 {
-                    "sach": "104",
-                    "quantity": 1
+                    "sach": "4",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T12:00:00Z",
@@ -54,8 +58,9 @@
             "user_id": "3",
             "items": [
                 {
-                    "sach": "105",
-                    "quantity": 2
+                    "sach": "5",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T13:00:00Z",
@@ -69,8 +74,9 @@
             "user_id": "0",
             "items": [
                 {
-                    "sach": "106",
-                    "quantity": 3
+                    "sach": "6",
+                    "quantity": 3,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T14:00:00Z",
@@ -84,8 +90,9 @@
             "user_id": "3",
             "items": [
                 {
-                    "sach": "107",
-                    "quantity": 1
+                    "sach": "7",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T15:00:00Z",
@@ -99,8 +106,9 @@
             "user_id": "6",
             "items": [
                 {
-                    "sach": "108",
-                    "quantity": 2
+                    "sach": "8",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T16:00:00Z",
@@ -114,8 +122,9 @@
             "user_id": "4",
             "items": [
                 {
-                    "sach": "109",
-                    "quantity": 1
+                    "sach": "9",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T17:00:00Z",
@@ -129,8 +138,9 @@
             "user_id": "6",
             "items": [
                 {
-                    "sach": "110",
-                    "quantity": 3
+                    "sach": "11",
+                    "quantity": 3,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T18:00:00Z",
@@ -144,8 +154,9 @@
             "user_id": "0",
             "items": [
                 {
-                    "sach": "111",
-                    "quantity": 2
+                    "sach": "11",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T19:00:00Z",
@@ -159,8 +170,9 @@
             "user_id": "3",
             "items": [
                 {
-                    "sach": "112",
-                    "quantity": 1
+                    "sach": "12",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T20:00:00Z",
@@ -174,8 +186,9 @@
             "user_id": "0",
             "items": [
                 {
-                    "sach": "113",
-                    "quantity": 2
+                    "sach": "13",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T21:00:00Z",
@@ -189,8 +202,9 @@
             "user_id": "6",
             "items": [
                 {
-                    "sach": "114",
-                    "quantity": 1
+                    "sach": "14",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T22:00:00Z",
@@ -204,8 +218,9 @@
             "user_id": "4",
             "items": [
                 {
-                    "sach": "115",
-                    "quantity": 2
+                    "sach": "15",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-25T23:00:00Z",
@@ -219,8 +234,9 @@
             "user_id": "9",
             "items": [
                 {
-                    "sach": "116",
-                    "quantity": 3
+                    "sach": "16",
+                    "quantity": 3,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T00:00:00Z",
@@ -234,8 +250,9 @@
             "user_id": "2",
             "items": [
                 {
-                    "sach": "117",
-                    "quantity": 1
+                    "sach": "17",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T01:00:00Z",
@@ -249,8 +266,9 @@
             "user_id": "0",
             "items": [
                 {
-                    "sach": "118",
-                    "quantity": 2
+                    "sach": "18",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T02:00:00Z",
@@ -264,8 +282,9 @@
             "user_id": "8",
             "items": [
                 {
-                    "sach": "119",
-                    "quantity": 1
+                    "sach": "19",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T03:00:00Z",
@@ -279,8 +298,9 @@
             "user_id": "3",
             "items": [
                 {
-                    "sach": "120",
-                    "quantity": 3
+                    "sach": "20",
+                    "quantity": 3,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T04:00:00Z",
@@ -294,8 +314,9 @@
             "user_id": "9",
             "items": [
                 {
-                    "sach": "121",
-                    "quantity": 2
+                    "sach": "21",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T05:00:00Z",
@@ -309,8 +330,9 @@
             "user_id": "8",
             "items": [
                 {
-                    "sach": "122",
-                    "quantity": 1
+                    "sach": "12",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T06:00:00Z",
@@ -324,8 +346,9 @@
             "user_id": "4",
             "items": [
                 {
-                    "sach": "123",
-                    "quantity": 2
+                    "sach": "23",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T07:00:00Z",
@@ -339,8 +362,9 @@
             "user_id": "3",
             "items": [
                 {
-                    "sach": "124",
-                    "quantity": 1
+                    "sach": "24",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T08:00:00Z",
@@ -354,8 +378,9 @@
             "user_id": "5",
             "items": [
                 {
-                    "sach": "125",
-                    "quantity": 2
+                    "sach": "25",
+                    "quantity": 2,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T09:00:00Z",
@@ -369,8 +394,9 @@
             "user_id": "3",
             "items": [
                 {
-                    "sach": "126",
-                    "quantity": 3
+                    "sach": "26",
+                    "quantity": 3,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T10:00:00Z",
@@ -384,8 +410,9 @@
             "user_id": "1",
             "items": [
                 {
-                    "sach": "127",
-                    "quantity": 1
+                    "sach": "17",
+                    "quantity": 1,
+                    "total": 100
                 }
             ],
             "date": "2024-10-26T11:00:00Z",

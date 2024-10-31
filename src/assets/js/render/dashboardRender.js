@@ -1,4 +1,5 @@
 import fakeDatabase from '../db/fakeDBv1.js';
+import { dateToString } from '../until/formatDate.js';
 
 const chartValues = [
     { value: 25 },
@@ -184,4 +185,74 @@ async function renderLeaderboard() {
         });
     });
 }
+/**
+ *
+ * @param {{name: String; quantify: Number; total: Number}} product
+ * @param {Number} index
+ */
+function createARow(product, index) {
+    const row = document.createElement('div');
+    row.className = 'rank rank-body-row';
+    const rank = document.createElement('div');
+    row.appendChild(rank);
+    rank.innerText = `${index + 1}`;
+    Object.keys(product).forEach((key) => {
+        const cell = document.createElement('div');
+        cell.className = `rank-${key}`;
+        cell.innerHTML = `${product[key]}`;
+        row.appendChild(cell);
+    });
+    return row;
+}
+async function productRank() {
+    const orders = await fakeDatabase.getAllOrder();
+    const books = await fakeDatabase.getAllSach();
+    let data = {};
+
+    orders.forEach((order) => {
+        order.items.forEach((e) => {
+            if (data[e.sach]) data[e.sach] += e.quantity;
+            else data[e.sach] = e.quantity;
+        });
+    });
+    let array = [];
+    books.forEach((e) => {
+        const quantify = data[e.id] ? data[e.id] : 0;
+        array.push({
+            name: e.title,
+            quantify: quantify,
+            total: e.base_price * (1 - e.discount) * quantify,
+        });
+    });
+    array.sort((a, b) => {
+        if (a.quantify != b.quantify) return b.quantify - a.quantify;
+        return b.total - a.total;
+    });
+    const chart = document.querySelector('.product-rank__body');
+    while (chart?.firstChild) chart.removeChild(chart.firstChild);
+    array.forEach((value, index) => {
+        chart?.appendChild(createARow(value, index));
+    });
+}
+
+function renderProductRank() {
+    const chooseDate = document.querySelector('#product-rank .choose-date');
+    const from = /**@type {HTMLInputElement} */ (
+        chooseDate?.querySelector('#from-date input')
+    );
+    const to = /**@type {HTMLInputElement} */ (
+        chooseDate?.querySelector('#to-date input')
+    );
+    if (!from || !to) return;
+    const now = new Date();
+    from.value = dateToString(
+        new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
+    );
+    to.value = dateToString(now);
+    to.max = dateToString(now);
+    chooseDate?.addEventListener('change', () => {});
+    productRank();
+}
+renderProductRank();
 export { formatLineChartData, renderLeaderboard };
+// String().padStart(2,'0')

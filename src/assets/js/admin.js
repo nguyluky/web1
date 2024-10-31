@@ -4,7 +4,10 @@ import cartRender from './render/table/cartTable.js';
 import sachRender from './render/table/sachTable.js';
 import orderRender from './render/table/orderTabel.js';
 import { showPopup } from './render/popupRender.js';
-import { formatLineChartData, renderLeaderboard } from './render/lineChart.js';
+import {
+    formatLineChartData,
+    renderLeaderboard,
+} from './render/dashboardRender.js';
 
 /*  ------- ADMIN -------
  ______  ____             ______   __  __     
