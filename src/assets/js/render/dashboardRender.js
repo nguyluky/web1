@@ -206,7 +206,7 @@ function createARow(product, index) {
 }
 async function productRank() {
     const orders = await fakeDatabase.getAllOrder();
-    const books = await fakeDatabase.getAllSach();
+    const books = await fakeDatabase.getAllBooks();
     let data = {};
 
     orders.forEach((order) => {

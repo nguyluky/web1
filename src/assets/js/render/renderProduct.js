@@ -1,6 +1,6 @@
 import fakeDatabase from '../db/fakeDBv1.js';
 
-const Product_Data = await fakeDatabase.getAllSach();
+const Product_Data = await fakeDatabase.getAllBooks();
 let data = Product_Data;
 let Current_Page = 1;
 let Products_Per_page = 8;

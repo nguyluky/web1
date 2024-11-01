@@ -78,7 +78,7 @@ const tabManagement = {
 const fakeDBManagement = {
     user: () => fakeDatabase.getAllUserInfo(),
     cart: () => fakeDatabase.getALlCart(),
-    sach: () => fakeDatabase.getAllSach(),
+    sach: () => fakeDatabase.getAllBooks(),
     order: () => fakeDatabase.getAllOrder(),
 };
 

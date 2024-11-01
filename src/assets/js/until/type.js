@@ -1,4 +1,4 @@
-import { validateEmail, validateNumberPhone } from './validata.js';
+import { validateEmail, validateNumberPhone } from './validator.js';
 
 /**
  * @typedef {{

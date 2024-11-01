@@ -15,7 +15,9 @@
 }
 
 aside.aside {
-    height: 800px;
+    position: sticky;
+    top: 16px;
+    height: fit-content;
     min-width: 235px;
 }
 
