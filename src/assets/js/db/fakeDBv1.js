@@ -1,5 +1,5 @@
-import { isEmail } from '../test.js';
 import uuidv from '../until/uuid.js';
+import { isEmail } from '../until/validator.js';
 import addressData from './addressDb.js';
 
 /**
@@ -469,7 +469,7 @@ class FakeDatabase {
     }
 
     /** @returns {Promise<Sach[]>} */
-    async getAllSach() {
+    async getAllBooks() {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.BOOK);
         const transaction = db.transaction(ObjectStoreName.BOOK, 'readonly');

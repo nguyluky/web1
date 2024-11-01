@@ -13,7 +13,6 @@
         />
         <title>We sell books</title>
         <script type="module" defer src="./assets/js/index.js"></script>
-        <script type="module" defer src="./assets/js/user-login.js"></script>
         <link rel="stylesheet" href="./assets/css/index.css" />
         <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css" />
         <link rel="icon" href="./assets/img/favicon.png" />
@@ -65,151 +64,25 @@
                 </div>
             </div>
         </header>
+        <nav class="nav"></nav>
         <main class="main">
             <div class="main_wapper">
-                <aside class="aside">
-                    <div class="aside-box box1 card">
-                        <div class="catergory__header">Danh mục</div>
-                        <div class="catergory__content">
-                            <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Giáo trình
-                                </div>
-                                <div class="catergory__row--sub">
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="gtcb"
-                                    >
-                                        <span>Cơ bản</span>
-                                    </li>
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="gtnc"
-                                    >
-                                        <span>Nâng cao</span>
-                                    </li>
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="gtcn"
-                                    >
-                                        <span>Chuyên ngành</span>
-                                    </li>
-                                </div>
-                            </div>
-                            <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Bài giảng
-                                </div>
-                                <div class="catergory__row--sub">
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="bgpp"
-                                    >
-                                        <span>Powderpoint</span>
-                                    </li>
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="bgpdf"
-                                    >
-                                        <span>PDF</span>
-                                    </li>
-                                </div>
-                            </div>
-                            <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Đề thi và đáp án
-                                </div>
-                                <div class="catergory__row--sub">
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="dtdaclc"
-                                    >
-                                        <span>Chất lượng cao</span>
-                                    </li>
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="dtddtdaclcadt"
-                                    >
-                                        <span>Đại trà</span>
-                                    </li>
-                                </div>
-                            </div>
-                            <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Bài tập lớn
-                                </div>
-                                <div class="catergory__row--sub">
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="btcn"
-                                    >
-                                        <span>Cá nhân</span>
-                                    </li>
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="btn"
-                                    >
-                                        <span>Nhóm</span>
-                                    </li>
-                                </div>
-                            </div>
-                            <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Tài liệu tham khảo
-                                </div>
-                                <div class="catergory__row--sub">
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="tltks"
-                                    >
-                                        <span>Sách tham khảo</span>
-                                    </li>
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="tltkk"
-                                    >
-                                        <span>Tài liệu điện tử</span>
-                                    </li>
-                                </div>
-                            </div>
-                            <div class="catergory__row">
-                                <div class="catergory__row--header">
-                                    Luận văn
-                                </div>
-                                <div class="catergory__row--sub">
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="lvtn"
-                                    >
-                                        <span>Tốt nghiệp</span>
-                                    </li>
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="lvts"
-                                    >
-                                        <span>Thạc sĩ</span>
-                                    </li>
-                                    <li
-                                        class="catergory__row--sub-header"
-                                        data-value="lvtns"
-                                    >
-                                        <span>Tiến sĩ</span>
-                                    </li>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="aside-box box2"></div>
-                    <div class="aside-box box3"></div>
-                    <div class="aside-box box4"></div>
-                </aside>
+                <aside class="aside"></aside>
                 <article class="article">
-                    <div class="article-header">
-                        <span>Danh sách tài liệu</span>
+                    <div class="dot-spinner-wrapper">
+                        <div class="dot-spinner">
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                        </div>
+
+                        <p style="margin-left: 10px">Đang tải dữ liệu</p>
                     </div>
-                    <div class="product-container"></div>
-                    <div class="pagination"></div>
                 </article>
             </div>
         </main>
