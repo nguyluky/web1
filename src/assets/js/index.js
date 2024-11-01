@@ -1,5 +1,4 @@
 import fakeDatabase from './db/fakeDBv1.js';
-import renderProduct from './render/renderProduct.js';
 import {
     inputFill,
     showCreateAccount,
@@ -8,22 +7,22 @@ import {
 } from './popupAccount.js';
 import removeDiacritics from './until/removeDiacritics.js';
 import { isEmail, validator } from './until/validator.js';
+import { initializationHomePage, updateHomePage } from './render/home/index.js';
+import urlConverter from './until/urlConverter.js';
 
 //#region khai bao bien
-const btnLocation = document.getElementById('btn-location');
-const closePopup = document.getElementById('btn-close');
-const popup_wrapper = document.getElementById('popup-wrapper');
-const btnExit = document.getElementById('btn-exit');
-const modalDemo = document.querySelector('.modal-demo');
-const form = document.querySelector('form');
 
-const btnAccount = document.getElementById('btn-account');
-const modal = document.querySelector('.js-modal');
+const BUTTON_LOCATION = document.getElementById('btn-location');
+const CLOSE_POPUP = document.getElementById('btn-close');
+const POPUP_WRAPPER = document.getElementById('popup-wrapper');
 
-const address_display = /** @type {HTMLInputElement} */ (
+const BUTTON_ACCOUNT = document.getElementById('btn-account');
+const MODAL = document.querySelector('.js-modal');
+
+const ADDRESS_DISPLAY = /** @type {HTMLInputElement} */ (
     document.getElementById('address_display')
 );
-const address_form = document.getElementById('Address-form');
+const ADDRESS_FORM = document.getElementById('Address-form');
 
 // #endregion
 
@@ -87,64 +86,55 @@ function __contentRender__(promiseData, selector, onchange) {
     }
 }
 
-/**
- * Gọi một lần ngay khi popup được load có thể nói là ngay sau khi trang load
- *
- * Render danh sách tỉnh/thành phố
- *
- * @param {(name: string) => void} [onchange] Khi người dùng chọn
- */
-function renderTinhThanhPho(onchange) {
-    __contentRender__(
-        fakeDatabase.getAllTinhThanPho(),
-        '.Address__dropdown-content.tp',
-        onchange,
-    );
-}
-
-/**
- * Render danh sách phường/xã khi người dùng chọn quận/huyện
- *
- * @param {string} tintp
- * @param {(qh: string) => void} [onchange]
- */
-function renderQuanHuyen(tintp, onchange) {
-    __contentRender__(
-        fakeDatabase.getAllTinhThanhByThanPho(tintp),
-        '.Address__dropdown-content.qh',
-        onchange,
-    );
-}
-
-/**
- * Render danh sách phường/xã khi người dùng chọn quận/huyện
- *
- * @param {string} tintp
- * @param {string} qh
- * @param {(px: string) => void} onchange
- */
-function renderPhuongXa(tintp, qh, onchange) {
-    __contentRender__(
-        fakeDatabase.getAllpxByThinhTpAndQh(tintp, qh),
-        '.Address__dropdown-content.xp',
-        onchange,
-    );
-}
-
 /** Khỏi tại hàm sử lý popup đại trỉ */
 function initializeLocationPopup() {
-    // được gọi một lần duy nhất
-    renderTinhThanhPho((tinhpt) => {
-        renderQuanHuyen(tinhpt, (qh) => {
-            renderPhuongXa(tinhpt, qh, (xp) => {
-                console.log(xp);
-            });
-        });
-    });
+    /**
+     * Gọi một lần ngay khi popup được load có thể nói là ngay sau khi trang load
+     *
+     * Render danh sách tỉnh/thành phố
+     *
+     * @param {(name: string) => void} [onchange] Khi người dùng chọn
+     */
+    function renderTinhThanhPho(onchange) {
+        __contentRender__(
+            fakeDatabase.getAllTinhThanPho(),
+            '.Address__dropdown-content.tp',
+            onchange,
+        );
+    }
+
+    /**
+     * Render danh sách phường/xã khi người dùng chọn quận/huyện
+     *
+     * @param {string} tintp
+     * @param {(qh: string) => void} [onchange]
+     */
+    function renderQuanHuyen(tintp, onchange) {
+        __contentRender__(
+            fakeDatabase.getAllTinhThanhByThanPho(tintp),
+            '.Address__dropdown-content.qh',
+            onchange,
+        );
+    }
+
+    /**
+     * Render danh sách phường/xã khi người dùng chọn quận/huyện
+     *
+     * @param {string} tintp
+     * @param {string} qh
+     * @param {(px: string) => void} onchange
+     */
+    function renderPhuongXa(tintp, qh, onchange) {
+        __contentRender__(
+            fakeDatabase.getAllpxByThinhTpAndQh(tintp, qh),
+            '.Address__dropdown-content.xp',
+            onchange,
+        );
+    }
 
     /** Hiện popup */
     function showPopupLocation() {
-        popup_wrapper?.classList.add('show');
+        POPUP_WRAPPER?.classList.add('show');
     }
 
     /** @param {MouseEvent} event */
@@ -152,12 +142,12 @@ function initializeLocationPopup() {
         const popup = /** @type {HTMLElement} */ (event.target).querySelector(
             '.popup',
         );
-        if (popup) popup_wrapper?.classList.remove('show');
+        if (popup) POPUP_WRAPPER?.classList.remove('show');
     }
 
     function showCustomLocation() {
-        if (address_display.checked) address_form?.classList.add('show');
-        else address_form?.classList.remove('show');
+        if (ADDRESS_DISPLAY.checked) ADDRESS_FORM?.classList.add('show');
+        else ADDRESS_FORM?.classList.remove('show');
     }
 
     function initializeDropdown(element) {
@@ -295,10 +285,19 @@ function initializeLocationPopup() {
         input?.addEventListener('keydown', handleKeyboardNavigation);
     }
 
+    // được gọi một lần duy nhất
+    renderTinhThanhPho((tinhpt) => {
+        renderQuanHuyen(tinhpt, (qh) => {
+            renderPhuongXa(tinhpt, qh, (xp) => {
+                console.log(xp);
+            });
+        });
+    });
+
     // hiện popup
-    btnLocation?.addEventListener('click', showPopupLocation);
+    BUTTON_LOCATION?.addEventListener('click', showPopupLocation);
     // ẩn popup
-    popup_wrapper?.addEventListener('click', HandleClickOutSidePopup);
+    POPUP_WRAPPER?.addEventListener('click', HandleClickOutSidePopup);
 
     // show address fill
     // người khi người dùng chọn "chọn khu vực giao khac"
@@ -314,7 +313,13 @@ function initializeLocationPopup() {
 
 /** Sử lý login và nhữ tư tự như vậy */
 function initializeAccountPopup() {
-    if (!btnLocation || !closePopup || !popup_wrapper || !btnAccount || !modal)
+    if (
+        !BUTTON_LOCATION ||
+        !CLOSE_POPUP ||
+        !POPUP_WRAPPER ||
+        !BUTTON_ACCOUNT ||
+        !MODAL
+    )
         return;
 
     // kiểm tra người dùng có nhập sđt hoặc email chưa
@@ -332,18 +337,18 @@ function initializeAccountPopup() {
                     .then((userInfo) => {
                         console.log(userInfo);
                         if (userInfo) {
-                            showInputPassword(modal);
+                            showInputPassword(MODAL);
                             validatePassword(userInfo);
                         } else {
-                            showCreateAccount(modal);
+                            showCreateAccount(MODAL);
                             validateCrateNewAccount(data['#input-phone-email']);
                         }
                         backSignIn();
-                        closeSignIn(modal);
+                        closeSignIn(MODAL);
                     })
                     .catch((e) => {
                         if (e) {
-                            showCreateAccount(modal);
+                            showCreateAccount(MODAL);
                             validateCrateNewAccount();
                         }
                     });
@@ -361,7 +366,7 @@ function initializeAccountPopup() {
             ],
             onSubmit: (data) => {
                 localStorage.setItem('user_id', userInfo.id);
-                modal?.classList.remove('show-modal');
+                MODAL?.classList.remove('show-modal');
                 showDropDown();
             },
         });
@@ -394,7 +399,7 @@ function initializeAccountPopup() {
                     )
                     .then((e) => {
                         localStorage.setItem('user_id', e.id);
-                        modal?.classList.remove('show-modal');
+                        MODAL?.classList.remove('show-modal');
                         showDropDown();
                     })
                     .catch((e) => {
@@ -425,7 +430,7 @@ function initializeAccountPopup() {
         dropDown.appendChild(p2);
         dropDown.appendChild(p3);
 
-        btnAccount?.appendChild(dropDown);
+        BUTTON_ACCOUNT?.appendChild(dropDown);
     }
 
     function closeSignIn(modal) {
@@ -446,35 +451,35 @@ function initializeAccountPopup() {
 
     function backSignIn() {
         const btnBack = document.getElementById('back-btn');
-        if (btnBack && btnAccount) {
+        if (btnBack && BUTTON_ACCOUNT) {
             btnBack.onclick = (e) => {
                 e.stopPropagation();
-                btnAccount.click();
+                BUTTON_ACCOUNT.click();
             };
         }
     }
 
-    btnLocation.addEventListener('click', () => {
-        popup_wrapper.classList.add('show');
+    BUTTON_LOCATION.addEventListener('click', () => {
+        POPUP_WRAPPER.classList.add('show');
     });
 
     // NOTE: nếu mà nhấn mà nó nó chứa thằng popup thì là nhấn bên ngoài
-    popup_wrapper.onclick = (event) => {
+    POPUP_WRAPPER.onclick = (event) => {
         const popup = /**@type {HTMLElement}*/ (event.target).querySelector(
             '.popup',
         );
-        if (popup) popup_wrapper.classList.remove('show');
+        if (popup) POPUP_WRAPPER.classList.remove('show');
     };
 
-    closePopup.addEventListener('click', () => {
-        popup_wrapper.classList.remove('show');
+    CLOSE_POPUP.addEventListener('click', () => {
+        POPUP_WRAPPER.classList.remove('show');
     });
 
-    btnAccount.addEventListener('click', () => {
+    BUTTON_ACCOUNT.addEventListener('click', () => {
         if (!localStorage.getItem('user_id')) {
-            modal.classList.add('show-modal');
-            showSignIn(modal);
-            closeSignIn(modal);
+            MODAL.classList.add('show-modal');
+            showSignIn(MODAL);
+            closeSignIn(MODAL);
             inputFill();
             validatePhoneNum();
         }
@@ -484,22 +489,52 @@ function initializeAccountPopup() {
     }
 }
 
+function initializePage() {
+    let { page: curr_page, query } = urlConverter(location.hash);
+
+    /**
+     * @param {string} page
+     */
+    function pageInit(page) {
+        initializationHomePage();
+    }
+
+    /**
+     * @param {string} curr_page
+     * @param {URLSearchParams} query
+     */
+    function pageUpdate(curr_page, query) {
+        updateHomePage(curr_page, query);
+    }
+
+    window.addEventListener('hashchange', (event) => {
+        const { page, query } = urlConverter(location.hash);
+        console.log(page, query);
+
+        if (page != curr_page) {
+            pageInit(page);
+            curr_page = page;
+        }
+
+        pageUpdate(page, query);
+    });
+
+    if (!curr_page) {
+        location.hash = '#/home';
+        return;
+    }
+
+    pageInit(curr_page);
+    pageUpdate(curr_page, query);
+}
+
 function main() {
     initializeLocationPopup();
     initializeAccountPopup();
-    renderProduct();
+
+    initializePage();
 }
 
 main();
-
-const catergory_row = document.querySelectorAll('.catergory__row--header');
-catergory_row.forEach((row) => {
-    row.addEventListener('click', () => {
-        const catergory_sub_row = row.parentElement?.querySelector(
-            '.catergory__row--sub',
-        );
-        catergory_sub_row?.classList.toggle('show');
-    });
-});
 
 // =====================================================================================

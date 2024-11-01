@@ -10,16 +10,6 @@ import {
 } from './render/dashboardRender.js';
 import { tableEditOff, tableEditOn } from './render/table/customCell.js';
 
-/*  ------- ADMIN -------
- ______  ____             ______   __  __     
-/\  _  \/\  _`\   /'\_/`\/\__  _\ /\ \/\ \    
-\ \ \L\ \ \ \/\ \/\      \/_/\ \/ \ \ `\\ \   
- \ \  __ \ \ \ \ \ \ \__\ \ \ \ \  \ \ , ` \  
-  \ \ \/\ \ \ \_\ \ \ \_/\ \ \_\ \__\ \ \`\ \ 
-   \ \_\ \_\ \____/\ \_\\ \_\/\_____\\ \_\ \_\
-    \/_/\/_/\/___/  \/_/ \/_/\/_____/ \/_/\/_/
- */
-
 /**
  * Định nghĩa các kiểu dữ liệu sử dụng trong file
  *
