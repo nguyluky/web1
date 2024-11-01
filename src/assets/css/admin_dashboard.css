@@ -3,7 +3,7 @@
 }
 .dashboard-wrapper {
     height: calc(100% - 20px);
-    padding: 25px 25px 0 25px;
+    padding: 20px 20px 0 10px;
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 25px;
@@ -231,6 +231,8 @@
 }
 .choose-date {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
+    flex-wrap: wrap;
+    gap: 30px;
     padding: 20px 0;
 }

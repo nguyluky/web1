@@ -204,16 +204,27 @@ function createARow(product, index) {
     });
     return row;
 }
-async function productRank() {
+/**
+ *
+ * @param {Date} from
+ * @param {Date} to
+ */
+async function productRank(from, to) {
     const orders = await fakeDatabase.getAllOrder();
     const books = await fakeDatabase.getAllSach();
     let data = {};
 
     orders.forEach((order) => {
-        order.items.forEach((e) => {
-            if (data[e.sach]) data[e.sach] += e.quantity;
-            else data[e.sach] = e.quantity;
-        });
+        const date = new Date(order.last_update);
+        if (
+            from.getTime() <= date.getTime() &&
+            date.getTime() <= to.getTime()
+        ) {
+            order.items.forEach((e) => {
+                if (data[e.sach]) data[e.sach] += e.quantity;
+                else data[e.sach] = e.quantity;
+            });
+        }
     });
     let array = [];
     books.forEach((e) => {
@@ -250,8 +261,10 @@ function renderProductRank() {
     );
     to.value = dateToString(now);
     to.max = dateToString(now);
-    chooseDate?.addEventListener('change', () => {});
-    productRank();
+    productRank(new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), now);
+    chooseDate?.addEventListener('change', () => {
+        productRank(new Date(from.value), new Date(to.value));
+    });
 }
 renderProductRank();
 export { formatLineChartData, renderLeaderboard };
