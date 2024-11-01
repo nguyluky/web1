@@ -213,15 +213,15 @@
 .rank-head div {
     padding: 10px;
     box-sizing: border-box;
-    background-color: #444;
+    background-color: #023e73;
 }
 .rank-body-row div {
     padding: 10px;
     box-sizing: border-box;
-    background-color: #666;
+    background-color: #79acd9;
 }
 .rank-body-row {
-    border-top: 4px solid #aaa;
+    border-top: 4px solid #fff;
 }
 .rank-name {
     overflow: hidden;

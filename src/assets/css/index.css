@@ -38,8 +38,8 @@ aside.aside {
 /* TODO: remove */
 .aside .aside-box.box1 {
     height: 100%;
+    padding: 20px;
 }
-
 .article {
     background-color: #fff;
     width: 100%;
