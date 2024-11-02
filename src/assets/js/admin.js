@@ -3,7 +3,7 @@ import userRender from './render/table/userTable.js';
 import cartRender from './render/table/cartTable.js';
 import sachRender from './render/table/sachTable.js';
 import orderRender from './render/table/orderTabel.js';
-import { showPopup } from './render/popupRender.js';
+import { showPopup, toast } from './render/popupRender.js';
 import {
     formatLineChartData,
     renderLeaderboard,
@@ -211,7 +211,7 @@ function setupMainButtonEvents() {
         // nếu nhấn nút save
         showPopup(
             'Xác nhận sửa',
-            'Bạn có chắc là muốn sửa không',
+            'Bạn có muốn lưu chỉnh sửa',
             () => {
                 updateMangement()
                     .then(() => {
@@ -219,8 +219,15 @@ function setupMainButtonEvents() {
                         buttonSaveState.edit();
                     })
                     .catch(() => {});
+                toast({
+                    title: 'Thành công!',
+                    message: 'Bạn đã lưu chỉnh sửa thành công.',
+                    type: 'success',
+                    duration: 5000,
+                });
             },
             () => {
+                tabManagement[tab].removeAllChange?.();
                 renderManagement(
                     /** @type {HTMLInputElement} */ (
                         document.getElementById('search-input')
@@ -242,7 +249,15 @@ function setupMainButtonEvents() {
             'Bạn có muốn xóa vĩnh viên các dòng hay không.',
             () => {
                 tabManagement[tab].removeRows?.();
-                // console.log('ok');
+                toast({
+                    title: 'Thành công!',
+                    message: 'Bạn đã xoá thành công.',
+                    type: 'success',
+                    duration: 5000,
+                });
+            },
+            () => {
+                tabManagement[tab].removeAllChange?.();
             },
         );
     }

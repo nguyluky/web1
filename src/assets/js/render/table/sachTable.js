@@ -4,6 +4,8 @@ import {
     createCheckBox,
     createRow,
     defaultAddRow,
+    getAllRowsSeletion,
+    removeRowById,
     renderTable,
     searchList,
 } from './baseRender.js';
@@ -364,17 +366,11 @@ function cancelAdd() {
     document.querySelector(`tr[id-row="${cacheAdd[0].id}"]`)?.remove();
     cacheAdd = [];
 }
-
 function removeRows() {
-    document.querySelectorAll('tr').forEach((e) => {
-        let cb = /** @type {HTMLInputElement | null} */ (
-            e.querySelector('input[type="checkbox"]')
-        );
-        if (cb?.checked) {
-            let rowID = e.getAttribute('id-row');
-            if (rowID) fakeDatabase.deleteSachById(rowID);
-            e.remove();
-        }
+    const selections = getAllRowsSeletion();
+    selections.forEach((id) => {
+        fakeDatabase.deleteUserById(id);
+        removeRowById(id);
     });
 }
 
@@ -422,6 +418,18 @@ async function saveBook() {
     });
 }
 
+function removeAllChange() {
+    cacheSave = {};
+    cacheAdd = [];
+    document.querySelectorAll('tr').forEach((e) => {
+        let cb = /** @type {HTMLInputElement | null} */ (
+            e.querySelector('input[type="checkbox"]')
+        );
+        if (cb?.checked) {
+            cb.checked = false;
+        }
+    });
+}
 // chuyển qua file popupFactory.js
 
 /** @type {import('./baseRender.js').IntefaceRender<Sach>} */
@@ -433,6 +441,7 @@ const Sach_ = {
     addRow,
     removeRows,
     cancelAdd,
+    removeAllChange,
 };
 
 export default Sach_;

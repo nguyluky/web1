@@ -160,6 +160,18 @@ async function userDoSave() {
     return true;
 }
 
+function removeAllChange() {
+    cacheSave = {};
+    cacheAdd = [];
+    document.querySelectorAll('tr').forEach((e) => {
+        let cb = /** @type {HTMLInputElement | null} */ (
+            e.querySelector('input[type="checkbox"]')
+        );
+        if (cb?.checked) {
+            cb.checked = false;
+        }
+    });
+}
 /**
  * @param {HTMLTableRowElement} row
  * @param {UserInfo} value
@@ -284,9 +296,8 @@ function cancelAdd() {
 /** Xóa các người dùng đã được chọn trong bảng */
 function removeRows() {
     const selections = getAllRowsSeletion();
-
     selections.forEach((id) => {
-        fakeDatabase.deleteSachById(id);
+        fakeDatabase.deleteUserById(id);
         removeRowById(id);
     });
 }
@@ -304,5 +315,6 @@ const user_ = {
     addRow: addUser,
     removeRows,
     cancelAdd,
+    removeAllChange,
 };
 export default user_;

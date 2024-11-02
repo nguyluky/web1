@@ -219,8 +219,8 @@ th {
 .details-wrapper {
     overflow-y: auto;
     height: 200px;
-    max-width: 400px;
-    white-space: pre; /* Since CSS 2.1 */
+    width: clamp(250px, 25vw, 350px);
+    white-space: pre-wrap; /* Since CSS 2.1 */
     white-space: -moz-pre; /* Mozilla, since 1999 */
     white-space: -pre; /* Opera 4-6 */
     white-space: -o-pre; /* Opera 7 */
