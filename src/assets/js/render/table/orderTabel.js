@@ -142,10 +142,30 @@ function renderRow(row, value, onchange) {
             const td = document.createElement('td');
             td.colSpan = Object.keys(cols).length + 1;
 
-            value.items.forEach((e) => {
-                const span = document.createElement('div');
-                span.textContent = e.sach + ' ' + e.quantity;
-                td.appendChild(span);
+            value.items.forEach((e, index) => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+
+                const stt = document.createElement('div');
+
+                const sach = document.createElement('div');
+                sach.style.width = '100%';
+                sach.style.textAlign = 'center';
+                sach.textContent = e.sach;
+                fakeDatabase.getSachById(e.sach).then((sach_) => {
+                    sach.textContent = sach_?.title || '';
+                });
+
+                const quantity = document.createElement('div');
+                quantity.style.width = '100%';
+                quantity.style.textAlign = 'center';
+
+                quantity.textContent = e.quantity + '';
+
+                div.appendChild(sach);
+                div.appendChild(quantity);
+
+                td.appendChild(div);
             });
 
             tr.appendChild(td);

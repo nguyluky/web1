@@ -229,10 +229,26 @@
     text-overflow: ellipsis;
     text-align: left;
 }
+
 .choose-date {
     display: flex;
     justify-content: right;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 30px;
+    gap: 5px;
     padding: 20px 0;
+}
+
+.choose-data-wrapper {
+    display: flex;
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: 2px 5px;
+}
+
+.choose-data-wrapper > div input[type='date'] {
+    width: 99px;
+    border: none;
+    background: none;
+    outline: none;
 }
