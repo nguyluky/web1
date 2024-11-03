@@ -7,7 +7,10 @@
  *   editOff: (td: HTMLTableCellElement) => any
  * }[]}
  */
-const customCells = []; // ===================Create element function==================
+const customCells = [];
+
+// ===================Create element function==================
+
 /**
  *
  * @param {string} key
@@ -49,6 +52,8 @@ function textTableCellEditOn(td) {
  */
 function textTableCellEditOff(td) {
     td.setAttribute('contenteditable', 'false');
+    td.setAttribute('default-value', td.textContent || '');
+    td.setAttribute('ischange', 'false');
 }
 
 customCells.push({
@@ -82,6 +87,7 @@ export function createDateTimeTableCell(
     if (!canEditable) td.setAttribute('can-editable', 'false');
     else td.setAttribute('can-editable', 'true');
 
+    // ==============================================================
     const dateTimeInput = document.createElement('input');
     dateTimeInput.disabled = true;
     dateTimeInput.type = 'datetime-local';
@@ -106,6 +112,14 @@ export function createDateTimeTableCell(
     });
 
     td.appendChild(dateTimeInput);
+    // ==============================================================
+
+    const divClickable = document.createElement('div');
+    divClickable.className = 'input-clickable';
+
+    td.appendChild(divClickable);
+
+    // ==============================================================
 
     return td;
 }
@@ -128,6 +142,10 @@ function dateTimeTableCellEditOn(td) {
 function dateTimeTableCellEditOff(td) {
     const input = td.querySelector('input');
     if (!input) return;
+
+    const date = new Date(input.value);
+    td.setAttribute('default-value', String(date));
+    td.setAttribute('ischange', 'false');
 
     input.disabled = true;
 }
@@ -190,6 +208,9 @@ function numberTableCellEditOn(td) {
  */
 function numberTableCellEditOff(td) {
     td.setAttribute('contenteditable', 'false');
+
+    td.setAttribute('default-value', td.textContent || '');
+    td.setAttribute('ischange', 'false');
 }
 
 customCells.push({
@@ -213,6 +234,8 @@ export function createOptionTabelCell(key, value, options, onchange) {
     td.setAttribute('ctype', 'option');
     td.setAttribute('default-value', value);
 
+    // ==============================================================
+
     const select = document.createElement('select');
     select.disabled = true;
     options.forEach((e) => {
@@ -235,6 +258,15 @@ export function createOptionTabelCell(key, value, options, onchange) {
 
     td.appendChild(select);
 
+    // ==============================================================
+
+    const divClickable = document.createElement('div');
+    divClickable.className = 'input-clickable';
+
+    td.appendChild(divClickable);
+
+    // ==============================================================
+
     return td;
 }
 /**
@@ -245,6 +277,9 @@ function optionTableCellEditOff(td) {
     const select = td.querySelector('select');
     if (!select) return;
     select.disabled = true;
+
+    td.setAttribute('default-value', select.value);
+    td.setAttribute('ischange', 'false');
 }
 /**
  *
@@ -310,6 +345,9 @@ function blockTextTableCellEditOff(td) {
     const block = document.querySelector('div');
     if (!block) return;
     block.setAttribute('contenteditable', 'false');
+
+    td.setAttribute('default-value', block.textContent || '');
+    td.setAttribute('ischange', 'false');
 }
 
 customCells.push({

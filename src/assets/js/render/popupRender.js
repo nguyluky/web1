@@ -13,10 +13,10 @@ function getPopupWrapper() {
 /**
  *
  * @param {HTMLElement} popup
- * @param {() => any} [onCancel]
+ * @param {() => any} [onClose]
  * @returns {(this: HTMLElement, ev: MouseEvent) => any}
  */
-function HandleClickOutSideBuilder(popup, onCancel) {
+function HandleClickOutSideBuilder(popup, onClose) {
     /**
      *
      * @this {HTMLElement}
@@ -30,7 +30,7 @@ function HandleClickOutSideBuilder(popup, onCancel) {
         if (target.isSameNode(popup) || !target.contains(popup)) return;
         target?.removeEventListener('click', handleClickOutSide);
         this.innerHTML = '';
-        if (onCancel) onCancel();
+        if (onClose) onClose();
     }
     return handleClickOutSide;
 }
@@ -73,7 +73,7 @@ export function showPopup(title, context, onOk, onCancel, onClose) {
 
     parder.addEventListener(
         'click',
-        HandleClickOutSideBuilder(popup, onCancelDeclaration),
+        HandleClickOutSideBuilder(popup, onCloseDeclaration),
     );
 }
 

@@ -3,6 +3,7 @@
  * @param {string | HTMLElement} context
  * @param {(() => void)?} onOk
  * @param {(() => void)?} onCancel
+ * @param {(() => void)?} onClose
  * @returns {HTMLDivElement}
  */
 export function createPopupBase(title, context, onOk, onCancel, onClose) {

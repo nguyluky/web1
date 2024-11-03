@@ -35,10 +35,18 @@ if (tabElement && !tabElement.checked) {
     tabElement.click();
 }
 
-const btnMenu = document.getElementById('menu-btn');
-const btnAdd = document.getElementById('add-btn');
-const btnSave = document.getElementById('save-btn');
-const btnDelete = document.getElementById('delete-btn');
+const btnMenu = /**@type {HTMLButtonElement} */ (
+    document.getElementById('menu-btn')
+);
+const btnAdd = /**@type {HTMLButtonElement} */ (
+    document.getElementById('add-btn')
+);
+const btnSave = /**@type {HTMLButtonElement} */ (
+    document.getElementById('save-btn')
+);
+const btnDelete = /**@type {HTMLButtonElement} */ (
+    document.getElementById('delete-btn')
+);
 const btnSignOut = document.getElementById('sign-out');
 // eslint-disable-next-line jsdoc/no-undefined-types
 const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
@@ -110,12 +118,6 @@ const buttonSaveState = {
                 '<i class="fa-solid fa-pen"></i><span>Edit</span>');
 
         tableEditOff('#content_table td');
-        // document.querySelectorAll('#content_table td[key]').forEach((td) => {
-        //     td.setAttribute('contenteditable', 'false');
-        // });
-        // document
-        //     .querySelectorAll('select')
-        //     .forEach((e) => e.classList.remove('allow-change'));
     },
     /* Đổi trạng thái nút thành "Lưu" và cho phép chỉnh sửa */
     save: () => {
@@ -125,13 +127,6 @@ const buttonSaveState = {
         btnSave?.classList.add('canedit');
 
         tableEditOn('#content_table td');
-
-        // document.querySelectorAll('#content_table td[key]').forEach((td) => {
-        //     td.setAttribute('contenteditable', 'true');
-        // });
-        // document
-        //     .querySelectorAll('select')
-        //     .forEach((e) => e.classList.add('allow-change'));
     },
 };
 
@@ -141,13 +136,16 @@ async function renderManagement(inputValue = '') {
     if (tab == 'dashboard') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
+
         const chart = document.getElementById('line-chart');
         chart && formatLineChartData(chart);
         renderLeaderboard();
+
         return;
     }
     document.querySelector('.dashboard-wrapper')?.classList.add('hide');
     document.querySelector('.table-wrapper')?.classList.remove('hide');
+
     const title = document.getElementById('table-title-header');
     const input = /** @type {HTMLInputElement} */ (
         document.getElementById('search-input')
@@ -171,7 +169,23 @@ async function renderManagement(inputValue = '') {
     loadingTable && (loadingTable.style.display = 'none');
     tabManagement[tab].renderTable(data);
     tabManagement[tab].search(data);
+
     input.oninput = () => tabManagement[tab].search(data);
+
+    btnAdd.disabled = false;
+    btnSave.disabled = false;
+    btnDelete.disabled = false;
+
+    // cập nhật nút
+    if (!tabManagement[tab].addRow) {
+        btnAdd.disabled = true;
+    }
+    if (!tabManagement[tab].doSave) {
+        btnSave.disabled = true;
+    }
+    if (!tabManagement[tab].removeRows) {
+        btnDelete.disabled = true;
+    }
 }
 
 /** Không biết ghi gì */

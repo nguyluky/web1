@@ -109,12 +109,21 @@ body {
     text-decoration: none;
 }
 
+.button_1:disabled {
+    filter: brightness(0.8);
+    cursor: not-allowed;
+}
+
 .button_1:hover {
     background: #efefef;
 }
 
 .button_1:active {
     transform: scale(0.98);
+}
+
+.button_1:disabled:active {
+    transform: none;
 }
 
 .button_1.dropdown-btn:active {
