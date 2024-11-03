@@ -60,7 +60,7 @@ async function createProduct(product) {
             <span class="regular-price ${product.discount == 0 ? 'hide' : ''}">
                 ${String(product.base_price)} <sup>₫</sup></span>
             <img
-                class="add-to-cart"
+                class="add-to-cart" data-book-id = ${product.id}
                 src="./assets/img/add-to-cart.png"
                 alt=""
             />

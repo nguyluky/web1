@@ -1,9 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>We sell books</title>
+        <script type="module" src="./assets/js/cart.js"></script>
         <script type="module" src="./assets/js/index.js"></script>
         <link rel="stylesheet" href="./assets/css/cart.css" />
         <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css" />
@@ -39,6 +40,7 @@
                     <div class="line"></div>
                     <button class="button_1 cart">
                         <i class="fa-solid fa-cart-shopping"></i>
+                        <div class="cart-count">0</div>
                     </button>
                 </div>
             </div>
@@ -48,15 +50,19 @@
                 <div class="main-cart-title">GIỎ HÀNG</div>
                 <div class="main-cart-content">
                     <div class="left-content">
-                        <div class="left-content-heading card">
+                        <div class="left-content-heading card item-grid">
                             <label>
                                 <input type="checkbox" />
-                                <span>Tất cả (1 sản phẩm)</span>
+                                <span id="total-cart-quantity"></span>
                             </label>
                             <div>Đơn giá</div>
                             <div>Số lượng</div>
                             <div>Thành tiền</div>
                             <i class="fa-regular fa-trash-can"></i>
+                        </div>
+                        <div class="left-content-body">
+                            <div class="cart-items"></div>
+                            <!-- <div class="cart-vouchers"></div>  -->
                         </div>
                     </div>
                     <div class="right info-user card">

@@ -558,6 +558,22 @@ class FakeDatabase {
         return requestToPromise(cartStore.get(cart_id));
     }
 
+    async createCartItem(cart_id, user_id, bookId, quantity) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.CART);
+        const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
+        const cartStore = transaction.objectStore(ObjectStoreName.CART);
+        const cart_data = {
+            id: cart_id,
+            user_id,
+            sach: bookId,
+            quantity,
+            timecreate: new Date(),
+        };
+        await requestToPromise(cartStore.put(cart_data));
+        return cart_data;
+    }
+
     /**
      * @param {Cart} cart_data
      * @returns {Promise<?>}
