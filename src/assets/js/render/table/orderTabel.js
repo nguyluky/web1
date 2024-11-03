@@ -29,11 +29,6 @@ const cols = {
 const cacheEdit = {};
 
 /**
- * @type {Order[]}
- */
-const cacheAdd = [];
-
-/**
  * @type {import('./baseRender.js').OnChange<Order>}
  */
 function handleOnChange(data, key, newValue) {
@@ -138,6 +133,53 @@ function renderRow(row, value, onchange) {
             }
         }
     });
+
+    row.addEventListener('click', () => {
+        if (!row.getAttribute('dropdown')) {
+            row.setAttribute('dropdown', 'true');
+
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = Object.keys(cols).length + 1;
+
+            value.items.forEach((e, index) => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+
+                const stt = document.createElement('div');
+
+                const sach = document.createElement('div');
+                sach.style.width = '100%';
+                sach.style.textAlign = 'center';
+                sach.textContent = e.sach;
+                fakeDatabase.getSachById(e.sach).then((sach_) => {
+                    sach.textContent = sach_?.title || '';
+                });
+
+                const quantity = document.createElement('div');
+                quantity.style.width = '100%';
+                quantity.style.textAlign = 'center';
+
+                quantity.textContent = e.quantity + '';
+
+                div.appendChild(sach);
+                div.appendChild(quantity);
+
+                td.appendChild(div);
+            });
+
+            tr.appendChild(td);
+
+            if (row.nextElementSibling) {
+                row.parentElement?.insertBefore(tr, row.nextElementSibling);
+            } else {
+                row.parentElement?.appendChild(tr);
+            }
+        } else {
+            row.removeAttribute('dropdown');
+            row.nextElementSibling?.remove();
+        }
+    });
 }
 
 /**
@@ -173,16 +215,12 @@ function searchOrder(list) {
 
 async function doSave() {
     const updateValues = Object.values(cacheEdit);
-    const addValues = Object.values(cacheAdd);
 
     const promiseUpdate = updateValues.map((e) => {
         return fakeDatabase.updateOrder(e);
     });
 
     await Promise.all(promiseUpdate);
-
-    // TODO: làm phần thêm order
-    // NOTE: tại chưa biết là admin có được phét thêm order cho người dùng được không
 
     tableClearErrorKey();
 }
@@ -194,18 +232,10 @@ const order = {
     cols,
     renderTable: renderOrder,
     search: searchOrder,
-    doSave: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
-    addRow: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
-    removeRows: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
-    cancelAdd: () => {
-        throw new Error('Làm này đi, đồ lười');
-    },
+    doSave: doSave,
+    addRow: undefined,
+    removeRows: undefined,
+    cancelAdd: undefined,
 };
 
 export default order;

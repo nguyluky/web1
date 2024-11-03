@@ -3,9 +3,10 @@
  * @param {string | HTMLElement} context
  * @param {(() => void)?} onOk
  * @param {(() => void)?} onCancel
+ * @param {(() => void)?} onClose
  * @returns {HTMLDivElement}
  */
-export function createPopupBase(title, context, onOk, onCancel) {
+export function createPopupBase(title, context, onOk, onCancel, onClose) {
     // Create the main popup div
     const popup = document.createElement('div');
     popup.className = 'popup';
@@ -17,16 +18,16 @@ export function createPopupBase(title, context, onOk, onCancel) {
     const title_ = document.createElement('h1');
     title_.textContent = title;
 
-    const closeButton = document.createElement('button');
-    closeButton.className = 'button_1';
-    closeButton.onclick = onCancel;
+    const xMark = document.createElement('button');
+    xMark.className = 'button_1';
+    xMark.onclick = onClose;
     const closeIcon = document.createElement('i');
     closeIcon.className = 'fa-solid fa-xmark';
-    closeButton.appendChild(closeIcon);
+    xMark.appendChild(closeIcon);
 
     // Append header elements
     popupHeader.appendChild(title_);
-    popupHeader.appendChild(closeButton);
+    popupHeader.appendChild(xMark);
     popup.appendChild(popupHeader);
 
     // Create the context
@@ -40,19 +41,25 @@ export function createPopupBase(title, context, onOk, onCancel) {
     const popupFooter = document.createElement('div');
     popupFooter.className = 'popup-footer';
 
-    const cancelButton = document.createElement('button');
-    cancelButton.className = 'button_1 btn-primary';
-    cancelButton.textContent = 'Cancel';
-    cancelButton.onclick = onCancel;
-
     const okButton = document.createElement('button');
     okButton.className = 'button_1 btn-ouline-primary';
-    okButton.textContent = 'OK';
+    okButton.textContent = 'Lưu';
     okButton.onclick = onOk;
 
+    const cancelButton = document.createElement('button');
+    cancelButton.className = 'button_1 btn-ouline-primary';
+    cancelButton.textContent = 'Bỏ';
+    cancelButton.onclick = onCancel;
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'button_1 btn-primary';
+    closeButton.textContent = 'Thoát';
+    closeButton.onclick = onClose;
+
     // Append footer elements
-    popupFooter.appendChild(cancelButton);
     popupFooter.appendChild(okButton);
+    popupFooter.appendChild(cancelButton);
+    popupFooter.appendChild(closeButton);
     popup.appendChild(popupFooter);
 
     return popup;
@@ -87,9 +94,7 @@ export function createImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
     buttonUpload.appendChild(text);
     text.textContent = 'Upload Image';
 
-
-    // const clearButton = 
-
+    // const clearButton =
 
     const inputUpload = document.createElement('input');
     inputUpload.setAttribute('type', 'file');
@@ -119,6 +124,7 @@ export function createImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
             onOk?.(isChange ? imgPreview.src : '');
         },
         onCancel,
+        null,
     );
 
     return popup;

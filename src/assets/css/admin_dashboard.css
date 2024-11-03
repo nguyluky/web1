@@ -3,7 +3,7 @@
 }
 .dashboard-wrapper {
     height: calc(100% - 20px);
-    padding: 25px 25px 0 25px;
+    padding: 20px 20px 0 10px;
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 25px;
@@ -213,15 +213,15 @@
 .rank-head div {
     padding: 10px;
     box-sizing: border-box;
-    background-color: #444;
+    background-color: #023e73;
 }
 .rank-body-row div {
     padding: 10px;
     box-sizing: border-box;
-    background-color: #666;
+    background-color: #79acd9;
 }
 .rank-body-row {
-    border-top: 4px solid #aaa;
+    border-top: 4px solid #fff;
 }
 .rank-name {
     overflow: hidden;
@@ -229,8 +229,26 @@
     text-overflow: ellipsis;
     text-align: left;
 }
+
 .choose-date {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
     padding: 20px 0;
+}
+
+.choose-data-wrapper {
+    display: flex;
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: 2px 5px;
+}
+
+.choose-data-wrapper > div input[type='date'] {
+    width: 99px;
+    border: none;
+    background: none;
+    outline: none;
 }

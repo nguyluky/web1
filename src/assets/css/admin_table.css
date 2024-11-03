@@ -7,8 +7,22 @@ td .custom-datetime-input[type='datetime-local'] {
     /* pointer-events: none; */
 }
 
-td .custom-datetime-input::-webkit-calendar-picker-indicator {
-    /* display: none; */
+td:has(.input-clickable) {
+    position: relative;
+}
+
+.input-clickable {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+}
+
+td select:disabled ~ .input-clickable,
+td input:disabled ~ .input-clickable {
+    height: 100%;
+    width: 100%;
 }
 
 /* td[contenteditable='true'] .custom-datetime-input[type='datetime-local'] {

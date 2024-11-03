@@ -168,11 +168,12 @@ async function cartDoSave() {
 
     tableClearErrorKey();
 
-    document.querySelectorAll('#content_table td').forEach((e) => {
-        e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
-        e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
-        e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
-    });
+    // TODO:
+    // document.querySelectorAll('#content_table td').forEach((e) => {
+    //     e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
+    //     e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
+    //     e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
+    // });
 }
 
 function removeRows() {

@@ -224,6 +224,7 @@ export function removeRowById(id) {
  *     addRow?: () => void;
  *     removeRows?: () => void;
  *     cancelAdd?: () => void;
+ *     removeAllChange?: () => void;
  * }} IntefaceRender
  */
 

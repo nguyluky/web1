@@ -70,6 +70,7 @@ function onChangeHandle(data, key, newValue) {
 /** Hàm lưu lại các chỉnh sửa và người dùng mới vào database */
 /** @returns {Promise<boolean>} */
 async function userDoSave() {
+    tableClearErrorKey();
     const updateValues = Object.values(cacheSave);
     const addValues = Object.values(cacheAdd);
 
@@ -139,27 +140,39 @@ async function userDoSave() {
 
     tableClearErrorKey();
 
-    document.querySelectorAll('#content_table td').forEach((e) => {
-        e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
-        e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
+    // document.querySelectorAll('#content_table td').forEach((e) => {
+    //     e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
+    //     e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
 
-        const key = e.getAttribute('key');
-        // TODO:
-        if (key == 'datecreated') {
-            const input = e.querySelector('input');
-            e.setAttribute(
-                'default-value',
-                String(new Date(input?.value || '')),
-            );
-        } else if (key == 'rule' || key == 'status') {
-            const select = e.querySelector('select');
-            e.setAttribute('default-value', select?.value || '');
-        } else e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
-    });
+    //     const key = e.getAttribute('key');
+    //     // TODO:
+    //     if (key == 'datecreated') {
+    //         const input = e.querySelector('input');
+    //         e.setAttribute(
+    //             'default-value',
+    //             String(new Date(input?.value || '')),
+    //         );
+    //     } else if (key == 'rule' || key == 'status') {
+    //         const select = e.querySelector('select');
+    //         e.setAttribute('default-value', select?.value || '');
+    //     } else e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
+    // });
 
     return true;
 }
 
+function removeAllChange() {
+    cacheSave = {};
+    cacheAdd = [];
+    document.querySelectorAll('tr').forEach((e) => {
+        let cb = /** @type {HTMLInputElement | null} */ (
+            e.querySelector('input[type="checkbox"]')
+        );
+        if (cb?.checked) {
+            cb.checked = false;
+        }
+    });
+}
 /**
  * @param {HTMLTableRowElement} row
  * @param {UserInfo} value
@@ -284,9 +297,8 @@ function cancelAdd() {
 /** Xóa các người dùng đã được chọn trong bảng */
 function removeRows() {
     const selections = getAllRowsSeletion();
-
     selections.forEach((id) => {
-        fakeDatabase.deleteSachById(id);
+        fakeDatabase.deleteUserById(id);
         removeRowById(id);
     });
 }
@@ -304,5 +316,6 @@ const user_ = {
     addRow: addUser,
     removeRows,
     cancelAdd,
+    removeAllChange,
 };
 export default user_;

@@ -74,12 +74,12 @@
                         </div>
                     </label>
                     <div class="left-magin"></div>
-                    <label class="container">
+                    <!-- <label class="container">
                         <div class="left-sidebar__btn" id="change-pass">
                             <i class="fa-solid fa-key"></i>
                             <p><strong>Password</strong></p>
                         </div>
-                    </label>
+                    </label> -->
                     <label class="container">
                         <div class="left-sidebar__btn" id="sign-out">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>
@@ -119,17 +119,21 @@
                             </div>
                             <div class="chart" id="product-rank">
                                 <div class="choose-date">
-                                    <div id="from-date">
-                                        <label>
-                                            <span>Từ ngày: </span>
-                                            <input type="date" />
-                                        </label>
-                                    </div>
-                                    <div id="to-date">
-                                        <label>
-                                            <span>Đến ngày: </span>
-                                            <input type="date" />
-                                        </label>
+                                    <span><strong>Date Range:</strong></span>
+                                    <div class="choose-data-wrapper">
+                                        <div id="from-date">
+                                            <label>
+                                                <!-- <span>Từ ngày: </span> -->
+                                                <input type="date" />
+                                            </label>
+                                        </div>
+                                        <span>-</span>
+                                        <div id="to-date">
+                                            <label>
+                                                <!-- <span>Đến ngày: </span> -->
+                                                <input type="date" />
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="product-rank__header">
@@ -288,5 +292,6 @@
         </main>
         <footer class="footer">Thực hiện bởi nhóm 16</footer>
         <div id="submit-wrapper"></div>
+        <div id="toast"></div>
     </body>
 </html>
