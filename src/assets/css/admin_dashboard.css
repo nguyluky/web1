@@ -158,7 +158,6 @@
 }
 .leaderboard-body div {
     background: var(--row-cl);
-    transition: background 0.3s;
 }
 
 .leaderboard-body > div:hover {
@@ -175,29 +174,34 @@
     height: 20px;
 }
 .info-order {
-    background-color: #666;
-    padding: 15px 0;
-    color: #fff;
+    background-color: #d0d7e1;
+    padding: 20px 15px;
     border-radius: 10px;
 }
-
-.info-order details > div,
-.info-order details summary {
-    height: 30px;
-    padding: 0 20px;
+.info-order > div {
+    text-align: center;
+    line-height: 24px;
 }
-
-.info-order details summary {
-    cursor: pointer;
-    gap: 10px;
+.info-order details {
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 10px 20px;
+    margin-top: 10px;
+}
+.info-order details > div,
+.info-order summary {
     line-height: 30px;
 }
 
-.info-order details[open] summary {
-    background-color: #999;
+.info-order summary {
+    cursor: pointer;
+    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.info-order details > div {
+.info-order__user details > div {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -234,7 +238,6 @@
     display: flex;
     justify-content: right;
     align-items: center;
-    flex-wrap: wrap;
     gap: 5px;
     padding: 20px 0;
 }
@@ -245,10 +248,15 @@
     border-radius: 4px;
     padding: 2px 5px;
 }
-
+.choose-data-wrapper span {
+    padding: 0 2px;
+}
 .choose-data-wrapper > div input[type='date'] {
-    width: 99px;
+    width: 110px;
     border: none;
     background: none;
     outline: none;
+}
+.choose-data-wrapper > div input[type='date']::-webkit-datetime-edit-text {
+    padding: 0 2.5px;
 }

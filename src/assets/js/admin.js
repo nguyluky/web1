@@ -4,10 +4,7 @@ import cartRender from './render/table/cartTable.js';
 import sachRender from './render/table/sachTable.js';
 import orderRender from './render/table/orderTabel.js';
 import { showPopup, toast } from './render/popupRender.js';
-import {
-    formatLineChartData,
-    renderLeaderboard,
-} from './render/dashboardRender.js';
+import dashboardRender from './render/dashboardRender.js';
 import { tableEditOff, tableEditOn } from './render/table/customCell.js';
 
 /**
@@ -136,11 +133,7 @@ async function renderManagement(inputValue = '') {
     if (tab == 'dashboard') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
-
-        const chart = document.getElementById('line-chart');
-        chart && formatLineChartData(chart);
-        renderLeaderboard();
-
+        dashboardRender();
         return;
     }
     document.querySelector('.dashboard-wrapper')?.classList.add('hide');
@@ -195,8 +188,6 @@ function updateMangement() {
 }
 
 function handleContentOverflow() {
-    const chart = document.getElementById('line-chart');
-    chart && formatLineChartData(chart);
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
     if (!contentDiv) return;
