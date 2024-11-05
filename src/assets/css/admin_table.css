@@ -153,7 +153,7 @@ tr td[error]:hover::before {
     width: max-content;
 }
 
-.header-popip-wrapper {
+.header-popup-wrapper {
     display: flex;
     justify-content: space-between;
 }
@@ -162,9 +162,7 @@ tr td[error]:hover::before {
     position: absolute;
     background-color: #efefef;
     box-shadow: 0 0 5px #3232325e;
-    height: 100px;
-    max-width: 100%;
-    width: 170px;
+    width: 150px;
     right: 0;
     top: 100%;
     border-radius: 5px;
@@ -173,6 +171,17 @@ tr td[error]:hover::before {
 .popup-filter-header p {
     padding: 3px 10px;
     color: #323232;
+    font-weight: normal;
+}
+
+.popup-filter-header input {
+    width: calc(100% - 10px);
+    background: transparent;
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 5px;
+    box-sizing: border-box;
+    padding: 4px;
 }
 
 .popup-filter-header hr {

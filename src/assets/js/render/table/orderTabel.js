@@ -96,9 +96,14 @@ function renderRow(row, value, onchange) {
             }
             case 'date':
             case 'last_update': {
-                const date = createDateTimeTableCell(key, value[key], (nv) => {
-                    onchange && onchange(value, key, nv);
-                });
+                const date = createDateTimeTableCell(
+                    key,
+                    value[key],
+                    (nv) => {
+                        onchange && onchange(value, key, nv);
+                    },
+                    false,
+                );
                 row.appendChild(date);
                 break;
             }
@@ -243,18 +248,43 @@ function customeHeader() {
 
     Object.keys(cols).forEach((key) => {
         const col = document.createElement('th');
-        document.createElement('span');
-        col.innerHTML = `
-            <div class="header-popip-wrapper">
-                <span>${key}</span>
-                <span><i class="fa-solid fa-caret-down"></i></span>
-                <div class="popup-filter-header">
-                    <p>sort by a->z</p>
-                    <p>sort by z->a</p>
-                    <hr>
-                </div>
-            </div>
-        `;
+
+        var node_1 = document.createElement('DIV');
+        node_1.setAttribute('class', 'header-popup-wrapper');
+
+        var node_2 = document.createElement('SPAN');
+        node_1.appendChild(node_2);
+        node_2.textContent = key;
+
+        var node_4 = document.createElement('SPAN');
+        node_1.appendChild(node_4);
+
+        var node_5 = document.createElement('I');
+        node_5.setAttribute('class', 'fa-solid fa-caret-down');
+        node_4.appendChild(node_5);
+
+        var node_6 = document.createElement('DIV');
+        node_6.setAttribute('class', 'popup-filter-header');
+        node_1.appendChild(node_6);
+        node_6.style.display = 'none';
+
+        var node_7 = document.createElement('P');
+        node_6.appendChild(node_7);
+        node_7.textContent = 'sort by a->z';
+
+        var node_9 = document.createElement('P');
+        node_6.appendChild(node_9);
+        node_9.textContent = 'sort by z->a';
+
+        var node_11 = document.createElement('HR');
+        node_6.appendChild(node_11);
+
+        var node_12 = document.createElement('INPUT');
+        node_12.setAttribute('placeholder', 'search');
+        node_6.appendChild(node_12);
+
+        col.appendChild(node_1);
+
         tableHeader.appendChild(col);
     });
 
