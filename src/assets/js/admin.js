@@ -165,19 +165,19 @@ async function renderManagement(inputValue = '') {
 
     input.oninput = () => tabManagement[tab].search(data);
 
-    btnAdd.disabled = false;
-    btnSave.disabled = false;
-    btnDelete.disabled = false;
+    btnAdd.style.display = 'flex';
+    btnSave.style.display = 'flex';
+    btnDelete.style.display = 'flex';
 
     // cập nhật nút
     if (!tabManagement[tab].addRow) {
-        btnAdd.disabled = true;
+        btnAdd.style.display = 'none';
     }
     if (!tabManagement[tab].doSave) {
-        btnSave.disabled = true;
+        btnSave.style.display = 'none';
     }
     if (!tabManagement[tab].removeRows) {
-        btnDelete.disabled = true;
+        btnDelete.style.display = 'none';
     }
 }
 

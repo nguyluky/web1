@@ -138,6 +138,7 @@ function createOderInfoForUser(order) {
     });
     return details;
 }
+
 async function renderLeaderboard() {
     let array = [];
     const data = orders.filter((e) => e.state == 'giaohangthanhcong');
@@ -184,6 +185,7 @@ async function renderLeaderboard() {
         });
     });
 }
+
 /**
  *
  * @param {{name: String; quantify: Number; total: Number}} product
@@ -205,6 +207,7 @@ function createARow(product, index) {
     });
     return row;
 }
+
 /**
  *
  * @param {Date} from
@@ -214,7 +217,8 @@ function createARow(product, index) {
  */
 async function productRank(from, to, data, array) {
     orders.forEach((order) => {
-        const date = new Date(order.last_update);
+        // last_update là chỉ có admin dùng thôi
+        const date = new Date(order.date);
         if (
             from.getTime() <= date.getTime() &&
             date.getTime() <= to.getTime()

@@ -96,9 +96,14 @@ function renderRow(row, value, onchange) {
             }
             case 'date':
             case 'last_update': {
-                const date = createDateTimeTableCell(key, value[key], (nv) => {
-                    onchange && onchange(value, key, nv);
-                });
+                const date = createDateTimeTableCell(
+                    key,
+                    value[key],
+                    (nv) => {
+                        onchange && onchange(value, key, nv);
+                    },
+                    false,
+                );
                 row.appendChild(date);
                 break;
             }
@@ -134,52 +139,73 @@ function renderRow(row, value, onchange) {
         }
     });
 
-    row.addEventListener('click', () => {
-        if (!row.getAttribute('dropdown')) {
-            row.setAttribute('dropdown', 'true');
+    // row.addEventListener('click', () => {
+    //     if (!row.getAttribute('dropdown')) {
+    //         row.setAttribute('dropdown', 'true');
 
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = Object.keys(cols).length + 1;
+    //         const tr = document.createElement('tr');
+    //         const td = document.createElement('td');
+    //         td.colSpan = Object.keys(cols).length + 1;
 
-            value.items.forEach((e, index) => {
-                const div = document.createElement('div');
-                div.style.display = 'flex';
+    //         const title = document.createElement('div');
+    //         title.style.display = 'flex';
+    //         title.innerHTML = `
+    //             <div style="width: 20%; text-align: center;">STT</div>
+    //             <div style="width: 40%;">Tên</div>
+    //             <div style="width: 20%; text-align: center;">số lượng</div>
+    //             <div style="width: 20%; text-align: center;">số lượng</div>
+    //         `;
 
-                const stt = document.createElement('div');
+    //         td.appendChild(title);
 
-                const sach = document.createElement('div');
-                sach.style.width = '100%';
-                sach.style.textAlign = 'center';
-                sach.textContent = e.sach;
-                fakeDatabase.getSachById(e.sach).then((sach_) => {
-                    sach.textContent = sach_?.title || '';
-                });
+    //         value.items.forEach((e, index) => {
+    //             const div = document.createElement('div');
+    //             div.style.display = 'flex';
 
-                const quantity = document.createElement('div');
-                quantity.style.width = '100%';
-                quantity.style.textAlign = 'center';
+    //             const stt = document.createElement('div');
+    //             stt.textContent = index + '';
+    //             stt.style.width = '20%';
+    //             stt.style.textAlign = 'center';
+    //             div.appendChild(stt);
 
-                quantity.textContent = e.quantity + '';
+    //             const sach = document.createElement('div');
+    //             sach.style.width = '40%';
+    //             sach.textContent = e.sach;
 
-                div.appendChild(sach);
-                div.appendChild(quantity);
+    //             const quantity = document.createElement('div');
+    //             quantity.style.width = '20%';
+    //             quantity.style.textAlign = 'center';
+    //             quantity.textContent = e.quantity + '';
 
-                td.appendChild(div);
-            });
+    //             const donqia = document.createElement('div');
+    //             donqia.textContent = '';
+    //             donqia.style.width = '20%';
+    //             donqia.style.textAlign = 'center';
 
-            tr.appendChild(td);
+    //             fakeDatabase.getSachById(e.sach).then((sach_) => {
+    //                 sach.textContent = sach_?.title || '';
+    //                 donqia.textContent = sach_?.base_price + '';
+    //             });
 
-            if (row.nextElementSibling) {
-                row.parentElement?.insertBefore(tr, row.nextElementSibling);
-            } else {
-                row.parentElement?.appendChild(tr);
-            }
-        } else {
-            row.removeAttribute('dropdown');
-            row.nextElementSibling?.remove();
-        }
-    });
+    //             div.appendChild(sach);
+    //             div.appendChild(quantity);
+    //             div.appendChild(donqia);
+
+    //             td.appendChild(div);
+    //         });
+
+    //         tr.appendChild(td);
+
+    //         if (row.nextElementSibling) {
+    //             row.parentElement?.insertBefore(tr, row.nextElementSibling);
+    //         } else {
+    //             row.parentElement?.appendChild(tr);
+    //         }
+    //     } else {
+    //         row.removeAttribute('dropdown');
+    //         row.nextElementSibling?.remove();
+    //     }
+    // });
 }
 
 /**
@@ -192,7 +218,7 @@ function renderOrder(list) {
     );
     if (!table) return;
 
-    renderTable(list, table, cols, handleOnChange, renderRow);
+    renderTable(list, table, cols, handleOnChange, renderRow, customeHeader);
 }
 
 /** @param {Order[]} list */
@@ -212,6 +238,68 @@ function searchOrder(list) {
         }
     });
 }
+
+function customeHeader() {
+    const tableHeader = document.createElement('tr');
+
+    const col = document.createElement('th');
+    col.insertAdjacentHTML('beforeend', 'Check');
+    tableHeader.appendChild(col);
+
+    Object.keys(cols).forEach((key) => {
+        const col = document.createElement('th');
+
+        var node_1 = document.createElement('DIV');
+        node_1.setAttribute('class', 'header-popup-wrapper');
+
+        var node_2 = document.createElement('SPAN');
+        node_1.appendChild(node_2);
+        node_2.textContent = key;
+
+        var node_4 = document.createElement('SPAN');
+        node_1.appendChild(node_4);
+
+        var node_5 = document.createElement('I');
+        node_5.setAttribute('class', 'fa-solid fa-caret-down');
+        node_4.appendChild(node_5);
+
+        var node_6 = document.createElement('DIV');
+        node_6.setAttribute('class', 'popup-filter-header');
+        node_1.appendChild(node_6);
+        node_6.style.display = 'none';
+
+        var node_7 = document.createElement('P');
+        node_6.appendChild(node_7);
+        node_7.textContent = 'sort by a->z';
+
+        var node_9 = document.createElement('P');
+        node_6.appendChild(node_9);
+        node_9.textContent = 'sort by z->a';
+
+        var node_11 = document.createElement('HR');
+        node_6.appendChild(node_11);
+
+        var node_12 = document.createElement('INPUT');
+        node_12.setAttribute('placeholder', 'search');
+        node_6.appendChild(node_12);
+
+        col.appendChild(node_1);
+
+        tableHeader.appendChild(col);
+    });
+
+    return tableHeader;
+}
+
+/**
+ *
+ *
+ * TODO: làm sao đây
+ * @param {string} key
+ * @param {any} value
+ *
+ */
+function advancedSearch(key, value) {}
 
 async function doSave() {
     const updateValues = Object.values(cacheEdit);
