@@ -76,6 +76,7 @@ function formatLineChartData(container, values = chartValues) {
     });
     hoverPoint();
 }
+
 const maxValue = (values) => {
     let max = 0;
     values.forEach((e) => {
@@ -119,6 +120,7 @@ function hoverPoint() {
         });
     });
 }
+
 /**@param {import('../until/type.js').Order} order */
 function creatOrderInfo(order) {
     const details = document.createElement('details');
@@ -145,6 +147,7 @@ function creatOrderInfo(order) {
     });
     return details;
 }
+
 async function renderLeaderboard() {
     const alldata = await fakeDatabase.getAllOrder();
     await fakeDatabase.getAllUserInfo();
@@ -185,6 +188,7 @@ async function renderLeaderboard() {
         });
     });
 }
+
 /**
  *
  * @param {{name: String; quantify: Number; total: Number}} product
@@ -204,6 +208,7 @@ function createARow(product, index) {
     });
     return row;
 }
+
 /**
  *
  * @param {Date} from
@@ -215,7 +220,8 @@ async function productRank(from, to) {
     let data = {};
 
     orders.forEach((order) => {
-        const date = new Date(order.last_update);
+        // last_update là chỉ có admin dùng thôi
+        const date = new Date(order.date);
         if (
             from.getTime() <= date.getTime() &&
             date.getTime() <= to.getTime()
@@ -226,6 +232,7 @@ async function productRank(from, to) {
             });
         }
     });
+
     let array = [];
     books.forEach((e) => {
         const quantify = data[e.id] ? data[e.id] : 0;

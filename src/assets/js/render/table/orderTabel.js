@@ -134,52 +134,73 @@ function renderRow(row, value, onchange) {
         }
     });
 
-    row.addEventListener('click', () => {
-        if (!row.getAttribute('dropdown')) {
-            row.setAttribute('dropdown', 'true');
+    // row.addEventListener('click', () => {
+    //     if (!row.getAttribute('dropdown')) {
+    //         row.setAttribute('dropdown', 'true');
 
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = Object.keys(cols).length + 1;
+    //         const tr = document.createElement('tr');
+    //         const td = document.createElement('td');
+    //         td.colSpan = Object.keys(cols).length + 1;
 
-            value.items.forEach((e, index) => {
-                const div = document.createElement('div');
-                div.style.display = 'flex';
+    //         const title = document.createElement('div');
+    //         title.style.display = 'flex';
+    //         title.innerHTML = `
+    //             <div style="width: 20%; text-align: center;">STT</div>
+    //             <div style="width: 40%;">Tên</div>
+    //             <div style="width: 20%; text-align: center;">số lượng</div>
+    //             <div style="width: 20%; text-align: center;">số lượng</div>
+    //         `;
 
-                const stt = document.createElement('div');
+    //         td.appendChild(title);
 
-                const sach = document.createElement('div');
-                sach.style.width = '100%';
-                sach.style.textAlign = 'center';
-                sach.textContent = e.sach;
-                fakeDatabase.getSachById(e.sach).then((sach_) => {
-                    sach.textContent = sach_?.title || '';
-                });
+    //         value.items.forEach((e, index) => {
+    //             const div = document.createElement('div');
+    //             div.style.display = 'flex';
 
-                const quantity = document.createElement('div');
-                quantity.style.width = '100%';
-                quantity.style.textAlign = 'center';
+    //             const stt = document.createElement('div');
+    //             stt.textContent = index + '';
+    //             stt.style.width = '20%';
+    //             stt.style.textAlign = 'center';
+    //             div.appendChild(stt);
 
-                quantity.textContent = e.quantity + '';
+    //             const sach = document.createElement('div');
+    //             sach.style.width = '40%';
+    //             sach.textContent = e.sach;
 
-                div.appendChild(sach);
-                div.appendChild(quantity);
+    //             const quantity = document.createElement('div');
+    //             quantity.style.width = '20%';
+    //             quantity.style.textAlign = 'center';
+    //             quantity.textContent = e.quantity + '';
 
-                td.appendChild(div);
-            });
+    //             const donqia = document.createElement('div');
+    //             donqia.textContent = '';
+    //             donqia.style.width = '20%';
+    //             donqia.style.textAlign = 'center';
 
-            tr.appendChild(td);
+    //             fakeDatabase.getSachById(e.sach).then((sach_) => {
+    //                 sach.textContent = sach_?.title || '';
+    //                 donqia.textContent = sach_?.base_price + '';
+    //             });
 
-            if (row.nextElementSibling) {
-                row.parentElement?.insertBefore(tr, row.nextElementSibling);
-            } else {
-                row.parentElement?.appendChild(tr);
-            }
-        } else {
-            row.removeAttribute('dropdown');
-            row.nextElementSibling?.remove();
-        }
-    });
+    //             div.appendChild(sach);
+    //             div.appendChild(quantity);
+    //             div.appendChild(donqia);
+
+    //             td.appendChild(div);
+    //         });
+
+    //         tr.appendChild(td);
+
+    //         if (row.nextElementSibling) {
+    //             row.parentElement?.insertBefore(tr, row.nextElementSibling);
+    //         } else {
+    //             row.parentElement?.appendChild(tr);
+    //         }
+    //     } else {
+    //         row.removeAttribute('dropdown');
+    //         row.nextElementSibling?.remove();
+    //     }
+    // });
 }
 
 /**
@@ -192,7 +213,7 @@ function renderOrder(list) {
     );
     if (!table) return;
 
-    renderTable(list, table, cols, handleOnChange, renderRow);
+    renderTable(list, table, cols, handleOnChange, renderRow, customeHeader);
 }
 
 /** @param {Order[]} list */
@@ -212,6 +233,43 @@ function searchOrder(list) {
         }
     });
 }
+
+function customeHeader() {
+    const tableHeader = document.createElement('tr');
+
+    const col = document.createElement('th');
+    col.insertAdjacentHTML('beforeend', 'Check');
+    tableHeader.appendChild(col);
+
+    Object.keys(cols).forEach((key) => {
+        const col = document.createElement('th');
+        document.createElement('span');
+        col.innerHTML = `
+            <div class="header-popip-wrapper">
+                <span>${key}</span>
+                <span><i class="fa-solid fa-caret-down"></i></span>
+                <div class="popup-filter-header">
+                    <p>sort by a->z</p>
+                    <p>sort by z->a</p>
+                    <hr>
+                </div>
+            </div>
+        `;
+        tableHeader.appendChild(col);
+    });
+
+    return tableHeader;
+}
+
+/**
+ *
+ *
+ * TODO: làm sao đây
+ * @param {string} key
+ * @param {any} value
+ *
+ */
+function advancedSearch(key, value) {}
 
 async function doSave() {
     const updateValues = Object.values(cacheEdit);
