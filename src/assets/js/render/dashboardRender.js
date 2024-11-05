@@ -127,6 +127,7 @@ function createOderInfoForUser(order) {
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     details.appendChild(summary);
+    details.appendChild(document.createElement('hr'));
     summary.innerHTML = `<div>Mã đơn: ${order.id}</div><div>Tổng đơn: ${order.total}</div>`;
     let head = document.createElement('div');
     head.innerHTML = `<div>Mã sách</div><div>Số lượng</div>`;
@@ -269,6 +270,7 @@ async function createOderInfoForProduct(order) {
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     details.appendChild(summary);
+    details.appendChild(document.createElement('hr'));
     summary.innerHTML = `<div>Mã đơn: ${order.orderId}</div><div>Số lượng: ${order.quantify}</div>`;
     let user = await fakeDatabase.getUserInfoByUserId(order.user);
     let userInfo = document.createElement('div');

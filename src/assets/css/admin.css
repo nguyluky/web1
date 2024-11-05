@@ -23,7 +23,18 @@ body {
     top: 0;
     z-index: 1;
 }
-
+.article-header::before {
+    content: '';
+    position: absolute;
+    top: 50px;
+    left: 0;
+    height: 30px;
+    width: 30px;
+    background-color: #fff;
+    clip-path: path(
+        'M0 0 H60 V60 H0 Z M30 0 A30 30 0 1 0 30 60 A30 30 0 1 0 30 0 Z'
+    );
+}
 .brand-name {
     height: 30px;
     display: flex;
@@ -516,10 +527,6 @@ body {
         background-color: #0a68f4;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     }
-
-    .article-main {
-        margin: 0;
-    }
 }
 
 @media screen and (max-width: 1200px) {
@@ -566,6 +573,9 @@ body {
 @media screen and (max-width: 750px) {
     .article-main {
         margin: 0;
+    }
+    .article-header::before {
+        display: none;
     }
     .aside {
         position: absolute;

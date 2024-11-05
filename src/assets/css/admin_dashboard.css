@@ -174,7 +174,7 @@
     height: 20px;
 }
 .info-order {
-    background-color: #d0d7e1;
+    background-color: #fff;
     padding: 20px 15px;
     border-radius: 10px;
 }
@@ -184,7 +184,7 @@
 }
 .info-order details {
     border-radius: 4px;
-    background-color: #fff;
+    background-color: #d0d7e1bb;
     padding: 10px 20px;
     margin-top: 10px;
 }
@@ -192,7 +192,10 @@
 .info-order summary {
     line-height: 30px;
 }
-
+details hr {
+    border: 1px solid #000;
+    margin: 4px 0;
+}
 .info-order summary {
     cursor: pointer;
     gap: 10px;
