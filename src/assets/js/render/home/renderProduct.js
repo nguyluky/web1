@@ -122,8 +122,8 @@ export function updatePagination(page) {
 function prevPage() {
     if (Current_Page > 1) {
         Current_Page--;
-        // updatePagination();
-        // displayProducts(data);
+        updatePagination(Current_Page);
+        displayProducts(data);
 
         const { page, query } = urlConverter(location.hash);
         query.set('p', Current_Page + '');
@@ -135,8 +135,8 @@ function prevPage() {
 function nextPage() {
     if (Current_Page < totalPages) {
         Current_Page++;
-        // updatePagination();
-        // displayProducts(data);
+        updatePagination(Current_Page);
+        displayProducts(data);
 
         const { page, query } = urlConverter(location.hash);
         query.set('p', Current_Page + '');
@@ -149,8 +149,8 @@ function nextPage() {
 function goToPage(page) {
     if (Current_Page != page) {
         Current_Page = page;
-        // updatePagination();
-        // displayProducts(data);
+        updatePagination(Current_Page);
+        displayProducts(data);
 
         const { page: page_, query } = urlConverter(location.hash);
         query.set('p', Current_Page + '');
