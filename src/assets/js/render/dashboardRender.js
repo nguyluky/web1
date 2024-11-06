@@ -8,13 +8,58 @@ const chartValues = [
     { value: 50 },
     { value: 40 },
 ];
-
+const orders = await fakeDatabase.getAllOrder();
+const books = await fakeDatabase.getAllBooks();
 /**
- *
- * @param {HTMLElement} container
  * @param {{value: number}[]} values
  */
-function formatLineChartData(container, values = chartValues) {
+function formatLineChartData(values = chartValues) {
+    const maxValue = (values) => {
+        let max = 0;
+        values.forEach((e) => {
+            max = max > e.value ? max : e.value;
+        });
+        return max;
+    };
+    const radiansToDegrees = (rads) => rads * (180 / Math.PI);
+
+    function createListItem(item) {
+        return `
+      <div class="data-point" data-value="${item.value}"></div>
+      <div class="line-segment" style="--hypotenuse: ${item.hypotenuse}; --angle:${item.angle};"></div>
+      `;
+    }
+
+    function getPointData(point) {
+        const popup = document.createElement('div');
+        popup.innerHTML = point.getAttribute('data-value');
+        return popup;
+    }
+
+    function hoverPoint() {
+        let timeoutId;
+        let lastHover;
+        document.querySelectorAll('.data-point').forEach((point, i, arr) => {
+            point.addEventListener('mouseover', () => {
+                if (lastHover) {
+                    if (lastHover.firstChild)
+                        lastHover.removeChild(lastHover.firstChild);
+                }
+                if (timeoutId) clearTimeout(timeoutId);
+                while (point.firstChild) point.removeChild(point.firstChild);
+                point.appendChild(getPointData(point));
+                lastHover = arr[i];
+            });
+            point.addEventListener('mouseout', () => {
+                timeoutId = setTimeout(() => {
+                    if (point.firstChild) point.removeChild(point.firstChild);
+                }, 3000);
+            });
+        });
+    }
+
+    const container = document.getElementById('line-chart');
+    if (!container) return;
     const widgetHeight = container.clientHeight;
     const widgetWidth = container.clientWidth;
     container.style.cssText = `--widgetHeight: ${widgetHeight}px; --widgetWidth: ${widgetWidth}px`;
@@ -76,80 +121,28 @@ function formatLineChartData(container, values = chartValues) {
     });
     hoverPoint();
 }
-const maxValue = (values) => {
-    let max = 0;
-    values.forEach((e) => {
-        max = max > e.value ? max : e.value;
-    });
-    return max;
-};
-const radiansToDegrees = (rads) => rads * (180 / Math.PI);
 
-function createListItem(item) {
-    return `
-  <div class="data-point" data-value="${item.value}"></div>
-  <div class="line-segment" style="--hypotenuse: ${item.hypotenuse}; --angle:${item.angle};"></div>
-  `;
-}
-
-function getPointData(point) {
-    const popup = document.createElement('div');
-    popup.innerHTML = point.getAttribute('data-value');
-    return popup;
-}
-
-function hoverPoint() {
-    let timeoutId;
-    let lastHover;
-    document.querySelectorAll('.data-point').forEach((point, i, arr) => {
-        point.addEventListener('mouseover', () => {
-            if (lastHover) {
-                if (lastHover.firstChild)
-                    lastHover.removeChild(lastHover.firstChild);
-            }
-            if (timeoutId) clearTimeout(timeoutId);
-            while (point.firstChild) point.removeChild(point.firstChild);
-            point.appendChild(getPointData(point));
-            lastHover = arr[i];
-        });
-        point.addEventListener('mouseout', () => {
-            timeoutId = setTimeout(() => {
-                if (point.firstChild) point.removeChild(point.firstChild);
-            }, 3000);
-        });
-    });
-}
 /**@param {import('../until/type.js').Order} order */
-function creatOrderInfo(order) {
+function createOderInfoForUser(order) {
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     details.appendChild(summary);
-    summary.innerHTML = `Mã đơn: ${order.id}`;
+    details.appendChild(document.createElement('hr'));
+    summary.innerHTML = `<div>Mã đơn: ${order.id}</div><div>Tổng đơn: ${order.total}</div>`;
     let head = document.createElement('div');
-    let ma = document.createElement('div');
-    head.appendChild(ma);
-    ma.innerHTML = `Mã sách`;
-    let sl = document.createElement('div');
-    sl.innerHTML = `Số lượng`;
-    head.appendChild(sl);
+    head.innerHTML = `<div>Mã sách</div><div>Số lượng</div>`;
     details.appendChild(head);
     order.items.forEach((item) => {
         let product = document.createElement('div');
-        let product_name = document.createElement('div');
-        product.appendChild(product_name);
-        product_name.innerHTML = item.sach;
-        let product_quantify = document.createElement('div');
-        product_quantify.innerHTML = `${item.quantity}`;
-        product.appendChild(product_quantify);
+        product.innerHTML = `<div>${item.sach}</div><div>${item.quantity}</div>`;
         details.appendChild(product);
     });
     return details;
 }
+
 async function renderLeaderboard() {
-    const alldata = await fakeDatabase.getAllOrder();
-    await fakeDatabase.getAllUserInfo();
     let array = [];
-    const data = alldata.filter((e) => e.state == 'giaohangthanhcong');
+    const data = orders.filter((e) => e.state == 'giaohangthanhcong');
     data.forEach((e) => {
         const index = array.findIndex((element) => element.id == e.user_id);
         if (index != -1) {
@@ -172,19 +165,28 @@ async function renderLeaderboard() {
             total.textContent = e.total;
         }
     });
-    const showOrder = document.querySelector('.info-order');
+    const showOrder = document.querySelector('.info-order__user');
+    const name = document.getElementById('user-name');
+    const text = name?.innerText;
     document.querySelectorAll('.leaderboard-body > div').forEach((e, i) => {
         e.addEventListener('click', () => {
-            while (showOrder?.firstChild)
-                showOrder.removeChild(showOrder.firstChild);
+            if (name)
+                name.innerHTML = `${text}<br><strong>${array[i].name}</strong>`;
+            while (
+                showOrder &&
+                showOrder.children.length > 1 &&
+                showOrder.lastChild
+            )
+                showOrder.removeChild(showOrder.lastChild);
             array[i].order.forEach(async (id) => {
                 let orderData = await fakeDatabase.getOrderById(id);
                 if (!orderData) return;
-                showOrder?.appendChild(creatOrderInfo(orderData));
+                showOrder?.appendChild(createOderInfoForUser(orderData));
             });
         });
     });
 }
+
 /**
  *
  * @param {{name: String; quantify: Number; total: Number}} product
@@ -197,39 +199,58 @@ function createARow(product, index) {
     row.appendChild(rank);
     rank.innerText = `${index + 1}`;
     Object.keys(product).forEach((key) => {
-        const cell = document.createElement('div');
-        cell.className = `rank-${key}`;
-        cell.innerHTML = `${product[key]}`;
-        row.appendChild(cell);
+        if (key != 'id') {
+            const cell = document.createElement('div');
+            cell.className = `rank-${key}`;
+            cell.innerHTML = `${product[key]}`;
+            row.appendChild(cell);
+        }
     });
     return row;
 }
+
 /**
  *
  * @param {Date} from
  * @param {Date} to
  */
 async function productRank(from, to) {
-    const orders = await fakeDatabase.getAllOrder();
-    const books = await fakeDatabase.getAllBooks();
     let data = {};
-
+    let array = [];
     orders.forEach((order) => {
-        const date = new Date(order.last_update);
+        // last_update là chỉ có admin dùng thôi
+        const date = new Date(order.date);
         if (
             from.getTime() <= date.getTime() &&
             date.getTime() <= to.getTime()
         ) {
             order.items.forEach((e) => {
-                if (data[e.sach]) data[e.sach] += e.quantity;
-                else data[e.sach] = e.quantity;
+                if (data[e.sach]) {
+                    data[e.sach].push({
+                        orderId: order.id,
+                        quantify: e.quantity,
+                        user: order.user_id,
+                    });
+                } else
+                    data[e.sach] = [
+                        {
+                            orderId: order.id,
+                            quantify: e.quantity,
+                            user: order.user_id,
+                        },
+                    ];
             });
         }
     });
-    let array = [];
     books.forEach((e) => {
-        const quantify = data[e.id] ? data[e.id] : 0;
+        let quantify = 0;
+        if (data[e.id]) {
+            data[e.id].forEach((x) => {
+                quantify += x.quantify;
+            });
+        }
         array.push({
+            id: e.id,
             name: e.title,
             quantify: quantify,
             total: e.base_price * (1 - e.discount) * quantify,
@@ -241,11 +262,52 @@ async function productRank(from, to) {
     });
     const chart = document.querySelector('.product-rank__body');
     while (chart?.firstChild) chart.removeChild(chart.firstChild);
+    let sum = 0;
     array.forEach((value, index) => {
+        sum += value.total;
         chart?.appendChild(createARow(value, index));
     });
+    const footer = document.querySelector('.product-rank__footer span');
+    if (footer) footer.innerHTML = String(sum) + ' VNĐ';
+    const showOrder = document.querySelector('.info-order__product');
+    const name = document.getElementById('product-name');
+    const text = name?.innerText;
+    document.querySelectorAll('.rank-body-row').forEach((row, i) => {
+        row.addEventListener('click', () => {
+            const top = /**@type {HTMLElement} */ (showOrder).offsetTop - 70;
+            document.querySelector('.dashboard-wrapper')?.scrollTo({
+                top: top,
+                behavior: 'smooth',
+            });
+            if (name)
+                name.innerHTML = `${text}<br><strong>${
+                    row.querySelector('.rank-name')?.innerHTML
+                }</strong>`;
+            while (
+                showOrder &&
+                showOrder.children.length > 1 &&
+                showOrder.lastChild
+            )
+                showOrder.removeChild(showOrder.lastChild);
+            if (data[array[i].id])
+                data[array[i].id].forEach(async (e) => {
+                    showOrder?.appendChild(await createOderInfoForProduct(e));
+                });
+        });
+    });
 }
-
+async function createOderInfoForProduct(order) {
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    details.appendChild(summary);
+    details.appendChild(document.createElement('hr'));
+    summary.innerHTML = `<div>Mã đơn: ${order.orderId}</div><div>Số lượng: ${order.quantify}</div>`;
+    let user = await fakeDatabase.getUserInfoByUserId(order.user);
+    let userInfo = document.createElement('div');
+    userInfo.innerHTML = `Khách mua hàng:<br>${user?.name}`;
+    details.appendChild(userInfo);
+    return details;
+}
 function renderProductRank() {
     const chooseDate = document.querySelector('#product-rank .choose-date');
     const from = /**@type {HTMLInputElement} */ (
@@ -266,6 +328,12 @@ function renderProductRank() {
         productRank(new Date(from.value), new Date(to.value));
     });
 }
-renderProductRank();
-export { formatLineChartData, renderLeaderboard };
-// String().padStart(2,'0')
+
+function count() {}
+function dashboardRender() {
+    renderLeaderboard();
+    renderProductRank();
+    formatLineChartData();
+    window.addEventListener('resize', () => formatLineChartData());
+}
+export default dashboardRender;

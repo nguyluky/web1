@@ -190,7 +190,7 @@ export function selectionCatergory(category_id) {
         data = Product_Data;
     }
     totalPages = Math.ceil(data.length / Products_Per_page);
-    // Current_Page = 1;
+    Current_Page = 1;
 }
 
 function renderProduct() {

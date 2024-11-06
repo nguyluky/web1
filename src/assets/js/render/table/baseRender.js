@@ -73,20 +73,11 @@ export function renderDefaultRow(row, value, cols, onchange) {
 }
 
 /**
- * @template {{ id: string }} T
- * @param {T[]} values - Dữ liệu để hiển thị.
- * @param {HTMLTableElement} table - Phần tử bảng HTML để render.
- * @param {COLS<T>} cols - Định nghĩa các cột trong bảng.
- * @param {OnChange<T>} [onchange] - Hàm gọi lại khi dữ liệu thay đổi.
- * @param {(row: HTMLTableRowElement, value: T, onchange?: OnChange<T>) => any} [cRenderRow]
- *   - Hàm render hàng tùy chỉnh.
  *
- *   {@link https://github.com/nguyluky/web1/blob/main/docs/RENDER_TABLE.md} for
- *   more information.
+ * @template T
+ * @param {COLS<T>} cols
  */
-function renderTable(values, table, cols, onchange, cRenderRow) {
-    table.innerHTML = '';
-
+function createHeader(cols) {
     const tableHeader = document.createElement('tr');
 
     // render table
@@ -103,6 +94,26 @@ function renderTable(values, table, cols, onchange, cRenderRow) {
         tableHeader.appendChild(col);
     });
 
+    return tableHeader;
+}
+
+/**
+ * @template {{ id: string }} T
+ * @param {T[]} values - Dữ liệu để hiển thị.
+ * @param {HTMLTableElement} table - Phần tử bảng HTML để render.
+ * @param {COLS<T>} cols - Định nghĩa các cột trong bảng.
+ * @param {OnChange<T>} [onchange] - Hàm gọi lại khi dữ liệu thay đổi.
+ * @param {(row: HTMLTableRowElement, value: T, onchange?: OnChange<T>) => any} [cRenderRow]
+ * @param {() => HTMLTableRowElement} [cRenderHeader]
+ *   - Hàm render hàng tùy chỉnh.
+ *
+ *   {@link https://github.com/nguyluky/web1/blob/main/docs/RENDER_TABLE.md} for
+ *   more information.
+ */
+function renderTable(values, table, cols, onchange, cRenderRow, cRenderHeader) {
+    table.innerHTML = '';
+
+    const tableHeader = cRenderHeader ? cRenderHeader() : createHeader(cols);
     table.appendChild(tableHeader);
 
     values.forEach((value) => {

@@ -58,10 +58,11 @@
     border-radius: 4px;
 }
 #vertical-axis {
-    margin-top: 8px;
+    margin: 8px 2px 4px 0;
     grid-area: 2 / 1 / span 1 / span 1;
     display: grid;
     grid-template-rows: repeat(var(--row), auto);
+    justify-items: right;
 }
 #horizontal-axis {
     grid-area: 3/ 2 / span 1 / span 1;
@@ -158,7 +159,6 @@
 }
 .leaderboard-body div {
     background: var(--row-cl);
-    transition: background 0.3s;
 }
 
 .leaderboard-body > div:hover {
@@ -175,29 +175,37 @@
     height: 20px;
 }
 .info-order {
-    background-color: #666;
-    padding: 15px 0;
-    color: #fff;
+    background-color: #fff;
+    padding: 20px 15px;
     border-radius: 10px;
 }
-
-.info-order details > div,
-.info-order details summary {
-    height: 30px;
-    padding: 0 20px;
+.info-order > div {
+    text-align: center;
+    line-height: 24px;
 }
-
-.info-order details summary {
-    cursor: pointer;
-    gap: 10px;
+.info-order details {
+    border-radius: 4px;
+    background-color: #d0d7e1bb;
+    padding: 10px 20px;
+    margin-top: 10px;
+}
+.info-order details > div,
+.info-order summary {
     line-height: 30px;
 }
-
-.info-order details[open] summary {
-    background-color: #999;
+details hr {
+    border: 1px solid #000;
+    margin: 4px 0;
+}
+.info-order summary {
+    cursor: pointer;
+    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.info-order details > div {
+.info-order__user details > div {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -232,9 +240,8 @@
 
 .choose-date {
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
     gap: 5px;
     padding: 20px 0;
 }
@@ -245,10 +252,19 @@
     border-radius: 4px;
     padding: 2px 5px;
 }
-
+.choose-data-wrapper span {
+    padding: 0 2px;
+}
 .choose-data-wrapper > div input[type='date'] {
-    width: 99px;
+    width: 110px;
     border: none;
     background: none;
     outline: none;
+}
+.choose-data-wrapper > div input[type='date']::-webkit-datetime-edit-text {
+    padding: 0 2.5px;
+}
+
+.product-rank__footer {
+    padding-top: 20px;
 }
