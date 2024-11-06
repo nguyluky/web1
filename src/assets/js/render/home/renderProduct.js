@@ -36,6 +36,7 @@ export function createPagination() {
 export async function createProduct(product) {
     const Product_Item = document.createElement('div');
     Product_Item.classList.add('product-card');
+    Product_Item.setAttribute('data-id', product.id);
     const img = await fakeDatabase.getImgById(product.thumbnail);
     let source = './assets/img/default-image.png';
     if (img) source = img.data;
@@ -52,13 +53,17 @@ export async function createProduct(product) {
         <div class="product-title">
             <p>${product.title}</p>
         </div>
-        <div class="product-price">
-            <span class="sale-price">
-                ${String(
-                    Math.round(product.base_price * (1 - product.discount)),
-                )} <sup>₫</sup></span>
-            <span class="regular-price ${product.discount == 0 ? 'hide' : ''}">
-                ${String(product.base_price)} <sup>₫</sup></span>
+        <div class="product-footer">
+            <div class="product-price">
+                <span class="sale-price">
+                    ${String(
+                        Math.round(product.base_price * (1 - product.discount)),
+                    )} <sup>₫</sup></span>
+                <span class="regular-price ${
+                    product.discount == 0 ? 'hide' : ''
+                }">
+                    ${String(product.base_price)} <sup>₫</sup></span>
+            </div>
             <img
                 class="add-to-cart"
                 src="./assets/img/add-to-cart.png"
@@ -91,6 +96,9 @@ export function displayProducts(data = Product_Data) {
         const productItem = await createProduct(product);
         productlist.appendChild(productItem);
     });
+    setTimeout(() => {
+        addToCart();
+    }, 100);
 }
 
 /**
@@ -186,35 +194,24 @@ export function selectionCatergory(category_id) {
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;
 }
-
-function renderProduct() {
-    console.log('call renderProduct');
-    // default
-    displayProducts();
-    createPagination();
-    setupPaginationListeners();
-    updatePagination(0);
-
-    // khi chọn danh mục
-    const sub_header = document.querySelectorAll('.catergory__row--sub-header');
-
-    sub_header.forEach((sub) => {
-        sub.addEventListener('click', (ev) => {
-            sub_header.forEach((e) => e.removeAttribute('selected'));
-            sub.setAttribute('selected', 'true');
-            const category = /**@type {HTMLElement}*/ (sub).dataset.value;
-
-            if (!category) return;
-
-            selectionCatergory(category);
-
-            const { page, query } = urlConverter(location.hash);
-            query.set('c', category);
-            location.hash = page + '?' + query.toString();
-            displayProducts();
-            createPagination();
+export function addToCart() {
+    console.log('add cart call');
+    const productCard = document.querySelectorAll('.product-card');
+    productCard.forEach((product) => {
+        product.addEventListener('click', async (event) => {
+            if (
+                /**@type {HTMLElement}*/ (event.target).classList.contains(
+                    'add-to-cart',
+                )
+            ) {
+                await fakeDatabase.addCart({
+                    user_id: localStorage.getItem('user_id'),
+                    sach: product.getAttribute('data-id'),
+                    quantity: 1,
+                    timecreate: new Date(),
+                });
+                console.log('add cart');
+            }
         });
     });
 }
-
-export default renderProduct;
