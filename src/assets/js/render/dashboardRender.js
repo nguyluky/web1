@@ -213,10 +213,10 @@ function createARow(product, index) {
  *
  * @param {Date} from
  * @param {Date} to
- * @param {Object} data
- * @param {Array} array
  */
-async function productRank(from, to, data, array) {
+async function productRank(from, to) {
+    let data = {};
+    let array = [];
     orders.forEach((order) => {
         // last_update là chỉ có admin dùng thôi
         const date = new Date(order.date);
@@ -262,8 +262,38 @@ async function productRank(from, to, data, array) {
     });
     const chart = document.querySelector('.product-rank__body');
     while (chart?.firstChild) chart.removeChild(chart.firstChild);
+    let sum = 0;
     array.forEach((value, index) => {
+        sum += value.total;
         chart?.appendChild(createARow(value, index));
+    });
+    const footer = document.querySelector('.product-rank__footer span');
+    if (footer) footer.innerHTML = String(sum) + ' VNĐ';
+    const showOrder = document.querySelector('.info-order__product');
+    const name = document.getElementById('product-name');
+    const text = name?.innerText;
+    document.querySelectorAll('.rank-body-row').forEach((row, i) => {
+        row.addEventListener('click', () => {
+            const top = /**@type {HTMLElement} */ (showOrder).offsetTop - 70;
+            document.querySelector('.dashboard-wrapper')?.scrollTo({
+                top: top,
+                behavior: 'smooth',
+            });
+            if (name)
+                name.innerHTML = `${text}<br><strong>${
+                    row.querySelector('.rank-name')?.innerHTML
+                }</strong>`;
+            while (
+                showOrder &&
+                showOrder.children.length > 1 &&
+                showOrder.lastChild
+            )
+                showOrder.removeChild(showOrder.lastChild);
+            if (data[array[i].id])
+                data[array[i].id].forEach(async (e) => {
+                    showOrder?.appendChild(await createOderInfoForProduct(e));
+                });
+        });
     });
 }
 async function createOderInfoForProduct(order) {
@@ -293,39 +323,13 @@ function renderProductRank() {
     );
     to.value = dateToString(now);
     to.max = dateToString(now);
-    let data = {};
-    let array = [];
-    productRank(
-        new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
-        now,
-        data,
-        array,
-    );
+    productRank(new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), now);
     chooseDate?.addEventListener('change', () => {
-        productRank(new Date(from.value), new Date(to.value), data, array);
-    });
-    const showOrder = document.querySelector('.info-order__product');
-    const name = document.getElementById('product-name');
-    const text = name?.innerText;
-    document.querySelectorAll('.rank-body-row').forEach((row, i) => {
-        row.addEventListener('click', () => {
-            if (name)
-                name.innerHTML = `${text}<br><strong>${
-                    row.querySelector('.rank-name')?.innerHTML
-                }</strong>`;
-            while (
-                showOrder &&
-                showOrder.children.length > 1 &&
-                showOrder.lastChild
-            )
-                showOrder.removeChild(showOrder.lastChild);
-            data[array[i].id].forEach(async (e) => {
-                showOrder?.appendChild(await createOderInfoForProduct(e));
-            });
-        });
+        productRank(new Date(from.value), new Date(to.value));
     });
 }
 
+function count() {}
 function dashboardRender() {
     renderLeaderboard();
     renderProductRank();
