@@ -328,6 +328,27 @@ input[type='checkbox'] {
     font-weight: 600;
 }
 
+.hide {
+    display: none;
+}
+
+.empty-cart {
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.empty-cart img {
+    width: 160px;
+}
+.empty-cart span {
+    font-size: 18px;
+
+    font-weight: 500;
+    margin-bottom: 10px;
+}
 @media screen and (max-width: 1000px) {
     .main-cart-content {
         grid-template-columns: 1fr;

@@ -69,7 +69,7 @@ export async function createProduct(product) {
     return Product_Item;
 }
 // render products
-export function displayProducts(data = Product_Data) {
+export async function displayProducts(data = Product_Data) {
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
@@ -86,11 +86,17 @@ export function displayProducts(data = Product_Data) {
     const end = start + Products_Per_page;
     const Products_To_Display = data.slice(start, end);
 
-    Products_To_Display.forEach(async (product) => {
-        // console.log(product);
+    // let arr = Products_To_Display.map(async (product) => {
+    //     // console.log(product);
+    //     const productItem = await createProduct(product);
+    //     productlist.appendChild(productItem);
+    //     return productItem;
+    // });
+
+    for (const product of Products_To_Display) {
         const productItem = await createProduct(product);
         productlist.appendChild(productItem);
-    });
+    }
 }
 
 /**

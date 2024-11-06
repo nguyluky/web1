@@ -1,17 +1,25 @@
 import fakeDatabase from './db/fakeDBv1.js';
+import user_ from './render/table/userTable.js';
 import uuidv from './until/uuid.js';
-
 const user_id = localStorage.getItem('user_id');
-const books = await fakeDatabase.getAllBooks();
+// const books = await fakeDatabase.getAllBooks();
 console.log(user_id);
-main();
-function main() {
-    if (user_id) {
-        addToCartOnButton();
-        // deleteCartItemOnButton();
-        // updateCartQuantity();
-        renderCart();
-    }
+// console.log('haf thanh dung');
+// main();
+// function main() {
+//     if (user_id) {
+//         // addToCartOnButton();
+//         deleteCartItemOnButton();
+//         updateCartQuantity();
+//         renderCart();
+//     }
+// }
+mainCart();
+
+function mainCart() {
+    updateCartQuantity();
+    renderCart();
+    // deleteCartItemOnButton();
 }
 
 async function renderCart() {
@@ -22,22 +30,29 @@ async function renderCart() {
         if (container && cartItems) {
             cartItems.innerHTML = '';
             let html = '';
-            carts.forEach(async (cart) => {
+            // carts.forEach(async (cart) => {
+            //     console.log(cart);
+            //     const cartItem = await createCartItem(cart);
+            //     if (cartItem) {
+            //         cartItems.appendChild(cartItem);
+            //     }
+            // });
+
+            for (const cart of carts) {
                 console.log(cart);
                 const cartItem = await createCartItem(cart);
                 if (cartItem) {
                     cartItems.appendChild(cartItem);
                 }
-                deleteCartItemOnButton();
-            });
+            }
+
+            deleteCartItemOnButton();
         }
     }
 }
 
 async function createCartItem(cart) {
-    const book = books.find((book) => {
-        return cart.sach === book.id;
-    });
+    const book = await fakeDatabase.getSachById(cart.sach);
 
     if (book) {
         let source = './assets/img/default-image.png';
@@ -47,7 +62,7 @@ async function createCartItem(cart) {
         }
         const cartItem = document.createElement('div');
         cartItem.classList.add('cart-item', 'item-grid');
-        let html = `            
+        let html = `
             <div class="cart-item-figure">
                 <label>
                     <input
@@ -110,46 +125,74 @@ async function createCartItem(cart) {
             </div>
             <div class="cart-item-delete-btn" data-cart-id =${cart.id}>
                 <i
-                    class="fa-regular fa-trash-can" 
+                    class="fa-regular fa-trash-can"
                 ></i>
-            </div>            
+            </div>
         `;
         cartItem.innerHTML = html;
         return cartItem;
     }
 }
 
-function pushCartItemIntoCart(carts, bookId, incrQuantity) {
-    let cart_id, quantity, tmp;
-    let cart = carts.find((cart) => {
-        return cart.sach === bookId;
-    });
-    if (!cart) {
-        cart_id = uuidv();
-        quantity = incrQuantity;
-    } else {
-        cart_id = cart.id;
-        quantity = cart.quantity + incrQuantity;
-    }
-    fakeDatabase
-        .createCartItem(cart_id, user_id, bookId, quantity)
-        .then((e) => {
-            console.log(e);
-            updateCartQuantity();
-        })
-        .catch((e) => {
-            console.error('bùn ngủ quá ...zzz');
+// function pushCartItemIntoCart(carts, bookId, incrQuantity) {
+//     let cart_id, quantity, tmp;
+//     let cart = carts.find((cart) => {
+//         return cart.sach === bookId;
+//     });
+//     if (!cart) {
+//         cart_id = uuidv();
+//         quantity = incrQuantity;
+//     } else {
+//         cart_id = cart.id;
+//         quantity = cart.quantity + incrQuantity;
+//     }
+//     fakeDatabase
+//         .createCartItem(cart_id, user_id, bookId, quantity)
+//         .then((e) => {
+//             console.log(e);
+//             updateCartQuantity();
+//         })
+//         .catch((e) => {
+//             console.error('bùn ngủ quá ...zzz');
+//         });
+// }
+// const cart_test = await fakeDatabase.getCartByUserId(user_id);
+// console.log(cart_test);
+async function pushCartItemIntoCart(bookId, incrQuantity) {
+    if (user_id) {
+        const carts = await fakeDatabase.getCartByUserId(user_id);
+        let cart_id, quantity;
+        let cart = carts.find((cart) => {
+            return cart.sach === bookId;
         });
+        if (!cart) {
+            cart_id = uuidv();
+            quantity = incrQuantity;
+        } else {
+            cart_id = cart.id;
+            quantity = cart.quantity + incrQuantity;
+        }
+        fakeDatabase
+            .createCartItem(cart_id, user_id, bookId, quantity)
+            .then((e) => {
+                console.log(e);
+                updateCartQuantity();
+            })
+            .catch((e) => {
+                console.error('bùn ngủ quá ...zzz');
+            });
+    }
 }
 
 async function addToCartOnButton() {
     if (user_id) {
-        const carts = await fakeDatabase.getCartByUserId(user_id);
         const btnAddCarts = document.querySelectorAll('.add-to-cart');
+        let arr = [];
         btnAddCarts.forEach((btnAddCart) => {
             btnAddCart.addEventListener('click', () => {
+                console.log(btnAddCart);
                 const bookId = btnAddCart.dataset.bookId;
-                pushCartItemIntoCart(carts, bookId, 1);
+                pushCartItemIntoCart(bookId, 1);
             });
         });
         updateCartQuantity();
@@ -187,7 +230,6 @@ async function updateCartQuantity() {
         if (cartQuantity) {
             cartQuantity.innerHTML = String(carts.length);
         }
-
         if (totalCartQuantity) {
             totalCartQuantity.innerHTML = `Tất cả (${carts.length} sản phẩm)`;
         }

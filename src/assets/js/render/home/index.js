@@ -6,6 +6,7 @@ import renderProduct, {
     setupPaginationListeners,
     updatePagination,
 } from './renderProduct.js';
+import addToCartOnButton from '../../cart.js';
 
 function initializationAside() {
     const aside = document.querySelector('aside');
@@ -200,7 +201,7 @@ export function initializationHomePage() {
  * @param {string} page
  * @param {URLSearchParams} query
  */
-export function updateHomePage(page, query) {
+export async function updateHomePage(page, query) {
     const category = query.get('c') || '';
     const page_num = query.get('p') || '';
 
@@ -211,8 +212,11 @@ export function updateHomePage(page, query) {
     if (page_num) {
         updatePagination(+page_num);
     }
-
-    displayProducts();
-
-    // renderProduct();
+    // await displayProducts();
+    // addToCartOnButton();
+    displayProducts().then(() => {
+        addToCartOnButton();
+    });
+    // displayProducts();
+    // addToCartOnButton();
 }
