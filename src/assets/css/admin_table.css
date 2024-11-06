@@ -159,6 +159,8 @@ tr td[error]:hover::before {
 }
 
 .popup-filter-header {
+    flex-direction: column;
+    padding: 5px;
     position: absolute;
     background-color: #efefef;
     box-shadow: 0 0 5px #3232325e;
@@ -173,8 +175,9 @@ tr td[error]:hover::before {
     color: #323232;
     font-weight: normal;
 }
-
+.popup-filter-header select,
 .popup-filter-header input {
+    outline: none;
     width: calc(100% - 10px);
     background: transparent;
     border: 1px solid gray;
@@ -186,4 +189,33 @@ tr td[error]:hover::before {
 
 .popup-filter-header hr {
     margin: 0 5px;
+}
+
+.button-ok-filter {
+    padding: 2px 5px;
+}
+
+.custom-header-icon-wrapper {
+    height: 20px;
+    width: 20px;
+    background: #efefef;
+    border-radius: 5px;
+    color: #3a84a7;
+}
+
+.custom-header-button-wrapper {
+    display: flex;
+    padding: 2px;
+    justify-content: end;
+    gap: 5px;
+}
+
+.custom-header-title {
+    padding: 0 5px 0 0;
+}
+
+@media screen and (max-width: 820px) {
+    .popup-filter-header {
+        width: 100px;
+    }
 }

@@ -44,6 +44,7 @@ export function createTextTableCell(key, value, onchange, canEditable = true) {
  * @param {HTMLTableCellElement} td
  */
 function textTableCellEditOn(td) {
+    if (td.getAttribute('can-editable') == 'false') return;
     td.setAttribute('contenteditable', 'true');
 }
 
@@ -129,6 +130,8 @@ export function createDateTimeTableCell(
  * @param {HTMLTableCellElement} td
  */
 function dateTimeTableCellEditOn(td) {
+    if (td.getAttribute('can-editable') == 'false') return;
+
     const input = td.querySelector('input');
     if (!input) return;
 
@@ -200,6 +203,8 @@ export function createNumberTableCell(
  * @param {HTMLTableCellElement} td
  */
 function numberTableCellEditOn(td) {
+    if (td.getAttribute('can-editable') == 'false') return;
+
     td.setAttribute('contenteditable', 'true');
 }
 
@@ -226,13 +231,23 @@ customCells.push({
  * @param {string} value
  * @param {{title: string, value: string}[]} options
  * @param {(nv: string) => any} [onchange]
+ * @param {boolean} [canEditable=true]
  */
 
-export function createOptionTabelCell(key, value, options, onchange) {
+export function createOptionTabelCell(
+    key,
+    value,
+    options,
+    onchange,
+    canEditable = true,
+) {
     const td = document.createElement('td');
     td.setAttribute('key', key);
     td.setAttribute('ctype', 'option');
     td.setAttribute('default-value', value);
+
+    if (!canEditable) td.setAttribute('can-editable', 'false');
+    else td.setAttribute('can-editable', 'true');
 
     // ==============================================================
 
@@ -274,6 +289,8 @@ export function createOptionTabelCell(key, value, options, onchange) {
  * @param {HTMLTableCellElement} td
  */
 function optionTableCellEditOff(td) {
+    if (td.getAttribute('can-editable') == 'false') return;
+
     const select = td.querySelector('select');
     if (!select) return;
     select.disabled = true;
@@ -333,6 +350,8 @@ export function createBlockTextTabelCell(key, value, onchange) {
  * @param {HTMLTableCellElement} td
  */
 function blockTextTableCellEditOn(td) {
+    if (td.getAttribute('can-editable') == 'false') return;
+
     const block = document.querySelector('div');
     if (!block) return;
     block.setAttribute('contenteditable', 'true');

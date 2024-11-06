@@ -126,7 +126,7 @@ aside.aside {
     font-weight: 500;
 }
 
-.product-price {
+.product-footer {
     flex: 0;
     font-size: 14px;
     display: flex;
@@ -134,20 +134,32 @@ aside.aside {
     align-items: center;
     width: 100%;
 }
-
-.product-price .sale-price {
+.product-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+}
+.sale-price {
     color: #ff4141;
     font-weight: 600;
     font-size: 16px;
+    position: relative;
+    top: 4px;
 }
-
-.product-price .regular-price {
+.regular-price {
     text-decoration: line-through;
     color: #888;
     font-size: 13px;
+    position: relative;
+    top: -4px;
 }
 
-.product-price > img {
+.product-price:has(.hide) .sale-price {
+    top: 0;
+}
+.product-footer > img {
     width: 22px;
     height: auto;
     cursor: pointer;

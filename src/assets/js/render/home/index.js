@@ -1,5 +1,5 @@
 import urlConverter from '../../until/urlConverter.js';
-import renderProduct, {
+import {
     createPagination,
     displayProducts,
     selectionCatergory,
@@ -213,6 +213,4 @@ export function updateHomePage(page, query) {
     }
 
     displayProducts();
-
-    // renderProduct();
 }

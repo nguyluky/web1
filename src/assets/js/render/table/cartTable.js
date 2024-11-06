@@ -179,7 +179,7 @@ async function cartDoSave() {
 function removeRows() {
     const rows = getAllRowsSeletion();
     rows.forEach((id) => {
-        fakeDatabase.deleteCardById(id);
+        fakeDatabase.deleteCartById(id);
         removeRowById(id);
     });
 }
