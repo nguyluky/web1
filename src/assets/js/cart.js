@@ -1,3 +1,4 @@
+// @ts-nocheck
 import fakeDatabase from './db/fakeDBv1.js';
 import user_ from './render/table/userTable.js';
 import uuidv from './until/uuid.js';
@@ -18,7 +19,12 @@ mainCart();
 
 function mainCart() {
     updateCartQuantity();
-    renderCart();
+    renderCart().then(() => {
+        handlePlus();
+        handleMinus();
+        deleteCartItemOnButton();
+    });
+
     // deleteCartItemOnButton();
 }
 
@@ -28,25 +34,32 @@ async function renderCart() {
         const container = document.querySelector('.left-content-body');
         const cartItems = document.querySelector('.cart-items');
         if (container && cartItems) {
-            cartItems.innerHTML = '';
-            let html = '';
-            // carts.forEach(async (cart) => {
-            //     console.log(cart);
-            //     const cartItem = await createCartItem(cart);
-            //     if (cartItem) {
-            //         cartItems.appendChild(cartItem);
-            //     }
-            // });
+            if (carts.length === 0) {
+                showEmptyCart();
+            } else {
+                const mainContent =
+                    document.querySelector('.main-cart-content');
+                mainContent?.classList.remove('hide');
+                cartItems.innerHTML = '';
+                // carts.forEach(async (cart) => {
+                //     console.log(cart);
+                //     const cartItem = await createCartItem(cart);
+                //     if (cartItem) {
+                //         cartItems.appendChild(cartItem);
+                //     }
+                // });
 
-            for (const cart of carts) {
-                console.log(cart);
-                const cartItem = await createCartItem(cart);
-                if (cartItem) {
-                    cartItems.appendChild(cartItem);
+                for (const cart of carts) {
+                    console.log(cart);
+                    const cartItem = await createCartItem(cart);
+                    if (cartItem) {
+                        cartItems.appendChild(cartItem);
+                    }
                 }
+                // handlePlus();
+                // handleMinus();
+                // deleteCartItemOnButton();
             }
-
-            deleteCartItemOnButton();
         }
     }
 }
@@ -68,6 +81,7 @@ async function createCartItem(cart) {
                     <input
                         type="checkbox"
                         class="check-book"
+                        data-cart-id = ${cart.id}
                     />
                 </label>
                 <dic class="book-pic">
@@ -96,8 +110,10 @@ async function createCartItem(cart) {
                         book.base_price * (1 - book.discount),
                     )} <sup>₫</sup></span
                 >
-                <span class="original-price"
-                    > ${book.discount === 0 ? '' : book.base_price}
+                <span class="original-price ${
+                    book.discount === 0 ? 'hide' : ''
+                }"
+                    > ${book.base_price}
                     <sup>₫</sup>
                 </span>
                 <div class="cart-price-note">
@@ -106,7 +122,7 @@ async function createCartItem(cart) {
             </div>
             <div class="cart-item-quantity">
                 <div class="quantity-form">
-                    <button class="dscr-quantity">
+                    <button class="dscr-quantity" data-cart-id = ${cart.id}>
                         -
                     </button>
                     <input
@@ -114,7 +130,7 @@ async function createCartItem(cart) {
                         value="${cart.quantity}"
                         class="quantity-num"
                     />
-                    <button class="inc-quantity">
+                    <button class="inc-quantity" data-cart-id = ${cart.id}>
                         +
                     </button>
                 </div>
@@ -132,6 +148,52 @@ async function createCartItem(cart) {
         cartItem.innerHTML = html;
         return cartItem;
     }
+}
+
+function handlePlus() {
+    const incrButtons = document.querySelectorAll('.inc-quantity');
+    incrButtons.forEach((incrButton) => {
+        incrButton.addEventListener('click', async () => {
+            console.log(incrButton);
+            const quantityInput = incrButton.previousElementSibling;
+            const cart_id = incrButton.dataset.cartId;
+            const cart = await fakeDatabase.getCartById(cart_id);
+            if (cart && quantityInput) {
+                cart.quantity++;
+                fakeDatabase
+                    .updateCart(cart)
+                    .then((e) => {
+                        quantityInput.value = cart.quantity;
+                    })
+                    .catch((e) => {
+                        alert('loi chuong trinh');
+                    });
+            }
+        });
+    });
+}
+
+function handleMinus() {
+    const dcrsButtons = document.querySelectorAll('.dscr-quantity');
+    dcrsButtons.forEach((dcrsButton) => {
+        dcrsButton.addEventListener('click', async () => {
+            console.log(dcrsButton);
+            const quantityInput = dcrsButton.nextElementSibling;
+            const cart_id = dcrsButton.dataset.cartId;
+            const cart = await fakeDatabase.getCartById(cart_id);
+            if (cart && quantityInput && cart.quantity > 1) {
+                cart.quantity--;
+                fakeDatabase
+                    .updateCart(cart)
+                    .then((e) => {
+                        quantityInput.value = cart.quantity;
+                    })
+                    .catch((e) => {
+                        alert('loi chuong trinh');
+                    });
+            }
+        });
+    });
 }
 
 // function pushCartItemIntoCart(carts, bookId, incrQuantity) {
@@ -184,6 +246,25 @@ async function pushCartItemIntoCart(bookId, incrQuantity) {
     }
 }
 
+function showEmptyCart() {
+    const mainContent = document.querySelector('.main-cart-content');
+    const mainComponent = document.querySelector('.main-component');
+    if (mainComponent && mainContent) {
+        mainContent.classList.add('hide');
+        const emptyCart = document.createElement('div');
+        emptyCart.classList.add('empty-cart');
+        if (!emptyCart.value) {
+            emptyCart.innerHTML = `
+            <div class="empty-cart">
+                <img src="./assets/img/emptyCart.png" alt="" />
+                <span>Giỏ hàng trống</span>
+            </div>
+        `;
+            mainComponent.appendChild(emptyCart);
+        }
+    }
+}
+
 async function addToCartOnButton() {
     if (user_id) {
         const btnAddCarts = document.querySelectorAll('.add-to-cart');
@@ -199,6 +280,26 @@ async function addToCartOnButton() {
     }
 }
 
+// function deleteCartItemOnButton() {
+//     const deleteButtons = document.querySelectorAll('.cart-item-delete-btn');
+//     console.log(deleteButtons);
+//     deleteButtons.forEach((deleteButton) => {
+//         deleteButton.addEventListener('click', () => {
+//             console.log(deleteButton);
+//             const cart_id = deleteButton.dataset.cartId;
+//             fakeDatabase
+//                 .deleteCardById(cart_id)
+//                 .then(async (e) => {
+//                     updateCartQuantity();
+//                 })
+//                 .catch((e) => {
+//                     alert('error');
+//                 });
+//             renderCart();
+//         });
+//     });
+// }
+
 function deleteCartItemOnButton() {
     const deleteButtons = document.querySelectorAll('.cart-item-delete-btn');
     console.log(deleteButtons);
@@ -209,12 +310,18 @@ function deleteCartItemOnButton() {
             fakeDatabase
                 .deleteCardById(cart_id)
                 .then(async (e) => {
+                    deleteButton.parentElement?.remove();
+                    const carts = await fakeDatabase.getCartByUserId(user_id);
+                    if (carts.length === 0) {
+                        showEmptyCart();
+                    }
                     updateCartQuantity();
                 })
                 .catch((e) => {
                     alert('error');
                 });
-            renderCart();
+
+            // renderCart();
         });
     });
 }

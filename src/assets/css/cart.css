@@ -66,6 +66,17 @@
     font-size: 18px;
 }
 
+/* .info-user {
+    max-height: 140px;
+}
+.coupon {
+    max-height: 170px;
+}
+
+.price-summary {
+    max-heigh: 220px;
+} */
+
 .info-header {
     display: flex;
     justify-content: space-between;
@@ -342,12 +353,12 @@ input[type='checkbox'] {
 }
 .empty-cart img {
     width: 160px;
+    margin: 20px 0px;
 }
 .empty-cart span {
     font-size: 18px;
-
     font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 @media screen and (max-width: 1000px) {
     .main-cart-content {
