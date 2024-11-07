@@ -9,6 +9,7 @@ import removeDiacritics from './until/removeDiacritics.js';
 import { isEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './render/home/index.js';
 import urlConverter from './until/urlConverter.js';
+import { initializationPageNotFound } from './render/pageNotFound/index.js';
 
 //#region khai bao bien
 
@@ -31,7 +32,6 @@ const ADDRESS_FORM = document.getElementById('Address-form');
  * selector. Hàm này đầu tiên hiển thị một spinner (thể hiện trạng thái
  * loading), sau đó thay thế nó bằng nội dung sau khi promiseData được giải
  * quyết.
- *
  * @param {Promise<string[]>} promiseData
  * @param {string} selector
  * @param {(s: string) => void} [onchange]
@@ -92,7 +92,6 @@ function initializeLocationPopup() {
      * Gọi một lần ngay khi popup được load có thể nói là ngay sau khi trang load
      *
      * Render danh sách tỉnh/thành phố
-     *
      * @param {(name: string) => void} [onchange] Khi người dùng chọn
      */
     function renderTinhThanhPho(onchange) {
@@ -105,7 +104,6 @@ function initializeLocationPopup() {
 
     /**
      * Render danh sách phường/xã khi người dùng chọn quận/huyện
-     *
      * @param {string} tintp
      * @param {(qh: string) => void} [onchange]
      */
@@ -119,7 +117,6 @@ function initializeLocationPopup() {
 
     /**
      * Render danh sách phường/xã khi người dùng chọn quận/huyện
-     *
      * @param {string} tintp
      * @param {string} qh
      * @param {(px: string) => void} onchange
@@ -145,11 +142,18 @@ function initializeLocationPopup() {
         if (popup) POPUP_WRAPPER?.classList.remove('show');
     }
 
+    /**
+     *
+     */
     function showCustomLocation() {
         if (ADDRESS_DISPLAY.checked) ADDRESS_FORM?.classList.add('show');
         else ADDRESS_FORM?.classList.remove('show');
     }
 
+    /**
+     *
+     * @param {Element} element
+     */
     function initializeDropdown(element) {
         const input = element.querySelector('input');
         const contentDropdowContent = element.querySelector(
@@ -172,6 +176,9 @@ function initializeLocationPopup() {
             document.removeEventListener('click', handleClickOutsideDropdown);
         }
 
+        /**
+         *
+         */
         function handleSearchInput() {
             const value = input?.value || '';
 
@@ -364,7 +371,7 @@ function initializeAccountPopup() {
                 validator.isRequired('#input-password'),
                 validator.isCorrectPassword('#input-password', userInfo.passwd),
             ],
-            onSubmit: (data) => {
+            onSubmit: () => {
                 localStorage.setItem('user_id', userInfo.id);
                 MODAL?.classList.remove('show-modal');
                 showDropDown();
@@ -402,7 +409,7 @@ function initializeAccountPopup() {
                         MODAL?.classList.remove('show-modal');
                         showDropDown();
                     })
-                    .catch((e) => {
+                    .catch(() => {
                         alert('Tạo tài khoản không thành công');
                     });
             },
@@ -489,6 +496,12 @@ function initializeAccountPopup() {
     }
 }
 
+/**
+ *
+ * khởi tạo hash url handle
+ * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+ *
+ */
 function initializePage() {
     let { page: curr_page, query } = urlConverter(location.hash);
 
@@ -496,7 +509,15 @@ function initializePage() {
      * @param {string} page
      */
     function pageInit(page) {
-        initializationHomePage();
+        switch (page) {
+            case '#/home':
+                initializationHomePage();
+                break;
+
+            default:
+                initializationPageNotFound();
+                break;
+        }
     }
 
     /**
@@ -504,10 +525,20 @@ function initializePage() {
      * @param {URLSearchParams} query
      */
     function pageUpdate(curr_page, query) {
-        updateHomePage(curr_page, query);
+        switch (curr_page) {
+            case '#/home':
+                updateHomePage(curr_page, query);
+                break;
+
+            default:
+                break;
+        }
     }
 
-    window.addEventListener('hashchange', (event) => {
+    /**
+     * khi hash thai đổi
+     */
+    function handleHashChange() {
         const { page, query } = urlConverter(location.hash);
         console.log(page, query);
 
@@ -517,7 +548,9 @@ function initializePage() {
         }
 
         pageUpdate(page, query);
-    });
+    }
+
+    window.addEventListener('hashchange', handleHashChange);
 
     if (!curr_page) {
         location.hash = '#/home';
@@ -528,6 +561,9 @@ function initializePage() {
     pageUpdate(curr_page, query);
 }
 
+/**
+ * main
+ */
 function main() {
     initializeLocationPopup();
     initializeAccountPopup();

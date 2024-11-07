@@ -1,5 +1,5 @@
 import urlConverter from '../../until/urlConverter.js';
-import renderProduct, {
+import {
     createPagination,
     displayProducts,
     selectionCatergory,
@@ -8,6 +8,39 @@ import renderProduct, {
 } from './renderProduct.js';
 import addToCartOnButton from '../../cart.js';
 
+/**
+ *
+ */
+function initializationMain() {
+    const main = document.querySelector('main');
+
+    if (!main) return;
+
+    main.innerHTML = `
+    <div class="main_wapper">
+        <aside class="aside"></aside>
+        <article class="article">
+            <div class="dot-spinner-wrapper">
+                <div class="dot-spinner">
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                </div>
+
+                <p style="margin-left: 10px">Đang tải dữ liệu</p>
+            </div>
+        </article>
+    </div>`;
+}
+
+/**
+ *
+ */
 function initializationAside() {
     const aside = document.querySelector('aside');
     if (!aside) return;
@@ -159,7 +192,7 @@ function initializationAside() {
     const sub_header = document.querySelectorAll('.catergory__row--sub-header');
 
     sub_header.forEach((sub) => {
-        sub.addEventListener('click', (ev) => {
+        sub.addEventListener('click', () => {
             sub_header.forEach((e) => e.removeAttribute('selected'));
             sub.setAttribute('selected', 'true');
             const category = /**@type {HTMLElement}*/ (sub).dataset.value;
@@ -178,6 +211,9 @@ function initializationAside() {
     });
 }
 
+/**
+ *
+ */
 function initializationArticle() {
     const article = document.querySelector('article');
     if (!article) return;
@@ -191,7 +227,11 @@ function initializationArticle() {
     `;
 }
 
+/**
+ *
+ */
 export function initializationHomePage() {
+    initializationMain();
     initializationArticle();
     initializationAside();
 }
@@ -219,4 +259,6 @@ export async function updateHomePage(page, query) {
     });
     // displayProducts();
     // addToCartOnButton();
+
+    // displayProducts();
 }

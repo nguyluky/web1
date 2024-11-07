@@ -189,7 +189,7 @@ async function renderLeaderboard() {
 
 /**
  *
- * @param {{name: String; quantify: Number; total: Number}} product
+ * @param {{name: String; quantity: Number; total: Number}} product
  * @param {Number} index
  */
 function createARow(product, index) {
@@ -228,14 +228,14 @@ async function productRank(from, to) {
                 if (data[e.sach]) {
                     data[e.sach].push({
                         orderId: order.id,
-                        quantify: e.quantity,
+                        quantity: e.quantity,
                         user: order.user_id,
                     });
                 } else
                     data[e.sach] = [
                         {
                             orderId: order.id,
-                            quantify: e.quantity,
+                            quantity: e.quantity,
                             user: order.user_id,
                         },
                     ];
@@ -243,21 +243,21 @@ async function productRank(from, to) {
         }
     });
     books.forEach((e) => {
-        let quantify = 0;
+        let quantity = 0;
         if (data[e.id]) {
             data[e.id].forEach((x) => {
-                quantify += x.quantify;
+                quantity += x.quantity;
             });
         }
         array.push({
             id: e.id,
             name: e.title,
-            quantify: quantify,
-            total: e.base_price * (1 - e.discount) * quantify,
+            quantity: quantity,
+            total: e.base_price * (1 - e.discount) * quantity,
         });
     });
     array.sort((a, b) => {
-        if (a.quantify != b.quantify) return b.quantify - a.quantify;
+        if (a.quantity != b.quantity) return b.quantity - a.quantity;
         return b.total - a.total;
     });
     const chart = document.querySelector('.product-rank__body');
@@ -301,7 +301,7 @@ async function createOderInfoForProduct(order) {
     const summary = document.createElement('summary');
     details.appendChild(summary);
     details.appendChild(document.createElement('hr'));
-    summary.innerHTML = `<div>Mã đơn: ${order.orderId}</div><div>Số lượng: ${order.quantify}</div>`;
+    summary.innerHTML = `<div>Mã đơn: ${order.orderId}</div><div>Số lượng: ${order.quantity}</div>`;
     let user = await fakeDatabase.getUserInfoByUserId(order.user);
     let userInfo = document.createElement('div');
     userInfo.innerHTML = `Khách mua hàng:<br>${user?.name}`;
