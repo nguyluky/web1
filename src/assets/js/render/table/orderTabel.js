@@ -79,6 +79,7 @@ function renderRow(row, value, onchange) {
                     (nv) => {
                         onchange && onchange(value, 'user_id', nv);
                     },
+                    false,
                 );
 
                 user_id.style.minWidth = '100px';
@@ -120,9 +121,14 @@ function renderRow(row, value, onchange) {
                 break;
             }
             case 'total': {
-                const to = createNumberTableCell('total', value.total, (nv) => {
-                    onchange && onchange(value, 'total', nv);
-                });
+                const to = createNumberTableCell(
+                    'total',
+                    value.total,
+                    (nv) => {
+                        onchange && onchange(value, 'total', nv);
+                    },
+                    false,
+                );
                 row.appendChild(to);
                 break;
             }
@@ -136,73 +142,73 @@ function renderRow(row, value, onchange) {
         }
     });
 
-    // row.addEventListener('click', () => {
-    //     if (!row.getAttribute('dropdown')) {
-    //         row.setAttribute('dropdown', 'true');
+    row.addEventListener('click', () => {
+        if (!row.getAttribute('dropdown')) {
+            row.setAttribute('dropdown', 'true');
 
-    //         const tr = document.createElement('tr');
-    //         const td = document.createElement('td');
-    //         td.colSpan = Object.keys(cols).length + 1;
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = Object.keys(cols).length + 1;
 
-    //         const title = document.createElement('div');
-    //         title.style.display = 'flex';
-    //         title.innerHTML = `
-    //             <div style="width: 20%; text-align: center;">STT</div>
-    //             <div style="width: 40%;">Tên</div>
-    //             <div style="width: 20%; text-align: center;">số lượng</div>
-    //             <div style="width: 20%; text-align: center;">số lượng</div>
-    //         `;
+            const title = document.createElement('div');
+            title.style.display = 'flex';
+            title.innerHTML = `
+                <div style="width: 20%; text-align: center;">STT</div>
+                <div style="width: 40%;">Tên</div>
+                <div style="width: 20%; text-align: center;">số lượng</div>
+                <div style="width: 20%; text-align: center;">Tiền</div>
+            `;
 
-    //         td.appendChild(title);
+            td.appendChild(title);
 
-    //         value.items.forEach((e, index) => {
-    //             const div = document.createElement('div');
-    //             div.style.display = 'flex';
+            value.items.forEach((e, index) => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
 
-    //             const stt = document.createElement('div');
-    //             stt.textContent = index + '';
-    //             stt.style.width = '20%';
-    //             stt.style.textAlign = 'center';
-    //             div.appendChild(stt);
+                const stt = document.createElement('div');
+                stt.textContent = index + '';
+                stt.style.width = '20%';
+                stt.style.textAlign = 'center';
+                div.appendChild(stt);
 
-    //             const sach = document.createElement('div');
-    //             sach.style.width = '40%';
-    //             sach.textContent = e.sach;
+                const sach = document.createElement('div');
+                sach.style.width = '40%';
+                sach.textContent = e.sach;
 
-    //             const quantity = document.createElement('div');
-    //             quantity.style.width = '20%';
-    //             quantity.style.textAlign = 'center';
-    //             quantity.textContent = e.quantity + '';
+                const quantity = document.createElement('div');
+                quantity.style.width = '20%';
+                quantity.style.textAlign = 'center';
+                quantity.textContent = e.quantity + '';
 
-    //             const donqia = document.createElement('div');
-    //             donqia.textContent = '';
-    //             donqia.style.width = '20%';
-    //             donqia.style.textAlign = 'center';
+                const donqia = document.createElement('div');
+                donqia.textContent = '';
+                donqia.style.width = '20%';
+                donqia.style.textAlign = 'center';
 
-    //             fakeDatabase.getSachById(e.sach).then((sach_) => {
-    //                 sach.textContent = sach_?.title || '';
-    //                 donqia.textContent = sach_?.base_price + '';
-    //             });
+                fakeDatabase.getSachById(e.sach).then((sach_) => {
+                    sach.textContent = sach_?.title || '';
+                    donqia.textContent = sach_?.base_price + '';
+                });
 
-    //             div.appendChild(sach);
-    //             div.appendChild(quantity);
-    //             div.appendChild(donqia);
+                div.appendChild(sach);
+                div.appendChild(quantity);
+                div.appendChild(donqia);
 
-    //             td.appendChild(div);
-    //         });
+                td.appendChild(div);
+            });
 
-    //         tr.appendChild(td);
+            tr.appendChild(td);
 
-    //         if (row.nextElementSibling) {
-    //             row.parentElement?.insertBefore(tr, row.nextElementSibling);
-    //         } else {
-    //             row.parentElement?.appendChild(tr);
-    //         }
-    //     } else {
-    //         row.removeAttribute('dropdown');
-    //         row.nextElementSibling?.remove();
-    //     }
-    // });
+            if (row.nextElementSibling) {
+                row.parentElement?.insertBefore(tr, row.nextElementSibling);
+            } else {
+                row.parentElement?.appendChild(tr);
+            }
+        } else {
+            row.removeAttribute('dropdown');
+            row.nextElementSibling?.remove();
+        }
+    });
 }
 
 /**
