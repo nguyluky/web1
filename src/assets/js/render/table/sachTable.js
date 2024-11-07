@@ -226,6 +226,10 @@ function createThumbnail(key, value, onchange) {
                 onchange && onchange(base64);
                 img.src = base64;
             },
+            () => {
+                onchange && onchange('../assets/img/default-image.png');
+                img.src = '../assets/img/default-image.png';
+            },
             () => {},
         );
     });

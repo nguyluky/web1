@@ -82,8 +82,15 @@ export function showPopup(title, context, onOk, onCancel, onClose) {
  * @param {(base64: string) => void} [onChangeImg]
  * @param {(base64: string) => void} [onOk]
  * @param {() => void} [onCancel]
+ * @param {() => void} [onClose]
  */
-export function showImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
+export function showImgPreviewPopup(
+    imgSrc,
+    onChangeImg,
+    onOk,
+    onCancel,
+    onClose,
+) {
     const parder = getPopupWrapper();
 
     const onChangeImgDeclaration = (base64) => {
@@ -100,11 +107,17 @@ export function showImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
         if (onCancel) onCancel();
     };
 
+    const onCloseDeclaration = () => {
+        parder.innerHTML = '';
+        if (onClose) onClose();
+    };
+
     const popup = createImgPreviewPopup(
         imgSrc,
         onChangeImgDeclaration,
         onOkDeclaration,
         onCancelDeclaration,
+        onCloseDeclaration,
     );
 
     parder.appendChild(popup);

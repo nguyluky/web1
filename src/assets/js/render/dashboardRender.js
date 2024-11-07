@@ -1,41 +1,24 @@
 import fakeDatabase from '../db/fakeDBv1.js';
 import { dateToString } from '../until/formatDate.js';
 
-const chartValues = [
-    { value: 25 },
-    { value: 60 },
-    { value: 45 },
-    { value: 50 },
-    { value: 40 },
-];
-const orders = await fakeDatabase.getAllOrder();
-const books = await fakeDatabase.getAllBooks();
-/**
- * @param {{value: number}[]} values
- */
-function formatLineChartData(values = chartValues) {
-    const maxValue = (values) => {
-        let max = 0;
-        values.forEach((e) => {
-            max = max > e.value ? max : e.value;
-        });
-        return max;
-    };
-    const radiansToDegrees = (rads) => rads * (180 / Math.PI);
+let orders = [];
+let books = [];
 
+function formatLineChartData() {
+    // tạo đường biểu đồ
     function createListItem(item) {
         return `
-      <div class="data-point" data-value="${item.value}"></div>
+      <div class="data-point" data-value="${item.value}" date-date=${item.date}></div>
       <div class="line-segment" style="--hypotenuse: ${item.hypotenuse}; --angle:${item.angle};"></div>
       `;
     }
-
+    // tạo popup cho từng điểm
     function getPointData(point) {
         const popup = document.createElement('div');
         popup.innerHTML = point.getAttribute('data-value');
         return popup;
     }
-
+    //  hover vào điểm
     function hoverPoint() {
         let timeoutId;
         let lastHover;
@@ -57,6 +40,31 @@ function formatLineChartData(values = chartValues) {
             });
         });
     }
+    //  chuyển đổi radian sang độ
+    const radiansToDegrees = (rads) => rads * (180 / Math.PI);
+    //  tạo dữ liệu cho biểu đồ
+    const from = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000);
+    const to = new Date();
+    let values = [];
+    let tongthu = 0;
+    for (let i = 1; i <= 30; i++) {
+        values.push({ date: i, value: 0 });
+    }
+    orders.forEach((e) => {
+        if (
+            e.state == 'giaohangthanhcong' &&
+            from <= new Date(e.last_update) &&
+            new Date(e.last_update) <= to
+        ) {
+            const date = Math.ceil(
+                (new Date(e.last_update).getTime() - from.getTime()) /
+                    (24 * 60 * 60 * 1000),
+            );
+            let index = values.findIndex((element) => element.date == date);
+            if (index) values[index].value += e.total;
+            tongthu += e.total;
+        }
+    });
 
     const container = document.getElementById('line-chart');
     if (!container) return;
@@ -66,8 +74,7 @@ function formatLineChartData(values = chartValues) {
     const pointSize = 16;
 
     const base = (widgetWidth - pointSize * 2) / (values.length - 1);
-
-    const topMostPoint = maxValue(values);
+    const topMostPoint = Math.max(...values.map((e) => e.value));
     let leftOffset = pointSize; //padding for left axis labels
     let nextPoint = 0;
     let rise = 0;
@@ -80,6 +87,7 @@ function formatLineChartData(values = chartValues) {
             hypotenuse: 0,
             angle: 0,
             value: 0,
+            date: 0,
         };
 
         currentValue.value = values[i].value;
@@ -108,6 +116,7 @@ function formatLineChartData(values = chartValues) {
         hypotenuse: 0,
         angle: 0,
         value: values[values.length - 1].value,
+        date: values[values.length - 1].date,
     };
 
     cssValues.push(lastPoint);
@@ -219,10 +228,11 @@ async function productRank(from, to) {
     let array = [];
     orders.forEach((order) => {
         // last_update là chỉ có admin dùng thôi
-        const date = new Date(order.date);
+        const date = new Date(order.last_update);
         if (
             from.getTime() <= date.getTime() &&
-            date.getTime() <= to.getTime()
+            date.getTime() <= to.getTime() &&
+            order.state == 'giaohangthanhcong'
         ) {
             order.items.forEach((e) => {
                 if (data[e.sach]) {
@@ -329,8 +339,18 @@ function renderProductRank() {
     });
 }
 
-function count() {}
-function dashboardRender() {
+async function count() {
+    const countProduct = document.querySelector('#amount-product .num');
+    const countUser = document.querySelector('#amount-user .num');
+    if (!countProduct || !countUser) return;
+    countProduct.innerHTML = orders.length.toString();
+    const users = await fakeDatabase.getAllUserInfo();
+    countUser.innerHTML = users.length.toString();
+}
+async function dashboardRender() {
+    orders = await fakeDatabase.getAllOrder();
+    books = await fakeDatabase.getAllBooks();
+    count();
     renderLeaderboard();
     renderProductRank();
     formatLineChartData();

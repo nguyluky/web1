@@ -44,9 +44,7 @@
     align-items: center;
     grid-area: 1/2 / span 1 / span 1;
 }
-.data-point {
-    position: relative;
-}
+
 .data-point div {
     position: absolute;
     bottom: 20px;
@@ -80,11 +78,11 @@
     background-color: white;
     border: 2px solid lightblue;
     border-radius: 50%;
-    bottom: calc(var(--y) - 8px);
-    height: 12px;
-    left: calc(var(--x) - 8px);
+    bottom: calc(var(--y) - 4px);
+    height: 8px;
+    left: calc(var(--x) - 5.5px);
     position: absolute;
-    width: 12px;
+    width: 8px;
     z-index: 1;
 }
 
@@ -106,10 +104,21 @@
 .count {
     width: 100%;
     height: 100px;
-    background-color: var(--bg_sidebar);
     border-radius: 10px;
     padding: 15px;
     box-sizing: border-box;
+    color: #fff;
+    font-weight: 900;
+    font-size: 26px;
+}
+.num {
+    font-size: 32px;
+}
+#amount-product {
+    background: #023e73;
+}
+#amount-user {
+    background: #79acd9;
 }
 .chart {
     width: 100%;

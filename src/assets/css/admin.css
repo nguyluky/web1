@@ -187,6 +187,7 @@ footer.footer {
     display: flex;
     gap: 10px;
     justify-content: right;
+    min-width: 260px;
 }
 
 .table-conten-wrapper {

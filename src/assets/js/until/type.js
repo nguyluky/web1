@@ -40,7 +40,7 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *     passwd: string;
  *     phone_num: string;
  *     rule: 'admin' | 'user';
- *     status: 'active' | 'ban';
+ *     status: 'active' | 'block';
  *     datecreated: Date;
  * }} UserInfo
  */
