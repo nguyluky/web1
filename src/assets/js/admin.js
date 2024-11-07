@@ -346,16 +346,29 @@ function setupSiderBar() {
 
         if (isEditMode) {
             this.checked = false;
-            showPopup('Xác nhận sửa', 'Bạn có chắc là muốn sửa không', () => {
-                buttonAddState.add();
-                buttonSaveState.edit();
-                updateMangement();
+            showPopup(
+                'Xác nhận sửa',
+                'Bạn có chắc là muốn sửa không',
+                () => {
+                    buttonAddState.add();
+                    buttonSaveState.edit();
+                    updateMangement();
 
-                tabElements.forEach((e) => (e.checked = false));
-                this.checked = true;
-                tab = this.value;
-                renderManagement();
-            });
+                    tabElements.forEach((e) => (e.checked = false));
+                    this.checked = true;
+                    tab = this.value;
+                    renderManagement();
+                },
+                () => {
+                    buttonAddState.add();
+                    buttonSaveState.edit();
+                    tabManagement[tab].removeAllChange?.();
+                    tabElements.forEach((e) => (e.checked = false));
+                    this.checked = true;
+                    tab = this.value;
+                    renderManagement();
+                },
+            );
 
             return;
         }

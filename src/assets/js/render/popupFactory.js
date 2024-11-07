@@ -20,7 +20,7 @@ export function createPopupBase(title, context, onOk, onCancel, onClose) {
 
     const xMark = document.createElement('button');
     xMark.className = 'button_1';
-    xMark.onclick = onClose;
+    xMark.onclick = onClose || null;
     const closeIcon = document.createElement('i');
     closeIcon.className = 'fa-solid fa-xmark';
     xMark.appendChild(closeIcon);
@@ -75,9 +75,16 @@ export function createPopupBase(title, context, onOk, onCancel, onClose) {
  * @param {((base64: string) => void)?} onChangeImg
  * @param {((base64: string) => void)?} onOk
  * @param {(() => void)?} onCancel
+ * @param {(() => void)?} onClose
  * @returns {HTMLDivElement}
  */
-export function createImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
+export function createImgPreviewPopup(
+    imgSrc,
+    onChangeImg,
+    onOk,
+    onCancel,
+    onClose,
+) {
     let isChange = false;
 
     const imgPreviewWrapper = document.createElement('div');
@@ -128,8 +135,8 @@ export function createImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
         () => {
             onOk?.(isChange ? imgPreview.src : '');
         },
-        null,
-        onCancel,
+        onCancel || undefined,
+        onClose || undefined,
     );
 
     return popup;

@@ -22,7 +22,7 @@ const cols = {
 /**
  * @type {{[key: string] : Order}}
  */
-const cacheEdit = {};
+let cacheEdit = {};
 
 /**
  * @type {import('./baseRender.js').OnChange<Order>}
@@ -482,6 +482,17 @@ async function doSave() {
     tableClearErrorKey();
 }
 
+function removeAllChange() {
+    cacheEdit = {};
+    document.querySelectorAll('tr').forEach((e) => {
+        let cb = /** @type {HTMLInputElement | null} */ (
+            e.querySelector('input[type="checkbox"]')
+        );
+        if (cb?.checked) {
+            cb.checked = false;
+        }
+    });
+}
 /**
  * @type {import("./baseRender.js").IntefaceRender<Order>}
  */
@@ -493,6 +504,7 @@ const order = {
     addRow: undefined,
     removeRows: undefined,
     cancelAdd: undefined,
+    removeAllChange,
 };
 
 export default order;

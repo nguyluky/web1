@@ -187,7 +187,7 @@ function renderRow(row, value, onchange) {
                     value.status,
                     [
                         { title: 'Active', value: 'active' },
-                        { title: 'Ban', value: 'ban' },
+                        { title: 'Block', value: 'block' },
                     ],
                     (va) => {
                         onchange && onchange(value, 'status', va);
@@ -314,7 +314,7 @@ const user_ = {
     doSave: userDoSave,
     search: searchUser,
     addRow: addUser,
-    removeRows,
+    removeRows: undefined,
     cancelAdd,
     removeAllChange,
 };
