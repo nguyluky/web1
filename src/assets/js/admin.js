@@ -114,7 +114,11 @@ const buttonSaveState = {
             (btnSave.innerHTML =
                 '<i class="fa-solid fa-pen"></i><span>Edit</span>');
 
-        tableEditOff('#content_table td');
+        tableEditOff(
+            /**@type {NodeListOf<HTMLTableCellElement>}*/ (
+                document.querySelectorAll('#content_table td')
+            ),
+        );
     },
     /* Đổi trạng thái nút thành "Lưu" và cho phép chỉnh sửa */
     save: () => {
@@ -123,7 +127,11 @@ const buttonSaveState = {
                 '<i class="fa-solid fa-floppy-disk"></i><span>Lưu</span>');
         btnSave?.classList.add('canedit');
 
-        tableEditOn('#content_table td');
+        tableEditOn(
+            /**@type {NodeListOf<HTMLTableCellElement>}*/ (
+                document.querySelectorAll('#content_table td')
+            ),
+        );
     },
 };
 

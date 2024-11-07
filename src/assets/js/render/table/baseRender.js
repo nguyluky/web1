@@ -3,7 +3,7 @@
  * @typedef {{ [P in keyof Partial<T>]: string }} COLS
  */
 
-import { createTextTableCell } from './customCell.js';
+import { createTextTableCell, tableEditOn } from './customCell.js';
 
 /**
  * @template T
@@ -179,13 +179,11 @@ function searchList(values, cols) {
 export function defaultAddRow(table, row) {
     row.setAttribute('isAddCache', 'true');
 
-    // Cho phép chỉnh sửa các ô trong hàng mới
-    row.querySelectorAll('td[key]').forEach((e) =>
-        e.setAttribute('contenteditable', 'true'),
-    );
-
     // Thêm hàng mới lên đầu bảng
     table.insertBefore(row, table.childNodes[1]);
+
+    // Cho phép chỉnh sửa các ô trong hàng mới
+    tableEditOn(row.querySelectorAll('td'));
 
     row.scrollIntoView({
         behavior: 'smooth',

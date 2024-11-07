@@ -1,3 +1,5 @@
+import { showImgPreviewPopup } from '../popupRender.js';
+
 /**
  * @template T
  * @type {{
@@ -17,6 +19,7 @@ const customCells = [];
  * @param {string} value
  * @param {(nv: string) => any} [onchange]
  * @param {boolean} [canEditable]
+ * @returns {HTMLTableCellElement} td
  */
 export function createTextTableCell(key, value, onchange, canEditable = true) {
     const td = document.createElement('td');
@@ -70,9 +73,8 @@ customCells.push({
  * @param {Date | string} value
  * @param {(nv: Date) => any} [onchange ]
  * @param {boolean} [canEditable ]
- * @returns
+ * @returns {HTMLTableCellElement} td
  */
-
 export function createDateTimeTableCell(
     key,
     value,
@@ -166,8 +168,8 @@ customCells.push({
  * @param {number} value
  * @param {(nv: number) => any} [onchange]
  * @param {boolean} [canEditable]
+ * @returns {HTMLTableCellElement} td
  */
-
 export function createNumberTableCell(
     key,
     value,
@@ -232,8 +234,8 @@ customCells.push({
  * @param {{title: string, value: string}[]} options
  * @param {(nv: string) => any} [onchange]
  * @param {boolean} [canEditable=true]
+ * @returns {HTMLTableCellElement} td
  */
-
 export function createOptionTabelCell(
     key,
     value,
@@ -320,15 +322,23 @@ customCells.push({
  * @param {string} key
  * @param {string} value
  * @param {(nv: string) => any} onchange
- * @returns
+ * @param {boolean} [canEditable=true]
+ * @returns {HTMLTableCellElement} td
  */
-
-export function createBlockTextTabelCell(key, value, onchange) {
+export function createBlockTextTabelCell(
+    key,
+    value,
+    onchange,
+    canEditable = true,
+) {
     const td = document.createElement('td');
     td.setAttribute('contenteditable', 'false');
     td.setAttribute('key', key);
     td.setAttribute('ctype', 'block-text');
     td.setAttribute('default-value', value);
+
+    if (!canEditable) td.setAttribute('can-editable', 'false');
+    else td.setAttribute('can-editable', 'true');
 
     const details_wrapper = document.createElement('div');
     details_wrapper.className = 'details-wrapper';
@@ -352,7 +362,7 @@ export function createBlockTextTabelCell(key, value, onchange) {
 function blockTextTableCellEditOn(td) {
     if (td.getAttribute('can-editable') == 'false') return;
 
-    const block = document.querySelector('div');
+    const block = td.querySelector('div');
     if (!block) return;
     block.setAttribute('contenteditable', 'true');
 }
@@ -377,11 +387,265 @@ customCells.push({
 });
 
 /**
- * @param {string} selection
+ * @typedef {{title: string, value: string}} Tag
  */
-export function tableEditOn(selection) {
-    const cells = document.querySelectorAll(selection);
 
+/**
+ * hello
+ *
+ * @param {string} key
+ * @param {string[]} values
+ * @param {Tag[]} tags
+ * @param {(tags: string[]) => any} onchange
+ * @param {boolean} [canEditable]
+ * @returns {HTMLTableCellElement}
+ */
+export function createTagInputCell(
+    key,
+    values,
+    tags,
+    onchange,
+    canEditable = true,
+) {
+    const td = document.createElement('td');
+    td.setAttribute('contenteditable', 'false');
+    td.setAttribute('key', key);
+    td.setAttribute('ctype', 'tag');
+    td.setAttribute('default-value', values.sort().join(','));
+
+    if (!canEditable) td.setAttribute('can-editable', 'false');
+    else td.setAttribute('can-editable', 'true');
+
+    const tagContainer = document.createElement('div');
+    tagContainer.className = 'tag-container';
+    td.appendChild(tagContainer);
+
+    const tagsCopy = [...values];
+
+    /**
+     * @param {(tag: Tag) => any} callback
+     * @returns {HTMLDivElement}
+     */
+    function createTagPop(callback) {
+        const tagPopup = document.createElement('div');
+        tagPopup.className = 'tag-popup';
+
+        tags.forEach((tag) => {
+            if (values.includes(tag.value)) return;
+
+            const span = document.createElement('span');
+            span.textContent = tag.title;
+            span.addEventListener('click', (event) => {
+                event.stopPropagation();
+                callback(tag);
+            });
+
+            tagPopup.appendChild(span);
+        });
+
+        return tagPopup;
+    }
+
+    /**
+     *
+     * @param {Tag | undefined} tag
+     * @returns {HTMLDivElement}
+     */
+    function createTagElement(tag) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'tag-ele';
+        categoryDiv.setAttribute('tag-id', tag?.value || '');
+
+        const s = document.createElement('span');
+        s.textContent = tag?.title || '';
+        categoryDiv.appendChild(s);
+
+        const i = document.createElement('i');
+        i.className = 'fa-solid fa-xmark';
+        categoryDiv.appendChild(i);
+
+        i.addEventListener('click', () => {
+            if (tag) handleRemoveTag(tag.value);
+        });
+
+        return categoryDiv;
+    }
+
+    /**
+     *
+     * @param {string | undefined} categoryId
+     */
+    function handleRemoveTag(categoryId) {
+        console.log('remove', categoryId);
+
+        tagContainer
+            .querySelector('.tag-ele[tag-id="' + categoryId + '"]')
+            ?.remove();
+        const index = tagsCopy.findIndex((e) => e == categoryId);
+        if (index >= 0) {
+            tagsCopy.splice(index, 1);
+            onchange(tagsCopy);
+        }
+
+        if (tagsCopy.sort().join(',') == td.getAttribute('default-value'))
+            td.setAttribute('ischange', 'false');
+        else td.setAttribute('ischange', 'true');
+    }
+
+    /**
+     *
+     * @param {Tag} tag
+     */
+    function handleAddTag(tag) {
+        tagContainer.querySelector('.tag-popup')?.remove();
+        const categoryAdd = tagContainer.querySelector('.tag-ele.add');
+
+        tagsCopy.push(tag.value);
+        onchange(tagsCopy);
+
+        const categoryDiv = createTagElement(tag);
+        tagContainer.insertBefore(categoryDiv, categoryAdd);
+
+        if (tagsCopy.sort().join(',') == td.getAttribute('default-value'))
+            td.setAttribute('ischange', 'false');
+        else td.setAttribute('ischange', 'true');
+    }
+
+    tagsCopy.forEach((tag) => {
+        const category = tags.find((e) => e.value == tag);
+        const categoryDiv = createTagElement(category);
+
+        tagContainer.appendChild(categoryDiv);
+    });
+
+    // nút thêm category
+    const tagAdd = document.createElement('div');
+    tagAdd.className = 'tag-ele add';
+    const span = document.createElement('span');
+    span.textContent = 'Thêm';
+    tagAdd.appendChild(span);
+    const i = document.createElement('i');
+    i.className = 'fa-solid fa-plus';
+    tagAdd.appendChild(i);
+
+    tagAdd.addEventListener('click', function () {
+        if (this.querySelector('.tag-popup')) return;
+
+        const addPopup = createTagPop(handleAddTag);
+
+        this.appendChild(addPopup);
+    });
+
+    tagContainer.contentEditable = 'false';
+    tagContainer.appendChild(tagAdd);
+
+    return td;
+}
+
+/**
+ *
+ *
+ * @param {HTMLTableCellElement} td
+ */
+function TagInputCellOn(td) {
+    if (td.getAttribute('can-editable') == 'false') return;
+
+    const container = document.querySelector('.tag-container');
+    container?.classList.add('on');
+}
+
+/**
+ *
+ * @param {HTMLTableCellElement} td
+ */
+function TagInputCellOff(td) {
+    const container = document.querySelector('.tag-container');
+    container?.classList.remove('on');
+
+    const tag = Array.from(td.querySelectorAll('.tag-ele')).map((e) =>
+        e.getAttribute('tag-id'),
+    );
+
+    td.setAttribute('default-value', tag.sort().join(','));
+    td.setAttribute('ischange', 'false');
+}
+
+customCells.push({
+    name: 'tag',
+    creater: createTagInputCell,
+    editOff: TagInputCellOff,
+    editOn: TagInputCellOn,
+});
+
+/**
+ *
+ * @param {string} key
+ * @param {string} base64
+ * @param {(base64: string) => any} onchange
+ * @param {boolean} [canEditable=true]
+ * @returns {HTMLTableCellElement}
+ */
+export function createThumbnailCell(key, base64, onchange, canEditable = true) {
+    const td = document.createElement('td');
+    td.setAttribute('contenteditable', 'false');
+    td.setAttribute('key', key);
+    td.setAttribute('ctype', 'img-thumbnail');
+
+    if (!canEditable) td.setAttribute('can-editable', 'false');
+    else td.setAttribute('can-editable', 'true');
+
+    // tạo div bao ảnh
+    const img_wrapper = document.createElement('div');
+    img_wrapper.className = 'img-wrapper';
+    // tạo thẻ img hiển thị ảnh
+    const img = document.createElement('img');
+    img.src = base64;
+    img_wrapper.appendChild(img);
+    img_wrapper.addEventListener('click', () => {
+        if (td.getAttribute('contenteditable') !== 'true') return;
+        showImgPreviewPopup(
+            img.src,
+            () => {},
+            (base64) => {
+                onchange && onchange(base64);
+                img.src = base64;
+            },
+            () => {},
+        );
+    });
+
+    td.appendChild(img_wrapper);
+
+    return td;
+}
+
+/**
+ * @param {HTMLTableCellElement} td
+ */
+function thumbnailCellEditOn(td) {
+    if (td.getAttribute('can-editable') == 'false') return;
+    td.setAttribute('contenteditable', 'true');
+}
+
+/**
+ * @param {HTMLTableCellElement} td
+ */
+function thumbnailCellEditOff(td) {
+    td.setAttribute('contenteditable', 'false');
+}
+
+customCells.push({
+    name: 'img-thumbnail',
+    creater: createThumbnailCell,
+    editOff: thumbnailCellEditOff,
+    editOn: thumbnailCellEditOn,
+});
+
+// ========================================================
+/**
+ * @param {NodeListOf<HTMLTableCellElement>} cells
+ */
+export function tableEditOn(cells) {
     const map = {};
 
     customCells.forEach((e) => {
@@ -397,11 +661,9 @@ export function tableEditOn(selection) {
 }
 
 /**
- * @param {string} selection
+ * @param {NodeListOf<HTMLTableCellElement>} cells
  */
-export function tableEditOff(selection) {
-    const cells = document.querySelectorAll(selection);
-
+export function tableEditOff(cells) {
     const map = {};
 
     customCells.forEach((e) => {

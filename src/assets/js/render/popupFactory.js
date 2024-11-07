@@ -1,9 +1,9 @@
 /**
  * @param {string} title
  * @param {string | HTMLElement} context
- * @param {(() => void)?} onOk
- * @param {(() => void)?} onCancel
- * @param {(() => void)?} onClose
+ * @param {(() => void)} [onOk]
+ * @param {(() => void)} [onCancel]
+ * @param {(() => void)} [onClose]
  * @returns {HTMLDivElement}
  */
 export function createPopupBase(title, context, onOk, onCancel, onClose) {
@@ -41,25 +41,30 @@ export function createPopupBase(title, context, onOk, onCancel, onClose) {
     const popupFooter = document.createElement('div');
     popupFooter.className = 'popup-footer';
 
-    const okButton = document.createElement('button');
-    okButton.className = 'button_1 btn-ouline-primary';
-    okButton.textContent = 'Lưu';
-    okButton.onclick = onOk;
+    if (onOk) {
+        const okButton = document.createElement('button');
+        okButton.className = 'button_1 btn-ouline-primary';
+        okButton.textContent = 'Lưu';
+        okButton.onclick = onOk;
+        popupFooter.appendChild(okButton);
+    }
 
-    const cancelButton = document.createElement('button');
-    cancelButton.className = 'button_1 btn-ouline-primary';
-    cancelButton.textContent = 'Bỏ';
-    cancelButton.onclick = onCancel;
+    if (onCancel) {
+        const cancelButton = document.createElement('button');
+        cancelButton.className = 'button_1 btn-ouline-primary';
+        cancelButton.textContent = 'Bỏ';
+        cancelButton.onclick = onCancel;
+        popupFooter.appendChild(cancelButton);
+    }
 
-    const closeButton = document.createElement('button');
-    closeButton.className = 'button_1 btn-primary';
-    closeButton.textContent = 'Thoát';
-    closeButton.onclick = onClose;
+    if (onClose) {
+        const closeButton = document.createElement('button');
+        closeButton.className = 'button_1 btn-primary';
+        closeButton.textContent = 'Thoát';
+        closeButton.onclick = onClose;
+        popupFooter.appendChild(closeButton);
+    }
 
-    // Append footer elements
-    popupFooter.appendChild(okButton);
-    popupFooter.appendChild(cancelButton);
-    popupFooter.appendChild(closeButton);
     popup.appendChild(popupFooter);
 
     return popup;
@@ -123,8 +128,8 @@ export function createImgPreviewPopup(imgSrc, onChangeImg, onOk, onCancel) {
         () => {
             onOk?.(isChange ? imgPreview.src : '');
         },
-        onCancel,
         null,
+        onCancel,
     );
 
     return popup;

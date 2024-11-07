@@ -54,14 +54,14 @@ td[contenteditable='true']
     object-fit: contain;
 }
 
-td .category-container {
+td .tag-container {
     max-width: 400px;
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
 }
 
-td .category {
+td .tag-ele {
     text-wrap: nowrap;
     display: flex;
     padding: 3px;
@@ -71,11 +71,11 @@ td .category {
     align-items: center;
 }
 
-td .category span {
+td .tag-ele span {
     margin-right: 5px;
 }
 
-td .category.add {
+td .tag-ele.add {
     position: relative;
     display: none;
 }
@@ -87,7 +87,7 @@ td > select {
     appearance: none;
 }
 
-.category.add .category-popup {
+.tag-ele.add .tag-popup {
     z-index: 1;
     position: absolute;
     width: max-content;
@@ -99,26 +99,26 @@ td > select {
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.19);
 }
 
-.category.add .category-popup > span {
+.tag-ele.add .tag-popup > span {
     padding: 3px 5px;
     cursor: pointer;
 }
 
-td .category i {
+td .tag-ele i {
     display: none;
     color: darkred;
     cursor: pointer;
 }
 
-td[contenteditable='true'] .category i {
+td .tag-container.on .tag-ele i {
     display: inline;
 }
 
-td .category.add i {
+td .tag-ele.add i {
     color: #3a84a7;
 }
 
-td[contenteditable='true'] .category.add {
+td .tag-container.on .tag-ele.add {
     display: block;
 }
 
