@@ -189,7 +189,7 @@ async function renderLeaderboard() {
 
 /**
  *
- * @param {{name: String; quantify: Number; total: Number}} product
+ * @param {{name: String; quantity: Number; total: Number}} product
  * @param {Number} index
  */
 function createARow(product, index) {
@@ -213,10 +213,10 @@ function createARow(product, index) {
  *
  * @param {Date} from
  * @param {Date} to
- * @param {Object} data
- * @param {Array} array
  */
-async function productRank(from, to, data, array) {
+async function productRank(from, to) {
+    let data = {};
+    let array = [];
     orders.forEach((order) => {
         // last_update là chỉ có admin dùng thôi
         const date = new Date(order.date);
@@ -228,14 +228,14 @@ async function productRank(from, to, data, array) {
                 if (data[e.sach]) {
                     data[e.sach].push({
                         orderId: order.id,
-                        quantify: e.quantity,
+                        quantity: e.quantity,
                         user: order.user_id,
                     });
                 } else
                     data[e.sach] = [
                         {
                             orderId: order.id,
-                            quantify: e.quantity,
+                            quantity: e.quantity,
                             user: order.user_id,
                         },
                     ];
@@ -243,27 +243,57 @@ async function productRank(from, to, data, array) {
         }
     });
     books.forEach((e) => {
-        let quantify = 0;
+        let quantity = 0;
         if (data[e.id]) {
             data[e.id].forEach((x) => {
-                quantify += x.quantify;
+                quantity += x.quantity;
             });
         }
         array.push({
             id: e.id,
             name: e.title,
-            quantify: quantify,
-            total: e.base_price * (1 - e.discount) * quantify,
+            quantity: quantity,
+            total: e.base_price * (1 - e.discount) * quantity,
         });
     });
     array.sort((a, b) => {
-        if (a.quantify != b.quantify) return b.quantify - a.quantify;
+        if (a.quantity != b.quantity) return b.quantity - a.quantity;
         return b.total - a.total;
     });
     const chart = document.querySelector('.product-rank__body');
     while (chart?.firstChild) chart.removeChild(chart.firstChild);
+    let sum = 0;
     array.forEach((value, index) => {
+        sum += value.total;
         chart?.appendChild(createARow(value, index));
+    });
+    const footer = document.querySelector('.product-rank__footer span');
+    if (footer) footer.innerHTML = String(sum) + ' VNĐ';
+    const showOrder = document.querySelector('.info-order__product');
+    const name = document.getElementById('product-name');
+    const text = name?.innerText;
+    document.querySelectorAll('.rank-body-row').forEach((row, i) => {
+        row.addEventListener('click', () => {
+            const top = /**@type {HTMLElement} */ (showOrder).offsetTop - 70;
+            document.querySelector('.dashboard-wrapper')?.scrollTo({
+                top: top,
+                behavior: 'smooth',
+            });
+            if (name)
+                name.innerHTML = `${text}<br><strong>${
+                    row.querySelector('.rank-name')?.innerHTML
+                }</strong>`;
+            while (
+                showOrder &&
+                showOrder.children.length > 1 &&
+                showOrder.lastChild
+            )
+                showOrder.removeChild(showOrder.lastChild);
+            if (data[array[i].id])
+                data[array[i].id].forEach(async (e) => {
+                    showOrder?.appendChild(await createOderInfoForProduct(e));
+                });
+        });
     });
 }
 async function createOderInfoForProduct(order) {
@@ -271,7 +301,7 @@ async function createOderInfoForProduct(order) {
     const summary = document.createElement('summary');
     details.appendChild(summary);
     details.appendChild(document.createElement('hr'));
-    summary.innerHTML = `<div>Mã đơn: ${order.orderId}</div><div>Số lượng: ${order.quantify}</div>`;
+    summary.innerHTML = `<div>Mã đơn: ${order.orderId}</div><div>Số lượng: ${order.quantity}</div>`;
     let user = await fakeDatabase.getUserInfoByUserId(order.user);
     let userInfo = document.createElement('div');
     userInfo.innerHTML = `Khách mua hàng:<br>${user?.name}`;
@@ -293,39 +323,13 @@ function renderProductRank() {
     );
     to.value = dateToString(now);
     to.max = dateToString(now);
-    let data = {};
-    let array = [];
-    productRank(
-        new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
-        now,
-        data,
-        array,
-    );
+    productRank(new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), now);
     chooseDate?.addEventListener('change', () => {
-        productRank(new Date(from.value), new Date(to.value), data, array);
-    });
-    const showOrder = document.querySelector('.info-order__product');
-    const name = document.getElementById('product-name');
-    const text = name?.innerText;
-    document.querySelectorAll('.rank-body-row').forEach((row, i) => {
-        row.addEventListener('click', () => {
-            if (name)
-                name.innerHTML = `${text}<br><strong>${
-                    row.querySelector('.rank-name')?.innerHTML
-                }</strong>`;
-            while (
-                showOrder &&
-                showOrder.children.length > 1 &&
-                showOrder.lastChild
-            )
-                showOrder.removeChild(showOrder.lastChild);
-            data[array[i].id].forEach(async (e) => {
-                showOrder?.appendChild(await createOderInfoForProduct(e));
-            });
-        });
+        productRank(new Date(from.value), new Date(to.value));
     });
 }
 
+function count() {}
 function dashboardRender() {
     renderLeaderboard();
     renderProductRank();

@@ -126,7 +126,7 @@ aside.aside {
     font-weight: 500;
 }
 
-.product-price {
+.product-footer {
     flex: 0;
     font-size: 14px;
     display: flex;
@@ -134,20 +134,32 @@ aside.aside {
     align-items: center;
     width: 100%;
 }
-
-.product-price .sale-price {
+.product-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+}
+.sale-price {
     color: #ff4141;
     font-weight: 600;
     font-size: 16px;
+    position: relative;
+    top: 4px;
 }
-
-.product-price .regular-price {
+.regular-price {
     text-decoration: line-through;
     color: #888;
     font-size: 13px;
+    position: relative;
+    top: -4px;
 }
 
-.product-price > img {
+.product-price:has(.hide) .sale-price {
+    top: 0;
+}
+.product-footer > img {
     width: 22px;
     height: auto;
     cursor: pointer;
@@ -191,6 +203,93 @@ aside.aside {
     display: flex;
     gap: 10px;
 }
+
+.search-display{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.search-header{
+    margin-top:10px;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.filter-btn{
+    padding: 5px;
+    background-color: white;
+    border-radius: 4px;
+    border: solid 1px gray;
+    width: 50px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.filter-btn:hover{
+    color: rgb(45, 136, 255);
+    background-color: #f4f4f4;
+}
+
+.filter-popup{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.53);
+    display: flex;
+    justify-content: center;
+}
+
+.filter-checkbox{
+    display: flex;
+    gap: 125px;
+}
+
+.filter-popup input[type='checkbox'] {
+    height: 18px;
+    width: 18px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.filter-checkbox__left > label{
+    display: flex;
+    align-items: center;
+}
+
+.filter-checkbox__right > label{
+    display: flex;
+    align-items: center;
+}
+
+.filter-slider{
+    margin-top: 30px;
+    width: 100%;
+}
+
+.filter-slider__header{
+    font-size: 18px;
+}
+
+.filter-slider > input{
+    width: 100%;
+    cursor: pointer;
+}
+
+.price-slider{
+    margin-top: 15px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
 
 /* @media screen and (max-width: 1100px) {
     .product-container {

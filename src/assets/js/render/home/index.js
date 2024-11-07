@@ -253,6 +253,4 @@ export function updateHomePage(page, query) {
     }
 
     displayProducts();
-
-    // renderProduct();
 }
