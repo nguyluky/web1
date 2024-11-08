@@ -96,9 +96,6 @@ export function displayProducts() {
         const productItem = await createProduct(product);
         productlist.appendChild(productItem);
     });
-    setTimeout(() => {
-        addToCart();
-    }, 100);
 }
 
 /**
@@ -202,8 +199,12 @@ export function addToCart() {
                 )
             ) {
                 await fakeDatabase.addCart({
-                    user_id: localStorage.getItem('user_id'),
-                    sach: product.getAttribute('data-id'),
+                    user_id: /**@type {String} */ (
+                        localStorage.getItem('user_id')
+                    ),
+                    sach: /**@type {String} */ (
+                        product.getAttribute('data-id')
+                    ),
                     quantity: 1,
                     timecreate: new Date(),
                 });
