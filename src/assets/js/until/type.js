@@ -84,6 +84,7 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *     last_update: Date;
  *     is_pay: boolean;
  *     total: number;
+ *     address: string;
  * }} Order
  */
 
