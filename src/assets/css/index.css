@@ -44,7 +44,7 @@ aside.aside {
     background-color: #fff;
     width: 100%;
     border-radius: 8px;
-    padding: 15px 30px;
+    padding: 20px 30px;
     padding-bottom: 30px;
 }
 
@@ -57,9 +57,11 @@ aside.aside {
 }
 .article-header {
     margin-bottom: 30px;
-    margin-top: 5px;
+    margin-top: 10px;
     font-size: 18px;
     font-weight: 700;
+    display: flex;
+    justify-content: space-between;
 }
 
 .product-container {
@@ -204,23 +206,14 @@ aside.aside {
     gap: 10px;
 }
 
-.search-display{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.search-header{
-    margin-top:10px;
+.search-header {
+    margin-top: 10px;
     margin-bottom: 15px;
     font-size: 20px;
     font-weight: 600;
 }
 
-.filter-btn{
+#filter-btn {
     padding: 5px;
     background-color: white;
     border-radius: 4px;
@@ -230,66 +223,58 @@ aside.aside {
     cursor: pointer;
 }
 
-.filter-btn:hover{
+#filter-btn:hover {
     color: rgb(45, 136, 255);
     background-color: #f4f4f4;
 }
 
-.filter-popup{
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.53);
+#search-filter {
+    min-width: 235px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+}
+.filter-header {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 10px 0 20px;
 }
 
-.filter-checkbox{
+.filter-checkbox {
     display: flex;
-    gap: 125px;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.filter-popup input[type='checkbox'] {
+#filter-popup input[type='checkbox'] {
     height: 18px;
     width: 18px;
     margin-right: 8px;
     cursor: pointer;
 }
 
-.filter-checkbox__left > label{
-    display: flex;
-    align-items: center;
-}
-
-.filter-checkbox__right > label{
-    display: flex;
-    align-items: center;
-}
-
-.filter-slider{
+.filter-slider {
     margin-top: 30px;
     width: 100%;
 }
 
-.filter-slider__header{
+.filter-slider__header {
     font-size: 18px;
 }
 
-.filter-slider > input{
+.filter-slider > input {
     width: 100%;
     cursor: pointer;
 }
 
-.price-slider{
+.price-slider {
     margin-top: 15px;
     margin-bottom: 5px;
     display: flex;
     justify-content: space-between;
 }
-
 
 /* @media screen and (max-width: 1100px) {
     .product-container {

@@ -74,7 +74,7 @@ export async function createProduct(product) {
     return Product_Item;
 }
 // render products
-export function displayProducts(data = Product_Data) {
+export function displayProducts() {
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
@@ -177,10 +177,14 @@ export function setupPaginationListeners() {
     });
 }
 
-export function selectionCatergory(category_id) {
-    if (category_id) {
+export function selectionConditional(categories, searchText = '') {
+    if (categories || searchText != '') {
         data = Product_Data.filter((e) => {
-            return e.category.includes(category_id);
+            return (
+                categories.every((category_id) =>
+                    e.category.includes(category_id),
+                ) && e.title.toLowerCase().includes(searchText.toLowerCase())
+            );
         });
     } else {
         data = Product_Data;
@@ -189,7 +193,6 @@ export function selectionCatergory(category_id) {
     Current_Page = 1;
 }
 export function addToCart() {
-    console.log('add cart call');
     const productCard = document.querySelectorAll('.product-card');
     productCard.forEach((product) => {
         product.addEventListener('click', async (event) => {
@@ -204,7 +207,6 @@ export function addToCart() {
                     quantity: 1,
                     timecreate: new Date(),
                 });
-                console.log('add cart');
             }
         });
     });

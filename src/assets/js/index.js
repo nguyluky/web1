@@ -10,6 +10,10 @@ import { isEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './render/home/index.js';
 import urlConverter from './until/urlConverter.js';
 import { initializationPageNotFound } from './render/pageNotFound/index.js';
+import {
+    initializationSearchPage,
+    updateSearchPage,
+} from './render/home/search.js';
 
 //#region khai bao bien
 
@@ -513,7 +517,9 @@ function initializePage() {
             case '#/home':
                 initializationHomePage();
                 break;
-
+            case '#/search':
+                initializationSearchPage();
+                break;
             default:
                 initializationPageNotFound();
                 break;
@@ -529,7 +535,9 @@ function initializePage() {
             case '#/home':
                 updateHomePage(curr_page, query);
                 break;
-
+            case '#/search':
+                updateSearchPage();
+                break;
             default:
                 break;
         }
@@ -552,11 +560,14 @@ function initializePage() {
 
     window.addEventListener('hashchange', handleHashChange);
 
-    if (!curr_page) {
-        location.hash = '#/home';
-        return;
-    }
-
+    if (!curr_page) location.hash = '#/home';
+    document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
+        if (/**@type {KeyboardEvent} */ (e).key === 'Enter') {
+            console.log('enter');
+            location.hash =
+                '#/search?t=' + /**@type {HTMLInputElement} */ (e.target).value;
+        }
+    });
     pageInit(curr_page);
     pageUpdate(curr_page, query);
 }
