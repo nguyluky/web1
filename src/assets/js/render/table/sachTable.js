@@ -115,8 +115,8 @@ function renderRow(row, value, onchange = null) {
                     const imgThumbnail = createThumbnailCell(
                         'thumbnail',
                         img.data || '../assets/img/default-image.png',
-                        (e) => {
-                            console.log(e);
+                        (base64) => {
+                            cacheImg[value.thumbnail] = base64;
                         },
                     );
                     const isEdit = td.getAttribute('contenteditable') == 'true';
