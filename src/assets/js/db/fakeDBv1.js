@@ -60,8 +60,9 @@ const fileData = {
 
 /**
  *
- * @param {IDBRequest} request
- * @returns {Promise<any>}
+ * @template T
+ * @param {IDBRequest<T>} request
+ * @returns {Promise<T>}
  */
 async function requestToPromise(request) {
     return new Promise((resolve, reject) => {
@@ -570,6 +571,11 @@ class FakeDatabase {
         return requestToPromise(cartStore.put(cart_data));
     }
 
+    /**
+     *
+     * @param {Omit<Cart, 'id'>} cart_data
+     * @returns {Promise<IDBValidKey>}
+     */
     async addCart(cart_data) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.CART);
@@ -577,6 +583,7 @@ class FakeDatabase {
         const cartStore = transaction.objectStore(ObjectStoreName.CART);
         return requestToPromise(cartStore.add(cart_data));
     }
+
     async deleteCartById(cart_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.CART);
