@@ -389,6 +389,7 @@ class FakeDatabase {
      */
     async createUserInfo(password, display_name, std, email) {
         if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.USER);
 
         const user_id = uuidv();
 
@@ -416,6 +417,8 @@ class FakeDatabase {
 
     async getUserInfoByPhoneOrEmail(phone_email) {
         if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.USER);
+
         const data = db
             .transaction(ObjectStoreName.USER, 'readonly')
             .objectStore(ObjectStoreName.USER);
