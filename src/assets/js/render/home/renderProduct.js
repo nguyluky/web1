@@ -7,6 +7,10 @@ let Current_Page = 1;
 let Products_Per_page = 8;
 let totalPages = Math.ceil(Product_Data.length / Products_Per_page);
 
+/**
+ *
+ * @returns {void}
+ */
 export function createPagination() {
     const pagination = /**@type {HTMLElement}*/ (
         document.querySelector('.pagination')
@@ -32,7 +36,12 @@ export function createPagination() {
         }">${i}</button>`;
     }
 }
-// create product card
+
+/**
+ *
+ * @param {import('../../until/type.js').Sach} product
+ * @returns {Promise<HTMLElement>}
+ */
 export async function createProduct(product) {
     const Product_Item = document.createElement('div');
     Product_Item.classList.add('product-card');
@@ -73,7 +82,12 @@ export async function createProduct(product) {
         `;
     return Product_Item;
 }
-// render products
+
+/**
+ * render products
+ * @param {import('../../until/type.js').Sach[]} data
+ * @returns {void}
+ */
 export function displayProducts(data = Product_Data) {
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
@@ -96,9 +110,11 @@ export function displayProducts(data = Product_Data) {
         const productItem = await createProduct(product);
         productlist.appendChild(productItem);
     });
-    setTimeout(() => {
-        addToCart();
-    }, 100);
+
+    // TODO: để merge nhánh cart vào
+    // setTimeout(() => {
+    //     addToCart();
+    // }, 100);
 }
 
 /**
@@ -126,7 +142,9 @@ export function updatePagination(page) {
     });
 }
 
-// Chuyển đến trang trước
+/**
+ * Chuyển đến trang trước đó
+ */
 function prevPage() {
     if (Current_Page > 1) {
         Current_Page--;
@@ -137,7 +155,9 @@ function prevPage() {
     }
 }
 
-// Chuyển đến trang sau
+/**
+ * Chuyển đến trang tiếp theo
+ */
 function nextPage() {
     if (Current_Page < totalPages) {
         Current_Page++;
@@ -148,8 +168,10 @@ function nextPage() {
     }
 }
 
-// Chuyển đến trang cụ thể
-/**@param {Number} page  */
+/**
+ * Chuyển đến trang cụ thể
+ * @param {number} page
+ */
 function goToPage(page) {
     if (Current_Page != page) {
         Current_Page = page;
@@ -160,6 +182,9 @@ function goToPage(page) {
     }
 }
 
+/**
+ * Thêm sự kiện cho các nút phân trang
+ */
 export function setupPaginationListeners() {
     const Page_Nums = document.querySelectorAll('.pagination__btns');
     Page_Nums.forEach((page) => {
@@ -177,6 +202,10 @@ export function setupPaginationListeners() {
     });
 }
 
+/**
+ *
+ * @param {string} category_id
+ */
 export function selectionCatergory(category_id) {
     if (category_id) {
         data = Product_Data.filter((e) => {
@@ -188,6 +217,10 @@ export function selectionCatergory(category_id) {
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;
 }
+
+/**
+ * Thêm sản phẩm vào giỏ hàng
+ */
 export function addToCart() {
     console.log('add cart call');
     const productCard = document.querySelectorAll('.product-card');
@@ -199,8 +232,8 @@ export function addToCart() {
                 )
             ) {
                 await fakeDatabase.addCart({
-                    user_id: localStorage.getItem('user_id'),
-                    sach: product.getAttribute('data-id'),
+                    user_id: localStorage.getItem('user_id') || '',
+                    sach: product.getAttribute('data-id') || '',
                     quantity: 1,
                     timecreate: new Date(),
                 });

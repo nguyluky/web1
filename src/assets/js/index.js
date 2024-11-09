@@ -498,11 +498,32 @@ function initializeAccountPopup() {
 
 /**
  *
- * khởi tạo hash url handle
+ * Khởi tạo xử lý URL cho ứng dụng.
+ *
+ * Hàm này thiết lập các trình nghe sự kiện và trình xử lý cần thiết để quản lý
+ * các thay đổi URL trong ứng dụng. Nó đảm bảo rằng ứng dụng có thể phản hồi
+ * các đường dẫn và tham số URL khác nhau, cho phép điều hướng và quản lý trạng thái
+ * dựa trên URL.
+ *
+ * Cách hoạt động:
+ * 1. Thêm một trình nghe sự kiện cho sự kiện 'hashchange' để xử lý các thay đổi hash của URL.
+ * 2. Phân tích cú pháp hash của URL hiện tại để xác định trạng thái ban đầu của ứng dụng.
+ * 3. Thiết lập các trình nghe sự kiện hoặc trình xử lý bổ sung cần thiết cho các thay đổi URL.
+ *
+ * Cách sử dụng:
+ *
+ * initializeUrlHandling();
+ *
+ * Ví dụ:
+ *
+ * // Gọi hàm này một lần khi khởi động ứng dụng
+ * initializeUrlHandling();
+ *
  * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
  *
  */
-function initializePage() {
+function initializeUrlHandling() {
     let { page: curr_page, query } = urlConverter(location.hash);
 
     /**
@@ -568,7 +589,7 @@ function main() {
     initializeLocationPopup();
     initializeAccountPopup();
 
-    initializePage();
+    initializeUrlHandling();
 }
 
 main();
