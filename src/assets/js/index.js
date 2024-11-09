@@ -585,7 +585,10 @@ function initializeUrlHandling() {
 
     if (!curr_page) location.hash = '#/home';
     document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
-        if (/**@type {KeyboardEvent} */ (e).key === 'Enter') {
+        if (
+            /**@type {KeyboardEvent} */ (e).key === 'Enter' &&
+            curr_page != '#/search'
+        ) {
             console.log('enter');
             location.hash =
                 '#/search?t=' + /**@type {HTMLInputElement} */ (e.target).value;
