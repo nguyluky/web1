@@ -214,27 +214,3 @@ export function selectionConditional(categories, searchText = '') {
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;
 }
-
-// TODO: để merge nhánh cart vào
-// /**
-//  * Thêm sản phẩm vào giỏ hàng
-//  */
-// export function addToCart() {
-//     const productCard = document.querySelectorAll('.product-card');
-//     productCard.forEach((product) => {
-//         product.addEventListener('click', async (event) => {
-//             if (
-//                 /**@type {HTMLElement}*/ (event.target).classList.contains(
-//                     'add-to-cart',
-//                 )
-//             ) {
-//                 await fakeDatabase.addCart({
-//                     user_id: localStorage.getItem('user_id') || '',
-//                     sach: product.getAttribute('data-id') || '',
-//                     quantity: 1,
-//                     timecreate: new Date(),
-//                 });
-//             }
-//         });
-//     });
-// }

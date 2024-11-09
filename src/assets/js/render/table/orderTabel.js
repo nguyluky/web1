@@ -5,10 +5,12 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import { isDate } from '../../until/validator.js';
 import { renderTable, searchList, tableClearErrorKey } from './baseRender.js';
-import { createOptionTabelCell } from './customCell.js';
-import { createNumberTableCell } from './customCell.js';
-import { createDateTimeTableCell } from './customCell.js';
-import { createTextTableCell } from './customCell.js';
+import {
+    createOptionTabelCell,
+    createNumberTableCell,
+    createDateTimeTableCell,
+    createTextTableCell,
+} from './customCell.js';
 
 const cols = {
     user_id: 'User id',
@@ -31,17 +33,10 @@ let cacheEdit = {};
 function handleOnChange(data, key, newValue) {
     console.log('onchange called');
 
-    if (cacheEdit[data.id]) {
-        cacheEdit[data.id] = {
-            ...cacheEdit[data.id],
-            [key]: newValue,
-        };
-    } else {
-        cacheEdit[data.id] = {
-            ...data,
-            [key]: newValue,
-        };
-    }
+    cacheEdit[data.id] = {
+        ...cacheEdit[data.id],
+        [key]: newValue,
+    };
 }
 
 /**
@@ -52,168 +47,246 @@ function handleOnChange(data, key, newValue) {
 function renderRow(row, value, onchange) {
     Object.keys(cols).forEach((key) => {
         switch (key) {
-            case 'state': {
-                const state = createOptionTabelCell(
-                    'state',
-                    value.state,
-                    [
-                        { title: 'Đợi xác nhận', value: 'doixacnhan' },
-                        { title: 'Đã xác nhận', value: 'daxacnhan' },
-                        { title: 'Đang giao hàng', value: 'danggiaohang' },
-                        {
-                            title: 'Giao hàng thành công',
-                            value: 'giaohangthanhcong',
-                        },
-                        { title: 'Hủy', value: 'Huy' },
-                    ],
-                    (nv) => {
-                        onchange && onchange(value, 'state', nv);
-                    },
-                );
-                row.appendChild(state);
+            case 'state':
+                appendStateCell(row, value, onchange);
                 break;
-            }
-            case 'user_id': {
-                const user_id = createTextTableCell(
-                    'user_id',
-                    value.user_id,
-                    (nv) => {
-                        onchange && onchange(value, 'user_id', nv);
-                    },
-                    false,
-                );
-
-                user_id.style.minWidth = '100px';
-                fakeDatabase.getUserInfoByUserId(value.user_id).then((user) => {
-                    user_id.textContent = user?.name || '';
-                    user_id.setAttribute('default-value', user?.name || '');
-                });
-
-                row.appendChild(user_id);
-
+            case 'user_id':
+                appendUserIdCell(row, value, onchange);
                 break;
-            }
             case 'date':
-            case 'last_update': {
-                const date = createDateTimeTableCell(
-                    key,
-                    value[key],
-                    (nv) => {
-                        onchange && onchange(value, key, nv);
-                    },
-                    false,
-                );
-                row.appendChild(date);
+            case 'last_update':
+                appendDateCell(row, key, value, onchange);
                 break;
-            }
-            case 'is_pay': {
-                const option = createOptionTabelCell(
-                    'is_pay',
-                    value.is_pay ? 'true' : 'false',
-                    [
-                        { title: 'Thành công', value: 'true' },
-                        { title: 'Chưa thanh toán', value: 'false' },
-                    ],
-                    (nv) => {
-                        onchange && onchange(value, 'is_pay', nv);
-                    },
-                );
-                row.appendChild(option);
+            case 'is_pay':
+                appendIsPayCell(row, value, onchange);
                 break;
-            }
-            case 'total': {
-                const to = createNumberTableCell(
-                    'total',
-                    value.total,
-                    (nv) => {
-                        onchange && onchange(value, 'total', nv);
-                    },
-                    false,
-                );
-                row.appendChild(to);
+            case 'total':
+                appendTotalCell(row, value, onchange);
                 break;
-            }
-            default: {
+            case 'address': {
                 const col = createTextTableCell(key, value[key], (nv) => {
                     // @ts-ignore
                     onchange && onchange(value, key, nv);
                 });
+                col.style.minWidth = '200px';
                 row.appendChild(col);
+
+                break;
             }
+            default:
+                appendDefaultCell(row, key, value, onchange);
         }
     });
 
-    row.addEventListener('click', () => {
-        if (!row.getAttribute('dropdown')) {
-            row.setAttribute('dropdown', 'true');
-
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = Object.keys(cols).length + 1;
-
-            const title = document.createElement('div');
-            title.style.display = 'flex';
-            title.innerHTML = `
-                <div style="width: 20%; text-align: center;">STT</div>
-                <div style="width: 40%;">Tên</div>
-                <div style="width: 20%; text-align: center;">số lượng</div>
-                <div style="width: 20%; text-align: center;">Tiền</div>
-            `;
-
-            td.appendChild(title);
-
-            value.items.forEach((e, index) => {
-                const div = document.createElement('div');
-                div.style.display = 'flex';
-
-                const stt = document.createElement('div');
-                stt.textContent = index + '';
-                stt.style.width = '20%';
-                stt.style.textAlign = 'center';
-                div.appendChild(stt);
-
-                const sach = document.createElement('div');
-                sach.style.width = '40%';
-                sach.textContent = e.sach;
-
-                const quantity = document.createElement('div');
-                quantity.style.width = '20%';
-                quantity.style.textAlign = 'center';
-                quantity.textContent = e.quantity + '';
-
-                const donqia = document.createElement('div');
-                donqia.textContent = '';
-                donqia.style.width = '20%';
-                donqia.style.textAlign = 'center';
-
-                fakeDatabase.getSachById(e.sach).then((sach_) => {
-                    sach.textContent = sach_?.title || '';
-                    donqia.textContent = sach_?.base_price + '';
-                });
-
-                div.appendChild(sach);
-                div.appendChild(quantity);
-                div.appendChild(donqia);
-
-                td.appendChild(div);
-            });
-
-            tr.appendChild(td);
-
-            if (row.nextElementSibling) {
-                row.parentElement?.insertBefore(tr, row.nextElementSibling);
-            } else {
-                row.parentElement?.appendChild(tr);
-            }
-        } else {
-            row.removeAttribute('dropdown');
-            row.nextElementSibling?.remove();
-        }
-    });
+    row.addEventListener('click', () => toggleDropdown(row, value));
 }
 
 /**
  *
+ * @param {HTMLTableRowElement} row
+ * @param {Order} value
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange]
+ */
+function appendStateCell(row, value, onchange) {
+    const state = createOptionTabelCell(
+        'state',
+        value.state,
+        [
+            { title: 'Đợi xác nhận', value: 'doixacnhan' },
+            { title: 'Đã xác nhận', value: 'daxacnhan' },
+            { title: 'Đang giao hàng', value: 'danggiaohang' },
+            { title: 'Giao hàng thành công', value: 'giaohangthanhcong' },
+            { title: 'Hủy', value: 'Huy' },
+        ],
+        (nv) => onchange && onchange(value, 'state', nv),
+    );
+    row.appendChild(state);
+}
+/**
+ *
+ * @param {HTMLTableRowElement} row
+ * @param {Order} value
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange]
+ */
+function appendUserIdCell(row, value, onchange) {
+    const user_id = createTextTableCell(
+        'user_id',
+        value.user_id,
+        (nv) => onchange && onchange(value, 'user_id', nv),
+        false,
+    );
+
+    user_id.style.minWidth = '100px';
+    fakeDatabase.getUserInfoByUserId(value.user_id).then((user) => {
+        user_id.textContent = user?.name || '';
+        user_id.setAttribute('default-value', user?.name || '');
+    });
+
+    row.appendChild(user_id);
+}
+
+/**
+ *
+ * @param {HTMLTableRowElement} row
+ * @param {string} key
+ * @param {Order} value
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange ]
+ */
+function appendDateCell(row, key, value, onchange) {
+    const date = createDateTimeTableCell(
+        key,
+        value[key],
+        // @ts-ignore
+        (nv) => onchange && onchange(value, key, nv),
+        false,
+    );
+    row.appendChild(date);
+}
+
+/**
+ *
+ * @param {HTMLTableRowElement} row
+ * @param {Order} value
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange]
+ */
+function appendIsPayCell(row, value, onchange) {
+    const option = createOptionTabelCell(
+        'is_pay',
+        value.is_pay ? 'true' : 'false',
+        [
+            { title: 'Thành công', value: 'true' },
+            { title: 'Chưa thanh toán', value: 'false' },
+        ],
+        (nv) => onchange && onchange(value, 'is_pay', nv),
+    );
+    row.appendChild(option);
+}
+
+/**
+ *
+ * @param {HTMLTableRowElement} row
+ * @param {Order} value
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange]
+ */
+function appendTotalCell(row, value, onchange) {
+    const to = createNumberTableCell(
+        'total',
+        value.total,
+        (nv) => onchange && onchange(value, 'total', nv),
+        false,
+    );
+    row.appendChild(to);
+}
+
+/**
+ *
+ * @param {HTMLTableRowElement} row
+ * @param {string} key
+ * @param {Order} value
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange ]
+ */
+function appendDefaultCell(row, key, value, onchange) {
+    const col = createTextTableCell(key, value[key], (nv) => {
+        // @ts-ignore
+        onchange && onchange(value, key, nv);
+    });
+    row.appendChild(col);
+}
+
+/**
+ *
+ * @param {HTMLTableRowElement} row
+ * @param {Order} value
+ */
+function toggleDropdown(row, value) {
+    if (row.querySelector('td[contenteditable = "true"]')) return;
+
+    /**
+     *
+     * @param {MouseEvent} event
+     * @returns {void}
+     */
+    function handleClickOutside(event) {
+        const target = /**@type {HTMLElement}*/ (event.target);
+        if (target.isSameNode(row)) return;
+        if (row.nextElementSibling?.contains(target)) return;
+        if (row.contains(target)) return;
+
+        row.removeAttribute('dropdown');
+        row.nextElementSibling?.remove();
+        document.removeEventListener('click', handleClickOutside);
+    }
+
+    if (!row.getAttribute('dropdown')) {
+        row.setAttribute('dropdown', 'true');
+
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = Object.keys(cols).length + 1;
+
+        const title = document.createElement('div');
+        title.style.display = 'flex';
+        title.innerHTML = `
+            <div style="width: 20%; text-align: center;">STT</div>
+            <div style="width: 40%;">Tên</div>
+            <div style="width: 20%; text-align: center;">số lượng</div>
+            <div style="width: 20%; text-align: center;">Tiền</div>
+        `;
+
+        td.appendChild(title);
+
+        value.items.forEach((e, index) => {
+            const div = document.createElement('div');
+            div.style.display = 'flex';
+
+            const stt = document.createElement('div');
+            stt.textContent = index + '';
+            stt.style.width = '20%';
+            stt.style.textAlign = 'center';
+            div.appendChild(stt);
+
+            const sach = document.createElement('div');
+            sach.style.width = '40%';
+            sach.textContent = e.sach;
+
+            const quantity = document.createElement('div');
+            quantity.style.width = '20%';
+            quantity.style.textAlign = 'center';
+            quantity.textContent = e.quantity + '';
+
+            const donqia = document.createElement('div');
+            donqia.textContent = '';
+            donqia.style.width = '20%';
+            donqia.style.textAlign = 'center';
+
+            fakeDatabase.getSachById(e.sach).then((sach_) => {
+                sach.textContent = sach_?.title || '';
+                donqia.textContent = sach_?.base_price + '';
+            });
+
+            div.appendChild(sach);
+            div.appendChild(quantity);
+            div.appendChild(donqia);
+
+            td.appendChild(div);
+        });
+
+        tr.appendChild(td);
+
+        if (row.nextElementSibling) {
+            row.parentElement?.insertBefore(tr, row.nextElementSibling);
+        } else {
+            row.parentElement?.appendChild(tr);
+        }
+        document.addEventListener('click', handleClickOutside);
+    } else {
+        row.removeAttribute('dropdown');
+        row.nextElementSibling?.remove();
+        document.removeEventListener('click', handleClickOutside);
+    }
+}
+
+/**
  * @param {Order[]} list
  */
 function renderOrder(list) {
@@ -244,12 +317,10 @@ function searchOrder(list) {
 }
 
 /**
- *
- * @param {(i1: string, i2: string) => any} onOk
- * @param {() => any} onCancel
+ * @param {{title: string, body: () => HTMLElement, onOk: (element: HTMLElement | null) => any, onCancel: () => any}[]} options
  * @returns {HTMLDivElement}
  */
-function createDropdownFilter(onOk, onCancel) {
+function createDropdownFilter(options) {
     const popupFilterHeader = document.createElement('div');
 
     popupFilterHeader.setAttribute('class', 'popup-filter-header');
@@ -266,27 +337,24 @@ function createDropdownFilter(onOk, onCancel) {
     const hr = document.createElement('HR');
     popupFilterHeader.appendChild(hr);
 
+    // ==================================
     const select = document.createElement('select');
     popupFilterHeader.appendChild(select);
 
-    const option1 = document.createElement('option');
-    option1.value = 'text';
-    option1.textContent = 'lọc theo text';
-    select.appendChild(option1);
+    // tạo option
 
-    const option2 = document.createElement('option');
-    option2.textContent = 'lọc theo khoản ngày';
-    option2.value = 'range-date';
-    select.appendChild(option2);
+    options.forEach((e) => {
+        const option = document.createElement('option');
+        option.value = e.title;
+        option.textContent = e.title;
+        select.appendChild(option);
+    });
 
-    const searchInput = document.createElement('input');
-    searchInput.setAttribute('placeholder', 'search');
-    popupFilterHeader.appendChild(searchInput);
+    // ==================================
 
-    const node_12 = document.createElement('input');
-    node_12.setAttribute('placeholder', 'search');
-    popupFilterHeader.appendChild(node_12);
-    node_12.style.display = 'none';
+    const body = document.createElement('div');
+    body.className = 'popup-filter-body';
+    popupFilterHeader.appendChild(body);
 
     const button_wrapper = document.createElement('div');
     button_wrapper.className = 'custom-header-button-wrapper';
@@ -305,30 +373,40 @@ function createDropdownFilter(onOk, onCancel) {
     button_wrapper.appendChild(filterBtn);
 
     filterBtn.addEventListener('click', () => {
-        onOk(searchInput.value, node_12.value);
+        const option = options.find((e) => e.title == select.value);
+
+        if (!option) return;
+        option.onOk(/** @type {HTMLElement | null}*/ (body.firstChild));
     });
 
     cancelBtn.addEventListener('click', () => {
-        onCancel();
+        const option = options.find((e) => e.title == select.value);
+
+        if (!option) return;
+        option.onCancel();
     });
 
     select.addEventListener('change', function optionChangeHandler() {
-        if (select.value == 'range-date') {
-            node_12.style.display = '';
-            node_12.type = 'date';
+        const body = popupFilterHeader.querySelector('.popup-filter-body');
+        const option = options.find((e) => e.title == select.value);
 
-            searchInput.type = 'date';
-        } else {
-            node_12.style.display = 'none';
-            searchInput.type = 'text';
-        }
+        if (!option || !body) return;
+
+        body.innerHTML = '';
+        body.appendChild(option.body());
     });
+
+    const option = options.find((e) => e.title == select.value);
+
+    if (option) {
+        body.innerHTML = '';
+        body.appendChild(option.body());
+    }
 
     return popupFilterHeader;
 }
 
 /**
- *
  * @returns {HTMLTableRowElement}
  */
 function customeHeader() {
@@ -357,27 +435,22 @@ function customeHeader() {
         icon.setAttribute('class', 'fa-solid fa-caret-down');
         iconWrapper.appendChild(icon);
 
-        const dropDownPopup = createDropdownFilter(
-            (i1, i2) => {
-                console.log(i1, i2);
-                if (isDate(i1) && isDate(i2))
-                    advancedSearch(undefined, (v) => {
-                        const td = v.querySelector('td[key=' + key + ']');
+        const dropDownPopup = createDropdownFilter([
+            {
+                title: 'text',
+                body: () => {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = 'search';
+                    return input;
+                },
+                onOk: (element) => {
+                    if (!HTMLElement) return;
 
-                        const date = new Date(
-                            td?.querySelector('input')?.value || '1/1/1',
-                        ).getTime();
+                    console.log(element);
 
-                        const d1 = new Date(i1).getTime();
-                        const d2 = new Date(i2).getTime();
+                    const i1 = /**@type {HTMLInputElement} */ (element).value;
 
-                        if (d1 < date && d2 > date) {
-                            return true;
-                        }
-
-                        return false;
-                    });
-                else
                     advancedSearch(undefined, (v) => {
                         const td = v.querySelector('td[key=' + key + ']');
                         const text = (td?.textContent || '').toLowerCase();
@@ -386,15 +459,39 @@ function customeHeader() {
 
                         return text.includes(i1.toLowerCase());
                     });
+                },
+                onCancel: () => {
+                    console.log('cancel');
+                },
             },
-            () => {
-                advancedSearch();
+            {
+                title: 'date-range',
+                body: () => {
+                    const div = document.createElement('div');
+                    div.style.display = 'flex';
+                    div.style.flexDirection = 'column';
+
+                    const input1 = document.createElement('input');
+                    input1.type = 'date';
+                    div.appendChild(input1);
+
+                    const input2 = document.createElement('input');
+                    input2.type = 'date';
+                    div.appendChild(input2);
+
+                    return div;
+                },
+                onOk: (element) => {
+                    console.log(element);
+                },
+                onCancel: () => {
+                    console.log('cancel');
+                },
             },
-        );
+        ]);
         headerPopupWrapper.appendChild(dropDownPopup);
 
         /**
-         *
          * @param {MouseEvent} event
          */
         function handleClickOutside(event) {
@@ -430,9 +527,6 @@ function customeHeader() {
 }
 
 /**
- *
- * code tôi copy trên mạng
- *
  * TODO: làm sao đây
  * @param {(a: HTMLTableRowElement, b: HTMLTableRowElement) => number} [compareFn]
  * @param {(value: HTMLTableRowElement, index: number, array: HTMLTableRowElement[]) => any} [predicate]
@@ -440,11 +534,10 @@ function customeHeader() {
 function advancedSearch(compareFn, predicate) {
     console.log('test');
 
-    // var table, rows, switching, i, x, y, shouldSwitch;
     const table = /**@type {HTMLTableElement}*/ (
         document.getElementById('content_table')
     );
-    /* Make a loop that will continue until no switching has been done: */
+
     let rows = /**@type {HTMLTableRowElement[]} */ (Array.from(table.rows));
 
     rows = rows.filter((e) => !!e.getAttribute('id-row'));
@@ -471,6 +564,9 @@ function advancedSearch(compareFn, predicate) {
     });
 }
 
+/**
+ * @returns {Promise<void>}
+ */
 async function doSave() {
     const updateValues = Object.values(cacheEdit);
 
@@ -483,6 +579,9 @@ async function doSave() {
     tableClearErrorKey();
 }
 
+/**
+ * @returns {void}
+ */
 function removeAllChange() {
     cacheEdit = {};
     document.querySelectorAll('tr').forEach((e) => {
@@ -494,6 +593,7 @@ function removeAllChange() {
         }
     });
 }
+
 /**
  * @type {import("./baseRender.js").IntefaceRender<Order>}
  */

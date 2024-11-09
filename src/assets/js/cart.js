@@ -1,8 +1,12 @@
 import fakeDatabase from './db/fakeDBv1.js';
-import user_ from './render/table/userTable.js';
 import uuidv from './until/uuid.js';
 import { toast } from './render/popupRender.js';
 
+/**
+ *
+ *
+ * @returns {void}
+ */
 function mainCart() {
     updateCartQuantity();
     renderCart().then(() => {
@@ -14,6 +18,10 @@ function mainCart() {
     });
 }
 
+/**
+ *
+ * @returns {Promise<void>}
+ */
 async function renderCart() {
     const user_id = localStorage.getItem('user_id');
 
@@ -43,6 +51,11 @@ async function renderCart() {
     }
 }
 
+/**
+ *
+ * @param {import('./until/type.js').Cart} cart
+ * @returns {Promise<HTMLElement | undefined>}
+ */
 async function createCartItem(cart) {
     const book = await fakeDatabase.getSachById(cart.sach);
 
@@ -321,6 +334,10 @@ function initDeleteCartItem() {
     });
 }
 
+/**
+ *
+ * @returns {Promise<void>}
+ */
 export async function updateCartQuantity() {
     const user_id = localStorage.getItem('user_id');
 
@@ -343,6 +360,10 @@ export async function updateCartQuantity() {
     }
 }
 
+/**
+ *
+ * @returns {void}
+ */
 function isCheckBox() {
     const mainCheckBox = /**@type {HTMLInputElement}*/ (
         document.querySelector('#check-all')
@@ -376,6 +397,9 @@ function isCheckBox() {
     });
 }
 
+/**
+ *
+ */
 async function renderPaymentSummary() {
     const otherCheckBoxes = /**@type {NodeListOf<HTMLInputElement>} */ (
         document.querySelectorAll('.check-book')
