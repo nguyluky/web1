@@ -139,25 +139,6 @@ async function userDoSave() {
     cacheSave = {};
 
     tableClearErrorKey();
-
-    // document.querySelectorAll('#content_table td').forEach((e) => {
-    //     e.setAttribute('contenteditable', 'false'); // Khóa không cho chỉnh sửa
-    //     e.setAttribute('ischange', 'false'); // Đặt lại trạng thái là không thay đổi
-
-    //     const key = e.getAttribute('key');
-    //     // TODO:
-    //     if (key == 'datecreated') {
-    //         const input = e.querySelector('input');
-    //         e.setAttribute(
-    //             'default-value',
-    //             String(new Date(input?.value || '')),
-    //         );
-    //     } else if (key == 'rule' || key == 'status') {
-    //         const select = e.querySelector('select');
-    //         e.setAttribute('default-value', select?.value || '');
-    //     } else e.setAttribute('default-value', e.textContent || ''); // Cập nhật giá trị mặc định
-    // });
-
     return true;
 }
 

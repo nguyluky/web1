@@ -103,9 +103,9 @@ export async function displayProducts(data = Product_Data) {
         productlist.appendChild(productItem);
     }
 
-    setTimeout(() => {
-        addToCart();
-    }, 100);
+    // setTimeout(() => {
+    //     addToCart();
+    // }, 100);
 }
 
 /**
@@ -195,24 +195,24 @@ export function selectionCatergory(category_id) {
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;
 }
-export function addToCart() {
-    console.log('add cart call');
-    const productCard = document.querySelectorAll('.product-card');
-    productCard.forEach((product) => {
-        product.addEventListener('click', async (event) => {
-            if (
-                /**@type {HTMLElement}*/ (event.target).classList.contains(
-                    'add-to-cart',
-                )
-            ) {
-                await fakeDatabase.addCart({
-                    user_id: localStorage.getItem('user_id'),
-                    sach: product.getAttribute('data-id'),
-                    quantity: 1,
-                    timecreate: new Date(),
-                });
-                console.log('add cart');
-            }
-        });
-    });
-}
+// export function addToCart() {
+//     console.log('add cart call');
+//     const productCard = document.querySelectorAll('.product-card');
+//     productCard.forEach((product) => {
+//         product.addEventListener('click', async (event) => {
+//             if (
+//                 /**@type {HTMLElement}*/ (event.target).classList.contains(
+//                     'add-to-cart',
+//                 )
+//             ) {
+//                 await fakeDatabase.addCart({
+//                     user_id: localStorage.getItem('user_id'),
+//                     sach: product.getAttribute('data-id'),
+//                     quantity: 1,
+//                     timecreate: new Date(),
+//                 });
+//                 console.log('add cart');
+//             }
+//         });
+//     });
+// }

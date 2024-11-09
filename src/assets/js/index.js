@@ -10,6 +10,7 @@ import { isEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './render/home/index.js';
 import urlConverter from './until/urlConverter.js';
 import { initializationPageNotFound } from './render/pageNotFound/index.js';
+import { updateCartQuantity } from './cart.js';
 
 //#region khai bao bien
 
@@ -375,6 +376,7 @@ function initializeAccountPopup() {
                 localStorage.setItem('user_id', userInfo.id);
                 MODAL?.classList.remove('show-modal');
                 showDropDown();
+                updateCartQuantity();
             },
         });
     }
