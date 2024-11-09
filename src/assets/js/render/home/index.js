@@ -2,7 +2,7 @@ import urlConverter from '../../until/urlConverter.js';
 import {
     createPagination,
     displayProducts,
-    selectionCatergory,
+    selectionConditional,
     setupPaginationListeners,
     updatePagination,
 } from './renderProduct.js';
@@ -244,7 +244,7 @@ export function updateHomePage(page, query) {
     const category = query.get('c') || '';
     const page_num = query.get('p') || '';
 
-    selectionCatergory(category);
+    selectionConditional(category === '' ? null : [category]);
 
     createPagination();
     setupPaginationListeners();
