@@ -6,7 +6,7 @@ import {
     setupPaginationListeners,
     updatePagination,
 } from './renderProduct.js';
-import addToCartOnButton from '../../cart.js';
+import initAddToCartOnButton from '../../cart.js';
 
 /**
  *
@@ -252,13 +252,8 @@ export async function updateHomePage(page, query) {
     if (page_num) {
         updatePagination(+page_num);
     }
-    // await displayProducts();
-    // addToCartOnButton();
-    displayProducts().then(() => {
-        addToCartOnButton();
-    });
-    // displayProducts();
-    // addToCartOnButton();
 
-    // displayProducts();
+    displayProducts().then(() => {
+        initAddToCartOnButton();
+    });
 }
