@@ -42,14 +42,20 @@ function defaultFilter() {
     );
 }
 
+/**
+ *
+ * @param {string[]} categories_
+ */
 function updateFilter(categories_) {
     const categories =
         /** @type {NodeListOf<HTMLInputElement>} */
         (document.querySelectorAll('.filter-checkbox input'));
 
     categories.forEach((e) => {
-        if (categories_.includes(e.dataset.category)) {
+        if (categories_.includes(e.dataset.category || '')) {
             e.checked = true;
+        } else {
+            e.checked = false;
         }
     });
 }
