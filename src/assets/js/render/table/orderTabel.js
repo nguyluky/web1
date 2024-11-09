@@ -16,7 +16,7 @@ const cols = {
     last_update: 'Last Update',
     is_pay: 'Pay',
     total: 'Total',
-    address: 'Địa trỉ',
+    address: 'Địa chỉ',
 };
 
 const STATE_OPTION = [
