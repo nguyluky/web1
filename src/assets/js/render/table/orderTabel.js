@@ -1,9 +1,6 @@
-/**
- * @typedef {import("../../until/type").Order} Order
- */
+/** @typedef {import('../../until/type').Order} Order */
 
 import fakeDatabase from '../../db/fakeDBv1.js';
-import { isDate } from '../../until/validator.js';
 import { renderTable, searchList, tableClearErrorKey } from './baseRender.js';
 import {
     createOptionTabelCell,
@@ -22,14 +19,23 @@ const cols = {
     address: 'Địa trỉ',
 };
 
-/**
- * @type {{[key: string] : Order}}
- */
+const STATE_OPTION = [
+    { title: 'Đợi xác nhận', value: 'doixacnhan' },
+    { title: 'Đã xác nhận', value: 'daxacnhan' },
+    { title: 'Đang giao hàng', value: 'danggiaohang' },
+    { title: 'Giao hàng thành công', value: 'giaohangthanhcong' },
+    { title: 'Hủy', value: 'Huy' },
+];
+
+const IS_PAY_OPTION = [
+    { title: 'Thành công', value: 'true' },
+    { title: 'Chưa thanh toán', value: 'false' },
+];
+
+/** @type {{ [key: string]: Order }} */
 let cacheEdit = {};
 
-/**
- * @type {import('./baseRender.js').OnChange<Order>}
- */
+/** @type {import('./baseRender.js').OnChange<Order>} */
 function handleOnChange(data, key, newValue) {
     console.log('onchange called');
 
@@ -82,7 +88,6 @@ function renderRow(row, value, onchange) {
 }
 
 /**
- *
  * @param {HTMLTableRowElement} row
  * @param {Order} value
  * @param {import('./baseRender.js').OnChange<Order>} [onchange]
@@ -91,19 +96,12 @@ function appendStateCell(row, value, onchange) {
     const state = createOptionTabelCell(
         'state',
         value.state,
-        [
-            { title: 'Đợi xác nhận', value: 'doixacnhan' },
-            { title: 'Đã xác nhận', value: 'daxacnhan' },
-            { title: 'Đang giao hàng', value: 'danggiaohang' },
-            { title: 'Giao hàng thành công', value: 'giaohangthanhcong' },
-            { title: 'Hủy', value: 'Huy' },
-        ],
+        STATE_OPTION,
         (nv) => onchange && onchange(value, 'state', nv),
     );
     row.appendChild(state);
 }
 /**
- *
  * @param {HTMLTableRowElement} row
  * @param {Order} value
  * @param {import('./baseRender.js').OnChange<Order>} [onchange]
@@ -126,11 +124,10 @@ function appendUserIdCell(row, value, onchange) {
 }
 
 /**
- *
  * @param {HTMLTableRowElement} row
  * @param {string} key
  * @param {Order} value
- * @param {import('./baseRender.js').OnChange<Order>} [onchange ]
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange]
  */
 function appendDateCell(row, key, value, onchange) {
     const date = createDateTimeTableCell(
@@ -144,7 +141,6 @@ function appendDateCell(row, key, value, onchange) {
 }
 
 /**
- *
  * @param {HTMLTableRowElement} row
  * @param {Order} value
  * @param {import('./baseRender.js').OnChange<Order>} [onchange]
@@ -153,17 +149,13 @@ function appendIsPayCell(row, value, onchange) {
     const option = createOptionTabelCell(
         'is_pay',
         value.is_pay ? 'true' : 'false',
-        [
-            { title: 'Thành công', value: 'true' },
-            { title: 'Chưa thanh toán', value: 'false' },
-        ],
+        IS_PAY_OPTION,
         (nv) => onchange && onchange(value, 'is_pay', nv),
     );
     row.appendChild(option);
 }
 
 /**
- *
  * @param {HTMLTableRowElement} row
  * @param {Order} value
  * @param {import('./baseRender.js').OnChange<Order>} [onchange]
@@ -179,11 +171,10 @@ function appendTotalCell(row, value, onchange) {
 }
 
 /**
- *
  * @param {HTMLTableRowElement} row
  * @param {string} key
  * @param {Order} value
- * @param {import('./baseRender.js').OnChange<Order>} [onchange ]
+ * @param {import('./baseRender.js').OnChange<Order>} [onchange]
  */
 function appendDefaultCell(row, key, value, onchange) {
     const col = createTextTableCell(key, value[key], (nv) => {
@@ -194,7 +185,6 @@ function appendDefaultCell(row, key, value, onchange) {
 }
 
 /**
- *
  * @param {HTMLTableRowElement} row
  * @param {Order} value
  */
@@ -202,12 +192,11 @@ function toggleDropdown(row, value) {
     if (row.querySelector('td[contenteditable = "true"]')) return;
 
     /**
-     *
      * @param {MouseEvent} event
      * @returns {void}
      */
     function handleClickOutside(event) {
-        const target = /**@type {HTMLElement}*/ (event.target);
+        const target = /** @type {HTMLElement} */ (event.target);
         if (target.isSameNode(row)) return;
         if (row.nextElementSibling?.contains(target)) return;
         if (row.contains(target)) return;
@@ -286,9 +275,7 @@ function toggleDropdown(row, value) {
     }
 }
 
-/**
- * @param {Order[]} list
- */
+/** @param {Order[]} list */
 function renderOrder(list) {
     const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
@@ -317,7 +304,12 @@ function searchOrder(list) {
 }
 
 /**
- * @param {{title: string, body: () => HTMLElement, onOk: (element: HTMLElement | null) => any, onCancel: () => any}[]} options
+ * @param {{
+ *     title: string;
+ *     body: () => HTMLElement;
+ *     onOk: (element: HTMLElement | null) => any;
+ *     onCancel: (element: HTMLElement | null) => any;
+ * }[]} options
  * @returns {HTMLDivElement}
  */
 function createDropdownFilter(options) {
@@ -376,14 +368,20 @@ function createDropdownFilter(options) {
         const option = options.find((e) => e.title == select.value);
 
         if (!option) return;
-        option.onOk(/** @type {HTMLElement | null}*/ (body.firstChild));
+        option.onOk(/** @type {HTMLElement | null} */ (body.firstChild));
+
+        // TODO: note
+        document.body.click();
     });
 
     cancelBtn.addEventListener('click', () => {
         const option = options.find((e) => e.title == select.value);
 
         if (!option) return;
-        option.onCancel();
+        option.onCancel(/** @type {HTMLElement | null} */ (body.firstChild));
+
+        // TODO: note
+        document.body.click();
     });
 
     select.addEventListener('change', function optionChangeHandler() {
@@ -394,6 +392,9 @@ function createDropdownFilter(options) {
 
         body.innerHTML = '';
         body.appendChild(option.body());
+
+        // TODO: note
+        document.body.click();
     });
 
     const option = options.find((e) => e.title == select.value);
@@ -406,9 +407,7 @@ function createDropdownFilter(options) {
     return popupFilterHeader;
 }
 
-/**
- * @returns {HTMLTableRowElement}
- */
+/** @returns {HTMLTableRowElement} */
 function customeHeader() {
     const tableHeader = document.createElement('tr');
 
@@ -435,7 +434,15 @@ function customeHeader() {
         icon.setAttribute('class', 'fa-solid fa-caret-down');
         iconWrapper.appendChild(icon);
 
-        const dropDownPopup = createDropdownFilter([
+        /**
+         * @type {{
+         *     title: string;
+         *     body: () => HTMLElement;
+         *     onOk: (element: HTMLElement | null) => any;
+         *     onCancel: (element: HTMLElement | null) => any;
+         * }[]}
+         */
+        const optionsFilter = [
             {
                 title: 'text',
                 body: () => {
@@ -449,7 +456,7 @@ function customeHeader() {
 
                     console.log(element);
 
-                    const i1 = /**@type {HTMLInputElement} */ (element).value;
+                    const i1 = /** @type {HTMLInputElement} */ (element).value;
 
                     advancedSearch(undefined, (v) => {
                         const td = v.querySelector('td[key=' + key + ']');
@@ -460,11 +467,17 @@ function customeHeader() {
                         return text.includes(i1.toLowerCase());
                     });
                 },
-                onCancel: () => {
-                    console.log('cancel');
+                onCancel: (body) => {
+                    if (body) {
+                        /** @type {HTMLInputElement} */ (body).value = '';
+                    }
+                    advancedSearch();
                 },
             },
-            {
+        ];
+
+        if (key == 'date' || key == 'last_update') {
+            optionsFilter.unshift({
                 title: 'date-range',
                 body: () => {
                     const div = document.createElement('div');
@@ -473,29 +486,321 @@ function customeHeader() {
 
                     const input1 = document.createElement('input');
                     input1.type = 'date';
+                    input1.className = 'date-range-input';
                     div.appendChild(input1);
 
                     const input2 = document.createElement('input');
                     input2.type = 'date';
+                    input2.className = 'date-range-input';
                     div.appendChild(input2);
 
                     return div;
                 },
                 onOk: (element) => {
+                    if (!element) return;
+                    const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
+                        element.querySelectorAll('.date-range-input')
+                    );
+
+                    const d1 = new Date(inputs[0].value).getTime();
+                    const d2 = new Date(inputs[1].value).getTime();
+
+                    advancedSearch(undefined, (v) => {
+                        const td = v.querySelector('td[key=' + key + ']');
+
+                        const date = new Date(
+                            td?.querySelector('input')?.value || '1/1/1',
+                        ).getTime();
+
+                        if (d1 < date && d2 > date) {
+                            return true;
+                        }
+
+                        return false;
+                    });
+                },
+                onCancel: (body) => {
+                    body?.querySelectorAll('input').forEach((e) => {
+                        e.value = '';
+                    });
+                    advancedSearch();
+                },
+            });
+        }
+
+        if (key == 'state') {
+            optionsFilter.unshift({
+                title: 'option',
+                body: () => {
+                    const div = document.createElement('div');
+                    div.style.display = 'flex';
+                    div.style.flexDirection = 'column';
+
+                    STATE_OPTION.forEach((e) => {
+                        const div_ = document.createElement('label');
+                        div_.className = 'option-filter';
+
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.style.width = '20px';
+                        input.value = e.value;
+                        div_.appendChild(input);
+
+                        const span = document.createElement('span');
+                        span.textContent = e.title;
+                        div_.appendChild(span);
+
+                        div.appendChild(div_);
+                    });
+
+                    return div;
+                },
+                onOk: (element) => {
                     console.log(element);
+                    if (!element) return;
+
+                    const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
+                        element.querySelectorAll('input:checked')
+                    );
+
+                    const values = Array.from(inputs).map((e) => e.value);
+
+                    advancedSearch(undefined, (v) => {
+                        if (values.length == 0) return true;
+
+                        const td = v.querySelector('td[key=' + key + ']');
+
+                        if (!td) return false;
+
+                        const select = td.querySelector('select');
+
+                        if (!select) return false;
+
+                        return values.includes(select.value);
+                    });
                 },
-                onCancel: () => {
-                    console.log('cancel');
+                onCancel: (body) => {
+                    body?.querySelectorAll('input').forEach((e) => {
+                        e.checked = false;
+                    });
+                    advancedSearch();
                 },
-            },
-        ]);
+            });
+        }
+
+        if (key == 'is_pay') {
+            optionsFilter.unshift({
+                title: 'option',
+                body: () => {
+                    const div = document.createElement('div');
+                    div.style.display = 'flex';
+                    div.style.flexDirection = 'column';
+
+                    IS_PAY_OPTION.forEach((e) => {
+                        const div_ = document.createElement('label');
+                        div_.className = 'option-filter';
+
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.style.width = '20px';
+                        input.value = e.value;
+                        div_.appendChild(input);
+
+                        const span = document.createElement('span');
+                        span.textContent = e.title;
+                        div_.appendChild(span);
+                        span.style.color = 'black';
+                        span.style.fontSize = '14px';
+                        span.style.fontWeight = 'normal';
+                        span.style.wordBreak = 'break-word';
+
+                        div.appendChild(div_);
+                    });
+
+                    return div;
+                },
+                onOk: (element) => {
+                    if (!element) return;
+
+                    const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
+                        element.querySelectorAll('input:checked')
+                    );
+
+                    const values = Array.from(inputs).map((e) => e.value);
+
+                    advancedSearch(undefined, (v) => {
+                        if (values.length == 0) return true;
+
+                        const td = v.querySelector('td[key=' + key + ']');
+
+                        if (!td) return false;
+
+                        const select = td.querySelector('select');
+
+                        if (!select) return false;
+
+                        return values.includes(select.value);
+                    });
+                },
+                onCancel: (body) => {
+                    body?.querySelectorAll('input').forEach((e) => {
+                        e.checked = false;
+                    });
+                    advancedSearch();
+                },
+            });
+        }
+
+        if (key == 'address') {
+            optionsFilter.unshift({
+                title: 'address',
+                body: () => {
+                    const div = document.createElement('div');
+                    div.style.display = 'flex';
+                    div.style.flexDirection = 'column';
+
+                    const span = document.createElement('span');
+                    span.textContent = 'Tỉnh/Thành Phố';
+                    div.appendChild(span);
+
+                    const selectTinhTP = document.createElement('select');
+                    selectTinhTP.name = 'tinhTP';
+                    div.appendChild(selectTinhTP);
+
+                    const span1 = document.createElement('span');
+                    span1.textContent = 'Quận/Huyện';
+                    div.appendChild(span1);
+
+                    const selectQuanHuyen = document.createElement('select');
+                    selectQuanHuyen.name = 'quanHuyen';
+                    div.appendChild(selectQuanHuyen);
+                    selectQuanHuyen.disabled = true;
+
+                    const span2 = document.createElement('span');
+                    span2.textContent = 'Phường/Xã';
+                    div.appendChild(span2);
+
+                    const selectPhuongXa = document.createElement('select');
+                    selectPhuongXa.name = 'phuongXa';
+                    div.appendChild(selectPhuongXa);
+                    selectPhuongXa.disabled = true;
+
+                    /** @returns {Promise<void>} */
+                    async function updateQuanHuyen() {
+                        selectQuanHuyen.disabled = false;
+                        selectQuanHuyen.innerHTML = '';
+
+                        const allOpstion = document.createElement('option');
+                        allOpstion.value = 'all';
+                        allOpstion.textContent = 'all';
+                        selectQuanHuyen.appendChild(allOpstion);
+
+                        if (selectTinhTP.value != 'all') {
+                            const quanHuyen =
+                                await fakeDatabase.getQuanHuyenByTinhThanhPho(
+                                    selectTinhTP.value,
+                                );
+
+                            quanHuyen.forEach((e) => {
+                                const option = document.createElement('option');
+                                option.value = e;
+                                option.textContent = e;
+                                selectQuanHuyen.appendChild(option);
+                            });
+                        }
+                    }
+
+                    /** @returns {Promise<void>} */
+                    async function updatePhuongXa() {
+                        selectPhuongXa.disabled = false;
+                        selectPhuongXa.innerHTML = '';
+
+                        const allOpstion = document.createElement('option');
+                        allOpstion.value = 'all';
+                        allOpstion.textContent = 'all';
+                        selectPhuongXa.appendChild(allOpstion);
+
+                        if (selectQuanHuyen.value != 'all') {
+                            const phuongXa =
+                                await fakeDatabase.getPhuongXaByQuanHuyenAndThinThanhPho(
+                                    selectTinhTP.value,
+                                    selectQuanHuyen.value,
+                                );
+
+                            phuongXa.forEach((e) => {
+                                const option = document.createElement('option');
+                                option.value = e;
+                                option.textContent = e;
+                                selectPhuongXa.appendChild(option);
+                            });
+                        }
+                    }
+
+                    selectTinhTP.addEventListener('change', updateQuanHuyen);
+
+                    selectQuanHuyen.addEventListener('change', updatePhuongXa);
+
+                    fakeDatabase
+                        .getAllTinhThanPho()
+                        .then(async (tinhThanhPho) => {
+                            const option = document.createElement('option');
+                            option.value = 'all';
+                            option.textContent = 'all';
+                            selectTinhTP.appendChild(option);
+
+                            tinhThanhPho.forEach((e) => {
+                                const option = document.createElement('option');
+                                option.value = e;
+                                option.textContent = e;
+                                selectTinhTP.appendChild(option);
+                            });
+                            await updateQuanHuyen();
+                            await updatePhuongXa();
+                        });
+
+                    return div;
+                },
+                onOk: (element) => {
+                    console.log(element);
+                    if (!element) return;
+                    const selects =
+                        /** @type {NodeListOf<HTMLSelectElement>} */ (
+                            element.querySelectorAll('select')
+                        );
+
+                    const tinhTP =
+                        selects[0].value == 'all' ? '.*' : selects[0].value;
+                    const quanHuyen =
+                        selects[1].value == 'all' ? '.*' : selects[1].value;
+                    const phuongXa =
+                        selects[2].value == 'all' ? '.*' : selects[2].value;
+
+                    const regex = new RegExp(
+                        `${tinhTP} - ${quanHuyen} - ${phuongXa}`,
+                        'i',
+                    );
+
+                    advancedSearch(undefined, (v) => {
+                        const td = v.querySelector('td[key=' + key + ']');
+                        const text = td?.textContent || '';
+                        return regex.test(text);
+                    });
+
+                    console.log(tinhTP, quanHuyen, phuongXa);
+                },
+                onCancel: (body) => {
+                    console.log(body);
+                    advancedSearch();
+                },
+            });
+        }
+
+        const dropDownPopup = createDropdownFilter(optionsFilter);
         headerPopupWrapper.appendChild(dropDownPopup);
 
-        /**
-         * @param {MouseEvent} event
-         */
+        /** @param {MouseEvent} event */
         function handleClickOutside(event) {
-            const target = /**@type {HTMLElement}*/ (event.target);
+            const target = /** @type {HTMLElement} */ (event.target);
             if (target.isSameNode(iconWrapper) || iconWrapper.contains(target))
                 return;
 
@@ -528,17 +833,22 @@ function customeHeader() {
 
 /**
  * TODO: làm sao đây
+ *
  * @param {(a: HTMLTableRowElement, b: HTMLTableRowElement) => number} [compareFn]
- * @param {(value: HTMLTableRowElement, index: number, array: HTMLTableRowElement[]) => any} [predicate]
+ * @param {(
+ *     value: HTMLTableRowElement,
+ *     index: number,
+ *     array: HTMLTableRowElement[],
+ * ) => any} [predicate]
  */
 function advancedSearch(compareFn, predicate) {
     console.log('test');
 
-    const table = /**@type {HTMLTableElement}*/ (
+    const table = /** @type {HTMLTableElement} */ (
         document.getElementById('content_table')
     );
 
-    let rows = /**@type {HTMLTableRowElement[]} */ (Array.from(table.rows));
+    let rows = /** @type {HTMLTableRowElement[]} */ (Array.from(table.rows));
 
     rows = rows.filter((e) => !!e.getAttribute('id-row'));
 
@@ -557,16 +867,14 @@ function advancedSearch(compareFn, predicate) {
         const id = e.getAttribute('id-row');
 
         if (!ids.includes(id)) {
-            /**@type {HTMLElement}*/ (e).style.display = 'none';
+            /** @type {HTMLElement} */ (e).style.display = 'none';
         } else {
-            /**@type {HTMLElement}*/ (e).style.display = '';
+            /** @type {HTMLElement} */ (e).style.display = '';
         }
     });
 }
 
-/**
- * @returns {Promise<void>}
- */
+/** @returns {Promise<void>} */
 async function doSave() {
     const updateValues = Object.values(cacheEdit);
 
@@ -579,9 +887,7 @@ async function doSave() {
     tableClearErrorKey();
 }
 
-/**
- * @returns {void}
- */
+/** @returns {void} */
 function removeAllChange() {
     cacheEdit = {};
     document.querySelectorAll('tr').forEach((e) => {
@@ -594,9 +900,7 @@ function removeAllChange() {
     });
 }
 
-/**
- * @type {import("./baseRender.js").IntefaceRender<Order>}
- */
+/** @type {import('./baseRender.js').IntefaceRender<Order>} */
 const order = {
     cols,
     renderTable: renderOrder,

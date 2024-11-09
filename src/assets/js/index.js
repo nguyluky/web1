@@ -37,6 +37,7 @@ const ADDRESS_FORM = document.getElementById('Address-form');
  * selector. Hàm này đầu tiên hiển thị một spinner (thể hiện trạng thái
  * loading), sau đó thay thế nó bằng nội dung sau khi promiseData được giải
  * quyết.
+ *
  * @param {Promise<string[]>} promiseData
  * @param {string} selector
  * @param {(s: string) => void} [onchange]
@@ -94,9 +95,11 @@ function __contentRender__(promiseData, selector, onchange) {
 /** Khỏi tại hàm sử lý popup đại trỉ */
 function initializeLocationPopup() {
     /**
-     * Gọi một lần ngay khi popup được load có thể nói là ngay sau khi trang load
+     * Gọi một lần ngay khi popup được load có thể nói là ngay sau khi trang
+     * load
      *
      * Render danh sách tỉnh/thành phố
+     *
      * @param {(name: string) => void} [onchange] Khi người dùng chọn
      */
     function renderTinhThanhPho(onchange) {
@@ -109,12 +112,13 @@ function initializeLocationPopup() {
 
     /**
      * Render danh sách phường/xã khi người dùng chọn quận/huyện
+     *
      * @param {string} tintp
      * @param {(qh: string) => void} [onchange]
      */
     function renderQuanHuyen(tintp, onchange) {
         __contentRender__(
-            fakeDatabase.getAllTinhThanhByThanPho(tintp),
+            fakeDatabase.getQuanHuyenByTinhThanhPho(tintp),
             '.Address__dropdown-content.qh',
             onchange,
         );
@@ -122,13 +126,14 @@ function initializeLocationPopup() {
 
     /**
      * Render danh sách phường/xã khi người dùng chọn quận/huyện
+     *
      * @param {string} tintp
      * @param {string} qh
      * @param {(px: string) => void} onchange
      */
     function renderPhuongXa(tintp, qh, onchange) {
         __contentRender__(
-            fakeDatabase.getAllpxByThinhTpAndQh(tintp, qh),
+            fakeDatabase.getPhuongXaByQuanHuyenAndThinThanhPho(tintp, qh),
             '.Address__dropdown-content.xp',
             onchange,
         );
@@ -147,18 +152,12 @@ function initializeLocationPopup() {
         if (popup) POPUP_WRAPPER?.classList.remove('show');
     }
 
-    /**
-     *
-     */
     function showCustomLocation() {
         if (ADDRESS_DISPLAY.checked) ADDRESS_FORM?.classList.add('show');
         else ADDRESS_FORM?.classList.remove('show');
     }
 
-    /**
-     *
-     * @param {Element} element
-     */
+    /** @param {Element} element */
     function initializeDropdown(element) {
         const input = element.querySelector('input');
         const contentDropdowContent = element.querySelector(
@@ -181,9 +180,6 @@ function initializeLocationPopup() {
             document.removeEventListener('click', handleClickOutsideDropdown);
         }
 
-        /**
-         *
-         */
         function handleSearchInput() {
             const value = input?.value || '';
 
@@ -456,7 +452,9 @@ function initializeAccountPopup() {
         if (modal)
             modal.onclick = (e) => {
                 if (!e.target) return;
-                if (!modalDemo?.contains(/**@type {HTMLElement}*/ (e.target))) {
+                if (
+                    !modalDemo?.contains(/** @type {HTMLElement} */ (e.target))
+                ) {
                     btnExit?.click();
                 }
             };
@@ -478,7 +476,7 @@ function initializeAccountPopup() {
 
     // NOTE: nếu mà nhấn mà nó nó chứa thằng popup thì là nhấn bên ngoài
     POPUP_WRAPPER.onclick = (event) => {
-        const popup = /**@type {HTMLElement}*/ (event.target).querySelector(
+        const popup = /** @type {HTMLElement} */ (event.target).querySelector(
             '.popup',
         );
         if (popup) POPUP_WRAPPER.classList.remove('show');
@@ -503,38 +501,37 @@ function initializeAccountPopup() {
 }
 
 /**
- *
  * Khởi tạo xử lý URL cho ứng dụng.
  *
  * Hàm này thiết lập các trình nghe sự kiện và trình xử lý cần thiết để quản lý
- * các thay đổi URL trong ứng dụng. Nó đảm bảo rằng ứng dụng có thể phản hồi
- * các đường dẫn và tham số URL khác nhau, cho phép điều hướng và quản lý trạng thái
+ * các thay đổi URL trong ứng dụng. Nó đảm bảo rằng ứng dụng có thể phản hồi các
+ * đường dẫn và tham số URL khác nhau, cho phép điều hướng và quản lý trạng thái
  * dựa trên URL.
  *
  * Cách hoạt động:
- * 1. Thêm một trình nghe sự kiện cho sự kiện 'hashchange' để xử lý các thay đổi hash của URL.
- * 2. Phân tích cú pháp hash của URL hiện tại để xác định trạng thái ban đầu của ứng dụng.
- * 3. Thiết lập các trình nghe sự kiện hoặc trình xử lý bổ sung cần thiết cho các thay đổi URL.
+ *
+ * 1. Thêm một trình nghe sự kiện cho sự kiện 'hashchange' để xử lý các thay đổi
+ *    hash của URL.
+ * 2. Phân tích cú pháp hash của URL hiện tại để xác định trạng thái ban đầu của
+ *    ứng dụng.
+ * 3. Thiết lập các trình nghe sự kiện hoặc trình xử lý bổ sung cần thiết cho các
+ *    thay đổi URL.
  *
  * Cách sử dụng:
  *
- * initializeUrlHandling();
+ * InitializeUrlHandling();
  *
  * Ví dụ:
  *
- * // Gọi hàm này một lần khi khởi động ứng dụng
- * initializeUrlHandling();
+ * // Gọi hàm này một lần khi khởi động ứng dụng initializeUrlHandling();
  *
  * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
  * https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
- *
  */
 function initializeUrlHandling() {
     let { page: curr_page, query } = urlConverter(location.hash);
 
-    /**
-     * @param {string} page
-     */
+    /** @param {string} page */
     function pageInit(page) {
         switch (page) {
             case '#/home':
@@ -566,9 +563,7 @@ function initializeUrlHandling() {
         }
     }
 
-    /**
-     * khi hash thai đổi
-     */
+    /** Khi hash thai đổi */
     function handleHashChange() {
         const { page, query } = urlConverter(location.hash);
         console.log(page, query);
@@ -585,19 +580,18 @@ function initializeUrlHandling() {
 
     if (!curr_page) location.hash = '#/home';
     document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
-        if (/**@type {KeyboardEvent} */ (e).key === 'Enter') {
+        if (/** @type {KeyboardEvent} */ (e).key === 'Enter') {
             console.log('enter');
             location.hash =
-                '#/search?t=' + /**@type {HTMLInputElement} */ (e.target).value;
+                '#/search?t=' +
+                /** @type {HTMLInputElement} */ (e.target).value;
         }
     });
     pageInit(curr_page);
     pageUpdate(curr_page, query);
 }
 
-/**
- * main
- */
+/** Main */
 function main() {
     initializeLocationPopup();
     initializeAccountPopup();

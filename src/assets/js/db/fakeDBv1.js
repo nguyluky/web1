@@ -46,9 +46,7 @@ const dataLoaded = JSON.parse(
     [ObjectStoreName.ORDER]: false,
 };
 
-/**
- * @type {{[Key: ObjectStoreName] : string}}
- */
+/** @type {{ [Key: ObjectStoreName]: string }} */
 const fileData = {
     [ObjectStoreName.USER]: '/assets/data/user.json',
     [ObjectStoreName.IMG]: '/assets/data/img.json',
@@ -59,7 +57,6 @@ const fileData = {
 };
 
 /**
- *
  * @template T
  * @param {IDBRequest<T>} request
  * @returns {Promise<T>}
@@ -77,20 +74,18 @@ function updateDataLoaded(storeName) {
     window.localStorage.setItem('dataLoaded', JSON.stringify(dataLoaded));
 }
 
-/**
- * import {
- */
+/** Import { */
 
 /** @param {IDBDatabase} db_ */
 function createObjectStore(db_) {
     /**
      * @type {{
-     *  name: ObjectStoreName,
-     *  keypath: string,
-     *  keys: {
-     *     keypath: string[] | string,
-     *     option?: IDBIndexParameters
-     *   }[]
+     *     name: ObjectStoreName;
+     *     keypath: string;
+     *     keys: {
+     *         keypath: string[] | string;
+     *         option?: IDBIndexParameters;
+     *     }[];
      * }[]}
      */
     const objectStoreItems = [
@@ -394,9 +389,7 @@ class FakeDatabase {
 
         const user_id = uuidv();
 
-        /**
-         * @type {UserInfo}
-         */
+        /** @type {UserInfo} */
         const data = {
             id: user_id,
             name: display_name,
@@ -591,7 +584,6 @@ class FakeDatabase {
     }
 
     /**
-     *
      * @param {Omit<Cart, 'id'>} cart_data
      * @returns {Promise<IDBValidKey>}
      */
@@ -692,7 +684,7 @@ class FakeDatabase {
      * @param {string} name
      * @returns {Promise<string[]>}
      */
-    async getAllTinhThanhByThanPho(name) {
+    async getQuanHuyenByTinhThanhPho(name) {
         return (
             addressData
                 .find((e) => e.Name == name)
@@ -705,7 +697,7 @@ class FakeDatabase {
      * @param {string} quan
      * @returns {Promise<string[]>}
      */
-    async getAllpxByThinhTpAndQh(pt, quan) {
+    async getPhuongXaByQuanHuyenAndThinThanhPho(pt, quan) {
         const pts = addressData.find((e) => e.Name == pt);
         if (!pts) return [];
         const qh = pts.Districts.find((e) => e.Name == quan);
