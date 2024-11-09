@@ -390,6 +390,7 @@ class FakeDatabase {
      */
     async createUserInfo(password, display_name, std, email) {
         if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.USER);
 
         const user_id = uuidv();
 
@@ -417,6 +418,8 @@ class FakeDatabase {
 
     async getUserInfoByPhoneOrEmail(phone_email) {
         if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.USER);
+
         const data = db
             .transaction(ObjectStoreName.USER, 'readonly')
             .objectStore(ObjectStoreName.USER);
@@ -557,6 +560,22 @@ class FakeDatabase {
         const transaction = db.transaction(ObjectStoreName.CART, 'readonly');
         const cartStore = transaction.objectStore(ObjectStoreName.CART);
         return requestToPromise(cartStore.get(cart_id));
+    }
+
+    async createCartItem(cart_id, user_id, bookId, quantity) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.CART);
+        const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
+        const cartStore = transaction.objectStore(ObjectStoreName.CART);
+        const cart_data = {
+            id: cart_id,
+            user_id,
+            sach: bookId,
+            quantity,
+            timecreate: new Date(),
+        };
+        await requestToPromise(cartStore.put(cart_data));
+        return cart_data;
     }
 
     /**

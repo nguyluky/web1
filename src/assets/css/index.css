@@ -9,6 +9,25 @@
     );
 }
 
+.button_1 {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    color: white;
+    background-color: rgb(255, 66, 78);
+    border-radius: 8px;
+    width: 13px;
+    height: 13px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 15px;
+    top: 3px;
+    right: 2px;
+    font-weight: 600;
+}
+
 .main_wapper {
     display: flex;
     gap: 20px;

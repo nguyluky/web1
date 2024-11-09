@@ -14,6 +14,7 @@ import {
     initializationSearchPage,
     updateSearchPage,
 } from './render/search/search.js';
+import { updateCartQuantity } from './cart.js';
 
 //#region khai bao bien
 
@@ -379,6 +380,7 @@ function initializeAccountPopup() {
                 localStorage.setItem('user_id', userInfo.id);
                 MODAL?.classList.remove('show-modal');
                 showDropDown();
+                updateCartQuantity();
             },
         });
     }

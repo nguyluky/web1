@@ -128,6 +128,9 @@ export function showImgPreviewPopup(
     );
 }
 
+/**
+ * @param {{title?: string, message?: string, type?: 'success' | 'info' | 'warning' | 'error', duration?: number}} param0
+ */
 export function toast({
     title = '',
     message = '',

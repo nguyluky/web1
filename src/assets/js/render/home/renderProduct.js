@@ -74,7 +74,7 @@ export async function createProduct(product) {
                     ${String(product.base_price)} <sup>₫</sup></span>
             </div>
             <img
-                class="add-to-cart"
+                class="add-to-cart" data-book-id = ${product.id}
                 src="./assets/img/add-to-cart.png"
                 alt=""
             />
@@ -82,8 +82,11 @@ export async function createProduct(product) {
         `;
     return Product_Item;
 }
-// render products
-export function displayProducts() {
+/**
+ * render products
+ * @returns {Promise<void>}
+ */
+export async function displayProducts() {
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
@@ -100,16 +103,10 @@ export function displayProducts() {
     const end = start + Products_Per_page;
     const Products_To_Display = data.slice(start, end);
 
-    Products_To_Display.forEach(async (product) => {
-        // console.log(product);
+    for (const product of Products_To_Display) {
         const productItem = await createProduct(product);
         productlist.appendChild(productItem);
-    });
-
-    // TODO: để merge nhánh cart vào
-    // setTimeout(() => {
-    //     addToCart();
-    // }, 100);
+    }
 }
 
 /**

@@ -1,6 +1,7 @@
 @import url('./share.css');
 @import url('./dot-spinner.css');
 @import url('./user_login.css');
+/* @import url('./cart.css'); */
 
 :root {
     --width-header: calc(100vw - 200px);
