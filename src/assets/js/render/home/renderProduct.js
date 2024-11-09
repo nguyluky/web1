@@ -209,7 +209,9 @@ export function selectionConditional(categories, searchText = '') {
             );
         });
     } else {
-        data = Product_Data;
+        data = Product_Data.filter((e) => {
+            return e.title.toLowerCase().includes(searchText.toLowerCase());
+        });
     }
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;

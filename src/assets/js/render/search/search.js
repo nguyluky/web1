@@ -21,12 +21,12 @@ function searchFilter() {
     )
         .filter((e) => /**@type {HTMLInputElement} */ (e).checked)
         .map((e) => /**@type {HTMLElement} */ (e).dataset.category);
-    // console.log(categories);
-
-    // TODO: hehe
-    // NOTE: update URL
     const { page, query } = urlConverter(location.hash);
-    query.set('cs', categories.join(','));
+    if (categories.length > 0) {
+        query.set('cs', categories.join(','));
+    } else {
+        query.delete('cs');
+    }
     location.hash = page + '?' + query.toString();
 }
 
@@ -66,6 +66,7 @@ function updateFilter(categories_) {
 function setupFilterListeners() {
     const { page, query } = urlConverter(location.hash);
     query.delete('p');
+    // khi nhập text tìm kiếm
     inputSearch?.addEventListener('keydown', (e) => {
         if (/**@type {KeyboardEvent} */ (e).key === 'Enter') {
             // NOTE: command tạm
@@ -74,6 +75,7 @@ function setupFilterListeners() {
             location.hash = page + '?' + query.toString();
         }
     });
+    // khi lọc theo category
     const filterPopup = document.querySelector('#search-filter');
     filterPopup
         ?.querySelector('.popup-btn')

@@ -245,7 +245,7 @@ export async function updateHomePage(page, query) {
     const category = query.get('c') || '';
     const page_num = query.get('p') || '';
 
-    selectionConditional(category === '' ? null : [category]);
+    selectionConditional(category === '' ? undefined : [category]);
 
     createPagination();
     setupPaginationListeners();
