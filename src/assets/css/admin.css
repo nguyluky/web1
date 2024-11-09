@@ -40,6 +40,9 @@ body {
         'M0 0 H60 V60 H0 Z M30 0 A30 30 0 1 0 30 60 A30 30 0 1 0 30 0 Z'
     );
 }
+#link-to-home {
+    text-decoration: none;
+}
 .brand-name {
     height: 30px;
     display: flex;

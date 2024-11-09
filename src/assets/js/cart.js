@@ -101,12 +101,11 @@ async function createCartItem(cart) {
             <div class="cart-item-price">
                 <span class="discount-price"
                     >${Math.round(
-                        book.base_price * (1 - book.discount),
-                    )} <sup>₫</sup></span
+            book.base_price * (1 - book.discount),
+        )} <sup>₫</sup></span
                 >
-                <span class="original-price ${
-                    book.discount === 0 ? 'hide' : ''
-                }"
+                <span class="original-price ${book.discount === 0 ? 'hide' : ''
+            }"
                     > ${book.base_price}
                     <sup>₫</sup>
                 </span>
@@ -176,9 +175,8 @@ function changeQuantity() {
             cart.quantity = +(quantityInput.value || '1');
 
             await fakeDatabase.updateCart(cart);
-            cartAmount.innerHTML = `${
-                cart.quantity * (book.base_price * (1 - book.discount))
-            } <sup>₫</sup>`;
+            cartAmount.innerHTML = `${cart.quantity * (book.base_price * (1 - book.discount))
+                } <sup>₫</sup>`;
             renderPaymentSummary();
         });
     });
@@ -269,17 +267,18 @@ function showEmptyCart() {
     const mainComponent = document.querySelector('.main-component');
     if (mainComponent && mainContent) {
         mainContent.classList.add('hide');
-        if (!mainComponent.classList.contains('empty-cart')) {
-            const emptyCart = document.createElement('div');
-            emptyCart.classList.add('empty-cart');
-            emptyCart.innerHTML = `
+        while (mainComponent.querySelector('.empty-cart')) {
+            mainComponent.querySelector('.empty-cart')?.remove();
+        }
+        const emptyCart = document.createElement('div');
+        emptyCart.classList.add('empty-cart');
+        emptyCart.innerHTML = `
             <div class="empty-cart">
                 <img src="./assets/img/emptyCart.png" alt="" />
                 <span>Giỏ hàng trống</span>
             </div>
         `;
-            mainComponent.appendChild(emptyCart);
-        }
+        mainComponent.appendChild(emptyCart);
     }
 }
 
@@ -303,6 +302,7 @@ function initDeleteCartItem() {
     const deleteButtons = /**@type {NodeListOf<HTMLElement>} */ (
         document.querySelectorAll('.cart-item-delete-btn')
     );
+
     console.log(deleteButtons);
     deleteButtons.forEach((deleteButton) => {
         deleteButton.addEventListener('click', () => {
@@ -331,6 +331,18 @@ function initDeleteCartItem() {
                     alert('error');
                 });
         });
+    });
+    const deleteAllButton = document.getElementById('delete-all-cart');
+    const checkAll = /**@type {HTMLInputElement} */ (document.getElementById('check-all'));
+    deleteAllButton?.addEventListener('click', () => {
+        if (checkAll.checked !== true) {
+            toast({ title: 'Vui lòng chọn sản phẩm cần xóa', type: 'error' });
+        }
+        else {
+            deleteButtons.forEach(deleteButton => {
+                deleteButton.click();
+            });
+        }
     });
 }
 
@@ -397,15 +409,14 @@ function isCheckBox() {
     });
 }
 
-/**
- *
- */
+// cập nhật tổng giá khi thay đổi số lượng sản phẩm
 async function renderPaymentSummary() {
     const otherCheckBoxes = /**@type {NodeListOf<HTMLInputElement>} */ (
         document.querySelectorAll('.check-book')
     );
     let totalAmount = 0,
-        originalAmount = 0;
+        originalAmount = 0,
+        numberOfItems = 0;
 
     for (const checkBox of otherCheckBoxes) {
         if (checkBox.checked) {
@@ -416,6 +427,7 @@ async function renderPaymentSummary() {
             if (!cart) continue;
             const book = await fakeDatabase.getSachById(cart.sach);
             if (!book) continue;
+            numberOfItems++;
             totalAmount +=
                 cart.quantity * (book.base_price * (1 - book.discount));
             originalAmount += cart.quantity * book.base_price;
@@ -428,14 +440,16 @@ async function renderPaymentSummary() {
 
     const discountAmount = document.querySelector('#discount-amount');
     if (discountAmount)
-        discountAmount.innerHTML = `${
-            originalAmount - totalAmount
-        } <sup>₫</sup>`;
+        discountAmount.innerHTML = `${originalAmount - totalAmount
+            } <sup>₫</sup>`;
 
     const totalAmountElement = document.querySelector('#total-amount');
 
     if (totalAmountElement)
         totalAmountElement.innerHTML = `${totalAmount} <sup>₫</sup>`;
+
+    const num = document.querySelector('.prices__button__center button');
+    if (num) num.innerHTML = `Mua Hàng (${numberOfItems})`;
 }
 
 mainCart();

@@ -394,7 +394,7 @@ function createDropdownFilter(options) {
         body.appendChild(option.body());
 
         // TODO: note
-        document.body.click();
+        // document.body.click();
     });
 
     const option = options.find((e) => e.title == select.value);
