@@ -201,9 +201,11 @@ function toggleDropdown(row, value) {
         if (row.nextElementSibling?.contains(target)) return;
         if (row.contains(target)) return;
 
-        row.removeAttribute('dropdown');
-        row.nextElementSibling?.remove();
-        document.removeEventListener('click', handleClickOutside);
+        if (row.nextElementSibling) {
+            row.removeAttribute('dropdown');
+            row.nextElementSibling.remove();
+            document.removeEventListener('click', handleClickOutside);
+        }
     }
 
     if (!row.getAttribute('dropdown')) {
@@ -269,9 +271,11 @@ function toggleDropdown(row, value) {
         }
         document.addEventListener('click', handleClickOutside);
     } else {
-        row.removeAttribute('dropdown');
-        row.nextElementSibling?.remove();
-        document.removeEventListener('click', handleClickOutside);
+        if (row.nextElementSibling) {
+            row.removeAttribute('dropdown');
+            row.nextElementSibling.remove();
+            document.removeEventListener('click', handleClickOutside);
+        }
     }
 }
 
@@ -418,410 +422,7 @@ function customeHeader() {
     Object.keys(cols).forEach((key) => {
         const col = document.createElement('th');
 
-        const headerPopupWrapper = document.createElement('DIV');
-        headerPopupWrapper.setAttribute('class', 'header-popup-wrapper');
-
-        const title = document.createElement('SPAN');
-        headerPopupWrapper.appendChild(title);
-        title.className = 'custom-header-title';
-        title.textContent = key;
-
-        const iconWrapper = document.createElement('SPAN');
-        iconWrapper.className = 'custom-header-icon-wrapper';
-        headerPopupWrapper.appendChild(iconWrapper);
-
-        const icon = document.createElement('I');
-        icon.setAttribute('class', 'fa-solid fa-caret-down');
-        iconWrapper.appendChild(icon);
-
-        /**
-         * @type {{
-         *     title: string;
-         *     body: () => HTMLElement;
-         *     onOk: (element: HTMLElement | null) => any;
-         *     onCancel: (element: HTMLElement | null) => any;
-         * }[]}
-         */
-        const optionsFilter = [
-            {
-                title: 'text',
-                body: () => {
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.placeholder = 'search';
-                    return input;
-                },
-                onOk: (element) => {
-                    if (!HTMLElement) return;
-
-                    console.log(element);
-
-                    const i1 = /** @type {HTMLInputElement} */ (element).value;
-
-                    advancedSearch(undefined, (v) => {
-                        const td = v.querySelector('td[key=' + key + ']');
-                        const text = (td?.textContent || '').toLowerCase();
-
-                        console.log(text.includes(i1.toLowerCase()));
-
-                        return text.includes(i1.toLowerCase());
-                    });
-                },
-                onCancel: (body) => {
-                    if (body) {
-                        /** @type {HTMLInputElement} */ (body).value = '';
-                    }
-                    advancedSearch();
-                },
-            },
-        ];
-
-        if (key == 'date' || key == 'last_update') {
-            optionsFilter.unshift({
-                title: 'date-range',
-                body: () => {
-                    const div = document.createElement('div');
-                    div.style.display = 'flex';
-                    div.style.flexDirection = 'column';
-
-                    const input1 = document.createElement('input');
-                    input1.type = 'date';
-                    input1.className = 'date-range-input';
-                    div.appendChild(input1);
-
-                    const input2 = document.createElement('input');
-                    input2.type = 'date';
-                    input2.className = 'date-range-input';
-                    div.appendChild(input2);
-
-                    return div;
-                },
-                onOk: (element) => {
-                    if (!element) return;
-                    const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
-                        element.querySelectorAll('.date-range-input')
-                    );
-
-                    const d1 = new Date(inputs[0].value).getTime();
-                    const d2 = new Date(inputs[1].value).getTime();
-
-                    advancedSearch(undefined, (v) => {
-                        const td = v.querySelector('td[key=' + key + ']');
-
-                        const date = new Date(
-                            td?.querySelector('input')?.value || '1/1/1',
-                        ).getTime();
-
-                        if (d1 < date && d2 > date) {
-                            return true;
-                        }
-
-                        return false;
-                    });
-                },
-                onCancel: (body) => {
-                    body?.querySelectorAll('input').forEach((e) => {
-                        e.value = '';
-                    });
-                    advancedSearch();
-                },
-            });
-        }
-
-        if (key == 'state') {
-            optionsFilter.unshift({
-                title: 'option',
-                body: () => {
-                    const div = document.createElement('div');
-                    div.style.display = 'flex';
-                    div.style.flexDirection = 'column';
-
-                    STATE_OPTION.forEach((e) => {
-                        const div_ = document.createElement('label');
-                        div_.className = 'option-filter';
-
-                        const input = document.createElement('input');
-                        input.type = 'checkbox';
-                        input.style.width = '20px';
-                        input.value = e.value;
-                        div_.appendChild(input);
-
-                        const span = document.createElement('span');
-                        span.textContent = e.title;
-                        div_.appendChild(span);
-
-                        div.appendChild(div_);
-                    });
-
-                    return div;
-                },
-                onOk: (element) => {
-                    console.log(element);
-                    if (!element) return;
-
-                    const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
-                        element.querySelectorAll('input:checked')
-                    );
-
-                    const values = Array.from(inputs).map((e) => e.value);
-
-                    advancedSearch(undefined, (v) => {
-                        if (values.length == 0) return true;
-
-                        const td = v.querySelector('td[key=' + key + ']');
-
-                        if (!td) return false;
-
-                        const select = td.querySelector('select');
-
-                        if (!select) return false;
-
-                        return values.includes(select.value);
-                    });
-                },
-                onCancel: (body) => {
-                    body?.querySelectorAll('input').forEach((e) => {
-                        e.checked = false;
-                    });
-                    advancedSearch();
-                },
-            });
-        }
-
-        if (key == 'is_pay') {
-            optionsFilter.unshift({
-                title: 'option',
-                body: () => {
-                    const div = document.createElement('div');
-                    div.style.display = 'flex';
-                    div.style.flexDirection = 'column';
-
-                    IS_PAY_OPTION.forEach((e) => {
-                        const div_ = document.createElement('label');
-                        div_.className = 'option-filter';
-
-                        const input = document.createElement('input');
-                        input.type = 'checkbox';
-                        input.style.width = '20px';
-                        input.value = e.value;
-                        div_.appendChild(input);
-
-                        const span = document.createElement('span');
-                        span.textContent = e.title;
-                        div_.appendChild(span);
-                        span.style.color = 'black';
-                        span.style.fontSize = '14px';
-                        span.style.fontWeight = 'normal';
-                        span.style.wordBreak = 'break-word';
-
-                        div.appendChild(div_);
-                    });
-
-                    return div;
-                },
-                onOk: (element) => {
-                    if (!element) return;
-
-                    const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
-                        element.querySelectorAll('input:checked')
-                    );
-
-                    const values = Array.from(inputs).map((e) => e.value);
-
-                    advancedSearch(undefined, (v) => {
-                        if (values.length == 0) return true;
-
-                        const td = v.querySelector('td[key=' + key + ']');
-
-                        if (!td) return false;
-
-                        const select = td.querySelector('select');
-
-                        if (!select) return false;
-
-                        return values.includes(select.value);
-                    });
-                },
-                onCancel: (body) => {
-                    body?.querySelectorAll('input').forEach((e) => {
-                        e.checked = false;
-                    });
-                    advancedSearch();
-                },
-            });
-        }
-
-        if (key == 'address') {
-            optionsFilter.unshift({
-                title: 'address',
-                body: () => {
-                    const div = document.createElement('div');
-                    div.style.display = 'flex';
-                    div.style.flexDirection = 'column';
-
-                    const span = document.createElement('span');
-                    span.textContent = 'Tỉnh/Thành Phố';
-                    div.appendChild(span);
-
-                    const selectTinhTP = document.createElement('select');
-                    selectTinhTP.name = 'tinhTP';
-                    div.appendChild(selectTinhTP);
-
-                    const span1 = document.createElement('span');
-                    span1.textContent = 'Quận/Huyện';
-                    div.appendChild(span1);
-
-                    const selectQuanHuyen = document.createElement('select');
-                    selectQuanHuyen.name = 'quanHuyen';
-                    div.appendChild(selectQuanHuyen);
-                    selectQuanHuyen.disabled = true;
-
-                    const span2 = document.createElement('span');
-                    span2.textContent = 'Phường/Xã';
-                    div.appendChild(span2);
-
-                    const selectPhuongXa = document.createElement('select');
-                    selectPhuongXa.name = 'phuongXa';
-                    div.appendChild(selectPhuongXa);
-                    selectPhuongXa.disabled = true;
-
-                    /** @returns {Promise<void>} */
-                    async function updateQuanHuyen() {
-                        selectQuanHuyen.disabled = false;
-                        selectQuanHuyen.innerHTML = '';
-
-                        const allOpstion = document.createElement('option');
-                        allOpstion.value = 'all';
-                        allOpstion.textContent = 'all';
-                        selectQuanHuyen.appendChild(allOpstion);
-
-                        if (selectTinhTP.value != 'all') {
-                            const quanHuyen =
-                                await fakeDatabase.getQuanHuyenByTinhThanhPho(
-                                    selectTinhTP.value,
-                                );
-
-                            quanHuyen.forEach((e) => {
-                                const option = document.createElement('option');
-                                option.value = e;
-                                option.textContent = e;
-                                selectQuanHuyen.appendChild(option);
-                            });
-                        }
-                    }
-
-                    /** @returns {Promise<void>} */
-                    async function updatePhuongXa() {
-                        selectPhuongXa.disabled = false;
-                        selectPhuongXa.innerHTML = '';
-
-                        const allOpstion = document.createElement('option');
-                        allOpstion.value = 'all';
-                        allOpstion.textContent = 'all';
-                        selectPhuongXa.appendChild(allOpstion);
-
-                        if (selectQuanHuyen.value != 'all') {
-                            const phuongXa =
-                                await fakeDatabase.getPhuongXaByQuanHuyenAndThinThanhPho(
-                                    selectTinhTP.value,
-                                    selectQuanHuyen.value,
-                                );
-
-                            phuongXa.forEach((e) => {
-                                const option = document.createElement('option');
-                                option.value = e;
-                                option.textContent = e;
-                                selectPhuongXa.appendChild(option);
-                            });
-                        }
-                    }
-
-                    selectTinhTP.addEventListener('change', updateQuanHuyen);
-
-                    selectQuanHuyen.addEventListener('change', updatePhuongXa);
-
-                    fakeDatabase
-                        .getAllTinhThanPho()
-                        .then(async (tinhThanhPho) => {
-                            const option = document.createElement('option');
-                            option.value = 'all';
-                            option.textContent = 'all';
-                            selectTinhTP.appendChild(option);
-
-                            tinhThanhPho.forEach((e) => {
-                                const option = document.createElement('option');
-                                option.value = e;
-                                option.textContent = e;
-                                selectTinhTP.appendChild(option);
-                            });
-                            await updateQuanHuyen();
-                            await updatePhuongXa();
-                        });
-
-                    return div;
-                },
-                onOk: (element) => {
-                    console.log(element);
-                    if (!element) return;
-                    const selects =
-                        /** @type {NodeListOf<HTMLSelectElement>} */ (
-                            element.querySelectorAll('select')
-                        );
-
-                    const tinhTP =
-                        selects[0].value == 'all' ? '.*' : selects[0].value;
-                    const quanHuyen =
-                        selects[1].value == 'all' ? '.*' : selects[1].value;
-                    const phuongXa =
-                        selects[2].value == 'all' ? '.*' : selects[2].value;
-
-                    const regex = new RegExp(
-                        `${tinhTP} - ${quanHuyen} - ${phuongXa}`,
-                        'i',
-                    );
-
-                    advancedSearch(undefined, (v) => {
-                        const td = v.querySelector('td[key=' + key + ']');
-                        const text = td?.textContent || '';
-                        return regex.test(text);
-                    });
-
-                    console.log(tinhTP, quanHuyen, phuongXa);
-                },
-                onCancel: (body) => {
-                    console.log(body);
-                    advancedSearch();
-                },
-            });
-        }
-
-        const dropDownPopup = createDropdownFilter(optionsFilter);
-        headerPopupWrapper.appendChild(dropDownPopup);
-
-        /** @param {MouseEvent} event */
-        function handleClickOutside(event) {
-            const target = /** @type {HTMLElement} */ (event.target);
-            if (target.isSameNode(iconWrapper) || iconWrapper.contains(target))
-                return;
-
-            if (
-                !dropDownPopup.isSameNode(target) &&
-                !dropDownPopup.contains(target)
-            ) {
-                dropDownPopup.style.display = 'none';
-                document.removeEventListener('click', handleClickOutside);
-            }
-        }
-
-        iconWrapper.addEventListener('click', () => {
-            if (dropDownPopup.style.display == 'none') {
-                dropDownPopup.style.display = 'flex';
-                document.addEventListener('click', handleClickOutside);
-            } else {
-                dropDownPopup.style.display = 'none';
-                document.removeEventListener('click', handleClickOutside);
-            }
-        });
+        const headerPopupWrapper = createHeaderPopupWrapper(key);
 
         col.appendChild(headerPopupWrapper);
 
@@ -829,6 +430,432 @@ function customeHeader() {
     });
 
     return tableHeader;
+}
+
+/**
+ * @param {string} key
+ * @returns {HTMLDivElement}
+ */
+function createHeaderPopupWrapper(key) {
+    const headerPopupWrapper = document.createElement('div');
+    headerPopupWrapper.setAttribute('class', 'header-popup-wrapper');
+
+    const title = document.createElement('SPAN');
+    headerPopupWrapper.appendChild(title);
+    title.className = 'custom-header-title';
+    title.textContent = key;
+
+    const iconWrapper = document.createElement('SPAN');
+    iconWrapper.className = 'custom-header-icon-wrapper';
+    headerPopupWrapper.appendChild(iconWrapper);
+
+    const icon = document.createElement('I');
+    icon.setAttribute('class', 'fa-solid fa-caret-down');
+    iconWrapper.appendChild(icon);
+
+    const dropDownPopup = createFilterPopup(key);
+    headerPopupWrapper.appendChild(dropDownPopup);
+
+    /** @param {MouseEvent} event */
+    function handleClickOutside(event) {
+        const target = /** @type {HTMLElement} */ (event.target);
+        if (target.isSameNode(iconWrapper) || iconWrapper.contains(target))
+            return;
+
+        if (
+            !dropDownPopup.isSameNode(target) &&
+            !dropDownPopup.contains(target)
+        ) {
+            dropDownPopup.style.display = 'none';
+            document.removeEventListener('click', handleClickOutside);
+        }
+    }
+
+    iconWrapper.addEventListener('click', () => {
+        if (dropDownPopup.style.display == 'none') {
+            dropDownPopup.style.display = 'flex';
+            document.addEventListener('click', handleClickOutside);
+        } else {
+            dropDownPopup.style.display = 'none';
+            document.removeEventListener('click', handleClickOutside);
+        }
+    });
+
+    return headerPopupWrapper;
+}
+
+/** @param {string} key */
+function createFilterOptions(key) {
+    /**
+     * @type {{
+     *     title: string;
+     *     body: () => HTMLElement;
+     *     onOk: (element: HTMLElement | null) => any;
+     *     onCancel: (element: HTMLElement | null) => any;
+     * }[]}
+     */
+    const optionsFilter = [
+        {
+            title: 'text',
+            body: () => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'search';
+                return input;
+            },
+            onOk: (element) => {
+                if (!HTMLElement) return;
+
+                console.log(element);
+
+                const i1 = /** @type {HTMLInputElement} */ (element).value;
+
+                advancedSearch(undefined, (v) => {
+                    const td = v.querySelector('td[key=' + key + ']');
+                    const text = (td?.textContent || '').toLowerCase();
+
+                    console.log(text.includes(i1.toLowerCase()));
+
+                    return text.includes(i1.toLowerCase());
+                });
+            },
+            onCancel: (body) => {
+                if (body) {
+                    /** @type {HTMLInputElement} */ (body).value = '';
+                }
+                advancedSearch();
+            },
+        },
+    ];
+
+    if (key == 'date' || key == 'last_update') {
+        optionsFilter.unshift({
+            title: 'date-range',
+            body: () => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.flexDirection = 'column';
+
+                const input1 = document.createElement('input');
+                input1.type = 'date';
+                input1.className = 'date-range-input';
+                div.appendChild(input1);
+
+                const input2 = document.createElement('input');
+                input2.type = 'date';
+                input2.className = 'date-range-input';
+                div.appendChild(input2);
+
+                return div;
+            },
+            onOk: (element) => {
+                if (!element) return;
+                const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
+                    element.querySelectorAll('.date-range-input')
+                );
+
+                const d1 = new Date(inputs[0].value).getTime();
+                const d2 = new Date(inputs[1].value).getTime();
+
+                advancedSearch(undefined, (v) => {
+                    const td = v.querySelector('td[key=' + key + ']');
+
+                    const date = new Date(
+                        td?.querySelector('input')?.value || '1/1/1',
+                    ).getTime();
+
+                    if (d1 < date && d2 > date) {
+                        return true;
+                    }
+
+                    return false;
+                });
+            },
+            onCancel: (body) => {
+                body?.querySelectorAll('input').forEach((e) => {
+                    e.value = '';
+                });
+                advancedSearch();
+            },
+        });
+    }
+
+    if (key == 'state') {
+        optionsFilter.unshift({
+            title: 'option',
+            body: () => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.flexDirection = 'column';
+
+                STATE_OPTION.forEach((e) => {
+                    const div_ = document.createElement('label');
+                    div_.className = 'option-filter';
+
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.style.width = '20px';
+                    input.value = e.value;
+                    div_.appendChild(input);
+
+                    const span = document.createElement('span');
+                    span.textContent = e.title;
+                    div_.appendChild(span);
+
+                    div.appendChild(div_);
+                });
+
+                return div;
+            },
+            onOk: (element) => {
+                console.log(element);
+                if (!element) return;
+
+                const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
+                    element.querySelectorAll('input:checked')
+                );
+
+                const values = Array.from(inputs).map((e) => e.value);
+
+                advancedSearch(undefined, (v) => {
+                    if (values.length == 0) return true;
+
+                    const td = v.querySelector('td[key=' + key + ']');
+
+                    if (!td) return false;
+
+                    const select = td.querySelector('select');
+
+                    if (!select) return false;
+
+                    return values.includes(select.value);
+                });
+            },
+            onCancel: (body) => {
+                body?.querySelectorAll('input').forEach((e) => {
+                    e.checked = false;
+                });
+                advancedSearch();
+            },
+        });
+    }
+
+    if (key == 'is_pay') {
+        optionsFilter.unshift({
+            title: 'option',
+            body: () => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.flexDirection = 'column';
+
+                IS_PAY_OPTION.forEach((e) => {
+                    const div_ = document.createElement('label');
+                    div_.className = 'option-filter';
+
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.style.width = '20px';
+                    input.value = e.value;
+                    div_.appendChild(input);
+
+                    const span = document.createElement('span');
+                    span.textContent = e.title;
+                    div_.appendChild(span);
+                    span.style.color = 'black';
+                    span.style.fontSize = '14px';
+                    span.style.fontWeight = 'normal';
+                    span.style.wordBreak = 'break-word';
+
+                    div.appendChild(div_);
+                });
+
+                return div;
+            },
+            onOk: (element) => {
+                if (!element) return;
+
+                const inputs = /** @type {NodeListOf<HTMLInputElement>} */ (
+                    element.querySelectorAll('input:checked')
+                );
+
+                const values = Array.from(inputs).map((e) => e.value);
+
+                advancedSearch(undefined, (v) => {
+                    if (values.length == 0) return true;
+
+                    const td = v.querySelector('td[key=' + key + ']');
+
+                    if (!td) return false;
+
+                    const select = td.querySelector('select');
+
+                    if (!select) return false;
+
+                    return values.includes(select.value);
+                });
+            },
+            onCancel: (body) => {
+                body?.querySelectorAll('input').forEach((e) => {
+                    e.checked = false;
+                });
+                advancedSearch();
+            },
+        });
+    }
+
+    if (key == 'address') {
+        optionsFilter.unshift({
+            title: 'address',
+            body: () => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.flexDirection = 'column';
+
+                const span = document.createElement('span');
+                span.textContent = 'Tỉnh/Thành Phố';
+                div.appendChild(span);
+
+                const selectTinhTP = document.createElement('select');
+                selectTinhTP.name = 'tinhTP';
+                div.appendChild(selectTinhTP);
+
+                const span1 = document.createElement('span');
+                span1.textContent = 'Quận/Huyện';
+                div.appendChild(span1);
+
+                const selectQuanHuyen = document.createElement('select');
+                selectQuanHuyen.name = 'quanHuyen';
+                div.appendChild(selectQuanHuyen);
+                selectQuanHuyen.disabled = true;
+
+                const span2 = document.createElement('span');
+                span2.textContent = 'Phường/Xã';
+                div.appendChild(span2);
+
+                const selectPhuongXa = document.createElement('select');
+                selectPhuongXa.name = 'phuongXa';
+                div.appendChild(selectPhuongXa);
+                selectPhuongXa.disabled = true;
+
+                /** @returns {Promise<void>} */
+                async function updateQuanHuyen() {
+                    selectQuanHuyen.disabled = false;
+                    selectQuanHuyen.innerHTML = '';
+
+                    const allOpstion = document.createElement('option');
+                    allOpstion.value = 'all';
+                    allOpstion.textContent = 'all';
+                    selectQuanHuyen.appendChild(allOpstion);
+
+                    if (selectTinhTP.value != 'all') {
+                        const quanHuyen =
+                            await fakeDatabase.getQuanHuyenByTinhThanhPho(
+                                selectTinhTP.value,
+                            );
+
+                        quanHuyen.forEach((e) => {
+                            const option = document.createElement('option');
+                            option.value = e;
+                            option.textContent = e;
+                            selectQuanHuyen.appendChild(option);
+                        });
+                    }
+                }
+
+                /** @returns {Promise<void>} */
+                async function updatePhuongXa() {
+                    selectPhuongXa.disabled = false;
+                    selectPhuongXa.innerHTML = '';
+
+                    const allOpstion = document.createElement('option');
+                    allOpstion.value = 'all';
+                    allOpstion.textContent = 'all';
+                    selectPhuongXa.appendChild(allOpstion);
+
+                    if (selectQuanHuyen.value != 'all') {
+                        const phuongXa =
+                            await fakeDatabase.getPhuongXaByQuanHuyenAndThinThanhPho(
+                                selectTinhTP.value,
+                                selectQuanHuyen.value,
+                            );
+
+                        phuongXa.forEach((e) => {
+                            const option = document.createElement('option');
+                            option.value = e;
+                            option.textContent = e;
+                            selectPhuongXa.appendChild(option);
+                        });
+                    }
+                }
+
+                selectTinhTP.addEventListener('change', updateQuanHuyen);
+
+                selectQuanHuyen.addEventListener('change', updatePhuongXa);
+
+                fakeDatabase.getAllTinhThanPho().then(async (tinhThanhPho) => {
+                    const option = document.createElement('option');
+                    option.value = 'all';
+                    option.textContent = 'all';
+                    selectTinhTP.appendChild(option);
+
+                    tinhThanhPho.forEach((e) => {
+                        const option = document.createElement('option');
+                        option.value = e;
+                        option.textContent = e;
+                        selectTinhTP.appendChild(option);
+                    });
+                    await updateQuanHuyen();
+                    await updatePhuongXa();
+                });
+
+                return div;
+            },
+            onOk: (element) => {
+                console.log(element);
+                if (!element) return;
+                const selects = /** @type {NodeListOf<HTMLSelectElement>} */ (
+                    element.querySelectorAll('select')
+                );
+
+                const tinhTP =
+                    selects[0].value == 'all' ? '.*' : selects[0].value;
+                const quanHuyen =
+                    selects[1].value == 'all' ? '.*' : selects[1].value;
+                const phuongXa =
+                    selects[2].value == 'all' ? '.*' : selects[2].value;
+
+                const regex = new RegExp(
+                    `${tinhTP} - ${quanHuyen} - ${phuongXa}`,
+                    'i',
+                );
+
+                advancedSearch(undefined, (v) => {
+                    const td = v.querySelector('td[key=' + key + ']');
+                    const text = td?.textContent || '';
+                    return regex.test(text);
+                });
+
+                console.log(tinhTP, quanHuyen, phuongXa);
+            },
+            onCancel: (body) => {
+                console.log(body);
+                advancedSearch();
+            },
+        });
+    }
+
+    return optionsFilter;
+}
+
+/**
+ * @param {string} key
+ * @returns {HTMLDivElement}
+ */
+function createFilterPopup(key) {
+    const optionsFilter = createFilterOptions(key);
+
+    const dropDownPopup = createDropdownFilter(optionsFilter);
+    return dropDownPopup;
 }
 
 /**

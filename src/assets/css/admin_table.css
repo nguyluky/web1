@@ -164,7 +164,6 @@ tr td[error]:hover::before {
     position: absolute;
     background-color: #efefef;
     box-shadow: 0 0 5px #3232325e;
-    min-width: 150px;
     right: 0;
     top: 100%;
     border-radius: 5px;
@@ -221,7 +220,8 @@ tr td[error]:hover::before {
 }
 
 @media screen and (max-width: 820px) {
-    .popup-filter-header {
-        width: 100px;
+    .custom-header-icon-wrapper {
+        height: 18px;
+        width: 18px;
     }
 }
