@@ -13,7 +13,7 @@ import { initializationPageNotFound } from './render/pageNotFound/index.js';
 import {
     initializationSearchPage,
     updateSearchPage,
-} from './render/home/search.js';
+} from './render/search/search.js';
 
 //#region khai bao bien
 
@@ -557,7 +557,7 @@ function initializeUrlHandling() {
                 updateHomePage(curr_page, query);
                 break;
             case '#/search':
-                updateSearchPage();
+                updateSearchPage(curr_page, query);
                 break;
             default:
                 break;

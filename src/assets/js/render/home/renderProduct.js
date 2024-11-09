@@ -197,8 +197,13 @@ export function setupPaginationListeners() {
     });
 }
 
+/**
+ *
+ * @param {string[]} [categories ]
+ * @param {string} [searchText='']
+ */
 export function selectionConditional(categories, searchText = '') {
-    if (categories || searchText != '') {
+    if (categories && categories.length > 0) {
         data = Product_Data.filter((e) => {
             return (
                 categories.every((category_id) =>
@@ -213,25 +218,26 @@ export function selectionConditional(categories, searchText = '') {
     Current_Page = 1;
 }
 
-/**
- * Thêm sản phẩm vào giỏ hàng
- */
-export function addToCart() {
-    const productCard = document.querySelectorAll('.product-card');
-    productCard.forEach((product) => {
-        product.addEventListener('click', async (event) => {
-            if (
-                /**@type {HTMLElement}*/ (event.target).classList.contains(
-                    'add-to-cart',
-                )
-            ) {
-                await fakeDatabase.addCart({
-                    user_id: localStorage.getItem('user_id') || '',
-                    sach: product.getAttribute('data-id') || '',
-                    quantity: 1,
-                    timecreate: new Date(),
-                });
-            }
-        });
-    });
-}
+// TODO: để merge nhánh cart vào
+// /**
+//  * Thêm sản phẩm vào giỏ hàng
+//  */
+// export function addToCart() {
+//     const productCard = document.querySelectorAll('.product-card');
+//     productCard.forEach((product) => {
+//         product.addEventListener('click', async (event) => {
+//             if (
+//                 /**@type {HTMLElement}*/ (event.target).classList.contains(
+//                     'add-to-cart',
+//                 )
+//             ) {
+//                 await fakeDatabase.addCart({
+//                     user_id: localStorage.getItem('user_id') || '',
+//                     sach: product.getAttribute('data-id') || '',
+//                     quantity: 1,
+//                     timecreate: new Date(),
+//                 });
+//             }
+//         });
+//     });
+// }

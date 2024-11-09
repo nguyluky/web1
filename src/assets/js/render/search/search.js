@@ -5,47 +5,65 @@ import {
     selectionConditional,
     setupPaginationListeners,
     updatePagination,
-} from './renderProduct.js';
+} from '../home/renderProduct.js';
 
-let categories = [];
+// let categories = [];
 const inputSearch = /**@type {HTMLInputElement} */ (
     document.querySelector('.search-bar')
 );
+
+/**
+ * @returns {void}
+ */
 function searchFilter() {
-    categories = Array.from(document.querySelectorAll('.filter-checkbox input'))
+    const categories = Array.from(
+        document.querySelectorAll('.filter-checkbox input'),
+    )
         .filter((e) => /**@type {HTMLInputElement} */ (e).checked)
         .map((e) => /**@type {HTMLElement} */ (e).dataset.category);
-    console.log(categories);
+    // console.log(categories);
+
+    // TODO: hehe
+    // NOTE: update URL
+    const { page, query } = urlConverter(location.hash);
+    query.set('cs', categories.join(','));
+    location.hash = page + '?' + query.toString();
 }
+
+/**
+ * @returns {void}
+ */
 function defaultFilter() {
-    categories = [];
+    const categories = [];
     Array.from(document.querySelectorAll('.filter-checkbox input')).forEach(
         (e) => {
             /**@type {HTMLInputElement} */ (e).checked = false;
         },
     );
 }
-export function updateSearchPage() {
-    const { page, query } = urlConverter(location.hash);
-    const p = query.get('p') || '';
-    const t = query.get('t') || '';
-    const searchFor = document.querySelector('.article-header span span');
-    if (searchFor) searchFor.textContent = t;
-    selectionConditional(categories, t);
-    createPagination();
-    setupPaginationListeners();
-    if (p) {
-        updatePagination(+p);
-    }
-    displayProducts();
+
+function updateFilter(categories_) {
+    const categories =
+        /** @type {NodeListOf<HTMLInputElement>} */
+        (document.querySelectorAll('.filter-checkbox input'));
+
+    categories.forEach((e) => {
+        if (categories_.includes(e.dataset.category)) {
+            e.checked = true;
+        }
+    });
 }
 
+/**
+ * @returns {void}
+ */
 function setupFilterListeners() {
     const { page, query } = urlConverter(location.hash);
     query.delete('p');
     inputSearch?.addEventListener('keydown', (e) => {
         if (/**@type {KeyboardEvent} */ (e).key === 'Enter') {
-            defaultFilter();
+            // NOTE: command tạm
+            // defaultFilter();
             query.set('t', inputSearch.value);
             location.hash = page + '?' + query.toString();
         }
@@ -55,9 +73,15 @@ function setupFilterListeners() {
         ?.querySelector('.popup-btn')
         ?.addEventListener('click', (event) => {
             searchFilter();
-            updateSearchPage();
+
+            // updateSearchPage();
         });
 }
+
+/**
+ *
+ * @returns {void}
+ */
 function initializationMain() {
     const main = document.querySelector('main');
 
@@ -84,6 +108,11 @@ function initializationMain() {
         </article>
     </div>`;
 }
+
+/**
+ *
+ * @returns {void}
+ */
 function initializationArticle() {
     const article = document.querySelector('article');
     if (!article) return;
@@ -96,6 +125,11 @@ function initializationArticle() {
         <div class="pagination"></div>
     `;
 }
+
+/**
+ *
+ * @returns {void}
+ */
 function initializationAside() {
     const aside = document.querySelector('aside');
     if (!aside) return;
@@ -238,9 +272,34 @@ function initializationAside() {
                         <button class="popup-btn">LỌC</button>
                     </div>`;
 }
+
+/**
+ *
+ */
 export async function initializationSearchPage() {
     initializationMain();
     initializationArticle();
     initializationAside();
     setupFilterListeners();
+}
+
+/**
+ * @param {string} page
+ * @param {URLSearchParams} query
+ */
+export function updateSearchPage(page, query) {
+    const p = query.get('p') || '';
+    const t = query.get('t') || '';
+    const cs = query.get('cs')?.split(',') || [];
+    const searchFor = document.querySelector('.article-header span span');
+    if (searchFor) searchFor.textContent = t;
+    console.log(cs);
+    updateFilter(cs);
+    selectionConditional(cs, t);
+    createPagination();
+    setupPaginationListeners();
+    if (p) {
+        updatePagination(+p);
+    }
+    displayProducts();
 }
