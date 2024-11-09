@@ -201,9 +201,11 @@ function toggleDropdown(row, value) {
         if (row.nextElementSibling?.contains(target)) return;
         if (row.contains(target)) return;
 
-        row.removeAttribute('dropdown');
-        row.nextElementSibling?.remove();
-        document.removeEventListener('click', handleClickOutside);
+        if (row.nextElementSibling) {
+            row.removeAttribute('dropdown');
+            row.nextElementSibling.remove();
+            document.removeEventListener('click', handleClickOutside);
+        }
     }
 
     if (!row.getAttribute('dropdown')) {
@@ -269,9 +271,11 @@ function toggleDropdown(row, value) {
         }
         document.addEventListener('click', handleClickOutside);
     } else {
-        row.removeAttribute('dropdown');
-        row.nextElementSibling?.remove();
-        document.removeEventListener('click', handleClickOutside);
+        if (row.nextElementSibling) {
+            row.removeAttribute('dropdown');
+            row.nextElementSibling.remove();
+            document.removeEventListener('click', handleClickOutside);
+        }
     }
 }
 
