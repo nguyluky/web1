@@ -684,7 +684,7 @@ class FakeDatabase {
      * @param {string} name
      * @returns {Promise<string[]>}
      */
-    async getQuanHuyenByTinhThanhPho(name) {
+    async getAllQuanHuyenByTinhThanhPho(name) {
         return (
             addressData
                 .find((e) => e.Name == name)
@@ -697,7 +697,7 @@ class FakeDatabase {
      * @param {string} quan
      * @returns {Promise<string[]>}
      */
-    async getPhuongXaByQuanHuyenAndThinThanhPho(pt, quan) {
+    async getAllPhuongXaByQuanHuyenAndThinThanhPho(pt, quan) {
         const pts = addressData.find((e) => e.Name == pt);
         if (!pts) return [];
         const qh = pts.Districts.find((e) => e.Name == quan);

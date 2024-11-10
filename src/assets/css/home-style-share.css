@@ -339,7 +339,7 @@ footer.footer .footer_wrapper .footer_box {
 
 .Address__dropdown-btn {
     background-color: white;
-    border: solid 1px rgb(135, 135, 135);
+    border: 1px solid #dddde3;
     color: rgb(135, 135, 135);
     border-radius: 4px;
     height: 35px;
@@ -367,7 +367,7 @@ footer.footer .footer_wrapper .footer_box {
     color: black;
 }
 .Address__dropdown-btn:has(input:disabled) {
-    border: solid 1px rgb(135, 135, 135);
+    border: 1px solid #dddde3;
     color: rgb(135, 135, 135);
     background-color: #f2f2f2;
 }

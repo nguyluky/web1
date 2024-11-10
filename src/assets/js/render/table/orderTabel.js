@@ -749,7 +749,7 @@ function createFilterOptions(key) {
 
                     if (selectTinhTP.value != 'all') {
                         const quanHuyen =
-                            await fakeDatabase.getQuanHuyenByTinhThanhPho(
+                            await fakeDatabase.getAllQuanHuyenByTinhThanhPho(
                                 selectTinhTP.value,
                             );
 
@@ -774,7 +774,7 @@ function createFilterOptions(key) {
 
                     if (selectQuanHuyen.value != 'all') {
                         const phuongXa =
-                            await fakeDatabase.getPhuongXaByQuanHuyenAndThinThanhPho(
+                            await fakeDatabase.getAllPhuongXaByQuanHuyenAndThinThanhPho(
                                 selectTinhTP.value,
                                 selectQuanHuyen.value,
                             );
