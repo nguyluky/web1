@@ -8,13 +8,14 @@ import {
 import removeDiacritics from './until/removeDiacritics.js';
 import { isEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './render/home/index.js';
-import urlConverter from './until/urlConverter.js';
+import urlConverter, { urlIsPage } from './until/urlConverter.js';
 import { initializationPageNotFound } from './render/pageNotFound/index.js';
 import {
     initializationSearchPage,
     updateSearchPage,
 } from './render/search/search.js';
 import { updateCartQuantity } from './cart.js';
+import { initializeUserInfoPage } from './render/user-info/index.js';
 
 //#region khai bao bien
 
@@ -32,7 +33,7 @@ const ADDRESS_FORM = document.getElementById('Address-form');
 
 // #endregion
 
-function initAddress() {}
+function initAddress() { }
 
 /** Khỏi tại hàm sử lý popup đại trỉ */
 function initializeLocationPopup() {
@@ -202,7 +203,7 @@ function initializeAccountPopup() {
             modal.onclick = (e) => {
                 if (!e.target) return;
                 if (
-                    !modalDemo?.contains(/** @type {HTMLElement} */ (e.target))
+                    !modalDemo?.contains(/** @type {HTMLElement} */(e.target))
                 ) {
                     btnExit?.click();
                 }
@@ -280,19 +281,44 @@ function initializeAccountPopup() {
 function initializeUrlHandling() {
     let { page: curr_page, query } = urlConverter(location.hash);
 
-    /** @param {string} page */
-    function pageInit(page) {
-        switch (page) {
-            case '#/home':
-                initializationHomePage();
-                break;
-            case '#/search':
-                initializationSearchPage();
-                break;
-            default:
-                initializationPageNotFound();
-                break;
+    const PAGES = [
+        {
+            pagePath: 'home',
+            init: initializationHomePage,
+            update: updateHomePage,
+        },
+        {
+            pagePath: 'search',
+            init: initializationSearchPage,
+            update: updateSearchPage,
+        },
+        {
+            // :?tab có nghĩa là tab có thể có hoặc không
+            pagePath: 'user/:?tab',
+            init: initializeUserInfoPage,
+            update: () => { },
+        },
+        {
+            pagePath: '404',
+            init: initializationPageNotFound,
+            update: () => { },
+        },
+    ]
+
+    /** 
+     * @param {string} page
+     * @param {URLSearchParams} query 
+     */
+    function pageInit(page, query) {
+        for (const { pagePath, init } of PAGES) {
+            const params = urlIsPage(page.replace('#/', ''), pagePath);
+            if (params) {
+                init(params, query);
+                return;
+            }
         }
+
+        initializationPageNotFound({}, query);
     }
 
     /**
@@ -300,16 +326,14 @@ function initializeUrlHandling() {
      * @param {URLSearchParams} query
      */
     function pageUpdate(curr_page, query) {
-        switch (curr_page) {
-            case '#/home':
-                updateHomePage(curr_page, query);
-                break;
-            case '#/search':
-                updateSearchPage(curr_page, query);
-                break;
-            default:
-                break;
+        for (const { pagePath, update } of PAGES) {
+            const params = urlIsPage(curr_page.replace('#/', ''), pagePath);
+            if (params) {
+                update(params, query);
+                return;
+            }
         }
+
     }
 
     /** Khi hash thai đổi */
@@ -318,7 +342,7 @@ function initializeUrlHandling() {
         console.log(page, query);
 
         if (page != curr_page) {
-            pageInit(page);
+            pageInit(page, query);
             curr_page = page;
         }
 
@@ -336,7 +360,9 @@ function initializeUrlHandling() {
                 /** @type {HTMLInputElement} */ (e.target).value;
         }
     });
-    pageInit(curr_page);
+
+
+    pageInit(curr_page, query);
     pageUpdate(curr_page, query);
 }
 

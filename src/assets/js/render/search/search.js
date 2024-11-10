@@ -19,8 +19,8 @@ function searchFilter() {
     const categories = Array.from(
         document.querySelectorAll('.filter-checkbox input'),
     )
-        .filter((e) => /**@type {HTMLInputElement} */ (e).checked)
-        .map((e) => /**@type {HTMLElement} */ (e).dataset.category);
+        .filter((e) => /**@type {HTMLInputElement} */(e).checked)
+        .map((e) => /**@type {HTMLElement} */(e).dataset.category);
     const { page, query } = urlConverter(location.hash);
     if (categories.length > 0) {
         query.set('cs', categories.join(','));
@@ -282,9 +282,10 @@ function initializationAside() {
 }
 
 /**
- *
+ * @param {Object} params
+ * @param {URLSearchParams} query
  */
-export async function initializationSearchPage() {
+export async function initializationSearchPage(params, query) {
     initializationMain();
     initializationArticle();
     initializationAside();

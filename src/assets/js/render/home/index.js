@@ -229,8 +229,10 @@ function initializationArticle() {
 
 /**
  *
+ * @param {object} params
+ * @param {URLSearchParams} query
  */
-export function initializationHomePage() {
+export function initializationHomePage(params, query) {
     initializationMain();
     initializationArticle();
     initializationAside();
@@ -238,10 +240,10 @@ export function initializationHomePage() {
 
 /**
  *
- * @param {string} page
+ * @param {object} params
  * @param {URLSearchParams} query
  */
-export async function updateHomePage(page, query) {
+export async function updateHomePage(params, query) {
     const category = query.get('c') || '';
     const page_num = query.get('p') || '';
 
