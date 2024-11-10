@@ -5,7 +5,6 @@ import {
     showInputPassword,
     showSignIn,
 } from './popupAccount.js';
-import removeDiacritics from './until/removeDiacritics.js';
 import { isEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './render/home/index.js';
 import urlConverter, { urlIsPage } from './until/urlConverter.js';
@@ -33,8 +32,6 @@ const ADDRESS_FORM = document.getElementById('Address-form');
 
 // #endregion
 
-function initAddress() { }
-
 /** Khỏi tại hàm sử lý popup đại trỉ */
 function initializeLocationPopup() {
     /** Hiện popup */
@@ -50,6 +47,7 @@ function initializeLocationPopup() {
         if (popup) POPUP_WRAPPER?.classList.remove('show');
     }
 
+    /** */
     function showCustomLocation() {
         if (ADDRESS_DISPLAY.checked) ADDRESS_FORM?.classList.add('show');
         else ADDRESS_FORM?.classList.remove('show');
@@ -81,6 +79,9 @@ function initializeAccountPopup() {
         return;
 
     // kiểm tra người dùng có nhập sđt hoặc email chưa
+    /**
+     * 
+     */
     function validatePhoneNum() {
         validator({
             form: '.input-auth-form',
@@ -102,19 +103,26 @@ function initializeAccountPopup() {
                             validateCrateNewAccount(data['#input-phone-email']);
                         }
                         backSignIn();
+                        // @ts-ignore
                         closeSignIn(MODAL);
                     })
-                    .catch((e) => {
-                        if (e) {
-                            showCreateAccount(MODAL);
-                            validateCrateNewAccount();
-                        }
-                    });
+                // .catch((e) => {
+                //     // không hiểu lắm
+
+                //     // if (e) {
+                //     //     showCreateAccount(MODAL);
+                //     //     validateCrateNewAccount();
+                //     // }
+                // });
             },
         });
     }
 
     // kiểm tra người dùng có nhập password vào đúng mật khẩu không
+    /**
+     * 
+     * @param {import('./until/type.js').UserInfo} userInfo 
+     */
     function validatePassword(userInfo) {
         validator({
             form: '.input-auth-form',
@@ -131,7 +139,11 @@ function initializeAccountPopup() {
         });
     }
 
-    // kiểm tra người dùng có nhập tên vào mật khẩu
+    /**
+     * kiểm tra người dùng có nhập tên vào mật khẩu
+     * 
+     * @param {string} userPhoneOrEmail 
+     */
     function validateCrateNewAccount(userPhoneOrEmail) {
         validator({
             form: '.input-auth-form',
@@ -168,7 +180,9 @@ function initializeAccountPopup() {
         });
     }
 
-    // thêm dropdown cho nút đăng nhập
+    /**
+     * thêm dropdown cho nút đăng nhập
+     */
     function showDropDown() {
         const dropDown = document.createElement('div');
         dropDown?.classList.add(
@@ -192,24 +206,29 @@ function initializeAccountPopup() {
         BUTTON_ACCOUNT?.appendChild(dropDown);
     }
 
+    /**
+     * 
+     * @param {Element} [modal]
+     */
     function closeSignIn(modal) {
         const btnExit = document.getElementById('btn-exit');
         const modalDemo = document.querySelector('.modal-demo');
         if (btnExit)
             btnExit.onclick = () => {
-                modal.classList.remove('show-modal');
+                modal?.classList.remove('show-modal');
             };
         if (modal)
-            modal.onclick = (e) => {
+            modal.addEventListener('click', (e) => {
                 if (!e.target) return;
                 if (
                     !modalDemo?.contains(/** @type {HTMLElement} */(e.target))
                 ) {
                     btnExit?.click();
                 }
-            };
+            });
     }
 
+    /** */
     function backSignIn() {
         const btnBack = document.getElementById('back-btn');
         if (btnBack && BUTTON_ACCOUNT) {
