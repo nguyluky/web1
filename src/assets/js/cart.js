@@ -265,6 +265,11 @@ export async function pushCartItemIntoCart(bookId, incrQuantity = 1) {
         quantity = cart.quantity + incrQuantity;
     }
     await fakeDatabase.createCartItem(cart_id, user_id, bookId, quantity);
+    toast({
+        title: 'Thành công',
+        message: 'Đã thêm vào giỏ hàng',
+        type: 'success'
+    })
     updateCartQuantity();
 }
 

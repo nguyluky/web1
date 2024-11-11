@@ -1,7 +1,7 @@
 import { pushCartItemIntoCart } from '../../cart.js';
 import fakeDatabase from '../../db/fakeDBv1.js';
 import urlConverter from '../../until/urlConverter.js';
-
+import removeDiacritics from '../../until/removeDiacritics.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = Product_Data;
 let Current_Page = 1;
@@ -99,10 +99,13 @@ export async function createProduct(product) {
     productFooter.appendChild(addToCart);
 
     addToCart.addEventListener('click', () => {
+
         pushCartItemIntoCart(product.id);
     })
 
-    productItem.addEventListener('click', () => {
+    productItem.addEventListener('click', (event) => {
+        const target = /**@type {HTMLInputElement}*/(event.target);
+        if (addToCart.isSameNode(target)) return;
         location.hash = `#/product/${product.id}`;
     });
 
@@ -113,6 +116,8 @@ export async function createProduct(product) {
  * @returns {Promise<void>}
  */
 export async function displayProducts() {
+    const noProduct = /**@type {HTMLElement}*/ (document.querySelector('.no-product'));
+
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
@@ -122,8 +127,10 @@ export async function displayProducts() {
     productlist.innerHTML = '';
     if (data.length == 0) {
         header.style.display = 'none';
+        noProduct.style.display = '';
         return;
     }
+    noProduct.style.display = 'none';
     header.style.display = '';
     const start = (Current_Page - 1) * Products_Per_page;
     const end = start + Products_Per_page;
@@ -140,6 +147,7 @@ export async function displayProducts() {
  * @param {number} page
  */
 export function updatePagination(page) {
+    if (totalPages < 2) return;
     Current_Page = page;
     let firstPage = 1;
     if (totalPages > 5) {
@@ -225,20 +233,27 @@ export function setupPaginationListeners() {
  * @param {string[]} [categories ]
  * @param {string} [searchText='']
  */
-export function selectionConditional(categories, searchText = '') {
+export function selectionConditional(categories, searchText = '', from = NaN, to = NaN) {
     if (categories && categories.length > 0) {
         data = Product_Data.filter((e) => {
             return (
                 categories.every((category_id) =>
                     e.category.includes(category_id),
-                ) && e.title.toLowerCase().includes(searchText.toLowerCase())
+                )
             );
         });
     } else {
-        data = Product_Data.filter((e) => {
-            return e.title.toLowerCase().includes(searchText.toLowerCase());
+        data = Product_Data
+    }
+    if (!isNaN(from) && !isNaN(to)) {
+        data = data.filter((e) => {
+            return (e.base_price >= from && e.base_price <= to);
         });
     }
+    data = data.filter((e) => {
+        return removeDiacritics(e.title).includes(removeDiacritics(searchText));
+    });
+    console.log(from, to, data);
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;
 }

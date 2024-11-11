@@ -1,5 +1,5 @@
 @import url(./home-style-share.css);
-
+@import url(./search_page.css);
 :root {
     --cart-width: 200px;
     --coutnt-row: 4;
@@ -61,14 +61,12 @@ aside.aside {
     padding: 20px;
 }
 .article {
+    position: relative;
     background-color: #fff;
     width: 100%;
     border-radius: 8px;
     padding: 20px 30px;
     padding-bottom: 30px;
-}
-
-.article {
     height: max-content;
     min-height: 800px;
     box-sizing: border-box;
@@ -225,75 +223,11 @@ aside.aside {
     display: flex;
     gap: 10px;
 }
-
-.search-header {
-    margin-top: 10px;
-    margin-bottom: 15px;
-    font-size: 20px;
-    font-weight: 600;
-}
-
-#filter-btn {
-    padding: 5px;
-    background-color: white;
-    border-radius: 4px;
-    border: solid 1px gray;
-    width: 50px;
-    margin-bottom: 20px;
-    cursor: pointer;
-}
-
-#filter-btn:hover {
-    color: rgb(45, 136, 255);
-    background-color: #f4f4f4;
-}
-
-#search-filter {
-    min-width: 235px;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-.filter-header {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 10px 0 20px;
-}
-
-.filter-checkbox {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#filter-popup input[type='checkbox'] {
-    height: 18px;
-    width: 18px;
-    margin-right: 8px;
-    cursor: pointer;
-}
-
-.filter-slider {
-    margin-top: 30px;
-    width: 100%;
-}
-
-.filter-slider__header {
-    font-size: 18px;
-}
-
-.filter-slider > input {
-    width: 100%;
-    cursor: pointer;
-}
-
-.price-slider {
-    margin-top: 15px;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
+.no-product {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .user-info__header {
@@ -557,7 +491,23 @@ aside.aside {
         top: 0;
         height: fit-content;
     }
-
+    .aside:has(#search-filter) {
+        position: relative;
+        top: 0;
+    }
+    #filter-btn {
+        display: block;
+    }
+    .filter-checkbox {
+        flex-direction: row;
+    }
+    .checkbox-column_1,
+    .checkbox-column_2 {
+        width: 100%;
+    }
+    .filter-slider {
+        margin-bottom: 30px;
+    }
     .aside-box.box1.card {
         padding-left: 10px;
     }

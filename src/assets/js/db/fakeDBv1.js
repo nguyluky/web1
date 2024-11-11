@@ -760,6 +760,13 @@ class FakeDatabase {
         const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
         return requestToPromise(orderStore.delete(order_id));
     }
+    async getOrdertByUserId(user_id) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.ORDER);
+        const transaction = db.transaction(ObjectStoreName.ORDER, 'readonly');
+        const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
+        return requestToPromise(orderStore.index('user_id').getAll(user_id));
+    }
 }
 
 const fakeDatabase = new FakeDatabase();
