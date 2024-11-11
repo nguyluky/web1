@@ -9,7 +9,7 @@ export function initializationPageNotFound(params, query) {
     main.innerHTML = `
             <div class="main_wapper">
                 <article class="article page-not-found">
-                    <h1>400</h1>
+                    <h1>404</h1>
                     <strong>Page not fount</strong>
                     <span
                         >Chúng tôi không tìm thấy trang bạn đang cố truy cập,

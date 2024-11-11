@@ -15,8 +15,43 @@ import {
 } from './pages/search/search.js';
 import { updateCartQuantity } from './cart.js';
 import { initializeUserInfoPage } from './pages/user-info/index.js';
+import { initializationProductPage, removeProductPage } from './pages/product/index.js';
 
 //#region khai bao bien
+
+const PAGES = [
+    {
+        pagePath: 'home',
+        init: initializationHomePage,
+        update: updateHomePage,
+        remove: () => { },
+    },
+    {
+        pagePath: 'search',
+        init: initializationSearchPage,
+        update: updateSearchPage,
+        remove: () => { },
+    },
+    {
+        // :?tab có nghĩa là tab có thể có hoặc không
+        pagePath: 'user/:?tab',
+        init: initializeUserInfoPage,
+        update: () => { },
+        remove: () => { },
+    },
+    {
+        pagePath: '404',
+        init: initializationPageNotFound,
+        update: () => { },
+        remove: () => { },
+    },
+    {
+        pagePath: 'product/:id',
+        init: initializationProductPage,
+        update: () => { },
+        remove: removeProductPage,
+    }
+]
 
 const BUTTON_LOCATION = document.getElementById('btn-location');
 const CLOSE_POPUP = document.getElementById('btn-close');
@@ -33,6 +68,7 @@ const ADDRESS_FORM = document.getElementById('Address-form');
 // #endregion
 
 /** Khỏi tại hàm sử lý popup đại trỉ */
+
 function initializeLocationPopup() {
     /** Hiện popup */
     function showPopupLocation() {
@@ -75,12 +111,24 @@ function initializeAccountPopup() {
         !POPUP_WRAPPER ||
         !BUTTON_ACCOUNT ||
         !MODAL
-    )
+    ) {
+        console.log('có gì đó không đúng');
         return;
-
-    // kiểm tra người dùng có nhập sđt hoặc email chưa
+    }
     /**
+     * Validates the phone number or email input in the authentication form.
      * 
+     * This function sets up validation rules for the input field with the ID 
+     * '#input-phone-email' and handles the form submission. On submission, it 
+     * retrieves user information based on the provided phone number or email.
+     * 
+     * If the user information is found, it proceeds to show the password input 
+     * modal and validates the password. If the user information is not found, 
+     * it shows the create account modal and validates the creation of a new account.
+     * 
+     * The function also handles the back sign-in and close sign-in modal actions.
+     * 
+     * @function
      */
     function validatePhoneNum() {
         validator({
@@ -106,14 +154,6 @@ function initializeAccountPopup() {
                         // @ts-ignore
                         closeSignIn(MODAL);
                     })
-                // .catch((e) => {
-                //     // không hiểu lắm
-
-                //     // if (e) {
-                //     //     showCreateAccount(MODAL);
-                //     //     validateCrateNewAccount();
-                //     // }
-                // });
             },
         });
     }
@@ -300,30 +340,6 @@ function initializeAccountPopup() {
 function initializeUrlHandling() {
     let { page: curr_page, query } = urlConverter(location.hash);
 
-    const PAGES = [
-        {
-            pagePath: 'home',
-            init: initializationHomePage,
-            update: updateHomePage,
-        },
-        {
-            pagePath: 'search',
-            init: initializationSearchPage,
-            update: updateSearchPage,
-        },
-        {
-            // :?tab có nghĩa là tab có thể có hoặc không
-            pagePath: 'user/:?tab',
-            init: initializeUserInfoPage,
-            update: () => { },
-        },
-        {
-            pagePath: '404',
-            init: initializationPageNotFound,
-            update: () => { },
-        },
-    ]
-
     /** 
      * @param {string} page
      * @param {URLSearchParams} query 
@@ -355,13 +371,30 @@ function initializeUrlHandling() {
 
     }
 
+    /**
+     * 
+     * @param {string} page 
+     * @returns {void}
+     */
+    function pageRemove(page) {
+        for (const { pagePath, remove } of PAGES) {
+            const params = urlIsPage(page.replace('#/', ''), pagePath);
+            if (params) {
+                remove();
+                return;
+            }
+        }
+    }
+
     /** Khi hash thai đổi */
     function handleHashChange() {
         const { page, query } = urlConverter(location.hash);
         console.log(page, query);
 
         if (page != curr_page) {
+            pageRemove(curr_page);
             pageInit(page, query);
+
             curr_page = page;
         }
 
