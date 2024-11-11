@@ -16,42 +16,58 @@ import {
 import { updateCartQuantity } from './cart.js';
 import { initializeUserInfoPage } from './pages/user-info/index.js';
 import { initializationProductPage, removeProductPage } from './pages/product/index.js';
+import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 
-//#region khai bao bien
-
+//#region khai bao page
+/**
+ * @type {{
+ *  pagePath: string,
+ *  init: (params: object, query: URLSearchParams) => Promise<*>,
+ *  update: (params: object, query: URLSearchParams) => Promise<*>,
+ *  remove: (params: object, query: URLSearchParams) => Promise<*>
+ * }[]}
+ */
 const PAGES = [
     {
         pagePath: 'home',
         init: initializationHomePage,
         update: updateHomePage,
-        remove: () => { },
+        remove: async () => { },
     },
     {
         pagePath: 'search',
         init: initializationSearchPage,
         update: updateSearchPage,
-        remove: () => { },
+        remove: async () => { },
     },
     {
         // :?tab có nghĩa là tab có thể có hoặc không
         pagePath: 'user/:?tab',
         init: initializeUserInfoPage,
-        update: () => { },
-        remove: () => { },
-    },
-    {
-        pagePath: '404',
-        init: initializationPageNotFound,
-        update: () => { },
-        remove: () => { },
+        update: async () => { },
+        remove: async () => { },
     },
     {
         pagePath: 'product/:id',
         init: initializationProductPage,
-        update: () => { },
+        update: async () => { },
         remove: removeProductPage,
-    }
+    },
+    {
+        pagePath: 'cart',
+        init: initializationCart,
+        update: updateCart,
+        remove: removeCart
+    },
+    {
+        pagePath: '404',
+        init: initializationPageNotFound,
+        update: async () => { },
+        remove: async () => { },
+    },
 ]
+
+//#region khai bao bien
 
 const BUTTON_LOCATION = document.getElementById('btn-location');
 const CLOSE_POPUP = document.getElementById('btn-close');
@@ -374,13 +390,14 @@ function initializeUrlHandling() {
     /**
      * 
      * @param {string} page 
+     * @param {URLSearchParams} query
      * @returns {void}
      */
-    function pageRemove(page) {
+    function pageRemove(page, query) {
         for (const { pagePath, remove } of PAGES) {
             const params = urlIsPage(page.replace('#/', ''), pagePath);
             if (params) {
-                remove();
+                remove(page, query);
                 return;
             }
         }
@@ -392,7 +409,7 @@ function initializeUrlHandling() {
         console.log(page, query);
 
         if (page != curr_page) {
-            pageRemove(curr_page);
+            pageRemove(curr_page, query);
             pageInit(page, query);
 
             curr_page = page;

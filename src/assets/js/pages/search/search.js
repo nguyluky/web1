@@ -296,7 +296,7 @@ export async function initializationSearchPage(params, query) {
  * @param {string} page
  * @param {URLSearchParams} query
  */
-export function updateSearchPage(page, query) {
+export async function updateSearchPage(page, query) {
     const p = query.get('p') || '';
     const t = query.get('t') || '';
     const cs = query.get('cs')?.split(',') || [];

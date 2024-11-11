@@ -237,7 +237,13 @@ function handleMinus() {
     });
 }
 
-async function pushCartItemIntoCart(bookId, incrQuantity) {
+/**
+ * 
+ * @param {string} bookId 
+ * @param {number} [incrQuantity=1]
+ * @returns {Promise<void>}
+ */
+export async function pushCartItemIntoCart(bookId, incrQuantity = 1) {
     const user_id = localStorage.getItem('user_id');
     if (!user_id) {
         toast({
@@ -293,7 +299,7 @@ async function initAddToCartOnButton() {
     btnAddCarts.forEach((btnAddCart) => {
         btnAddCart.addEventListener('click', () => {
             console.log(btnAddCart);
-            const bookId = btnAddCart.dataset.bookId;
+            const bookId = btnAddCart.dataset.bookId || '';
             pushCartItemIntoCart(bookId, 1);
         });
     });

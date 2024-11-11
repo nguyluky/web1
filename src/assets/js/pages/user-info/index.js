@@ -3,9 +3,9 @@
  * khởi tạo trang thông tin người dùng
  * @param {Object} params
  * @param {URLSearchParams} query
- * @returns {void}
+ * @returns {Promise<void>}
  */
-export function initializeUserInfoPage(params, query) {
+export async function initializeUserInfoPage(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
 

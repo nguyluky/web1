@@ -232,7 +232,7 @@ function initializationArticle() {
  * @param {object} params
  * @param {URLSearchParams} query
  */
-export function initializationHomePage(params, query) {
+export async function initializationHomePage(params, query) {
     initializationMain();
     initializationArticle();
     initializationAside();
@@ -256,6 +256,6 @@ export async function updateHomePage(params, query) {
     }
 
     displayProducts().then(() => {
-        initAddToCartOnButton();
+        // initAddToCartOnButton();
     });
 }

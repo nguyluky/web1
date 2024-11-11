@@ -2,7 +2,7 @@
  * @param {Object} params
  * @param {URLSearchParams} query
  */
-export function initializationPageNotFound(params, query) {
+export async function initializationPageNotFound(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
 

@@ -4,21 +4,20 @@
  * @param {object} params
  * @param {URLSearchParams} query
  */
-export function initializationProductPage(params, query) {
+export async function initializationProductPage(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
 
     const style = document.createElement('style');
     style.id = 'product-page-style';
     style.innerHTML = `
-    .container {
+    .main_wapper {
         display: grid;
         grid-template-columns: 1fr 3fr 1fr;
-        max-width: 800px;
         border: 0px;
-        padding: 20px;
         gap: 10px;
     }
+
     .left-section,
     .center-section,
     .right-section {
@@ -100,7 +99,7 @@ export function initializationProductPage(params, query) {
                 <img
                     src="https://nhasachphuongnam.com/images/detailed/267/ly-thuyet-tro-choi.jpg"
                     alt="Lý thuyết trò chơi"
-                    height="250px"
+                    width="100%"
                 />
                 <p>Đặc điểm nổi bật:</p>
                 <ul>
@@ -192,6 +191,11 @@ export async function updateProductPage(params, query) {
 
 }
 
-export function removeProductPage() {
+/**
+ * 
+ * @param {object} params 
+ * @param {URLSearchParams} query 
+ */
+export async function removeProductPage(params, query) {
     document.getElementById('product-page-style')?.remove();
 }

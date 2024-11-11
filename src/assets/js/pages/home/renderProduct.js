@@ -1,3 +1,4 @@
+import { pushCartItemIntoCart } from '../../cart.js';
 import fakeDatabase from '../../db/fakeDBv1.js';
 import urlConverter from '../../until/urlConverter.js';
 
@@ -31,9 +32,8 @@ export function createPagination() {
     );
     paginationPage.innerHTML = ``;
     for (let i = 1; i <= (totalPages < 5 ? totalPages : 5); i++) {
-        paginationPage.innerHTML += `<button class="pagination__btns page ${
-            i == 1 ? 'active-page' : ''
-        }">${i}</button>`;
+        paginationPage.innerHTML += `<button class="pagination__btns page ${i == 1 ? 'active-page' : ''
+            }">${i}</button>`;
     }
 }
 
@@ -43,44 +43,70 @@ export function createPagination() {
  * @returns {Promise<HTMLElement>}
  */
 export async function createProduct(product) {
-    const Product_Item = document.createElement('div');
-    Product_Item.classList.add('product-card');
-    Product_Item.setAttribute('data-id', product.id);
+    const productItem = document.createElement('div');
+    productItem.classList.add('product-card');
+    productItem.setAttribute('data-id', product.id);
     const img = await fakeDatabase.getImgById(product.thumbnail);
     let source = './assets/img/default-image.png';
     if (img) source = img.data;
-    Product_Item.innerHTML = `
-        <div class="product-img">
-            <div class="discount-tag ${
-                product.discount == 0 ? 'hide' : ''
-            }">-${String(product.discount * 100)}%</div>
-            <img
-                src="${source}"
-                alt=""
-            />
-        </div>
-        <div class="product-title">
-            <p>${product.title}</p>
-        </div>
-        <div class="product-footer">
-            <div class="product-price">
-                <span class="sale-price">
-                    ${String(
-                        Math.round(product.base_price * (1 - product.discount)),
-                    )} <sup>₫</sup></span>
-                <span class="regular-price ${
-                    product.discount == 0 ? 'hide' : ''
-                }">
-                    ${String(product.base_price)} <sup>₫</sup></span>
-            </div>
-            <img
-                class="add-to-cart" data-book-id = ${product.id}
-                src="./assets/img/add-to-cart.png"
-                alt=""
-            />
-        </div>
-        `;
-    return Product_Item;
+
+    const productImg = document.createElement('div');
+    productImg.classList.add('product-img');
+    productItem.appendChild(productImg);
+
+    const discountTag = document.createElement('div');
+    discountTag.classList.add('discount-tag');
+    if (product.discount == 0) discountTag.classList.add('hide');
+    discountTag.innerHTML = `-${String(product.discount * 100)}%`;
+    productImg.appendChild(discountTag);
+
+    const imgTag = document.createElement('img');
+    imgTag.src = source;
+    imgTag.alt = '';
+    productImg.appendChild(imgTag);
+
+    const productTitle = document.createElement('div');
+    productTitle.classList.add('product-title');
+    productTitle.innerHTML = `<p>${product.title}</p>`;
+    productItem.appendChild(productTitle);
+
+    const productFooter = document.createElement('div');
+    productFooter.classList.add('product-footer');
+    productItem.appendChild(productFooter);
+
+    const productPrice = document.createElement('div');
+    productPrice.classList.add('product-price');
+    productFooter.appendChild(productPrice);
+
+    const salePrice = document.createElement('span');
+    salePrice.classList.add('sale-price');
+    salePrice.innerHTML = `${String(
+        Math.round(product.base_price * (1 - product.discount)),
+    )} <sup>₫</sup>`;
+    productPrice.appendChild(salePrice);
+
+    const regularPrice = document.createElement('span');
+    regularPrice.classList.add('regular-price');
+    if (product.discount == 0) regularPrice.classList.add('hide');
+    regularPrice.innerHTML = `${String(product.base_price)} <sup>₫</sup>`;
+    productPrice.appendChild(regularPrice);
+
+    const addToCart = document.createElement('img');
+    addToCart.classList.add('add-to-cart');
+    addToCart.setAttribute('data-book-id', product.id);
+    addToCart.src = './assets/img/add-to-cart.png';
+    addToCart.alt = '';
+    productFooter.appendChild(addToCart);
+
+    addToCart.addEventListener('click', () => {
+        pushCartItemIntoCart(product.id);
+    })
+
+    productItem.addEventListener('click', () => {
+        location.hash = `#/product/${product.id}`;
+    });
+
+    return productItem;
 }
 /**
  * render products
