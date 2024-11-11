@@ -1,6 +1,6 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import urlConverter from '../../until/urlConverter.js';
-
+import removeDiacritics from '../../until/removeDiacritics.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = Product_Data;
 let Current_Page = 1;
@@ -31,9 +31,8 @@ export function createPagination() {
     );
     paginationPage.innerHTML = ``;
     for (let i = 1; i <= (totalPages < 5 ? totalPages : 5); i++) {
-        paginationPage.innerHTML += `<button class="pagination__btns page ${
-            i == 1 ? 'active-page' : ''
-        }">${i}</button>`;
+        paginationPage.innerHTML += `<button class="pagination__btns page ${i == 1 ? 'active-page' : ''
+            }">${i}</button>`;
     }
 }
 
@@ -51,9 +50,8 @@ export async function createProduct(product) {
     if (img) source = img.data;
     Product_Item.innerHTML = `
         <div class="product-img">
-            <div class="discount-tag ${
-                product.discount == 0 ? 'hide' : ''
-            }">-${String(product.discount * 100)}%</div>
+            <div class="discount-tag ${product.discount == 0 ? 'hide' : ''
+        }">-${String(product.discount * 100)}%</div>
             <img
                 src="${source}"
                 alt=""
@@ -66,11 +64,10 @@ export async function createProduct(product) {
             <div class="product-price">
                 <span class="sale-price">
                     ${String(
-                        Math.round(product.base_price * (1 - product.discount)),
-                    )} <sup>₫</sup></span>
-                <span class="regular-price ${
-                    product.discount == 0 ? 'hide' : ''
-                }">
+            Math.round(product.base_price * (1 - product.discount)),
+        )} <sup>₫</sup></span>
+                <span class="regular-price ${product.discount == 0 ? 'hide' : ''
+        }">
                     ${String(product.base_price)} <sup>₫</sup></span>
             </div>
             <img
@@ -87,6 +84,8 @@ export async function createProduct(product) {
  * @returns {Promise<void>}
  */
 export async function displayProducts() {
+    const noProduct = /**@type {HTMLElement}*/ (document.querySelector('.no-product'));
+
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
@@ -96,8 +95,10 @@ export async function displayProducts() {
     productlist.innerHTML = '';
     if (data.length == 0) {
         header.style.display = 'none';
+        noProduct.style.display = '';
         return;
     }
+    noProduct.style.display = 'none';
     header.style.display = '';
     const start = (Current_Page - 1) * Products_Per_page;
     const end = start + Products_Per_page;
@@ -114,6 +115,7 @@ export async function displayProducts() {
  * @param {number} page
  */
 export function updatePagination(page) {
+    if (totalPages < 2) return;
     Current_Page = page;
     let firstPage = 1;
     if (totalPages > 5) {
@@ -199,20 +201,27 @@ export function setupPaginationListeners() {
  * @param {string[]} [categories ]
  * @param {string} [searchText='']
  */
-export function selectionConditional(categories, searchText = '') {
+export function selectionConditional(categories, searchText = '', from = NaN, to = NaN) {
     if (categories && categories.length > 0) {
         data = Product_Data.filter((e) => {
             return (
                 categories.every((category_id) =>
                     e.category.includes(category_id),
-                ) && e.title.toLowerCase().includes(searchText.toLowerCase())
+                )
             );
         });
     } else {
-        data = Product_Data.filter((e) => {
-            return e.title.toLowerCase().includes(searchText.toLowerCase());
+        data = Product_Data
+    }
+    if (!isNaN(from) && !isNaN(to)) {
+        data = data.filter((e) => {
+            return (e.base_price >= from && e.base_price <= to);
         });
     }
+    data = data.filter((e) => {
+        return removeDiacritics(e.title).includes(removeDiacritics(searchText));
+    });
+    console.log(from, to, data);
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;
 }

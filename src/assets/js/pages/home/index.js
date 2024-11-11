@@ -224,6 +224,9 @@ function initializationArticle() {
         </div>
         <div class="product-container"></div>
         <div class="pagination"></div>
+        <div class="no-product">
+            <img src="./assets/img/empty-product.png">
+        </div>
     `;
 }
 
