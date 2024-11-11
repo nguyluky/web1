@@ -218,14 +218,14 @@ function initializeAccountPopup() {
                 modal?.classList.remove('show-modal');
             };
         if (modal)
-            modal.addEventListener('click', (e) => {
+            // NOTE: không nên đổi thành addevntListener
+            // @ts-ignore
+            modal.onclick = (e) => {
                 if (!e.target) return;
-                if (
-                    !modalDemo?.contains(/** @type {HTMLElement} */(e.target))
-                ) {
+                if (!modalDemo?.contains(/**@type {HTMLElement}*/(e.target))) {
                     btnExit?.click();
                 }
-            });
+            };
     }
 
     /** */
