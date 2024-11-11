@@ -1,5 +1,5 @@
 import uuidv from '../until/uuid.js';
-import { isEmail } from '../until/validator.js';
+import { validateEmail } from '../until/validator.js';
 import addressData from './addressDb.js';
 
 /**
@@ -36,7 +36,7 @@ const req = window.indexedDB.open('fakedb', 1);
 
 // Initialize dataLoaded state from localStorage or set default
 const dataLoaded = JSON.parse(
-    /** @type {string} */ (window.localStorage.getItem('dataLoaded')),
+    /** @type {string} */(window.localStorage.getItem('dataLoaded')),
 ) || {
     [ObjectStoreName.USER]: false,
     [ObjectStoreName.IMG]: false,
@@ -417,7 +417,7 @@ class FakeDatabase {
             .transaction(ObjectStoreName.USER, 'readonly')
             .objectStore(ObjectStoreName.USER);
         let userget;
-        if (isEmail(phone_email)) {
+        if (validateEmail(phone_email)) {
             userget = data.index('email').get(phone_email);
         } else {
             userget = data.index('phone_num').get(phone_email);

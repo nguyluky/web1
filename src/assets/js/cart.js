@@ -35,17 +35,17 @@ async function renderCart() {
     if (container && cartItems) {
         if (carts.length === 0) {
             showEmptyCart();
-        } else {
-            const mainContent = document.querySelector('.main-cart-content');
-            mainContent?.classList.remove('hide');
-            cartItems.innerHTML = '';
+            return;
+        }
+        const mainContent = document.querySelector('.main-cart-content');
+        mainContent?.classList.remove('hide');
+        cartItems.innerHTML = '';
 
-            for (const cart of carts) {
-                console.log(cart);
-                const cartItem = await createCartItem(cart);
-                if (cartItem) {
-                    cartItems.appendChild(cartItem);
-                }
+        for (const cart of carts) {
+            console.log(cart);
+            const cartItem = await createCartItem(cart);
+            if (cartItem) {
+                cartItems.appendChild(cartItem);
             }
         }
     }
@@ -262,6 +262,9 @@ async function pushCartItemIntoCart(bookId, incrQuantity) {
     updateCartQuantity();
 }
 
+/**
+ * Hiển thị thông báo khi giỏ hàng trống
+ */
 function showEmptyCart() {
     const mainContent = document.querySelector('.main-cart-content');
     const mainComponent = document.querySelector('.main-component');
@@ -348,6 +351,9 @@ function initDeleteCartItem() {
 
 /**
  *
+ * upadte số lượng sản phẩm trong giỏ hàng
+ * at the top right corner of the page
+ * 
  * @returns {Promise<void>}
  */
 export async function updateCartQuantity() {

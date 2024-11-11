@@ -5,16 +5,16 @@ import {
     showInputPassword,
     showSignIn,
 } from './popupAccount.js';
-import { isEmail, validator } from './until/validator.js';
-import { initializationHomePage, updateHomePage } from './render/home/index.js';
+import { validateEmail, validator } from './until/validator.js';
+import { initializationHomePage, updateHomePage } from './pages/home/index.js';
 import urlConverter, { urlIsPage } from './until/urlConverter.js';
-import { initializationPageNotFound } from './render/pageNotFound/index.js';
+import { initializationPageNotFound } from './pages/pageNotFound/index.js';
 import {
     initializationSearchPage,
     updateSearchPage,
-} from './render/search/search.js';
+} from './pages/search/search.js';
 import { updateCartQuantity } from './cart.js';
-import { initializeUserInfoPage } from './render/user-info/index.js';
+import { initializeUserInfoPage } from './pages/user-info/index.js';
 
 //#region khai bao bien
 
@@ -156,7 +156,7 @@ function initializeAccountPopup() {
             onSubmit: (data) => {
                 let email = '',
                     phone_num = '';
-                if (isEmail(userPhoneOrEmail)) {
+                if (validateEmail(userPhoneOrEmail)) {
                     email = userPhoneOrEmail;
                 } else {
                     phone_num = userPhoneOrEmail;
