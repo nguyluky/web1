@@ -353,18 +353,18 @@ function initializeAccountPopup() {
  * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
  * https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
  */
-function initializeUrlHandling() {
+async function initializeUrlHandling() {
     let { page: curr_page, query } = urlConverter(location.hash);
 
     /** 
      * @param {string} page
      * @param {URLSearchParams} query 
      */
-    function pageInit(page, query) {
+    async function pageInit(page, query) {
         for (const { pagePath, init } of PAGES) {
             const params = urlIsPage(page.replace('#/', ''), pagePath);
             if (params) {
-                init(params, query);
+                await init(params, query);
                 return;
             }
         }
@@ -376,15 +376,14 @@ function initializeUrlHandling() {
      * @param {string} curr_page
      * @param {URLSearchParams} query
      */
-    function pageUpdate(curr_page, query) {
+    async function pageUpdate(curr_page, query) {
         for (const { pagePath, update } of PAGES) {
             const params = urlIsPage(curr_page.replace('#/', ''), pagePath);
             if (params) {
-                update(params, query);
+                await update(params, query);
                 return;
             }
         }
-
     }
 
     /**
@@ -404,18 +403,18 @@ function initializeUrlHandling() {
     }
 
     /** Khi hash thai đổi */
-    function handleHashChange() {
+    async function handleHashChange() {
         const { page, query } = urlConverter(location.hash);
         console.log(page, query);
 
         if (page != curr_page) {
-            pageRemove(curr_page, query);
-            pageInit(page, query);
+            await pageRemove(curr_page, query);
+            await pageInit(page, query);
 
             curr_page = page;
         }
 
-        pageUpdate(page, query);
+        await pageUpdate(page, query);
     }
 
     window.addEventListener('hashchange', handleHashChange);
@@ -431,8 +430,8 @@ function initializeUrlHandling() {
     });
 
 
-    pageInit(curr_page, query);
-    pageUpdate(curr_page, query);
+    await pageInit(curr_page, query);
+    await pageUpdate(curr_page, query);
 }
 
 /** Main */

@@ -474,6 +474,10 @@ footer.footer .footer_wrapper .footer_box {
     display: none;
 }
 
+.selected{
+    color: #189eff;
+}
+
 article.article.page-not-found {
     background-color: transparent;
     display: flex;
