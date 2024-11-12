@@ -78,7 +78,11 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  * @typedef {{
  *     id: string;
  *     user_id: string;
- *     items: Omit<Cart, 'id'| 'user_id' | 'timecreate'>[];
+ *     items: {
+        * sach: String;
+        * quantity: Number;
+        * total: Number;
+    * }[];
  *     date: Date;
  *     state: 'doixacnhan' | 'daxacnhan' | 'danggiaohang' | 'giaohangthanhcong' | 'huy';
  *     last_update: Date;

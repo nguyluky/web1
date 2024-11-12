@@ -1,4 +1,5 @@
 import fakeDatabase from "./db/fakeDBv1.js";
+import order from "./render/table/orderTabel.js";
 
 
 const user_option = document.querySelectorAll('.user-info__row');
@@ -9,12 +10,12 @@ async function create_user_info(option) {
         article.className = "user-package";
         article.innerHTML = `
                     <div class="package-category">
-                        <div class="all selected">Tất cả</div>
-                        <div class="waiting">Chờ xử lý</div>
-                        <div class="confirmed">Đã xác nhận</div>
-                        <div class="ondelivery">Vận chuyển</div>
-                        <div class="finished">Đã giao</div>
-                        <div class="cancle">Đã hủy</div>
+                        <div class = "package-category-header">Tất cả</div>
+                        <div class = "package-category-header">Chờ xử lý</div>
+                        <div class = "package-category-header">Đã xác nhận</div>
+                        <div class = "package-category-header">Vận chuyển</div>
+                        <div class = "package-category-header">Đã giao</div>
+                        <div class = "package-category-header">Đã hủy</div>
                     </div>
                     <div class="package-search">
                         <label class="input-search">
@@ -23,159 +24,39 @@ async function create_user_info(option) {
                         </label>
                     </div>
                     <div class="package-content">
-                        <div class="package-details">
-                            <div class="package-details__left">
-                                <div class="package-details__container">
-                                    <div class="package-details__general">
-                                        <div class="package-details__img">
-                                            <img src="assets/img/default-image.png" alt="">
-                                        </div>
-                                        <div class="package-details__details">
-                                            <div class="package-details__title">Pháp luật đại cương (Dùng trong các trường đại học, cao đẳng và trung cấp)</div>
-                                            <div class="package-details__quantity">x1</div>
-                                            <div class="package-details__price">
-                                                <span class="package-details__total--number">
-                                                    20000 <sup>₫</sup>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="package-details__general">
-                                        <div class="package-details__img">
-                                            <img src="assets/img/default-image.png" alt="">
-                                        </div>
-                                        <div class="package-details__details">
-                                            <div class="package-details__title">Pháp luật đại cương (Dùng trong các trường đại học, cao đẳng và trung cấp)</div>
-                                            <div class="package-details__quantity">x1</div>
-                                            <div class="package-details__price">
-                                                <span class="package-details__total--number">
-                                                    20000 <sup>₫</sup>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="package-details__status">
-                                    <div class="package-details__status--header">Trạng thái:</div>
-                                    <div class="package-details__status--text">Đã giao</div>
-                                </div>
-                            </div>
-                            <div class="package-details__right">
-                                <div class="package-details__id">Mã đơn hàng: 240817H5BBB2NN</div>
-                                <div class="package-details__total">
-                                    <div class="package-details__total--header">Thành tiền:</div>
-                                    <span class="package-details__total--number">
-                                        40000 <sup>₫</sup>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="package-details">
-                            <div class="package-details__left">
-                                <div class="package-details__container">
-                                    <div class="package-details__general">
-                                        <div class="package-details__img">
-                                            <img src="assets/img/default-image.png" alt="">
-                                        </div>
-                                        <div class="package-details__details">
-                                            <div class="package-details__title">Pháp luật đại cương (Dùng trong các trường đại học, cao đẳng và trung cấp)</div>
-                                            <div class="package-details__quantity">x1</div>
-                                            <div class="package-details__price">
-                                                <span class="package-details__total--number">
-                                                    20000 <sup>₫</sup>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="package-details__status">
-                                    <div class="package-details__status--header">Trạng thái:</div>
-                                    <div class="package-details__status--text">Đã giao</div>
-                                </div>
-                            </div>
-                            <div class="package-details__right">
-                                <div class="package-details__id">Mã đơn hàng: 240817H5BBB2NN</div>
-                                <div class="package-details__total">
-                                    <div class="package-details__total--header">Thành tiền:</div>
-                                    <span class="package-details__total--number">
-                                        20000 <sup>₫</sup>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="package-details">
-                            <div class="package-details__left">
-                                <div class="package-details__container">
-                                    <div class="package-details__general">
-                                        <div class="package-details__img">
-                                            <img src="assets/img/default-image.png" alt="">
-                                        </div>
-                                        <div class="package-details__details">
-                                            <div class="package-details__title">Pháp luật đại cương (Dùng trong các trường đại học, cao đẳng và trung cấp)</div>
-                                            <div class="package-details__quantity">x1</div>
-                                            <div class="package-details__price">
-                                                <span class="package-details__total--number">
-                                                    20000 <sup>₫</sup>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="package-details__status">
-                                    <div class="package-details__status--header">Trạng thái:</div>
-                                    <div class="package-details__status--text">Đã giao</div>
-                                </div>
-                            </div>
-                            <div class="package-details__right">
-                                <div class="package-details__id">Mã đơn hàng: 240817H5BBB2NN</div>
-                                <div class="package-details__total">
-                                    <div class="package-details__total--header">Thành tiền:</div>
-                                    <span class="package-details__total--number">
-                                        20000 <sup>₫</sup>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                         `;
+        renderorder();
+
+        const package_catagory = document.querySelectorAll('.package-category-header');
+        console.log(package_catagory);
+        package_catagory.forEach(catagory => {
+            catagory.addEventListener('click', e => {
+                console.log(catagory.innerHTML);
+                typeofOrder(catagory.innerHTML);
+            });
+        });
     }
     else {
         if (option.dataset.value === "tttk") {
-            article.className = "article";
-            article.innerHTML = `
+            article.className = "user-personal-info";
+            displayInfo();
+        }
+    }
+}
+
+async function displayInfo() {
+    article.innerHTML = `
                     <div class="article-header">
                         <span>Thông tin tài khoản</span>
                     </div>
                     <div class="user-personal__container">
-                        <div class="user-personal">
-                            <div class="user-header">Họ và tên:</div>
-                            <div class="user-info">Laverne Hermiston</div>
-                        </div>
-                        <div class="user-personal">
-                            <div class="user-header">Giới tính:</div>
-                            <div class="user-info">Nam</div>
-                        </div>
-                        <div class="user-personal">
-                            <div class="user-header">Email:</div>
-                            <div class="user-info">Yesenia62@gmail.com</div>
-                        </div>
-                        <div class="user-personal">
-                            <div class="user-header">Số điện thoại:</div>
-                            <div class="user-info">0854198563</div>
-                        </div>
-                        <div class="user-personal">
-                            <div class="user-header">Địa chỉ giao hàng:</div>
-                            <div class="user-info">273 Đ. An Dương Vương, Phường 3, Quận 5, Hồ Chí Minh</div>
-                        </div>
                     </div>
             `;
 
-            // const personal_info = await renderinfo();
-            // console.log(personal_info);
-            // if (personal_info) {
-            //     article.appendChild(personal_info);
-            // }
-        }
+    const user_container = /**@type {HTMLElement}*/(document.querySelector('.user-personal__container'));
+    if (await renderinfo()) {
+        user_container.innerHTML = await renderinfo();
     }
 }
 
@@ -198,13 +79,12 @@ function create_user_gender(user_id) {
 }
 
 async function renderinfo() {
-    const user_id = localStorage.getItem('user_id');
-    if (!user_id) {
-        return;
-    }
-    console.log(user_id);
-    const personal_info_data = await fakeDatabase.getUserInfoByUserId(String(1));
-    console.log(personal_info_data);
+    // const user_id = localStorage.getItem('user_id');
+    // if (!user_id) {
+    //     return;
+    // }
+    //console.log(user_id);
+    const personal_info_data = await fakeDatabase.getUserInfoByUserId(String(2));
     const container = document.createElement('div');
 
     container.innerHTML = `
@@ -214,7 +94,7 @@ async function renderinfo() {
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Giới tính:</div>
-                        <div class="user-info">${create_user_gender(Number(user_id))}</div>
+                        <div class="user-info">${create_user_gender(2)}</div>
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Email:</div>
@@ -230,21 +110,112 @@ async function renderinfo() {
                     </div>        
     `;
 
-    //return container;
+    return container.innerHTML;
 }
 
-async function typeofOrder() {
-    const user_id = localStorage.getItem('user_id');
-    if (!user_id) {
-        return;
+const status = {
+    daxacnhan: {
+        text: 'Đã xác nhận',
+        color: 'rgba(219, 198, 38, 1)'
+    },
+    doixacnhan: {
+        text: 'Chờ xác nhận',
+        color: 'rgba(208, 128, 8, 1)'
+    },
+    danggiaohang: {
+        text: 'Đang vận chuyển',
+        color: 'rgba(0, 158, 129, 1)'
+    },
+    giaohangthanhcong: {
+        text: 'Đã giao',
+        color: 'rgba(4, 170, 9, 1)'
+    },
+    huy: {
+        text: 'Đã hủy',
+        color: 'rgba(212, 13, 13, 1)'
     }
-    const order_data = await fakeDatabase.getOrdertByUserId(user_id);
-    console.log(order_data);
+}
 
+async function renderorder() {
+    const order_data = await fakeDatabase.getOrdertByUserId(String(3));
+    const container = /**@type {HTMLElement}*/(document.querySelector('.package-content'));
+
+    container.innerHTML = ``;
+
+    order_data.forEach(order => {
+        const package_details = document.createElement('div');
+        package_details.className = "package-details";
+
+        const all_items_detail = document.createElement('div');
+        all_items_detail.className = "package-details__container";
+
+        order.items.forEach(async item => {
+            const item_detail = document.createElement('div');
+            const sach = await fakeDatabase.getSachById(item.sach);
+            let source = './assets/img/default-image.png';
+            if (sach) {
+                const thumbnail = await fakeDatabase.getImgById(sach.thumbnail);
+                if (thumbnail)
+                    source = thumbnail.data;
+            }
+            item_detail.className = "package-details__general";
+            item_detail.innerHTML = `
+                            <div class="package-details__img">
+                                <img src="${source}" alt="">
+                            </div>
+                            <div class="package-details__details">
+                                <div class="package-details__title">${sach?.title}</div>
+                                <div class="package-details__quantity">x${item.quantity}</div>
+                                <div class="package-details__price">
+                                    <span class="package-details__total--number">
+                                        ${item.total} <sup>₫</sup>
+                                    </span>
+                                </div>
+                            </div>
+            `;
+
+            all_items_detail.appendChild(item_detail);
+        });
+
+        package_details.innerHTML = `
+                            <div class="package-details__top">
+                                <div class="package-details__id">Mã đơn hàng: ${order.id}</div>
+                                <div class="package-details__total">
+                                    <div class="package-details__total--header">Thành tiền:</div>
+                                    <span class="package-details__total--number">
+                                        ${order.total} <sup>₫</sup>
+                                    </span>
+                                </div>
+                                <div class="package-details__status">
+                                    <div class="package-details__status--header">Trạng thái:</div>
+                                    <div class="package-details__status--text" style="color:${status[order.state].color}">${status[order.state].text}</div>
+                                </div>
+                            </div>
+        `;
+
+        const package_detail_bottom = document.createElement('div');
+        package_detail_bottom.className = "package-details__bottom";
+        package_detail_bottom.appendChild(all_items_detail);
+
+        package_details.appendChild(package_detail_bottom);
+
+        container.appendChild(package_details);
+    });
+}
+
+async function typeofOrder(state) {
+    const order_data = await fakeDatabase.getOrdertByUserId('3');
+    switch (state) {
+        case "":
+
+            break;
+
+        default:
+            break;
+    }
 
 }
 
-function renderorder(data) {
-    const order_data = data;
-    const container = document.createElement('div');
-}
+displayInfo();
+
+
