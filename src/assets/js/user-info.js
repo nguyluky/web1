@@ -1,4 +1,4 @@
-import fakeDatabase from "./db/fakeDBv1";
+import fakeDatabase from "./db/fakeDBv1.js";
 
 
 const user_option = document.querySelectorAll('.user-info__row');
@@ -170,10 +170,11 @@ async function create_user_info(option) {
                     </div>
             `;
 
-            const personal_info = await renderinfo();
-            if (personal_info) {
-                article.appendChild(personal_info);
-            }
+            // const personal_info = await renderinfo();
+            // console.log(personal_info);
+            // if (personal_info) {
+            //     article.appendChild(personal_info);
+            // }
         }
     }
 }
@@ -197,12 +198,13 @@ function create_user_gender(user_id) {
 }
 
 async function renderinfo() {
-
     const user_id = localStorage.getItem('user_id');
     if (!user_id) {
         return;
     }
-    const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
+    console.log(user_id);
+    const personal_info_data = await fakeDatabase.getUserInfoByUserId(String(1));
+    console.log(personal_info_data);
     const container = document.createElement('div');
 
     container.innerHTML = `
@@ -212,7 +214,7 @@ async function renderinfo() {
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Giới tính:</div>
-                        <div class="user-info">${create_user_gender(user_id)}</div>
+                        <div class="user-info">${create_user_gender(Number(user_id))}</div>
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Email:</div>
@@ -228,13 +230,21 @@ async function renderinfo() {
                     </div>        
     `;
 
-    return container;
+    //return container;
 }
 
-async function renderorder() {
+async function typeofOrder() {
     const user_id = localStorage.getItem('user_id');
     if (!user_id) {
         return;
     }
-    const cart_data = await fakeDatabase.getCartByUserId(user_id);
+    const order_data = await fakeDatabase.getOrdertByUserId(user_id);
+    console.log(order_data);
+
+
+}
+
+function renderorder(data) {
+    const order_data = data;
+    const container = document.createElement('div');
 }
