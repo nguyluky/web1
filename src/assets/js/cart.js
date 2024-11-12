@@ -15,6 +15,7 @@ function mainCart() {
         initDeleteCartItem();
         isCheckBox();
         changeQuantity();
+        renderPaymentSummary();
     });
 }
 
@@ -22,6 +23,7 @@ function mainCart() {
  *
  * @returns {Promise<void>}
  */
+
 async function renderCart() {
     const user_id = localStorage.getItem('user_id');
 
@@ -163,7 +165,7 @@ function changeQuantity() {
 
             const parentElement = getParent(quantityInput, '.cart-item');
             const cartAmount = parentElement.querySelector('.cart-item-amount');
-            if (!quantityInput.value) {
+            if (!quantityInput.value || !+quantityInput.value || parseInt(quantityInput.value) < 1) {
                 quantityInput.value = '1';
             }
             const cart = await fakeDatabase.getCartById(
@@ -350,7 +352,23 @@ function initDeleteCartItem() {
     const checkAll = /**@type {HTMLInputElement} */ (document.getElementById('check-all'));
     deleteAllButton?.addEventListener('click', () => {
         if (checkAll.checked !== true) {
-            toast({ title: 'Vui lòng chọn sản phẩm cần xóa', type: 'error' });
+            const checkBoxes = /**@type {NodeListOf<HTMLInputElement>} */ (document.querySelectorAll(".check-book"));
+            const trueChecks = Array.from(checkBoxes).filter(checkBox => {
+                return checkBox.checked === true;
+            })
+
+            if (trueChecks.length === 0) {
+                console.log('failed')
+                toast({ title: 'Vui lòng chọn sản phẩm cần xóa', type: 'error' });
+            }
+            else {
+                console.log("success")
+                for (const trueCheck of trueChecks) {
+                    const parentElement = getParent(trueCheck, ".cart-item");
+                    const deleteButton = parentElement.querySelector('.cart-item-delete-btn');
+                    deleteButton.click();
+                }
+            }
         }
         else {
             deleteButtons.forEach(deleteButton => {
@@ -428,6 +446,7 @@ function isCheckBox() {
 
 // cập nhật tổng giá khi thay đổi số lượng sản phẩm
 async function renderPaymentSummary() {
+    let order = [];
     const otherCheckBoxes = /**@type {NodeListOf<HTMLInputElement>} */ (
         document.querySelectorAll('.check-book')
     );
@@ -448,8 +467,12 @@ async function renderPaymentSummary() {
             totalAmount +=
                 cart.quantity * (book.base_price * (1 - book.discount));
             originalAmount += cart.quantity * book.base_price;
+            order.push(cart.id);
         }
     }
+    localStorage.setItem('order', JSON.stringify(order));
+    console.log(order)
+
 
     const amount = document.querySelector('#original-amount');
 
@@ -467,7 +490,22 @@ async function renderPaymentSummary() {
 
     const num = document.querySelector('.prices__button__center button');
     if (num) num.innerHTML = `Mua Hàng (${numberOfItems})`;
+    buyBooks(numberOfItems);
 }
+
+function buyBooks(num) {
+    const buyBtn = document.querySelector('.btn-danger');
+    buyBtn?.addEventListener('click', (e) => {
+        if (num === 0) {
+            toast({ title: 'Vui lòng chọn sản phẩm cần mua', type: 'error' });
+        }
+        else {
+            window.location.href = './pay.html';
+        }
+    })
+}
+
+
 
 mainCart();
 

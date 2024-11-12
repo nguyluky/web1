@@ -27,7 +27,7 @@
 
 .left-content {
     box-sizing: border-box;
-    grid-row: 1/4;
+    grid-row: 1/5;
 }
 
 .left-content-heading {
@@ -168,6 +168,11 @@
 .prices__total {
     display: flex;
     justify-content: space-between;
+}
+
+#total-amount {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .prices__value--note {
@@ -357,13 +362,14 @@ input[type='checkbox'] {
     justify-content: center;
 }
 .empty-cart img {
-    width: 160px;
+    width: 250px;
     margin: 20px 0px;
 }
 .empty-cart span {
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 20px;
+    color: rgb(120, 120, 120);
 }
 @media screen and (max-width: 1000px) {
     .main-cart-content {
