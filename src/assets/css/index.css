@@ -1,5 +1,5 @@
 @import url(./home-style-share.css);
-
+@import url(./search_page.css);
 :root {
     --cart-width: 200px;
     --coutnt-row: 4;
@@ -34,6 +34,7 @@
 }
 
 aside.aside {
+    z-index: 2;
     position: sticky;
     top: 16px;
     height: fit-content;
@@ -60,14 +61,12 @@ aside.aside {
     padding: 20px;
 }
 .article {
+    position: relative;
     background-color: #fff;
     width: 100%;
     border-radius: 8px;
     padding: 20px 30px;
     padding-bottom: 30px;
-}
-
-.article {
     height: max-content;
     min-height: 800px;
     box-sizing: border-box;
@@ -224,78 +223,14 @@ aside.aside {
     display: flex;
     gap: 10px;
 }
-
-.search-header {
-    margin-top: 10px;
-    margin-bottom: 15px;
-    font-size: 20px;
-    font-weight: 600;
+.no-product {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-#filter-btn {
-    padding: 5px;
-    background-color: white;
-    border-radius: 4px;
-    border: solid 1px gray;
-    width: 50px;
-    margin-bottom: 20px;
-    cursor: pointer;
-}
-
-#filter-btn:hover {
-    color: rgb(45, 136, 255);
-    background-color: #f4f4f4;
-}
-
-#search-filter {
-    min-width: 235px;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-.filter-header {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 10px 0 20px;
-}
-
-.filter-checkbox {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#filter-popup input[type='checkbox'] {
-    height: 18px;
-    width: 18px;
-    margin-right: 8px;
-    cursor: pointer;
-}
-
-.filter-slider {
-    margin-top: 30px;
-    width: 100%;
-}
-
-.filter-slider__header {
-    font-size: 18px;
-}
-
-.filter-slider > input {
-    width: 100%;
-    cursor: pointer;
-}
-
-.price-slider {
-    margin-top: 15px;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.user-info__header{
+.user-info__header {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -303,23 +238,23 @@ aside.aside {
     padding-bottom: 10px;
 }
 
-.user-info__img > img{
+.user-info__img > img {
     width: 50px;
 }
 
-.user-info__name{
+.user-info__name {
     font-weight: 500;
     font-size: 16px;
 }
 
-.user-info__content{
+.user-info__content {
     margin-top: 15px;
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.user-info__row{
+.user-info__row {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -330,30 +265,30 @@ aside.aside {
     color: #189eff;
 }
 
-.user-personal__container{
+.user-personal__container {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 40px;
 }
 
-.user-personal{
+.user-personal {
     display: flex;
     gap: 200px;
 }
 
-.user-header{
+.user-header {
     font-size: 16px;
     font-weight: 600;
     width: 140px;
 }
 
-.user-info{
+.user-info {
     font-size: 16px;
     font-weight: 300;
 }
 
-.package-category{
+.package-category {
     background-color: #fff;
     width: 100%;
     border-radius: 8px;
@@ -376,7 +311,7 @@ aside.aside {
     box-sizing: border-box;
 }
 
-.package-search{
+.package-search {
     background-color: #fff;
     width: 100%;
     border-radius: 8px;
@@ -384,18 +319,18 @@ aside.aside {
     box-sizing: border-box;
 }
 
-.input-search > input{
+.input-search > input {
     width: 100%;
     border: none;
     outline: none;
 }
 
-.icon-input{
+.icon-input {
     color: #dddde3;
     margin-right: 10px;
 }
 
-.input-search{
+.input-search {
     height: 40px;
     box-sizing: border-box;
     display: flex;
@@ -406,13 +341,13 @@ aside.aside {
     padding: 10px;
 }
 
-.package-content{
+.package-content {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.package-details{
+.package-details {
     background-color: #fff;
     width: 100%;
     border-radius: 8px;
@@ -439,7 +374,7 @@ aside.aside {
     gap: 10px;
 }
 
-.package-details__img{
+.package-details__img {
     width: 100px;
     height: 100px;
     aspect-ratio: 1/1;
@@ -453,29 +388,29 @@ aside.aside {
     position: relative;
 }
 
-.package-details__img > img{
+.package-details__img > img {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
     position: relative;
 }
 
-.package-details__details{
+.package-details__details {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.package-details__title{
+.package-details__title {
     width: 200px;
 }
 
-.package-details__quantity{
+.package-details__quantity {
     font-size: 16px;
     font-weight: 600;
 }
 
-.package-details__status{
+.package-details__status {
     margin-top: 10px;
     margin-left: 110px;
     display: flex;
@@ -483,41 +418,41 @@ aside.aside {
     gap: 10px;
 }
 
-.package-details__status--header{
+.package-details__status--header {
     font-size: 16px;
     font-weight: 600;
 }
 
-.package-details__status--text{
+.package-details__status--text {
     color: rgba(4, 170, 9, 1);
     font-weight: 400;
     font-size: 16px;
 }
 
-.package-details__right{
+.package-details__right {
     display: flex;
     flex-direction: column;
     gap: 50px;
     margin-right: 10px;
 }
 
-.package-details__id{
+.package-details__id {
     font-size: 16px;
     font-weight: 600;
 }
 
-.package-details__total{
+.package-details__total {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.package-details__total--header{
+.package-details__total--header {
     font-size: 16px;
     font-weight: 600;
 }
 
-.package-details__total--number{
+.package-details__total--number {
     color: #ff4141;
     font-weight: 600;
     font-size: 16px;
@@ -566,9 +501,26 @@ aside.aside {
     }
 
     aside.aside {
+        top: 0;
         height: fit-content;
     }
-
+    .aside:has(#search-filter) {
+        position: relative;
+        top: 0;
+    }
+    #filter-btn {
+        display: block;
+    }
+    .filter-checkbox {
+        flex-direction: row;
+    }
+    .checkbox-column_1,
+    .checkbox-column_2 {
+        width: 100%;
+    }
+    .filter-slider {
+        margin-bottom: 30px;
+    }
     .aside-box.box1.card {
         padding-left: 10px;
     }

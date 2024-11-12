@@ -5,16 +5,67 @@ import {
     showInputPassword,
     showSignIn,
 } from './popupAccount.js';
-import removeDiacritics from './until/removeDiacritics.js';
-import { isEmail, validator } from './until/validator.js';
-import { initializationHomePage, updateHomePage } from './render/home/index.js';
-import urlConverter from './until/urlConverter.js';
-import { initializationPageNotFound } from './render/pageNotFound/index.js';
+import { validateEmail, validator } from './until/validator.js';
+import { initializationHomePage, updateHomePage } from './pages/home/index.js';
+import urlConverter, { urlIsPage } from './until/urlConverter.js';
+import { initializationPageNotFound } from './pages/pageNotFound/index.js';
 import {
     initializationSearchPage,
     updateSearchPage,
-} from './render/search/search.js';
+} from './pages/search/search.js';
 import { updateCartQuantity } from './cart.js';
+import { initializeUserInfoPage } from './pages/user-info/index.js';
+import { initializationProductPage, removeProductPage } from './pages/product/index.js';
+import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
+
+//#region khai bao page
+/**
+ * @type {{
+ *  pagePath: string,
+ *  init: (params: object, query: URLSearchParams) => Promise<*>,
+ *  update: (params: object, query: URLSearchParams) => Promise<*>,
+ *  remove: (params: object, query: URLSearchParams) => Promise<*>
+ * }[]}
+ */
+const PAGES = [
+    {
+        pagePath: 'home',
+        init: initializationHomePage,
+        update: updateHomePage,
+        remove: async () => { },
+    },
+    {
+        pagePath: 'search',
+        init: initializationSearchPage,
+        update: updateSearchPage,
+        remove: async () => { },
+    },
+    {
+        // :?tab có nghĩa là tab có thể có hoặc không
+        pagePath: 'user/:?tab',
+        init: initializeUserInfoPage,
+        update: async () => { },
+        remove: async () => { },
+    },
+    {
+        pagePath: 'product/:id',
+        init: initializationProductPage,
+        update: async () => { },
+        remove: removeProductPage,
+    },
+    {
+        pagePath: 'cart',
+        init: initializationCart,
+        update: updateCart,
+        remove: removeCart
+    },
+    {
+        pagePath: '404',
+        init: initializationPageNotFound,
+        update: async () => { },
+        remove: async () => { },
+    },
+]
 
 //#region khai bao bien
 
@@ -32,113 +83,9 @@ const ADDRESS_FORM = document.getElementById('Address-form');
 
 // #endregion
 
-/**
- * Hàm này được sử dụng để render nội dung vào một phần tử được chọn bởi
- * selector. Hàm này đầu tiên hiển thị một spinner (thể hiện trạng thái
- * loading), sau đó thay thế nó bằng nội dung sau khi promiseData được giải
- * quyết.
- *
- * @param {Promise<string[]>} promiseData
- * @param {string} selector
- * @param {(s: string) => void} [onchange]
- */
-function __contentRender__(promiseData, selector, onchange) {
-    const content = document.querySelector(selector);
-    if (content) {
-        content.innerHTML = `
-        <div class="dot-spinner-wrapper">
-            <div class="dot-spinner">
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-                <div class="dot-spinner__dot"></div>
-            </div>
-        </div>
-        `;
-
-        promiseData.then((e) => {
-            content.innerHTML = '';
-            e?.forEach((j, index) => {
-                const div = document.createElement('div');
-                div.textContent = j || '';
-                div.setAttribute('selection', index == 0 ? 'true' : 'false');
-                div.addEventListener('click', function () {
-                    const parder =
-                        this.parentElement?.parentElement?.parentElement;
-                    const input = /** @type {HTMLInputElement} */ (
-                        parder?.querySelector('.Address__dropdown-btn input')
-                    );
-
-                    if (parder) {
-                        // sr
-                        const nextInput = /** @type {HTMLInputElement} */ (
-                            /** @type {HTMLElement} */ (
-                                parder.nextElementSibling
-                            )?.querySelector('.Address__dropdown-btn input')
-                        );
-                        nextInput && (nextInput.disabled = false);
-                    }
-                    if (input) input.placeholder = this.textContent || '';
-
-                    onchange && onchange(this.textContent || '');
-                });
-                content.appendChild(div);
-            });
-        });
-    }
-}
-
 /** Khỏi tại hàm sử lý popup đại trỉ */
+
 function initializeLocationPopup() {
-    /**
-     * Gọi một lần ngay khi popup được load có thể nói là ngay sau khi trang
-     * load
-     *
-     * Render danh sách tỉnh/thành phố
-     *
-     * @param {(name: string) => void} [onchange] Khi người dùng chọn
-     */
-    function renderTinhThanhPho(onchange) {
-        __contentRender__(
-            fakeDatabase.getAllTinhThanPho(),
-            '.Address__dropdown-content.tp',
-            onchange,
-        );
-    }
-
-    /**
-     * Render danh sách phường/xã khi người dùng chọn quận/huyện
-     *
-     * @param {string} tintp
-     * @param {(qh: string) => void} [onchange]
-     */
-    function renderQuanHuyen(tintp, onchange) {
-        __contentRender__(
-            fakeDatabase.getQuanHuyenByTinhThanhPho(tintp),
-            '.Address__dropdown-content.qh',
-            onchange,
-        );
-    }
-
-    /**
-     * Render danh sách phường/xã khi người dùng chọn quận/huyện
-     *
-     * @param {string} tintp
-     * @param {string} qh
-     * @param {(px: string) => void} onchange
-     */
-    function renderPhuongXa(tintp, qh, onchange) {
-        __contentRender__(
-            fakeDatabase.getPhuongXaByQuanHuyenAndThinThanhPho(tintp, qh),
-            '.Address__dropdown-content.xp',
-            onchange,
-        );
-    }
-
     /** Hiện popup */
     function showPopupLocation() {
         POPUP_WRAPPER?.classList.add('show');
@@ -152,155 +99,11 @@ function initializeLocationPopup() {
         if (popup) POPUP_WRAPPER?.classList.remove('show');
     }
 
+    /** */
     function showCustomLocation() {
         if (ADDRESS_DISPLAY.checked) ADDRESS_FORM?.classList.add('show');
         else ADDRESS_FORM?.classList.remove('show');
     }
-
-    /** @param {Element} element */
-    function initializeDropdown(element) {
-        const input = element.querySelector('input');
-        const contentDropdowContent = element.querySelector(
-            '.Address__dropdown-content',
-        );
-        const button = element.querySelector('.Address__dropdown-btn');
-
-        /**
-         * Khi người dùng nhấn làm hiện cái dropdown thì sự kiện ẩn mới được bật
-         *
-         * @param {MouseEvent} event
-         */
-        function handleClickOutsideDropdown(event) {
-            const target = /** @type {HTMLElement} */ (event.target);
-            const isClickInsideDropdown =
-                button?.contains(target) || button?.isSameNode(target);
-
-            if (isClickInsideDropdown) return;
-            contentDropdowContent?.classList.remove('show');
-            document.removeEventListener('click', handleClickOutsideDropdown);
-        }
-
-        function handleSearchInput() {
-            const value = input?.value || '';
-
-            contentDropdowContent?.querySelectorAll('div').forEach((e) => {
-                if (value == '') {
-                    e.classList.remove('hide');
-                } else if (
-                    !removeDiacritics(e.textContent || '').includes(
-                        removeDiacritics(value),
-                    )
-                ) {
-                    e.classList.add('hide');
-                } else {
-                    e.classList.remove('hide');
-                }
-            });
-
-            // NOTE: nếu cái selection nó bị ẩn thì tìm cái không bị ẩn đầu tiện rồi chọn
-            let curr = contentDropdowContent?.querySelector(
-                "div[selection='true']",
-            );
-
-            if (curr?.classList.contains('hide')) {
-                const a =
-                    contentDropdowContent?.querySelector('div:not(.hide)');
-                if (a) {
-                    a.setAttribute('selection', 'true');
-                    curr.setAttribute('selection', 'false');
-                }
-            }
-        }
-
-        function showDropdown() {
-            if (input?.disabled) return;
-            contentDropdowContent?.classList.add('show');
-            document.addEventListener('click', handleClickOutsideDropdown);
-        }
-
-        function resetDropdownOnBlur() {
-            if (!input) return;
-            input.value = '';
-
-            contentDropdowContent?.querySelectorAll('div').forEach((e) => {
-                e.classList.remove('hide');
-            });
-        }
-
-        /** @param {KeyboardEvent} event */
-        function handleKeyboardNavigation(event) {
-            if (!input) return;
-
-            const validkey = ['ArrowDown', 'ArrowUp', 'Enter'];
-            if (!validkey.includes(event.code)) return;
-
-            event.preventDefault();
-
-            let curr = contentDropdowContent?.querySelector(
-                "div[selection='true']",
-            );
-
-            if (event.code == 'Enter') {
-                /** @type {HTMLElement} */ (curr)?.click();
-                input.value = '';
-                return;
-            }
-
-            /** @type {Element | undefined | null} */
-            let next;
-            let temp = curr;
-
-            // NOTE: tìm phần tử không bị ẩn gần nhất
-            if (contentDropdowContent?.querySelector('div:not(.hide)'))
-                do {
-                    if (event.code == 'ArrowDown') {
-                        next =
-                            temp?.nextElementSibling ||
-                            temp?.parentElement?.firstElementChild;
-                    } else if (event.code == 'ArrowUp') {
-                        next =
-                            temp?.previousElementSibling ||
-                            temp?.parentElement?.lastElementChild;
-                    }
-
-                    temp = next;
-                } while (next?.classList.contains('hide'));
-
-            if (next) {
-                console.log(next);
-                curr?.setAttribute('selection', 'false');
-                next?.setAttribute('selection', 'true');
-                next?.scrollIntoView({
-                    inline: 'nearest',
-                    block: 'nearest',
-                });
-            }
-        }
-
-        // người dùng nhấn vào cái button thì hiện cái dropdown
-        button?.addEventListener('click', showDropdown);
-        input?.addEventListener('input', handleSearchInput);
-
-        // cho toàn bộ hiện lại nếu dropdown bị ẩn
-        input?.addEventListener('focusout', resetDropdownOnBlur);
-
-        /**
-         * - NOTE: Xử lý sự kiện khi người dùng nhấn các phím điều hướng
-         *   (ArrowDown, ArrowUp) và Enter trong dropdown.
-         * - NOTE: Điều này cho phép người dùng điều hướng giữa các mục trong
-         *   dropdown và chọn mục bằng phím Enter.
-         */
-        input?.addEventListener('keydown', handleKeyboardNavigation);
-    }
-
-    // được gọi một lần duy nhất
-    renderTinhThanhPho((tinhpt) => {
-        renderQuanHuyen(tinhpt, (qh) => {
-            renderPhuongXa(tinhpt, qh, (xp) => {
-                console.log(xp);
-            });
-        });
-    });
 
     // hiện popup
     BUTTON_LOCATION?.addEventListener('click', showPopupLocation);
@@ -313,10 +116,7 @@ function initializeLocationPopup() {
         .getElementsByName('select_address')
         .forEach((e) => e.addEventListener('change', showCustomLocation));
 
-    // Dropdown handle
-    document
-        .querySelectorAll('#Address-form > .Address-form__row')
-        .forEach(initializeDropdown);
+    // xử lý khi người dùng nhập địa chỉ
 }
 
 /** Sử lý login và nhữ tư tự như vậy */
@@ -327,10 +127,25 @@ function initializeAccountPopup() {
         !POPUP_WRAPPER ||
         !BUTTON_ACCOUNT ||
         !MODAL
-    )
+    ) {
+        console.log('có gì đó không đúng');
         return;
-
-    // kiểm tra người dùng có nhập sđt hoặc email chưa
+    }
+    /**
+     * Validates the phone number or email input in the authentication form.
+     * 
+     * This function sets up validation rules for the input field with the ID 
+     * '#input-phone-email' and handles the form submission. On submission, it 
+     * retrieves user information based on the provided phone number or email.
+     * 
+     * If the user information is found, it proceeds to show the password input 
+     * modal and validates the password. If the user information is not found, 
+     * it shows the create account modal and validates the creation of a new account.
+     * 
+     * The function also handles the back sign-in and close sign-in modal actions.
+     * 
+     * @function
+     */
     function validatePhoneNum() {
         validator({
             form: '.input-auth-form',
@@ -352,19 +167,18 @@ function initializeAccountPopup() {
                             validateCrateNewAccount(data['#input-phone-email']);
                         }
                         backSignIn();
+                        // @ts-ignore
                         closeSignIn(MODAL);
                     })
-                    .catch((e) => {
-                        if (e) {
-                            showCreateAccount(MODAL);
-                            validateCrateNewAccount();
-                        }
-                    });
             },
         });
     }
 
     // kiểm tra người dùng có nhập password vào đúng mật khẩu không
+    /**
+     * 
+     * @param {import('./until/type.js').UserInfo} userInfo 
+     */
     function validatePassword(userInfo) {
         validator({
             form: '.input-auth-form',
@@ -381,7 +195,11 @@ function initializeAccountPopup() {
         });
     }
 
-    // kiểm tra người dùng có nhập tên vào mật khẩu
+    /**
+     * kiểm tra người dùng có nhập tên vào mật khẩu
+     * 
+     * @param {string} userPhoneOrEmail 
+     */
     function validateCrateNewAccount(userPhoneOrEmail) {
         validator({
             form: '.input-auth-form',
@@ -394,7 +212,7 @@ function initializeAccountPopup() {
             onSubmit: (data) => {
                 let email = '',
                     phone_num = '';
-                if (isEmail(userPhoneOrEmail)) {
+                if (validateEmail(userPhoneOrEmail)) {
                     email = userPhoneOrEmail;
                 } else {
                     phone_num = userPhoneOrEmail;
@@ -418,7 +236,9 @@ function initializeAccountPopup() {
         });
     }
 
-    // thêm dropdown cho nút đăng nhập
+    /**
+     * thêm dropdown cho nút đăng nhập
+     */
     function showDropDown() {
         const dropDown = document.createElement('div');
         dropDown?.classList.add(
@@ -442,24 +262,29 @@ function initializeAccountPopup() {
         BUTTON_ACCOUNT?.appendChild(dropDown);
     }
 
+    /**
+     * 
+     * @param {Element} [modal]
+     */
     function closeSignIn(modal) {
         const btnExit = document.getElementById('btn-exit');
         const modalDemo = document.querySelector('.modal-demo');
         if (btnExit)
             btnExit.onclick = () => {
-                modal.classList.remove('show-modal');
+                modal?.classList.remove('show-modal');
             };
         if (modal)
+            // NOTE: không nên đổi thành addevntListener
+            // @ts-ignore
             modal.onclick = (e) => {
                 if (!e.target) return;
-                if (
-                    !modalDemo?.contains(/** @type {HTMLElement} */ (e.target))
-                ) {
+                if (!modalDemo?.contains(/**@type {HTMLElement}*/(e.target))) {
                     btnExit?.click();
                 }
             };
     }
 
+    /** */
     function backSignIn() {
         const btnBack = document.getElementById('back-btn');
         if (btnBack && BUTTON_ACCOUNT) {
@@ -531,19 +356,20 @@ function initializeAccountPopup() {
 function initializeUrlHandling() {
     let { page: curr_page, query } = urlConverter(location.hash);
 
-    /** @param {string} page */
-    function pageInit(page) {
-        switch (page) {
-            case '#/home':
-                initializationHomePage();
-                break;
-            case '#/search':
-                initializationSearchPage();
-                break;
-            default:
-                initializationPageNotFound();
-                break;
+    /** 
+     * @param {string} page
+     * @param {URLSearchParams} query 
+     */
+    function pageInit(page, query) {
+        for (const { pagePath, init } of PAGES) {
+            const params = urlIsPage(page.replace('#/', ''), pagePath);
+            if (params) {
+                init(params, query);
+                return;
+            }
         }
+
+        initializationPageNotFound({}, query);
     }
 
     /**
@@ -551,15 +377,29 @@ function initializeUrlHandling() {
      * @param {URLSearchParams} query
      */
     function pageUpdate(curr_page, query) {
-        switch (curr_page) {
-            case '#/home':
-                updateHomePage(curr_page, query);
-                break;
-            case '#/search':
-                updateSearchPage(curr_page, query);
-                break;
-            default:
-                break;
+        for (const { pagePath, update } of PAGES) {
+            const params = urlIsPage(curr_page.replace('#/', ''), pagePath);
+            if (params) {
+                update(params, query);
+                return;
+            }
+        }
+
+    }
+
+    /**
+     * 
+     * @param {string} page 
+     * @param {URLSearchParams} query
+     * @returns {void}
+     */
+    function pageRemove(page, query) {
+        for (const { pagePath, remove } of PAGES) {
+            const params = urlIsPage(page.replace('#/', ''), pagePath);
+            if (params) {
+                remove(page, query);
+                return;
+            }
         }
     }
 
@@ -569,7 +409,9 @@ function initializeUrlHandling() {
         console.log(page, query);
 
         if (page != curr_page) {
-            pageInit(page);
+            pageRemove(curr_page, query);
+            pageInit(page, query);
+
             curr_page = page;
         }
 
@@ -587,7 +429,9 @@ function initializeUrlHandling() {
                 /** @type {HTMLInputElement} */ (e.target).value;
         }
     });
-    pageInit(curr_page);
+
+
+    pageInit(curr_page, query);
     pageUpdate(curr_page, query);
 }
 

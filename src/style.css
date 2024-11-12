@@ -1,0 +1,65 @@
+.left-content.card.pay {
+    padding: 20px;
+}
+
+.main-pay .right {
+}
+
+.main-cart-content {
+    grid-template-columns: 1fr 1fr;
+}
+
+.main-pay .group {
+    display: flex;
+    gap: 10px;
+}
+
+.main-pay .item .img {
+    height: 60px;
+}
+
+.main-pay .item {
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    align-items: center;
+}
+
+.main-pay .item .img img {
+    height: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.main-pay .item .body {
+    margin-right: auto;
+    color: #27272a;
+}
+
+.group button {
+    min-width: max-content;
+}
+
+.main-pay .item .body div:first-child {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.main-pay .item .body div:nth-child(2) {
+    font-size: 14px;
+    color: gray;
+}
+
+.calculator {
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.calculatior-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: gray;
+    font-weight: 400;
+}

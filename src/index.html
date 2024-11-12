@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -21,6 +21,8 @@
         <link rel="stylesheet" href="./assets/css/index.css" />
         <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css" />
         <link rel="icon" href="./assets/img/favicon.png" />
+        <script type="module" src="./assets/js/render/address.js"></script>
+
         <meta
             name="google-site-verification"
             content="eEgHLOuD2-ZJ-WcyTLtJggrKQpHJgdIrnxPPXJVEg6s"
@@ -183,50 +185,28 @@
                     <div id="Address-form">
                         <div class="Address-form__row">
                             <p class="Address-type">Tỉnh/Thành phố</p>
-                            <div
-                                class="dropdown-container"
-                                id="dropdown-container--city"
-                            >
-                                <label class="Address__dropdown-btn">
-                                    <input
-                                        placeholder="Vui lòng chọn tỉnh/thành phố"
-                                    />
-                                    <i class="fa-solid fa-angle-down"></i>
-                                </label>
-                                <div class="Address__dropdown-content tp"></div>
-                            </div>
+                            <address-form
+                                type="TTP"
+                                placeholder="Tỉnh/Thành Phố"
+                                name="address"
+                            ></address-form>
                         </div>
                         <div class="Address-form__row">
                             <p class="Address-type">Quận/Huyện</p>
-                            <div
-                                class="dropdown-container"
-                                id="dropdown-container--district"
-                            >
-                                <label class="Address__dropdown-btn">
-                                    <input
-                                        disabled
-                                        placeholder="Vui lòng chọn quận/huyện"
-                                    />
-                                    <i class="fa-solid fa-angle-down"></i>
-                                </label>
-                                <div class="Address__dropdown-content qh"></div>
-                            </div>
+                            <address-form
+                                type="QH"
+                                placeholder="Quận/Huyện"
+                                name="address"
+                            ></address-form>
                         </div>
                         <div class="Address-form__row">
                             <p class="Address-type">Phường/Xã</p>
-                            <div
-                                class="dropdown-container"
-                                id="dropdown-container--ward"
-                            >
-                                <label class="Address__dropdown-btn">
-                                    <input
-                                        disabled
-                                        placeholder="Vui lòng chọn phường/xã"
-                                    />
-                                    <i class="fa-solid fa-angle-down"></i>
-                                </label>
-                                <div class="Address__dropdown-content xp"></div>
-                            </div>
+
+                            <address-form
+                                type="PX"
+                                placeholder="Phường/Xã"
+                                name="address"
+                            ></address-form>
                         </div>
                     </div>
                 </div>
