@@ -42,6 +42,7 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *     rule: 'admin' | 'user';
  *     status: 'active' | 'block';
  *     datecreated: Date;
+ *     address: string[];
  * }} UserInfo
  */
 
@@ -78,6 +79,11 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  * @typedef {{
  *     id: string;
  *     user_id: string;
+ *     inforeceiver: {
+ *         name: string,
+ *         phone_num: string,   
+ *         email: string,
+ *     };
  *     items: Omit<Cart, 'id'| 'user_id' | 'timecreate'>[];
  *     date: Date;
  *     state: 'doixacnhan' | 'daxacnhan' | 'danggiaohang' | 'giaohangthanhcong' | 'huy';

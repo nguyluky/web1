@@ -74,7 +74,7 @@ function setupFilterListeners() {
     const filterPopup = document.querySelector('#search-filter');
     filterPopup
         ?.querySelector('.popup-btn')
-        // @ts-ignore
+
         ?.addEventListener('click', (event) => {
             searchFilter();
 
@@ -294,9 +294,14 @@ function initializationAside() {
                         </div>
                     </div>`;
 
-    const rangeInput = document.querySelectorAll(".range-input input"),
-        priceInput = document.querySelectorAll(".price-input input"),
-        range = document.querySelector(".slider .progress");
+    const rangeInput = /**@type {NodeListOf<HTMLInputElement>} */ (document.querySelectorAll(".range-input input")),
+        priceInput =  /**@type {NodeListOf<HTMLInputElement>} */ (document.querySelectorAll(".price-input input")),
+        range =  /**@type {HTMLElement} */ (document.querySelector(".slider .progress"));
+
+    if (!range) {
+        console.error("Không tìm thấy range");
+        return;
+    }
     let priceGap = 10000;
     // biếng JSDoc quá
 
@@ -308,15 +313,15 @@ function initializationAside() {
             // nếu nhập đúng điều kiện
             if (maxPrice - minPrice >= priceGap && maxPrice <= Number(/**@type {HTMLInputElement} */(rangeInput[1]).max)) {
                 if (/**@type {HTMLElement} */ (e.target).className === "input-min") {
-                    // @ts-ignore
-                    rangeInput[0].value = minPrice;
-                    // @ts-ignore
-                    range.style.left = (minPrice / rangeInput[0].max) * 100 + "%";
+
+                    rangeInput[0].value = minPrice + '';
+
+                    range.style.left = (minPrice / +rangeInput[0].max) * 100 + "%";
                 } else {
-                    // @ts-ignore
-                    rangeInput[1].value = maxPrice;
-                    // @ts-ignore
-                    range.style.right = 100 - (maxPrice / rangeInput[1].max) * 100 + "%";
+
+                    rangeInput[1].value = maxPrice + '';
+
+                    range.style.right = 100 - (maxPrice / +rangeInput[1].max) * 100 + "%";
                 }
             }
         });
@@ -324,29 +329,38 @@ function initializationAside() {
 
     rangeInput.forEach((input) => {
         input.addEventListener("input", (e) => {
-            // @ts-ignore
+            const target = /**@type {HTMLElement} */ (e.target);
+            if (!target) return;
+
             let minVal = parseInt(rangeInput[0].value),
-                // @ts-ignore
+
                 maxVal = parseInt(rangeInput[1].value);
 
+
+
             if (maxVal - minVal < priceGap) {
-                // @ts-ignore
-                if (e.target.className === "range-min") {
-                    // @ts-ignore
-                    rangeInput[0].value = maxVal - priceGap;
+
+                if (target.className === "range-min") {
+
+                    rangeInput[0].value = (maxVal - priceGap) + '';
                 } else {
-                    // @ts-ignore
-                    rangeInput[1].value = minVal + priceGap;
+
+                    rangeInput[1].value = (minVal + priceGap) + '';
                 }
+
+
+                range.style.left = (minVal / +rangeInput[0].max) * 100 + "%";
+
+                range.style.right = 100 - (maxVal / +rangeInput[1].max) * 100 + "%";
             } else {
-                // @ts-ignore
-                priceInput[0].value = minVal;
-                // @ts-ignore
-                priceInput[1].value = maxVal;
-                // @ts-ignore
-                range.style.left = (minVal / rangeInput[0].max) * 100 + "%";
-                // @ts-ignore
-                range.style.right = 100 - (maxVal / rangeInput[1].max) * 100 + "%";
+
+                priceInput[0].value = minVal + '';
+
+                priceInput[1].value = maxVal + '';
+
+                range.style.left = (minVal / +rangeInput[0].max) * 100 + "%";
+
+                range.style.right = 100 - (maxVal / +rangeInput[1].max) * 100 + "%";
             }
         });
     });
@@ -357,7 +371,7 @@ function initializationAside() {
  * @param {Object} params
  * @param {URLSearchParams} query
  */
-// @ts-ignore
+
 export async function initializationSearchPage(params, query) {
     initializationMain();
     initializationArticle();

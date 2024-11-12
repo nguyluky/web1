@@ -69,6 +69,10 @@ async function requestToPromise(request) {
     });
 }
 
+/**
+ * 
+ * @param {string} storeName 
+ */
 function updateDataLoaded(storeName) {
     dataLoaded[storeName] = true;
     window.localStorage.setItem('dataLoaded', JSON.stringify(dataLoaded));
@@ -99,6 +103,7 @@ function createObjectStore(db_) {
                 { keypath: 'phone_num', option: { unique: true } },
                 { keypath: 'rule' },
                 { keypath: 'datecreated' },
+                { keypath: 'address' },
                 { keypath: ['email', 'passwd'], option: { unique: true } },
             ],
         },
@@ -170,71 +175,6 @@ function createObjectStore(db_) {
         console.log(`tạo ${obj.name} thành công`);
     });
 }
-
-async function loadUserData() {
-    if (!dataLoaded[ObjectStoreName.USER]) {
-        const data = await fetch('/assets/data/user.json').then((res) =>
-            res.json(),
-        );
-        const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
-        const userStore = transaction.objectStore(ObjectStoreName.USER);
-        data.data.forEach((e) => userStore.add(e));
-        // await requestToPromise(transaction);
-        updateDataLoaded(ObjectStoreName.USER);
-    }
-}
-async function loadImgData() {
-    if (!dataLoaded[ObjectStoreName.IMG]) {
-        const data = await fetch('/assets/data/img.json').then((res) =>
-            res.json(),
-        );
-        const transaction = db.transaction(ObjectStoreName.IMG, 'readwrite');
-        const imgStore = transaction.objectStore(ObjectStoreName.IMG);
-        data.data.forEach((e) => imgStore.add(e));
-        updateDataLoaded(ObjectStoreName.IMG);
-        // await requestToPromise(transaction);
-    }
-}
-async function loadCategoryData() {
-    if (!dataLoaded[ObjectStoreName.CATEGORY]) {
-        const data = await fetch('/assets/data/category.json').then((res) =>
-            res.json(),
-        );
-        const transaction = db.transaction(
-            ObjectStoreName.CATEGORY,
-            'readwrite',
-        );
-        const categoryStore = transaction.objectStore(ObjectStoreName.CATEGORY);
-        data.data.forEach((e) => categoryStore.add(e));
-        // await requestToPromise(transaction);
-        updateDataLoaded(ObjectStoreName.CATEGORY);
-    }
-}
-async function loadBookData() {
-    if (!dataLoaded[ObjectStoreName.BOOK]) {
-        const data = await fetch('/assets/data/book.json').then((res) =>
-            res.json(),
-        );
-        const transaction = db.transaction(ObjectStoreName.BOOK, 'readwrite');
-        const bookStore = transaction.objectStore(ObjectStoreName.BOOK);
-        data.data.forEach((e) => bookStore.add(e));
-        // await requestToPromise(transaction);
-        updateDataLoaded(ObjectStoreName.BOOK);
-    }
-}
-async function loadCartData() {
-    if (!dataLoaded[ObjectStoreName.CART]) {
-        const data = await fetch('/assets/data/cart.json').then((res) =>
-            res.json(),
-        );
-        const transaction = db.transaction(ObjectStoreName.CART, 'readwrite');
-        const bookStore = transaction.objectStore(ObjectStoreName.CART);
-        data.data.forEach((e) => bookStore.add({ ...e }));
-        // await requestToPromise(transaction);
-        updateDataLoaded(ObjectStoreName.CART);
-    }
-}
-// async function loadOrder(params) {}
 
 req.onupgradeneeded = (event) => {
     isOnupgradeneeded = true;
@@ -399,6 +339,7 @@ class FakeDatabase {
             rule: 'user',
             status: 'active',
             datecreated: new Date(),
+            address: []
         };
 
         const data_ = db
@@ -435,10 +376,6 @@ class FakeDatabase {
         const transaction = db.transaction(ObjectStoreName.USER, 'readonly');
         const userStore = transaction.objectStore(ObjectStoreName.USER);
         return requestToPromise(userStore.index('phone_num').get(phone_num));
-    }
-
-    async checkIfUserExists(email, phone_num) {
-        // TODO: Implement this function
     }
 
     /**
