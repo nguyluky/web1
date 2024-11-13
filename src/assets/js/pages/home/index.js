@@ -6,7 +6,7 @@ import {
     setupPaginationListeners,
     updatePagination,
 } from './renderProduct.js';
-import initAddToCartOnButton from '../../cart.js';
+import initAddToCartOnButton, { updateCartQuantity } from '../../cart.js';
 
 /**
  *
@@ -239,6 +239,7 @@ export async function initializationHomePage(params, query) {
     initializationMain();
     initializationArticle();
     initializationAside();
+    updateCartQuantity();
 }
 
 /**

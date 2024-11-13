@@ -1,7 +1,19 @@
+import { showUserInfo, renderCart, updateCartQuantity } from "../../cart.js";
+
 
 export async function initializationCart(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
+
+
+
+    const cssRep = await fetch('./assets/css/cart.css');
+
+    const style = document.createElement('style');
+    style.textContent = await cssRep.text();
+    style.id = 'cart-style'
+    document.head.appendChild(style);
+
 
     main.classList.add('main-cart');
     main.innerHTML = `
@@ -35,14 +47,13 @@ export async function initializationCart(params, query) {
                 </div>
                 <div class="info-content">
                     <div class="contact-info">
-                        <div class="contact-info__name">Ly Lê</div>
+                        <div class="contact-info__name"></div>
                         <div class="contact-info__phone-num">
-                            0912345678
+                        
                         </div>
                     </div>
                     <div class="address-info">
-                        106,đường Nguyễn Chí Thanh, thị trấn Quảng Phú,
-                        huyện Cư M’gar, Đắk Lắk
+                        
                     </div>
                 </div>
             </div>
@@ -96,16 +107,10 @@ export async function initializationCart(params, query) {
             </div>
         </div>
     </div>
-    `
-
-    const style = document.createElement('link');
-    style.rel = 'stylesheet'
-    style.href = './assets/css/cart.css'
-    style.id = 'cart-style'
-
-    document.head.appendChild(style);
-
-
+    `;
+    updateCartQuantity();
+    showUserInfo();
+    await renderCart();
 
 }
 

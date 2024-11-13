@@ -73,6 +73,7 @@ const BUTTON_LOCATION = document.getElementById('btn-location');
 const CLOSE_POPUP = document.getElementById('btn-close');
 const POPUP_WRAPPER = document.getElementById('popup-wrapper');
 
+const BUTTON_CART = document.querySelector('.cart');
 const BUTTON_ACCOUNT = document.getElementById('btn-account');
 const MODAL = document.querySelector('.js-modal');
 
@@ -126,7 +127,8 @@ function initializeAccountPopup() {
         !CLOSE_POPUP ||
         !POPUP_WRAPPER ||
         !BUTTON_ACCOUNT ||
-        !MODAL
+        !MODAL ||
+        !BUTTON_CART
     ) {
         console.log('có gì đó không đúng');
         return;
@@ -154,7 +156,6 @@ function initializeAccountPopup() {
                 validator.isRequired('#input-phone-email'),
             ],
             onSubmit: (data) => {
-                // ch sửa lai lấy thông tin người dùng băng email hoặc sdt
                 fakeDatabase
                     .getUserInfoByPhoneOrEmail(data['#input-phone-email'])
                     .then((userInfo) => {
@@ -320,9 +321,18 @@ function initializeAccountPopup() {
             validatePhoneNum();
         }
     });
+
+    BUTTON_CART.addEventListener('click', () => {
+        BUTTON_ACCOUNT.click();
+        if (localStorage.getItem('user_id')) {
+            location.hash = `#/cart`
+        }
+    })
+
     if (localStorage.getItem('user_id')) {
         showDropDown();
     }
+
 }
 
 /**
@@ -438,7 +448,6 @@ async function initializeUrlHandling() {
 function main() {
     initializeLocationPopup();
     initializeAccountPopup();
-
     initializeUrlHandling();
 }
 

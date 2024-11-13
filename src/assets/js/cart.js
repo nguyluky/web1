@@ -1,30 +1,52 @@
 import fakeDatabase from './db/fakeDBv1.js';
 import uuidv from './until/uuid.js';
 import { toast } from './render/popupRender.js';
+import urlConverter from './until/urlConverter.js';
+import { showPopup } from './render/popupRender.js';
 
-/**
- *
- *
- * @returns {void}
- */
-function mainCart() {
-    updateCartQuantity();
-    renderCart().then(() => {
-        handlePlus();
-        handleMinus();
-        initDeleteCartItem();
-        isCheckBox();
-        changeQuantity();
-        renderPaymentSummary();
-    });
+// /**
+//  *
+//  *
+//  * @returns {void}
+//  */
+// export function mainCart() {
+//     updateCartQuantity();
+//     renderCart().then(() => {
+//         handlePlus();
+//         handleMinus();
+//         initDeleteCartItem();
+//         isCheckBox();
+//         changeQuantity();
+//         // renderPaymentSummary();
+//         showUserInfo();
+//     });
+// }
+
+export async function showUserInfo() {
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        return;
+    }
+
+    const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
+    const userName = document.querySelector('.contact-info__name');
+    const userTel = document.querySelector('.contact-info__phone-num');
+    const userAddress = document.querySelector('.address-info');
+    if (userInfo && userName && userTel && userAddress) {
+        userName.innerHTML = userInfo.name;
+        userTel.innerHTML = userInfo.phone_num;
+        // userAddress.innerHTML = userInfo.address[0];
+    }
 }
+
 
 /**
  *
  * @returns {Promise<void>}
  */
 
-async function renderCart() {
+export async function renderCart() {
     const user_id = localStorage.getItem('user_id');
 
     if (!user_id) {
@@ -50,7 +72,34 @@ async function renderCart() {
                 cartItems.appendChild(cartItem);
             }
         }
+
+        const titleBooks = document.querySelectorAll('.book-title');
+        titleBooks.forEach(titleBook => {
+            titleBook.addEventListener('click', () => {
+                const parentElement = getParent(titleBook, '.cart-item');
+                const book_id = parentElement.dataset.bookId;
+                console.log(parentElement)
+                location.hash = `#/product/${book_id}`;
+            })
+        })
+        handlePlus();
+        handleMinus();
+        initDeleteCartItem();
+        isCheckBox();
+        changeQuantity();
     }
+}
+
+
+function deliveryTime() {
+    const today = new Date();
+    today.setDate(today.getDate() + 3);
+    const dayName = today.toLocaleDateString("vi-VN", { weekday: 'long' });
+    return `Giao ${dayName}, ${today.getDate()}/${today.getMonth() + 1}`
+}
+
+function formatNumber(num) {
+    return num.toLocaleString('vi-VN');
 }
 
 /**
@@ -67,9 +116,11 @@ async function createCartItem(cart) {
         if (img) {
             source = img.data;
         }
+        const deliveryDay = deliveryTime();
         const cartItem = document.createElement('div');
         cartItem.classList.add('cart-item', 'item-grid');
         cartItem.dataset.cartId = cart.id;
+        cartItem.dataset.bookId = book.id;
         let html = `
             <div class="cart-item-figure">
                 <label>
@@ -95,20 +146,20 @@ async function createCartItem(cart) {
                             class="car-icon"
                         />
                         <span class="delivery-text"
-                            >Giao thứ 7, 02/11</span
+                            >${deliveryDay}</span
                         >
                     </div>
                 </div>
             </div>
             <div class="cart-item-price">
                 <span class="discount-price"
-                    >${Math.round(
-            book.base_price * (1 - book.discount),
+                    >${formatNumber(Math.round(
+            book.base_price * (1 - book.discount)),
         )} <sup>₫</sup></span
                 >
                 <span class="original-price ${book.discount === 0 ? 'hide' : ''
             }"
-                    > ${book.base_price}
+                    > ${formatNumber(book.base_price)}
                     <sup>₫</sup>
                 </span>
                 <div class="cart-price-note">
@@ -131,7 +182,7 @@ async function createCartItem(cart) {
                 </div>
             </div>
             <div class="cart-item-amount ">
-                ${cart.quantity * (book.base_price * (1 - book.discount))}
+                ${formatNumber(cart.quantity * (book.base_price * (1 - book.discount)))}
                 <sup>₫</sup>
             </div>
             <div class="cart-item-delete-btn" data-cart-id =${cart.id}>
@@ -141,6 +192,7 @@ async function createCartItem(cart) {
             </div>
         `;
         cartItem.innerHTML = html;
+
         return cartItem;
     }
 }
@@ -177,7 +229,7 @@ function changeQuantity() {
             cart.quantity = +(quantityInput.value || '1');
 
             await fakeDatabase.updateCart(cart);
-            cartAmount.innerHTML = `${cart.quantity * (book.base_price * (1 - book.discount))
+            cartAmount.innerHTML = `${formatNumber(cart.quantity * (book.base_price * (1 - book.discount)))
                 } <sup>₫</sup>`;
             renderPaymentSummary();
         });
@@ -202,7 +254,7 @@ function handlePlus() {
             await fakeDatabase.updateCart(cart);
             parentElement.querySelector('.quantity-num').value = cart.quantity;
             parentElement.querySelector('.cart-item-amount').innerHTML = `
-                ${cart.quantity * (book.base_price * (1 - book.discount))}
+                ${formatNumber(cart.quantity * (book.base_price * (1 - book.discount)))}
                 <sup>₫</sup>
             `;
             renderPaymentSummary();
@@ -230,7 +282,7 @@ function handleMinus() {
                 parentElement.querySelector('.quantity-num').value =
                     cart.quantity;
                 parentElement.querySelector('.cart-item-amount').innerHTML = `
-                    ${cart.quantity * (book.base_price * (1 - book.discount))}
+                    ${formatNumber(cart.quantity * (book.base_price * (1 - book.discount)))}
                     <sup>₫</sup>
                 `;
             }
@@ -313,7 +365,7 @@ async function initAddToCartOnButton() {
     updateCartQuantity();
 }
 
-function initDeleteCartItem() {
+async function initDeleteCartItem() {
     const user_id = localStorage.getItem('user_id');
     const deleteButtons = /**@type {NodeListOf<HTMLElement>} */ (
         document.querySelectorAll('.cart-item-delete-btn')
@@ -343,9 +395,7 @@ function initDeleteCartItem() {
                     updateCartQuantity();
                     renderPaymentSummary();
                 })
-                .catch((e) => {
-                    alert('error');
-                });
+                .catch((e) => { });
         });
     });
     const deleteAllButton = document.getElementById('delete-all-cart');
@@ -470,43 +520,53 @@ async function renderPaymentSummary() {
             order.push(cart.id);
         }
     }
-    localStorage.setItem('order', JSON.stringify(order));
-    console.log(order)
-
 
     const amount = document.querySelector('#original-amount');
 
-    if (amount) amount.innerHTML = `${originalAmount} <sup>₫</sup>`;
-
+    if (amount) amount.innerHTML = `${formatNumber(originalAmount)} <sup>₫</sup>`;
     const discountAmount = document.querySelector('#discount-amount');
     if (discountAmount)
-        discountAmount.innerHTML = `${originalAmount - totalAmount
+        discountAmount.innerHTML = `${formatNumber(totalAmount - originalAmount)
             } <sup>₫</sup>`;
 
     const totalAmountElement = document.querySelector('#total-amount');
+    if (totalAmountElement) {
+        totalAmountElement.innerHTML = `${formatNumber(totalAmount)} <sup>₫</sup>`;
+    }
 
-    if (totalAmountElement)
-        totalAmountElement.innerHTML = `${totalAmount} <sup>₫</sup>`;
 
     const num = document.querySelector('.prices__button__center button');
-    if (num) num.innerHTML = `Mua Hàng (${numberOfItems})`;
-    buyBooks(numberOfItems);
+    if (num) num.innerHTML = `Mua Hàng (${formatNumber(numberOfItems)})`;
+    buyBooks(numberOfItems, order);
 }
 
-function buyBooks(num) {
+async function buyBooks(num, order) {
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) {
+        return;
+    }
+    const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
     const buyBtn = document.querySelector('.btn-danger');
-    buyBtn?.addEventListener('click', (e) => {
+    console.log(num)
+    buyBtn?.addEventListener('click', () => {
+        console.log(num)
         if (num === 0) {
             toast({ title: 'Vui lòng chọn sản phẩm cần mua', type: 'error' });
         }
+        else if (userInfo && userInfo.status === 'block') {
+            toast({ title: 'Tài khoản của bạn đã bị chặn', type: 'error' });
+        }
         else {
-            window.location.href = './pay.html';
+            const { page, query } = urlConverter(location.hash);
+            query.set('payment', encodeURI(order.join(',')));
+            window.location.hash = page + '?' + query.toString();
+            console.log(window.location.hash)
         }
     })
 }
 
 
 
-mainCart();
+// mainCart();
 
 export default initAddToCartOnButton;
