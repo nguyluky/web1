@@ -697,6 +697,12 @@ class FakeDatabase {
         const orderStore = transaction.objectStore(ObjectStoreName.ORDER);
         return requestToPromise(orderStore.delete(order_id));
     }
+
+    /**
+     * 
+     * @param {string} user_id 
+     * @returns {Promise<Order[]>}
+     */
     async getOrdertByUserId(user_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.ORDER);

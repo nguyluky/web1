@@ -14,7 +14,7 @@ import {
     updateSearchPage,
 } from './pages/search/search.js';
 import { updateCartQuantity } from './cart.js';
-import { initializeUserInfoPage } from './pages/user-info/index.js';
+import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
 import { initializationProductPage, removeProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 
@@ -43,8 +43,8 @@ const PAGES = [
     {
         // :?tab có nghĩa là tab có thể có hoặc không
         pagePath: 'user/:?tab',
-        init: initializeUserInfoPage,
-        update: async () => { },
+        init: initializationUserInfoPage,
+        update: updateUserInfoPage,
         remove: async () => { },
     },
     {
@@ -428,7 +428,9 @@ async function initializeUrlHandling() {
                 /** @type {HTMLInputElement} */ (e.target).value;
         }
     });
-
+    document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
+        location.hash = '#/user';
+    });
 
     await pageInit(curr_page, query);
     await pageUpdate(curr_page, query);

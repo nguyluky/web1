@@ -253,7 +253,6 @@ export function selectionConditional(categories, searchText = '', from = NaN, to
     data = data.filter((e) => {
         return removeDiacritics(e.title).includes(removeDiacritics(searchText));
     });
-    console.log(from, to, data);
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;
 }
