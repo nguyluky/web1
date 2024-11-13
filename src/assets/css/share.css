@@ -185,6 +185,7 @@ body {
 .dropdown-btn-content.dropdown-pos-left-bottom {
     right: 0;
     top: 100%;
+    z-index: 100;
 }
 
 .dropdown-btn-content.dropdown-pos-left-bottom > p {

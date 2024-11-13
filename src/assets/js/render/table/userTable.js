@@ -241,13 +241,14 @@ function addUser() {
     /** @type {UserInfo} */
     const data = {
         id: uuidv(8),
-        email: '',
-        name: '',
-        passwd: '',
-        phone_num: '',
+        email: 'Nhập email',
+        name: 'Nhập tên',
+        passwd: 'Nhập mật khẩu',
+        phone_num: 'Nhập số điện thoại',
         rule: 'user',
         status: 'active',
         datecreated: now,
+        address: [],
     };
 
     // Lưu người dùng mới vào cache
@@ -265,6 +266,12 @@ function addUser() {
         },
         renderRow,
     );
+
+    row.querySelectorAll('td').forEach((e) => {
+        e.addEventListener('click', (event) => {
+            e.getAttribute('ischange') != 'true' && document.execCommand('selectAll', false);
+        });
+    })
 
     defaultAddRow(table, row);
 }
