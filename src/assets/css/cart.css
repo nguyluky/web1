@@ -28,6 +28,7 @@
 .left-content {
     box-sizing: border-box;
     grid-row: 1/5;
+    min-height: 80vh;
 }
 
 .left-content-heading {
@@ -372,6 +373,7 @@ input[type='checkbox'] {
 
     .left-content {
         grid-row: 2;
+        min-height: auto;
     }
 
     .left-content .right {

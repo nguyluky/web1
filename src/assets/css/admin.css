@@ -236,6 +236,16 @@ th {
     background: hwb(54 72% 0%);
 }
 
+#content_table tr[isAddCache='true'] td {
+    /* background: #f0f8ff; */
+    color: gray;
+    text-decoration: underline;
+}
+
+#content_table tr[isAddCache='true'] td[ischange='true'] {
+    color: #313030;
+}
+
 .details-wrapper {
     overflow-y: auto;
     height: 200px;
@@ -595,7 +605,8 @@ body {
         position: absolute;
         height: auto;
         z-index: 50;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        box-shadow:
+            0 4px 8px 0 rgba(0, 0, 0, 0.2),
             0 6px 20px 0 rgba(0, 0, 0, 0.19);
         border-radius: 0;
         padding: 0;
