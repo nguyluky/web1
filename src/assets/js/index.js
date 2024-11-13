@@ -281,7 +281,7 @@ function initializeAccountPopup() {
                 if (!modalDemo?.contains(/**@type {HTMLElement}*/(e.target))) {
                     btnExit?.click();
                 }
-            };
+        };
     }
 
     /** */
