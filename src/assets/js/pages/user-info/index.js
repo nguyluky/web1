@@ -76,28 +76,40 @@ async function createOrderItemElement(item) {
     }
     item_detail.className = "package-details__general";
     item_detail.innerHTML = `
-        <div class="package-details__img">
-            <img src="${source}" alt="">
-        </div>
         <div class="package-details__details">
-            <div class="package-details__title">${sach?.title}</div>
-            <div class="package-details__quantity">x${item.quantity}</div>
-            <div class="package-details__price">
-                <span class="package-details__total--number">
-                    ${item.total} <sup>₫</sup>
-                </span>
+            <div class="package-details__img">
+                <img src="${source}" alt="">
+            </div>
+            <div class="package-details__info">
+                <div class="package-details__title">${sach?.title}</div>
+                <div class="package-details__quantity">x${item.quantity}</div>        
             </div>
         </div>
-            `;
+        <div class="package-details__price">
+            <span class="package-details__total--number">
+                ${item.total} <sup>₫</sup>
+            </span>
+        </div>`;
     return item_detail;
 }
 async function renderOrder(option = 'all') {
     const container = /**@type {HTMLElement}*/(document.querySelector('.package-content'));
     container.innerHTML = '';
+    let count = 0;
     order_data.forEach(order => {
-        if (option === 'all' || order.state === option)
+        if (option === 'all' || order.state === option) {
+            count++;
             container.appendChild(createOrderContainer(order));
+        }
     })
+    if (count === 0) {
+        document.querySelector('.no-order')?.classList.remove('hide');
+        document.querySelector('.package-search')?.classList.add('hide');
+    }
+    else {
+        document.querySelector('.no-order')?.classList.add('hide');
+        document.querySelector('.package-search')?.classList.remove('hide');
+    }
 }
 
 function renderUserInfo() {
@@ -184,6 +196,10 @@ function initializationArticle__OrderInfo() {
                             <input type="text" placeholder="Tìm kiếm theo tên sản phẩm, Mã đơn hàng">
                         </label>
                     </div>
+                    <div class="no-order hide">
+                        <img src="../assets/img/no-order.png">
+                        <h3>Không có đơn hàng nào</h3>
+                    </div>
                     <div class="package-content">
                     </div>
                         `;
@@ -256,11 +272,16 @@ export async function initializationUserInfoPage(params, query) {
 export async function updateUserInfoPage() {
     const { page, query } = urlConverter(location.hash);
     const info = query.get('info');
+    const user_option = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.user-info__row'));
     switch (info) {
         case 'tttk':
+            user_option[0].classList.add('selected');
+            user_option[1].classList.remove('selected');
             initializationArticle__AccountInfo();
             break;
         case 'dhct':
+            user_option[0].classList.remove('selected');
+            user_option[1].classList.add('selected');
             initializationArticle__OrderInfo();
             break;
     }

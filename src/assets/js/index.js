@@ -281,7 +281,7 @@ function initializeAccountPopup() {
                 if (!modalDemo?.contains(/**@type {HTMLElement}*/(e.target))) {
                     btnExit?.click();
                 }
-        };
+            };
     }
 
     /** */
@@ -429,9 +429,12 @@ async function initializeUrlHandling() {
         }
     });
     document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
-        location.hash = '#/user';
+        location.hash = '#/user?info=tttk';
     });
 
+    document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
+        location.hash = '#/user?info=dhct';
+    });
     await pageInit(curr_page, query);
     await pageUpdate(curr_page, query);
 }

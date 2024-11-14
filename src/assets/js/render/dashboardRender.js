@@ -58,7 +58,7 @@ function formatLineChartData() {
         ) {
             const date = Math.ceil(
                 (new Date(e.last_update).getTime() - from.getTime()) /
-                    (24 * 60 * 60 * 1000),
+                (24 * 60 * 60 * 1000),
             );
             let index = values.findIndex((element) => element.date == date);
             if (index) values[index].value += e.total;
@@ -149,9 +149,16 @@ function createOderInfoForUser(order) {
     return details;
 }
 
-async function renderLeaderboard() {
+async function renderLeaderboard(from, to) {
     let array = [];
-    const data = orders.filter((e) => e.state == 'giaohangthanhcong');
+    const data = orders.filter((order) => {
+        const date = new Date(order.last_update);
+        return (
+            from.getTime() <= date.getTime() &&
+            date.getTime() <= to.getTime() &&
+            order.state == 'giaohangthanhcong'
+        )
+    });
     data.forEach((e) => {
         const index = array.findIndex((element) => element.id == e.user_id);
         if (index != -1) {
@@ -159,8 +166,11 @@ async function renderLeaderboard() {
             array[index].order.push(e.id);
         } else array.push({ id: e.user_id, total: e.total, order: [e.id] });
     });
-    array.sort((a, b) => b.total - a.total);
-    array.slice(0, 5).forEach(async (e, i) => {
+    array = array.sort((a, b) => b.total - a.total).slice(0, 5);
+    while (array.length < 5) array.push({ id: '' });
+    console.log(array);
+    array.forEach(async (e, i) => {
+        console.log('leader');
         const user = await fakeDatabase.getUserInfoByUserId(e.id);
         const name = document.querySelector(
             `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(2)`,
@@ -168,19 +178,25 @@ async function renderLeaderboard() {
         const total = document.querySelector(
             `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(3)`,
         );
-        if (user && name && total) {
+        if (!name || !total) return;
+        if (user) {
             e['name'] = user.name;
             name.textContent = user.name;
             total.textContent = e.total;
+        } else {
+            name.textContent = 'Không có';
+            total.textContent = '0';
         }
     });
     const showOrder = document.querySelector('.info-order__user');
-    const name = document.getElementById('user-name');
-    const text = name?.innerText;
+    const name = document.querySelector('#user-name strong');
     document.querySelectorAll('.leaderboard-body > div').forEach((e, i) => {
-        e.addEventListener('click', () => {
+        e.addEventListener('click', (event) => {
+            event.stopImmediatePropagation();
+            console.log(Math.random());
+            console.log(array[i].order);
             if (name)
-                name.innerHTML = `${text}<br><strong>${array[i].name}</strong>`;
+                name.innerHTML = array[i].name;
             while (
                 showOrder &&
                 showOrder.children.length > 1 &&
@@ -280,8 +296,8 @@ async function productRank(from, to) {
     const footer = document.querySelector('.product-rank__footer span');
     if (footer) footer.innerHTML = String(sum) + ' VNĐ';
     const showOrder = document.querySelector('.info-order__product');
-    const name = document.getElementById('product-name');
-    const text = name?.innerText;
+    const name = document.querySelector('#product-name strong');
+
     document.querySelectorAll('.rank-body-row').forEach((row, i) => {
         row.addEventListener('click', () => {
             const top = /**@type {HTMLElement} */ (showOrder).offsetTop - 70;
@@ -290,9 +306,7 @@ async function productRank(from, to) {
                 behavior: 'smooth',
             });
             if (name)
-                name.innerHTML = `${text}<br><strong>${
-                    row.querySelector('.rank-name')?.innerHTML
-                }</strong>`;
+                name.innerHTML = "" + row.querySelector('.rank-name')?.innerHTML;
             while (
                 showOrder &&
                 showOrder.children.length > 1 &&
@@ -318,7 +332,7 @@ async function createOderInfoForProduct(order) {
     details.appendChild(userInfo);
     return details;
 }
-function renderProductRank() {
+function renderByDateRange() {
     const chooseDate = document.querySelector('#product-rank .choose-date');
     const from = /**@type {HTMLInputElement} */ (
         chooseDate?.querySelector('#from-date input')
@@ -333,9 +347,17 @@ function renderProductRank() {
     );
     to.value = dateToString(now);
     to.max = dateToString(now);
+    let from_current = from.value;
+    let to_current = to.value;
     productRank(new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), now);
+    renderLeaderboard(new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000), now);
     chooseDate?.addEventListener('change', () => {
+        from.value = from.value ? from.value : from_current;
+        to.value = to.value ? to.value : to_current;
+        from_current = from.value;
+        to_current = to.value;
         productRank(new Date(from.value), new Date(to.value));
+        renderLeaderboard(new Date(from.value), new Date(to.value));
     });
 }
 
@@ -351,8 +373,7 @@ async function dashboardRender() {
     orders = await fakeDatabase.getAllOrder();
     books = await fakeDatabase.getAllBooks();
     count();
-    renderLeaderboard();
-    renderProductRank();
+    renderByDateRange();
     formatLineChartData();
     window.addEventListener('resize', () => formatLineChartData());
 }
