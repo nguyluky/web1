@@ -39,6 +39,12 @@ let cacheEdit = {};
 function handleOnChange(data, key, newValue) {
     console.log('onchange called');
 
+    if (!cacheEdit[data.id]) {
+        cacheEdit[data.id] = {
+            ...data,
+            [key]: newValue,
+        };
+    }
     cacheEdit[data.id] = {
         ...cacheEdit[data.id],
         [key]: newValue,
@@ -372,7 +378,7 @@ function createDropdownFilter(options) {
         const option = options.find((e) => e.title == select.value);
 
         if (!option) return;
-        option.onOk(/** @type {HTMLElement | null} */ (body.firstChild));
+        option.onOk(/** @type {HTMLElement | null} */(body.firstChild));
 
         // TODO: note
         document.body.click();
@@ -382,7 +388,7 @@ function createDropdownFilter(options) {
         const option = options.find((e) => e.title == select.value);
 
         if (!option) return;
-        option.onCancel(/** @type {HTMLElement | null} */ (body.firstChild));
+        option.onCancel(/** @type {HTMLElement | null} */(body.firstChild));
 
         // TODO: note
         document.body.click();
