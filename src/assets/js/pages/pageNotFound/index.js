@@ -9,8 +9,9 @@ export async function initializationPageNotFound(params, query) {
     main.innerHTML = `
             <div class="main_wapper">
                 <article class="article page-not-found">
+                    <img src="/assets/img/error-illustration-1.svg" alt="404" />
                     <h1>404</h1>
-                    <strong>Page not fount</strong>
+                    <strong>Page not found</strong>
                     <span
                         >Chúng tôi không tìm thấy trang bạn đang cố truy cập,
                         vui lòng về lại trang chính hoặc liên hệ với admin để
