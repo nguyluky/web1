@@ -372,7 +372,7 @@ function createDropdownFilter(options) {
         const option = options.find((e) => e.title == select.value);
 
         if (!option) return;
-        option.onOk(/** @type {HTMLElement | null} */ (body.firstChild));
+        option.onOk(/** @type {HTMLElement | null} */(body.firstChild));
 
         // TODO: note
         document.body.click();
@@ -382,7 +382,7 @@ function createDropdownFilter(options) {
         const option = options.find((e) => e.title == select.value);
 
         if (!option) return;
-        option.onCancel(/** @type {HTMLElement | null} */ (body.firstChild));
+        option.onCancel(/** @type {HTMLElement | null} */(body.firstChild));
 
         // TODO: note
         document.body.click();

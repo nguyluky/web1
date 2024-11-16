@@ -17,6 +17,7 @@ import { updateCartQuantity } from './cart.js';
 import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
 import { initializationProductPage, removeProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
+import { showListShippingAddressPopup, showNewShippingAddressPopup } from './render/addressPopup.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
 
 //#region khai bao page
@@ -76,63 +77,16 @@ const PAGES = [
 
 //#region khai bao bien
 
-const BUTTON_LOCATION = document.getElementById('btn-location');
-const CLOSE_POPUP = document.getElementById('btn-close');
-const POPUP_WRAPPER = document.getElementById('popup-wrapper');
-
 const BUTTON_CART = document.querySelector('.cart');
 const BUTTON_ACCOUNT = document.getElementById('btn-account');
 const MODAL = document.querySelector('.js-modal');
 
-const ADDRESS_DISPLAY = /** @type {HTMLInputElement} */ (
-    document.getElementById('address_display')
-);
-const ADDRESS_FORM = document.getElementById('Address-form');
-
 // #endregion
 
-/** Khỏi tại hàm sử lý popup đại trỉ */
-
-function initializeLocationPopup() {
-    /** Hiện popup */
-    function showPopupLocation() {
-        POPUP_WRAPPER?.classList.add('show');
-    }
-
-    /** @param {MouseEvent} event */
-    function HandleClickOutSidePopup(event) {
-        const popup = /** @type {HTMLElement} */ (event.target).querySelector(
-            '.popup',
-        );
-        if (popup) POPUP_WRAPPER?.classList.remove('show');
-    }
-
-    /** */
-    function showCustomLocation() {
-        if (ADDRESS_DISPLAY.checked) ADDRESS_FORM?.classList.add('show');
-        else ADDRESS_FORM?.classList.remove('show');
-    }
-
-    // hiện popup
-    BUTTON_LOCATION?.addEventListener('click', showPopupLocation);
-    // ẩn popup
-    POPUP_WRAPPER?.addEventListener('click', HandleClickOutSidePopup);
-
-    // show address fill
-    // người khi người dùng chọn "chọn khu vực giao khac"
-    document
-        .getElementsByName('select_address')
-        .forEach((e) => e.addEventListener('change', showCustomLocation));
-
-    // xử lý khi người dùng nhập địa chỉ
-}
 
 /** Sử lý login và nhữ tư tự như vậy */
 function initializeAccountPopup() {
     if (
-        !BUTTON_LOCATION ||
-        !CLOSE_POPUP ||
-        !POPUP_WRAPPER ||
         !BUTTON_ACCOUNT ||
         !MODAL ||
         !BUTTON_CART
@@ -303,22 +257,6 @@ function initializeAccountPopup() {
         }
     }
 
-    BUTTON_LOCATION.addEventListener('click', () => {
-        POPUP_WRAPPER.classList.add('show');
-    });
-
-    // NOTE: nếu mà nhấn mà nó nó chứa thằng popup thì là nhấn bên ngoài
-    POPUP_WRAPPER.onclick = (event) => {
-        const popup = /** @type {HTMLElement} */ (event.target).querySelector(
-            '.popup',
-        );
-        if (popup) POPUP_WRAPPER.classList.remove('show');
-    };
-
-    CLOSE_POPUP.addEventListener('click', () => {
-        POPUP_WRAPPER.classList.remove('show');
-    });
-
     BUTTON_ACCOUNT.addEventListener('click', () => {
         if (!localStorage.getItem('user_id')) {
             MODAL.classList.add('show-modal');
@@ -456,9 +394,21 @@ async function initializeUrlHandling() {
     await pageUpdate(curr_page, query);
 }
 
+function initializationAddress() {
+    document.getElementById('btn-location')?.addEventListener('click', (ev) => {
+        if (!localStorage.getItem('user_id')) {
+            alert('Vui lòng đăng nhập để thêm địa chỉ mới');
+            return;
+        }
+        ev.preventDefault();
+        ev.stopPropagation();
+        showListShippingAddressPopup();
+    })
+}
+
 /** Main */
 function main() {
-    initializeLocationPopup();
+    initializationAddress();
     initializeAccountPopup();
     initializeUrlHandling();
 }
