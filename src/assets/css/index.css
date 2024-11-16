@@ -277,12 +277,12 @@ aside.aside {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 30px;
 }
 
 .user-personal {
     display: flex;
-    gap: 200px;
+    justify-content: space-between;
 }
 
 .user-header {
@@ -294,6 +294,7 @@ aside.aside {
 .user-info {
     font-size: 16px;
     font-weight: 300;
+    width: 450px;
 }
 
 .package-category {
@@ -348,7 +349,22 @@ aside.aside {
     width: 100%;
     padding: 10px;
 }
-
+.no-order {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+    background-color: #fff;
+    border-radius: 8px;
+}
+.no-order.hide {
+    display: none;
+}
+.no-order img {
+    width: 80%;
+    max-width: 500px;
+}
 .package-content {
     display: flex;
     flex-direction: column;
@@ -375,17 +391,18 @@ aside.aside {
 .package-details__container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
 }
 
 .package-details__general {
     display: flex;
     gap: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px 0 12px;
 }
 
 .package-details__img {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     aspect-ratio: 1/1;
     border-radius: 4px;
     display: flex;
@@ -406,12 +423,18 @@ aside.aside {
 
 .package-details__details {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    flex: 1;
+    gap: 10px;
+    padding-right: 12px;
 }
-
+.package-details__info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
 .package-details__title {
-    width: 200px;
+    width: 100%;
 }
 
 .package-details__quantity {
@@ -424,6 +447,12 @@ aside.aside {
     align-items: center;
     gap: 10px;
     width: 200px;
+}
+
+.package-details__price {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
 }
 
 .package-details__status--header {
@@ -528,9 +557,6 @@ aside.aside {
     .filter-slider {
         margin-bottom: 30px;
     }
-    .aside-box.box1.card {
-        padding-left: 10px;
-    }
 
     .catergory__header {
         display: none;
@@ -541,6 +567,7 @@ aside.aside {
         flex-direction: row;
         white-space: nowrap;
         overflow: auto;
+        padding: 0;
     }
 
     .catergory__content::-webkit-scrollbar {

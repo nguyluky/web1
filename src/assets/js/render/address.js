@@ -1,7 +1,113 @@
 import fakeDatabase from '../db/fakeDBv1.js';
 import removeDiacritics from '../until/removeDiacritics.js';
 
-class AddressFrom extends HTMLElement {
+
+const css = `
+
+.Address-form__row {
+    display: flex;
+    align-items: center;
+    padding: 5px 30px;
+    justify-content: space-between;
+}
+
+.Address__dropdown-btn {
+    background-color: white;
+    border: 1px solid #dddde3;
+    color: rgb(135, 135, 135);
+    border-radius: 4px;
+    height: 35px;
+    padding-left: 10px;
+    text-align: start;
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.Address__dropdown-btn--text {
+    white-space: nowrap;
+}
+.Address__dropdown-btn:hover,
+.Address__dropdown-btn:focus {
+    border: solid 1px rgb(7, 7, 7);
+    color: rgb(7, 7, 7);
+}
+.Address__dropdown-btn:focus {
+    box-shadow: 0px 0px 5px 1px rgba(78, 148, 254, 0.808);
+}
+
+.Address__dropdown-btn:not(:has(input:disabled)) input::placeholder {
+    color: black;
+}
+.Address__dropdown-btn:has(input:disabled) {
+    border: 1px solid #dddde3;
+    color: rgb(135, 135, 135);
+    background-color: #f2f2f2;
+}
+
+.fa-angle-down {
+    text-align: end;
+    padding-right: 10px;
+}
+
+:host {
+    position: relative;
+    width: 100%;
+}
+
+.Address__dropdown-content {
+    max-height: 30vh;
+    overflow: auto;
+    background-color: white;
+    width: 100%;
+    border: solid 1px rgb(146, 145, 145);
+    border-radius: 4px;
+    box-shadow: 0px 2px 5px rgb(174, 174, 174);
+    padding: 5px 0;
+    margin-top: 5px;
+    font-size: 15px;
+    display: none;
+    position: absolute;
+    z-index: 10;
+}
+
+.Address__dropdown-content > div[selection='true'] {
+    background: #189eff;
+    color: #fff;
+}
+
+.Address__dropdown-content > div.hide {
+    display: none;
+}
+
+.Address__dropdown-btn input {
+    flex: 1;
+    outline: none;
+    border: none;
+    background: none;
+    width: 100%;
+}
+
+.Address__dropdown-content div {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.Address__dropdown-content div[selection='false']:hover {
+    background-color: rgba(134, 182, 255, 0.5);
+}
+
+.show {
+    display: block;
+}    
+
+`
+
+export class AddressFrom extends HTMLElement {
+
+    static formAssociated = true;
+
     static observedAttributes = ['placeholder', 'type', 'name'];
 
     /**
@@ -56,6 +162,7 @@ class AddressFrom extends HTMLElement {
 
     set value(value) {
         this._value = value;
+        this._internals.setFormValue(this._value);
     }
 
     /**
@@ -71,8 +178,12 @@ class AddressFrom extends HTMLElement {
     set options(value) {
         this._opstions = value;
 
-        const content = this.querySelector('.Address__dropdown-content');
-        const input = this.querySelector('input');
+        const shadow = this.shadowRoot;
+
+        if (!shadow) return;
+
+        const content = shadow.querySelector('.Address__dropdown-content');
+        const input = shadow.querySelector('input');
         if (!content || !input) return;
 
         if (this._opstions.length == 0) {
@@ -95,7 +206,9 @@ class AddressFrom extends HTMLElement {
 
             div.addEventListener('click', () => {
                 input.placeholder = e.title;
-                this._value = e.title;
+                this.value = e.value;
+
+                content.classList.remove('show');
 
                 content
                     .querySelector('div[selection="true"]')
@@ -116,11 +229,29 @@ class AddressFrom extends HTMLElement {
         });
     }
 
+    get required() {
+        return this.hasAttribute('required');
+    }
+
+    set required(value) {
+        if (value) {
+            this.setAttribute('required', '');
+        } else {
+            this.removeAttribute('required');
+        }
+    }
+
     constructor() {
         super();
+
+        this._internals = this.attachInternals();
+
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
+
+
+
         switch (name) {
             case 'type': {
                 this._type = newValue;
@@ -128,7 +259,7 @@ class AddressFrom extends HTMLElement {
             }
             case 'placeholder': {
                 this._placeholder = newValue;
-                this.querySelector('input')?.setAttribute(
+                this.shadowRoot?.querySelector('input')?.setAttribute(
                     'placeholder',
                     newValue,
                 );
@@ -136,14 +267,14 @@ class AddressFrom extends HTMLElement {
             }
             case 'name': {
                 this._name = newValue;
-                this.querySelector('input')?.setAttribute('value', newValue);
+                this.shadowRoot?.querySelector('input')?.setAttribute('value', newValue);
                 break;
             }
         }
     }
 
     setLoading() {
-        const content = this.querySelector('.Address__dropdown-content');
+        const content = this.shadowRoot?.querySelector('.Address__dropdown-content');
 
         if (!content) return;
 
@@ -219,7 +350,7 @@ class AddressFrom extends HTMLElement {
     handleClickOutsideDropdown(event, button, contentDropdowContent) {
         const target = /** @type {HTMLElement} */ (event.target);
         const isClickInsideDropdown =
-            button?.contains(target) || button?.isSameNode(target);
+            this.contains(target) || button.contains(target) || button.isSameNode(target);
 
         if (isClickInsideDropdown) return;
         contentDropdowContent?.classList.remove('show');
@@ -365,11 +496,19 @@ class AddressFrom extends HTMLElement {
         this._type = this.getAttribute('type') || 'TTP';
         this._name = this.getAttribute('name') || '';
 
-        this.classList.add('dropdown-container');
+
+        const style = document.createElement('style');
+        style.innerHTML = css;
+
+
+        const shadow = this.attachShadow({ mode: 'open' });
+        shadow.appendChild(style);
+
+        // this.classList.add('dropdown-container');
 
         const button = document.createElement('label');
         button.classList.add('Address__dropdown-btn');
-        this.appendChild(button);
+        shadow.appendChild(button);
 
         const input = document.createElement('input');
         input.setAttribute('type', 'text');
@@ -377,13 +516,15 @@ class AddressFrom extends HTMLElement {
         button.appendChild(input);
         input.disabled = this._type != 'TTP';
 
+        this._input = input;
+
         const icon = document.createElement('i');
         icon.classList.add('fa-solid', 'fa-angle-down');
         button.appendChild(icon);
 
         const content = document.createElement('div');
         content.classList.add('Address__dropdown-content');
-        this.appendChild(content);
+        shadow.appendChild(content);
 
         button.addEventListener('click', () => {
             this.showDropdown(input, button, content);
@@ -409,6 +550,37 @@ class AddressFrom extends HTMLElement {
 
         this.update();
     }
+
+    checkValidity() {
+        if (this.required && this._value == '' && this.options.length > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    reportValidity() {
+        console.log('reportValidity')
+        if (!this.checkValidity()) {
+            this._internals.setValidity(
+                {
+                    valueMissing: true,
+                },
+                'choose a value',
+            );
+        }
+        else {
+            this._internals.setValidity({});
+        }
+        return this._internals.reportValidity();
+    }
+
+    formResetCallback() {
+        this.value = '';
+        this._input?.setAttribute('placeholder', this._placeholder);
+        this._internals.setValidity({});
+    }
+
 }
 
 customElements.define('address-form', AddressFrom);
