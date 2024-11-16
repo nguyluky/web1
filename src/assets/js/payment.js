@@ -128,9 +128,22 @@ export function closeDeal() {
 
 
 
-function showQR(option) {
-    console.log('success')
+async function showQR(option) {
+    console.log('success');
+    let price = 0;
+    const orders = getOrder();
+    if (!orders)
+        return;
+    for (const order of orders) {
+        const cart = await fakeDatabase.getCartById(order);
+        if (!cart)
+            return;
 
+        const book = await fakeDatabase.getSachById(cart.sach);
+        if (!book)
+            return;
+        price += cart.quantity * (1 - book.discount) * book.base_price;
+    }
     const modal = document.querySelector('.js-modal');
     if (!modal)
         return;
@@ -163,7 +176,7 @@ function showQR(option) {
                         <div class="prices__item">
                             <div class="prices__text">Tổng tiền</div>
                             <div class="prices__value" id="payment-amount">
-                                0 <sup>₫</sup>
+                                ${formatNumber(price)}<sup>₫</sup>
                             </div>
                         </div>
                     </div>
@@ -200,8 +213,9 @@ function showQR(option) {
                 </div>
             </div>
         </div>`;
-    setTimeout(() => {
+    setTimeout(async () => {
         modal.classList.remove('show-modal');
+
     }, 10000);
 }
 

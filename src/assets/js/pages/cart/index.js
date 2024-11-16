@@ -1,4 +1,4 @@
-import { showUserInfo, renderCart, updateCartQuantity } from "../../cart.js";
+import { showUserInfo, renderCart, updateCartQuantity, buyBooks } from "../../cart.js";
 
 
 export async function initializationCart(params, query) {
@@ -115,7 +115,7 @@ export async function initializationCart(params, query) {
 }
 
 export async function updateCart(params, query) {
-
+    buyBooks();
 }
 
 export async function removeCart(params, query) {

@@ -663,7 +663,7 @@ class FakeDatabase {
     }
 
     /**
-     * @param {Order} order
+     * @param {any} order
      * @returns {Promise<?>}
      */
     async addOrder(order) {

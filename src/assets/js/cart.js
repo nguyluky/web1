@@ -18,7 +18,12 @@ export async function showUserInfo() {
     if (userInfo && userName && userTel && userAddress) {
         userName.innerHTML = userInfo.name;
         userTel.innerHTML = userInfo.phone_num;
-        // userAddress.innerHTML = userInfo.address[0];
+        // const address = userInfo.address;
+        // console.log(userInfo)
+        // if (userInfo.address.length > 0) {
+        //     userAddress.innerHTML = userInfo.address[0];
+        // }
+
     }
 }
 
@@ -69,7 +74,7 @@ export async function renderCart() {
         initDeleteCartItem();
         isCheckBox();
         changeQuantity();
-        buyBooks();
+
     }
 }
 
@@ -482,11 +487,10 @@ function isCheckBox() {
     });
 }
 
-let order = [];
 
 // cập nhật tổng giá khi thay đổi số lượng sản phẩm
 async function renderPaymentSummary() {
-    // let order = [];
+
     const otherCheckBoxes = /**@type {NodeListOf<HTMLInputElement>} */ (
         document.querySelectorAll('.check-book')
     );
@@ -507,7 +511,6 @@ async function renderPaymentSummary() {
             totalAmount +=
                 cart.quantity * (book.base_price * (1 - book.discount));
             originalAmount += cart.quantity * book.base_price;
-            order.push(cart.id);
         }
     }
 
@@ -527,20 +530,23 @@ async function renderPaymentSummary() {
 
     const num = document.querySelector('.prices__button__center button');
     if (num) num.innerHTML = `Mua Hàng (${formatNumber(numberOfItems)})`;
-    buyBooks();
 }
 
-async function buyBooks() {
+export async function buyBooks() {
     const user_id = localStorage.getItem('user_id');
     if (!user_id) {
         return;
     }
     const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
     const buyBtn = document.querySelector('.btn-danger');
-    // console.log(order,length)
+
     buyBtn?.addEventListener('click', () => {
-        console.log(order.length)
-        if (order.length === 0) {
+        const orders = /**@type {NodeListOf<HTMLInputElement>} */(document.querySelectorAll('input[name="check-book"]:checked'))
+        const orderItems = [];
+        for (const order of orders) {
+            orderItems.push(order.dataset.cartId);
+        }
+        if (orderItems.length === 0) {
             toast({ title: 'Vui lòng chọn sản phẩm cần mua', type: 'error' });
         }
         else if (userInfo && userInfo.status === 'block') {
@@ -548,7 +554,7 @@ async function buyBooks() {
         }
         else {
             const { page, query } = urlConverter(location.hash);
-            query.set('payment', encodeURI(order.join(',')));
+            query.set('payment', encodeURI(orderItems.join(',')));
             window.location.hash = '#/payment' + '?' + query.toString();
             console.log(window.location.hash)
         }
