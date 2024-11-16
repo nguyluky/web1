@@ -235,3 +235,14 @@ export async function updatePayment() {
     changeCart();
     closeDeal();
 }
+
+export async function removePayment() {
+    const main = document.querySelector('main');
+    if (!main) return;
+
+    main.classList.remove('main-payment');
+
+    document.getElementById('payment-style')?.remove();
+    document.getElementById('cart-style')?.remove();
+
+}
