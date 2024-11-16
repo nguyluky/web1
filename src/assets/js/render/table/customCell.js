@@ -550,7 +550,7 @@ export function createTagInputCell(
 function TagInputCellOn(td) {
     if (td.getAttribute('can-editable') == 'false') return;
 
-    const container = document.querySelector('.tag-container');
+    const container = td.querySelector('.tag-container');
     container?.classList.add('on');
 }
 
@@ -605,7 +605,7 @@ export function createThumbnailCell(key, base64, onchange, canEditable = true) {
         if (td.getAttribute('contenteditable') !== 'true') return;
         showImgPreviewPopup(
             img.src,
-            () => {},
+            () => { },
             (base64) => {
                 onchange && onchange(base64);
                 img.src = base64;
