@@ -93,7 +93,7 @@ export async function initializationCart(params, query) {
                         <div
                             class="prices__value"
                             id="total-amount"
-                        ></div>
+                        >0 <sup>₫</sup></div>
                         <div class="prices__value--note">
                             (Đã bao gồm VAT nếu có)
                         </div>

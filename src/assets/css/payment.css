@@ -1,0 +1,240 @@
+/* @import url(./cart.css); */
+.order-quantity span {
+    color: rgb(128, 128, 137);
+}
+
+.order-quantity {
+    margin-top: 4px;
+}
+
+#show-order-info {
+    color: rgb(11, 116, 229);
+    cursor: pointer;
+}
+
+.order-quantity i {
+    padding-left: 3px;
+    font-size: 7px;
+    vertical-align: middle;
+}
+
+.price-summary-header {
+    border-bottom: 1px solid rgb(235, 235, 240);
+    padding: 6px 6px 16px 6px;
+}
+
+.price-summary-body {
+    padding: 8px 6px;
+}
+
+.btn-danger {
+    font-size: 16px;
+    width: 100%;
+}
+
+.order-grid {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 24fr 6fr 6fr;
+    column-gap: 2.4%;
+    /* align-items: center; */
+}
+
+.payment-type {
+    margin-top: 20px;
+    background-color: white;
+    padding: 16px;
+}
+
+.payment-type div {
+    /* list-style-type: none; */
+    line-height: 4;
+}
+.ship-title,
+.payment-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+}
+.payment-text img {
+    width: 32px;
+    margin-right: 8px;
+}
+.payment-text {
+    display: flex;
+    margin-left: 8px;
+    align-items: center;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.ship-option {
+    border: 1px solid rgb(194, 225, 255);
+    border-radius: 10px;
+    padding: 16px;
+    background-color: rgb(240, 248, 255);
+    width: 45%;
+    margin-bottom: 10px;
+}
+
+.ship-text {
+    font-size: 15px;
+    line-height: 2;
+    margin-left: 8px;
+}
+
+#quantity-ship {
+    color: rgb(128, 128, 137);
+    font-size: 13px;
+    margin-left: 26px;
+    line-height: 16px;
+    line-height: 1.5;
+}
+
+.order-item {
+    margin-top: 15px;
+    vertical-align: middle;
+}
+
+.order-info {
+    display: flex;
+    /*   -items: center; */
+}
+
+.order-info img {
+    width: 55px;
+    margin-right: 10px;
+}
+
+.order-title {
+    font-size: 14px;
+    color: rgb(39, 39, 42);
+    font-weight: 400;
+    margin-bottom: 7px;
+}
+
+.modal-container {
+    width: 710px;
+    /* height: 350px; */
+    margin: auto;
+    position: relative;
+    /* background-color: white; */
+    /* border-radius: 12px; */
+    margin: auto;
+    /* padding: 16px; */
+    /* display: flex; */
+}
+
+.header-content {
+    background-color: #fff;
+    border-bottom: 1px solid rgb(224, 224, 224);
+    padding: 16px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.qr-title img {
+    width: 32px;
+    margin-right: 7px;
+}
+
+.qr-title {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+#change-payment-option {
+    color: rgb(13, 92, 192);
+    font-size: 14px;
+}
+
+.body-content {
+    background-color: white;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    display: flex;
+}
+
+.left-payment-content {
+    width: 40%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+#qr-img {
+    margin: auto;
+    padding: 16px;
+    background-color: #f6f5fa;
+    border-radius: 16px;
+}
+
+#qr-img img {
+    width: 200px;
+    border-radius: 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+#qr-img .prices__item {
+    margin: 0px;
+    padding-top: 12px;
+    font-size: 14px;
+    line-height: 12px;
+}
+
+.right-payment-content {
+    width: 60%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.qr-content h4 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 2;
+}
+
+.qr-content ul {
+    list-style: none;
+    line-height: 2.15;
+    font-size: 12px;
+    color: rgb(128, 128, 137);
+}
+
+.qr-decription {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 2.5;
+}
+
+.qr-decription img {
+    position: relative;
+    width: 28px;
+    top: 10px;
+}
+
+.qr-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: bold;
+    background-color: #1c94fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 14px;
+    flex-shrink: 0;
+}

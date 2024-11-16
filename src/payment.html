@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>We sell books</title>
+        <script type="module" src="./assets/js/cart.js"></script>
+        <script type="module" src="./assets/js/payment.js"></script>
+        <!-- <script type="module" src="./assets/js/index.js"></script> -->
+        <link rel="stylesheet" href="./assets/css/cart.css" />
+        <link rel="stylesheet" href="./assets/css/index.css" />
+        <link rel="stylesheet" href="./assets/css/payment.css" />
+        <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css" />
+        <link rel="icon" href="./assets/img/favicon.png" />
+    </head>
+    <body>
+        <header class="header">
+            <div class="header_wrapper">
+                <div class="left">
+                    <a href="/">
+                        <img src="./assets/img/logo1.png" alt="Logo" />
+                    </a>
+                </div>
+                <div class="center">
+                    <label class="ct-input search">
+                        <div class="icon_input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input type="text" placeholder="tìm kiếm" />
+                        <div class="input_text">Tìm kiếm</div>
+                    </label>
+                </div>
+                <div class="right">
+                    <button class="button_1" id="btn-location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>TP.Hồ Chí Minh</span>
+                    </button>
+                    <button class="button_1 dropdown-btn" id="btn-account">
+                        <i class="fa-regular fa-face-smile-wink"></i>
+                        <span>Tài khoản</span>
+                    </button>
+                    <div class="line"></div>
+                    <button class="button_1 cart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <div class="cart-count">0</div>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main class="main main-payment">
+            <div class="main-component main_wapper">
+                <div class="main-cart-content">
+                    <div class="left-content">
+                        <div class="left-content-body card">
+                            <div class="ship-title">
+                                Chọn hình thức giao hàng
+                            </div>
+                            <div class="ship-option">
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="ship-option"
+                                        id=""
+                                        checked
+                                    />
+                                    <span class="ship-text"
+                                        >Giao tiết kiệm</span
+                                    >
+                                </label>
+
+                                <div id="quantity-ship">
+                                    <div class="delivery-time">
+                                        <img
+                                            src="./assets/img/car.png"
+                                            alt=""
+                                            width="24px"
+                                        />
+                                        <span
+                                            >Đảm bảo nhận hàng trước 01/12</span
+                                        >
+                                    </div>
+                                    <div id="total-ship-quantity">
+                                        Có 3 sản phẩm hỗ trợ hình thức này
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <div> -->
+                            <div class="order-col order-grid">
+                                <div>Sản phẩm</div>
+                                <div>Số lượng</div>
+                                <div>Thành tiền</div>
+                            </div>
+                            <!-- </div> -->
+
+                            <div class="order-items"></div>
+                        </div>
+
+                        <div class="payment-type">
+                            <h3 class="payment-title">
+                                Chọn hình thức thanh toán
+                            </h3>
+
+                            <div>
+                                <label class="payment-option">
+                                    <input
+                                        type="radio"
+                                        name="payment-option"
+                                        id="cash-option"
+                                        checked
+                                    />
+                                    <span class="payment-text">
+                                        <img
+                                            src="./assets/img/payCash.png"
+                                            alt=""
+                                        />
+                                        <div>Thanh toán tiền mặt</div>
+                                        <!-- </div> -->
+                                    </span>
+                                </label>
+
+                                <label class="payment-option">
+                                    <input
+                                        type="radio"
+                                        name="payment-option"
+                                        id="momo-option"
+                                    />
+                                    <span class="payment-text">
+                                        <img
+                                            src="./assets/img/momo.jpg"
+                                            alt=""
+                                        />
+                                        <div>Ví Momo</div>
+                                    </span>
+                                </label>
+
+                                <label class="payment-option">
+                                    <input
+                                        type="radio"
+                                        name="payment-option"
+                                        id="zaloPay"
+                                    />
+                                    <span class="payment-text">
+                                        <img
+                                            src="./assets/img/zaloPay.png"
+                                            alt=""
+                                        />
+                                        <div>Ví ZaloPay</div>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right info-user card">
+                        <div class="info-header">
+                            <span>Giao tới</span>
+                            <button id="change-address-btn">Thay đổi</button>
+                        </div>
+                        <div class="info-content">
+                            <div class="contact-info">
+                                <div class="contact-info__name">Ly Lê</div>
+                                <div class="contact-info__phone-num">
+                                    0912345678
+                                </div>
+                            </div>
+                            <div class="address-info">
+                                106,đường Nguyễn Chí Thanh, thị trấn Quảng Phú,
+                                huyện Cư M’gar, Đắk Lắk
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right coupon card">
+                        <div class="coupon-header">
+                            <div class="coupon-header__title">Khuyến mãi</div>
+                            <div class="coupon-header__usage">
+                                <span>Có thể chọn 2</span>
+                            </div>
+                        </div>
+                        <div class="coupon-list"></div>
+                        <div class="show-more">
+                            <i class="fa-solid fa-ticket"></i>
+                            <span>Chọn hoặc nhập Khuyến mãi khác</span>
+                        </div>
+                    </div>
+                    <div class="right price-summary card">
+                        <div class="price-summary-header">
+                            <div class="info-header">
+                                <span>Đơn hàng</span>
+                                <button id="change-cart">Thay đổi</button>
+                            </div>
+                            <div class="order-quantity">
+                                <span>2 sản phẩm.</span>
+                                <span id="show-order-info"
+                                    >Xem thông tin<i
+                                        class="fa-solid fa-angle-up"
+                                    ></i
+                                ></span>
+                            </div>
+                        </div>
+                        <div class="price-summary-body">
+                            <ul class="prices__items">
+                                <li class="prices__item">
+                                    <div class="prices__text">
+                                        Tổng tiền hàng
+                                    </div>
+                                    <div
+                                        class="prices__value"
+                                        id="original-amount"
+                                    >
+                                        0
+                                        <sup>₫</sup>
+                                    </div>
+                                </li>
+                                <li class="prices__item">
+                                    <div class="prices__text">
+                                        Phí vân chuyển
+                                    </div>
+                                    <div
+                                        class="prices__value"
+                                        id="discount-amount"
+                                    >
+                                        0 <sup>₫</sup>
+                                    </div>
+                                </li>
+                                <li class="prices__item">
+                                    <div class="prices__text">Giảm giá</div>
+                                    <div
+                                        class="prices__value"
+                                        id="discount-amount"
+                                    >
+                                        0 <sup>₫</sup>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="prices__total">
+                                <span>Tổng tiền thanh toán</span>
+                                <div class="prices__content">
+                                    <div
+                                        class="prices__value"
+                                        id="total-amount"
+                                    >
+                                        0 <sup>₫</sup>
+                                    </div>
+                                    <div class="prices__value--note">
+                                        (Đã bao gồm VAT nếu có)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="prices__button__center">
+                                <button class="button_1 btn-danger">
+                                    Đặt hàng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="footer">
+            <
+            <div class="footer_wrapper">
+                <div class="footer_box box1">
+                    <h4 class="footer-header">wesellbooks</h4>
+                    <div class="footer-context">
+                        <span>
+                            Chúng tôi là cộng đồng chia sẻ tài liệu học tập,
+                            giúp bạn dễ dàng truy cập vào những kiến thức quý
+                            giá. Cùng nhau học hỏi và phát triển!
+                        </span>
+                    </div>
+                </div>
+                <div class="footer_box box2">
+                    <h4 class="footer-header">Thành viên sáng lập</h4>
+                    <div class="footer-context">
+                        <li>Nguyễn Khắc Hiếu</li>
+                        <li>OwO</li>
+                        <li>Place houlder</li>
+                        <li>Place houlder</li>
+                        <li>Place houlder</li>
+                    </div>
+                </div>
+
+                <div class="footer_box box3">
+                    <h4 class="footer-header">Liên hệ</h4>
+                    <div class="footer-context">
+                        <li>
+                            <i class="fa-solid fa-house"></i
+                            ><span
+                                >273 Đ. An Dương Vương, Phường 3, Quận 5, Hồ Chí
+                                Minh
+                            </span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>acb@xyz.com</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            <span>0876 882 811</span>
+                        </li>
+                        <li>
+                            <i class="fa-brands fa-facebook-f"></i>
+                            <span>https://fb.com/abc.1524</span>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <div id="popup-wrapper">
+            <div class="popup">
+                <button id="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="popup-header">Địa chỉ giao hàng</div>
+                <div class="popup-body">
+                    <div class="popup-mess">
+                        Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao
+                        hàng cùng phí đóng gói, vận chuyển một cách chính xác
+                        nhất.
+                    </div>
+                    <div class="space_line">
+                        <div></div>
+                        <p>hoặc</p>
+                        <div></div>
+                    </div>
+                    <div class="select">
+                        <label>
+                            <input
+                                type="radio"
+                                name="select_address"
+                                checked="checked"
+                            />
+                            <span id="default_address"
+                                >(User default address)</span
+                            >
+                        </label>
+                        <label>
+                            <input type="radio" name="select_address" />
+                            <span id="other_address"
+                                >Chọn khu vực giao hàng khác</span
+                            >
+                        </label>
+                    </div>
+                </div>
+                <button class="popup-btn">GIAO ĐẾN ĐỊA CHỈ NÀY</button>
+            </div>
+        </div>
+
+        <div class="modal js-modal">
+            <!-- <div class="modal-overlay"></div>
+            <div class="modal-container modal-demo">
+                <div class="header-content">
+                    <div class="qr-title">
+                        <img src="./assets/img/momo.jpg" alt="" />
+                        Thanh toán bằng ví MoMo
+                    </div>
+                    <span id="change-payment-option">Đổi phương thức khác</span>
+                </div>
+                <div class="body-content">
+                    <div class="left-payment-content">
+                        <div id="qr-img">
+                            <img src="./assets/img/image.png" alt="" />
+                            <div class="prices__item">
+                                <div class="prices__text">Tổng tiền</div>
+                                <div class="prices__value" id="payment-amount">
+                                    0 <sup>₫</sup>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-payment-content">
+                        <div class="qr-content">
+                            <h4>Quét mã QR để thanh toán</h4>
+                            <ul>
+                                <li class="qr-decription">
+                                    <span class="qr-num">1</span>
+                                    <div class="qr-text">
+                                        Mở ứng dụng MoMo trên điện thoại
+                                    </div>
+                                </li>
+                                <li class="qr-decription">
+                                    <span class="qr-num">2</span>
+                                    <div class="qr-text">
+                                        Trên MoMo, chọn biểu tượng
+                                        <img
+                                            src="./assets/img/scanQR.png"
+                                            alt=""
+                                        />
+                                        <b>Quét mã QR</b>
+                                    </div>
+                                </li>
+                                <li class="qr-decription">
+                                    <span class="qr-num">3</span>
+                                    <div class="qr-text">
+                                        Quét mã QR ở trang này và thanh toán
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+        <div id="toast"></div>
+    </body>
+</html>

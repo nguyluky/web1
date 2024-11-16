@@ -15,7 +15,6 @@ header.header {
 
 .header {
     background: #fff;
-
     height: 60px;
 }
 
@@ -474,7 +473,7 @@ footer.footer .footer_wrapper .footer_box {
     display: none;
 }
 
-.selected{
+.selected {
     color: #189eff;
 }
 

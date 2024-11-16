@@ -17,6 +17,7 @@ import { updateCartQuantity } from './cart.js';
 import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
 import { initializationProductPage, removeProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
+import { initializationPayment, updatePayment } from './pages/payment/index.js';
 
 //#region khai bao page
 /**
@@ -65,6 +66,12 @@ const PAGES = [
         update: async () => { },
         remove: async () => { },
     },
+    {
+        pagePath: 'payment',
+        init: initializationPayment,
+        update: updatePayment,
+        remove: async () => { },
+    }
 ]
 
 //#region khai bao bien

@@ -4,24 +4,6 @@ import { toast } from './render/popupRender.js';
 import urlConverter from './until/urlConverter.js';
 import { showPopup } from './render/popupRender.js';
 
-// /**
-//  *
-//  *
-//  * @returns {void}
-//  */
-// export function mainCart() {
-//     updateCartQuantity();
-//     renderCart().then(() => {
-//         handlePlus();
-//         handleMinus();
-//         initDeleteCartItem();
-//         isCheckBox();
-//         changeQuantity();
-//         // renderPaymentSummary();
-//         showUserInfo();
-//     });
-// }
-
 export async function showUserInfo() {
     const user_id = localStorage.getItem("user_id");
 
@@ -87,18 +69,24 @@ export async function renderCart() {
         initDeleteCartItem();
         isCheckBox();
         changeQuantity();
+        buyBooks();
     }
 }
 
 
-function deliveryTime() {
+export function getDeliveryTime() {
     const today = new Date();
     today.setDate(today.getDate() + 3);
     const dayName = today.toLocaleDateString("vi-VN", { weekday: 'long' });
-    return `Giao ${dayName}, ${today.getDate()}/${today.getMonth() + 1}`
+    const date = {
+        date: dayName,
+        day: today.getDate(),
+        month: today.getMonth() + 1
+    }
+    return date;
 }
 
-function formatNumber(num) {
+export function formatNumber(num) {
     return num.toLocaleString('vi-VN');
 }
 
@@ -116,7 +104,9 @@ async function createCartItem(cart) {
         if (img) {
             source = img.data;
         }
-        const deliveryDay = deliveryTime();
+
+        const deliveryDay = getDeliveryTime();
+        const deliveryText = `Giao ${deliveryDay.date}, ${deliveryDay.day}/${deliveryDay.month} `
         const cartItem = document.createElement('div');
         cartItem.classList.add('cart-item', 'item-grid');
         cartItem.dataset.cartId = cart.id;
@@ -146,7 +136,7 @@ async function createCartItem(cart) {
                             class="car-icon"
                         />
                         <span class="delivery-text"
-                            >${deliveryDay}</span
+                            >${deliveryText}</span
                         >
                     </div>
                 </div>
@@ -162,9 +152,7 @@ async function createCartItem(cart) {
                     > ${formatNumber(book.base_price)}
                     <sup>₫</sup>
                 </span>
-                <div class="cart-price-note">
-                    Giá chưa áp dụng khuyến mãi
-                </div>
+                
             </div>
             <div class="cart-item-quantity">
                 <div class="quantity-form">
@@ -494,9 +482,11 @@ function isCheckBox() {
     });
 }
 
+let order = [];
+
 // cập nhật tổng giá khi thay đổi số lượng sản phẩm
 async function renderPaymentSummary() {
-    let order = [];
+    // let order = [];
     const otherCheckBoxes = /**@type {NodeListOf<HTMLInputElement>} */ (
         document.querySelectorAll('.check-book')
     );
@@ -537,20 +527,20 @@ async function renderPaymentSummary() {
 
     const num = document.querySelector('.prices__button__center button');
     if (num) num.innerHTML = `Mua Hàng (${formatNumber(numberOfItems)})`;
-    buyBooks(numberOfItems, order);
+    buyBooks();
 }
 
-async function buyBooks(num, order) {
+async function buyBooks() {
     const user_id = localStorage.getItem('user_id');
     if (!user_id) {
         return;
     }
     const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
     const buyBtn = document.querySelector('.btn-danger');
-    console.log(num)
+    // console.log(order,length)
     buyBtn?.addEventListener('click', () => {
-        console.log(num)
-        if (num === 0) {
+        console.log(order.length)
+        if (order.length === 0) {
             toast({ title: 'Vui lòng chọn sản phẩm cần mua', type: 'error' });
         }
         else if (userInfo && userInfo.status === 'block') {
@@ -559,7 +549,7 @@ async function buyBooks(num, order) {
         else {
             const { page, query } = urlConverter(location.hash);
             query.set('payment', encodeURI(order.join(',')));
-            window.location.hash = page + '?' + query.toString();
+            window.location.hash = '#/payment' + '?' + query.toString();
             console.log(window.location.hash)
         }
     })
