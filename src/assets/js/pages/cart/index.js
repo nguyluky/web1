@@ -98,9 +98,12 @@ export async function initializationCart(params, query) {
     </div>
     `
 
-    const style = document.createElement('link');
-    style.rel = 'stylesheet'
-    style.href = './assets/css/cart.css'
+
+    const cssRep = await fetch('/assets/css/cart.css');
+
+
+    const style = document.createElement('style');
+    style.innerHTML = await cssRep.text();
     style.id = 'cart-style'
 
     document.head.appendChild(style);

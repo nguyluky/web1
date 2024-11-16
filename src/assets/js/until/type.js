@@ -42,7 +42,7 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *     rule: 'admin' | 'user';
  *     status: 'active' | 'block';
  *     datecreated: Date;
- *     address: string[];
+ *     address: UserAddress[];
  * }} UserInfo
  */
 
@@ -85,10 +85,10 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *         email: string,
  *     };
  *     items: {
-        * sach: String;
-        * quantity: Number;
-        * total: Number;
-    * }[];
+ *       sach: string;
+ *       quantity: number;
+ *       total: number;
+ *     }[];
  *     date: Date;
  *     state: 'doixacnhan' | 'daxacnhan' | 'danggiaohang' | 'giaohangthanhcong' | 'huy';
  *     last_update: Date;
@@ -96,6 +96,19 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *     total: number;
  *     address: string;
  * }} Order
+ */
+
+
+/**
+ * 
+ * address: format ${ward} - ${district} - ${province}
+ * @typedef {{
+ *    name: string,
+ *    phone_num: string,
+ *    email: string,
+ *    street: string,
+ *    address: string,
+ * }} UserAddress
  */
 
 /**
