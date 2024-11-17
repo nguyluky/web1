@@ -1,5 +1,5 @@
 /**
- * @param {Object} params
+ * @param {{[key: string]: string}} params
  * @param {URLSearchParams} query
  */
 export async function initializationPageNotFound(params, query) {

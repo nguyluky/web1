@@ -1,11 +1,7 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { toast } from "../../render/popupRender.js";
 import removeDiacritics from "../../until/removeDiacritics.js";
-import urlConverter from "../../until/urlConverter.js";
-
-let user_id = '';
-let order_data = await fakeDatabase.getOrdertByUserId(user_id);
-let personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
+import { navigateToPage } from "../../until/urlConverter.js";
 
 document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
     location.hash = '#/user?info=tttk';
@@ -280,26 +276,29 @@ function initializationArticle__AccountInfo() {
 }
 
 function setupEvent() {
-    const { page, query } = urlConverter(location.hash);
     const user_option = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.user-info__row'));
     user_option.forEach(option => {
         option.addEventListener('click', () => {
-            query.set('info', /**@type {String} */(option.dataset.value));
-            location.hash = page + '?' + query.toString();
+            navigateToPage('user/' + option.dataset.value);
         });
     });
 }
 /**
  * 
  * khởi tạo trang thông tin người dùng
- * @param {Object} params
+ * @param {{[key: string]: string}} params
  * @param {URLSearchParams} query
  * @returns {Promise<void>}
  */
 export async function initializationUserInfoPage(params, query) {
-    user_id = /**@type {String} */ (localStorage.getItem('user_id')) ?? '';
-    order_data = await fakeDatabase.getOrdertByUserId(user_id);
-    personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
+
+
+    const cssRep = await fetch('./assets/css/user_info.css');
+    const style = document.createElement('style');
+    style.textContent = await cssRep.text();
+    style.id = 'user-info-style'
+    document.head.appendChild(style);
+
     initializationMain();
     initializationAside();
     initializationArticle__AccountInfo();
@@ -307,20 +306,28 @@ export async function initializationUserInfoPage(params, query) {
 }
 
 
-export async function updateUserInfoPage() {
-    const { page, query } = urlConverter(location.hash);
-    const info = query.get('info');
+/**
+ * @param {{[key: string]: string}} params 
+ * @param {URLSearchParams} query
+ * @returns {Promise<void>}
+ */
+export async function updateUserInfoPage(params, query) {
+    const info = params.tab;
     const user_option = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.user-info__row'));
     switch (info) {
-        case 'tttk':
-            user_option[0].classList.add('selected');
-            user_option[1].classList.remove('selected');
-            initializationArticle__AccountInfo();
-            break;
         case 'dhct':
             user_option[0].classList.remove('selected');
             user_option[1].classList.add('selected');
             initializationArticle__OrderInfo();
             break;
+
+        default:
+            user_option[0].classList.add('selected');
+            user_option[1].classList.remove('selected');
+            initializationArticle__AccountInfo();
     }
+}
+
+export async function removeUserInfoPage(params, query) {
+    document.getElementById('user-info-style')?.remove();
 }

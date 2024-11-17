@@ -17,18 +17,18 @@ export default function urlConverter(url) {
 /**
  * 
  * @param {string} path         url
- * @param {string} pagePath     format url 
+ * @param {string} format     format url 
  * 
- * @returns {Object|undefined}
+ * @returns {{[key: string]: string}|undefined}
  * 
  * @example
  *  urlIsPage('user/123', 'user/:id') => {id: '123'}
  *  urlIsPage('user/123', 'user/:id/:name') => undefined
  *  urlIsPage('user/123', 'user/:id/:?name') => {id: '123'}
  */
-export function urlIsPage(path, pagePath) {
+export function urlIsPage(path, format) {
     const paths = path.split('/');
-    const pagePaths = pagePath.split('/');
+    const pagePaths = format.split('/');
 
     const isValid = pagePaths.some((p, index, arr) => {
         if (p.startsWith(':?') && arr[index + 1]) {
@@ -40,6 +40,9 @@ export function urlIsPage(path, pagePath) {
         throw new Error('Invalid pagePath');
     }
 
+    /**
+     * @type {{[key: string]: string}}
+     */
     const params = {};
 
     if (paths.length > pagePaths.length) return undefined;
@@ -60,3 +63,65 @@ export function urlIsPage(path, pagePath) {
     return params;
 }
 
+/**
+ * 
+ * @param {string} key 
+ * @returns {string | null}
+ */
+export function getSearchParam(key) {
+    const { query } = urlConverter(location.hash);
+    return query.get(key);
+}
+
+/**
+ * 
+ * @param {string} page 
+ * @param {{[key: string]: string} | ((qurey: URLSearchParams) => URLSearchParams)} [query] 
+ * 
+ * @example
+ * // using relative path
+ * navigateToPage('user', {id: '123', name: 'abc'}) => location.hash = 'user?id=123&name=abc'
+ * navigateToPage('user') => location.hash = 'user'
+ * 
+ * // using absolute path
+ * current hash: 'abc/user?id=123&name=abc'
+ * navigateToPage('./profile', {id: '123'}) => location.hash = 'abc/user/profile?id=123'
+ * navigateToPage('../profile', {id: '123'}) => location.hash = 'abc/profile?id=123'
+ * navigateToPage('./') => location.hash = 'abc/user'
+ * 
+ * // using function
+ * navigateToPage('user', query => {
+ *      query.set('id', '123');
+ *      return query;
+ * }
+ */
+export function navigateToPage(page, query) {
+    const { page: currentPage, query: currentQuery } = urlConverter(location.hash);
+
+    if (page.startsWith('./')) {
+        page = currentPage.split('/').join('/') + '/' + page.slice(2);
+    }
+    else if (page.startsWith('../')) {
+        const paths = currentPage.split('/');
+        const newPaths = paths.slice(0, -1);
+        page = newPaths.join('/') + '/' + page.slice(3);
+    }
+
+
+    let hash = '/' + page.split('/').join('/');
+
+    /**
+     * @type {URLSearchParams}
+     */
+    let search;
+
+    if (typeof query === 'function')
+        search = query(currentQuery);
+    else
+        search = new URLSearchParams(query);
+
+    if (search) {
+        hash += '?' + search.toString();
+    }
+    location.hash = hash
+}
