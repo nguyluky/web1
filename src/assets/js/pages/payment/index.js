@@ -1,4 +1,4 @@
-import { getOrder, rendeOrder, changeCart, closeDeal } from "../../payment.js";
+import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
 
 export async function initializationPayment() {
     const main = document.querySelector('main');

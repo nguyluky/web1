@@ -39,13 +39,13 @@
 }
 .filter-slider {
     margin-bottom: 20px;
-    max-width: 400px;
 }
 /* copy nên coi kỹ lại */
 .price-input {
     width: 100%;
     display: flex;
     margin: 20px 0 25px;
+    justify-content: space-evenly;
 }
 .price-input .field {
     display: flex;
@@ -68,7 +68,6 @@ input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 .price-input .separator {
-    flex: 1;
     display: flex;
     font-size: 19px;
     align-items: center;
@@ -133,4 +132,8 @@ input[type='range']::-moz-range-thumb {
     position: absolute;
     left: 92%;
     /* transform: translateX(-50%); */
+}
+
+.article {
+    position: relative;
 }

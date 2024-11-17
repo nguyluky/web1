@@ -198,7 +198,7 @@ function initializationAside() {
 
             if (!category) return;
 
-            navigateToPage('home', { c: category });
+            navigateToPage('./', { c: category });
         });
     });
 }

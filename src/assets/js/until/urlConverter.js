@@ -96,19 +96,27 @@ export function getSearchParam(key) {
  * }
  */
 export function navigateToPage(page, query) {
-    const { page: currentPage, query: currentQuery } = urlConverter(location.hash);
+    let { page: currentPage, query: currentQuery } = urlConverter(location.hash);
+    currentPage = currentPage.replace('#/', '');
 
     if (page.startsWith('./')) {
-        page = currentPage.split('/').join('/') + '/' + page.slice(2);
+        const paths = currentPage.split('/');
+        paths.push(page.slice(2));
+        page = paths.join('/');
     }
     else if (page.startsWith('../')) {
         const paths = currentPage.split('/');
         const newPaths = paths.slice(0, -1);
-        page = newPaths.join('/') + '/' + page.slice(3);
+        newPaths.push(page.slice(3));
+        page = newPaths.join('/');
     }
 
 
-    let hash = '/' + page.split('/').join('/');
+    let hash = '/' + page;
+
+    if (hash.endsWith('/')) {
+        hash = hash.slice(0, -1);
+    }
 
     /**
      * @type {URLSearchParams}
