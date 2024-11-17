@@ -532,6 +532,10 @@ async function renderPaymentSummary() {
     if (num) num.innerHTML = `Mua Hàng (${formatNumber(numberOfItems)})`;
 }
 
+/**
+ * 
+ * @returns {Promise<void>}
+ */
 export async function buyBooks() {
     const user_id = localStorage.getItem('user_id');
     if (!user_id) {
