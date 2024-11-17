@@ -210,12 +210,23 @@ function initializeAccountPopup() {
 
         const p1 = document.createElement('p');
         p1.textContent = 'Thông tin tài khoản';
+        p1.onclick = () => {
+            location.hash = '#/user?info=tttk';
+        }
 
         const p2 = document.createElement('p');
         p2.textContent = 'Đơn hàng của tôi';
+        p2.onclick = () => {
+            location.hash = '#/user?info=dhct';
+        }
 
         const p3 = document.createElement('p');
         p3.textContent = 'Đăng xuất';
+        p3.onclick = () => {
+            localStorage.removeItem('user_id');
+            location.hash = '#/home';
+            location.reload();
+        }
 
         dropDown.appendChild(p1);
         dropDown.appendChild(p2);
@@ -383,13 +394,9 @@ async function initializeUrlHandling() {
                 /** @type {HTMLInputElement} */ (e.target).value;
         }
     });
-    document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
-        location.hash = '#/user?info=tttk';
-    });
 
-    document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
-        location.hash = '#/user?info=dhct';
-    });
+    // chuyển qua showDropDown
+
     await pageInit(curr_page, query);
     await pageUpdate(curr_page, query);
 }
