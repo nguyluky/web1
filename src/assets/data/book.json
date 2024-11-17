@@ -24,8 +24,8 @@
             "details": "● Sách chuyên ngành NNA\n1. Thư tín thương mại 25k\n2. Tiếng Anh văn phòng 10k \n3. Tiếng Trung 1,2 đã làm gần hết bài tập 20k\n4. ...( mình tìm ra sẽ update thêm (dưới cmt chẳng hạn 🥲))",
             "thumbnail": "90da6890-8c45-5733-b3c2-8c6b203259bc",
             "imgs": [],
-            "base_price": 0,
-            "discount": 0.15,
+            "base_price": 20000,
+            "discount": 0.1,
             "category": ["gtcn", "gtcb", "gtnc", "tltks"]
         },
         {
@@ -61,7 +61,7 @@
                 "c636597a-0ec4-5942-bcba-5745aece620e",
                 "65f5b8cf-4c77-5834-bc98-c5641b9a6b65"
             ],
-            "base_price": 0,
+            "base_price": 25000,
             "discount": 0.0,
             "category": ["gtcn", "gtcb", "gtnc", "bgpp", "bgPDF", "btcn"]
         },

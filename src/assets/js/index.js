@@ -366,13 +366,7 @@ async function initializeUrlHandling() {
                 /** @type {HTMLInputElement} */ (e.target).value;
         }
     });
-    document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
-        location.hash = '#/user?info=tttk';
-    });
 
-    document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
-        location.hash = '#/user?info=dhct';
-    });
     await pageInit(curr_page, query);
     await pageUpdate(curr_page, query);
 }

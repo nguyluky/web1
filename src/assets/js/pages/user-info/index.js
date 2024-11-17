@@ -2,9 +2,18 @@ import fakeDatabase from "../../db/fakeDBv1.js";
 import removeDiacritics from "../../until/removeDiacritics.js";
 import urlConverter from "../../until/urlConverter.js";
 
-const user_id = /**@type {String} */(localStorage.getItem('user_id'));
-const order_data = await fakeDatabase.getOrdertByUserId(user_id);
-const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
+let user_id = '';
+let order_data = await fakeDatabase.getOrdertByUserId(user_id);
+let personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
+
+document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
+    location.hash = '#/user?info=tttk';
+});
+
+document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
+    location.hash = '#/user?info=dhct';
+});
+
 const status = {
     daxacnhan: {
         text: 'Đã xác nhận',
@@ -182,32 +191,34 @@ function initializationArticle__OrderInfo() {
     article.className = "user-package";
     // 'doixacnhan' | 'daxacnhan' | 'danggiaohang' | 'giaohangthanhcong' | 'huy'
     article.innerHTML = `
-                    <div class="package-category">
-                        <div class = "package-category-header" data-state="all">Tất cả</div>
-                        <div class = "package-category-header" data-state="doixacnhan">Chờ xử lý</div>
-                        <div class = "package-category-header" data-state="daxacnhan">Đã xác nhận</div>
-                        <div class = "package-category-header" data-state="danggiaohang">Vận chuyển</div>
-                        <div class = "package-category-header" data-state="giaohangthanhcong">Đã giao</div>
-                        <div class = "package-category-header" data-state="huy">Đã hủy</div>
-                    </div>
-                    <div class="package-search">
-                        <label class="input-search">
-                            <div class="icon-input"><i class="fa-solid fa-magnifying-glass"></i></div>
-                            <input type="text" placeholder="Tìm kiếm theo tên sản phẩm, Mã đơn hàng">
-                        </label>
-                    </div>
-                    <div class="no-order hide">
-                        <img src="../assets/img/no-order.png">
-                        <h3>Không có đơn hàng nào</h3>
-                    </div>
-                    <div class="package-content">
-                    </div>
-                        `;
+        <div class="package-category">
+            <div class = "package-category-header selected" data-state="all">Tất cả</div>
+            <div class = "package-category-header" data-state="doixacnhan">Chờ xử lý</div>
+            <div class = "package-category-header" data-state="daxacnhan">Đã xác nhận</div>
+            <div class = "package-category-header" data-state="danggiaohang">Vận chuyển</div>
+            <div class = "package-category-header" data-state="giaohangthanhcong">Đã giao</div>
+            <div class = "package-category-header" data-state="huy">Đã hủy</div>
+        </div>
+        <div class="package-search">
+            <label class="input-search">
+                <div class="icon-input"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <input type="text" placeholder="Tìm kiếm theo tên sản phẩm, Mã đơn hàng">
+            </label>
+        </div>
+        <div class="no-order hide">
+            <img src="../assets/img/no-order.png">
+            <h3>Không có đơn hàng nào</h3>
+        </div>
+        <div class="package-content">
+        </div>
+            `;
     renderOrder();
     const package_catagory = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.package-category-header'));
     package_catagory.forEach(catagory => {
         catagory.addEventListener('click', e => {
             renderOrder(catagory.dataset.state);
+            package_catagory.forEach(e => { e.classList.remove('selected') });
+            catagory.classList.add('selected');
         });
     });
     const search_input = /**@type {HTMLInputElement} */ (document.querySelector('.input-search input'));
@@ -262,6 +273,9 @@ function setupEvent() {
  * @returns {Promise<void>}
  */
 export async function initializationUserInfoPage(params, query) {
+    user_id = /**@type {String} */ (localStorage.getItem('user_id')) ?? '';
+    order_data = await fakeDatabase.getOrdertByUserId(user_id);
+    personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
     initializationMain();
     initializationAside();
     initializationArticle__AccountInfo();
