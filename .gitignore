@@ -5,3 +5,4 @@ eslint.config.mjs
 
 node_modules/*
 .prettierrc
+node_modules

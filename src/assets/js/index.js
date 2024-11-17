@@ -389,8 +389,6 @@ async function initializeUrlHandling() {
         navigateToPage('home');
         return;
     };
-
-
 }
 /**
  * 
