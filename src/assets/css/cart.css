@@ -1,4 +1,4 @@
-@import url(./home-style-share.css);
+/* @import url(./home-style-share.css); */
 
 .main_wapper {
     display: block;
@@ -171,6 +171,14 @@
     justify-content: space-between;
 }
 
+#total-amount {
+    display: flex;
+    justify-content: flex-end;
+    color: red;
+    font-size: 18px;
+    font-weight: 600;
+}
+
 .prices__value--note {
     font-size: 12px;
     color: rgb(128, 128, 137);
@@ -192,22 +200,6 @@ input[type='checkbox'] {
     margin-right: 8px;
 }
 
-/* cart-book */
-/* .cart-seller-items {
-    background-color: white;
-} */
-
-/* .cart-seller-name {
-    box-sizing: border-box;
-    padding: 16px;
-    background-color: white;
-} */
-
-/* .cart-seller-name label {
-    display: flex;
-    align-items: center;
-    margin: 0px;
-} */
 .left-content-body {
     background-color: white;
     border-radius: 5px;
@@ -245,6 +237,10 @@ input[type='checkbox'] {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.book-title:hover {
+    color: rgb(11, 116, 229);
 }
 
 .book-delivery-time {
@@ -358,13 +354,14 @@ input[type='checkbox'] {
     justify-content: center;
 }
 .empty-cart img {
-    width: 160px;
+    width: 250px;
     margin: 20px 0px;
 }
 .empty-cart span {
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 20px;
+    color: rgb(120, 120, 120);
 }
 @media screen and (max-width: 1000px) {
     .main-cart-content {

@@ -18,6 +18,7 @@ import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-inf
 import { initializationProductPage, removeProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 import { showListShippingAddressPopup, showNewShippingAddressPopup } from './render/addressPopup.js';
+import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
 
 //#region khai bao page
 /**
@@ -66,10 +67,17 @@ const PAGES = [
         update: async () => { },
         remove: async () => { },
     },
+    {
+        pagePath: 'payment',
+        init: initializationPayment,
+        update: updatePayment,
+        remove: removePayment,
+    }
 ]
 
 //#region khai bao bien
 
+const BUTTON_CART = document.querySelector('.cart');
 const BUTTON_ACCOUNT = document.getElementById('btn-account');
 const MODAL = document.querySelector('.js-modal');
 
@@ -80,7 +88,8 @@ const MODAL = document.querySelector('.js-modal');
 function initializeAccountPopup() {
     if (
         !BUTTON_ACCOUNT ||
-        !MODAL
+        !MODAL ||
+        !BUTTON_CART
     ) {
         console.log('có gì đó không đúng');
         return;
@@ -108,7 +117,6 @@ function initializeAccountPopup() {
                 validator.isRequired('#input-phone-email'),
             ],
             onSubmit: (data) => {
-                // ch sửa lai lấy thông tin người dùng băng email hoặc sdt
                 fakeDatabase
                     .getUserInfoByPhoneOrEmail(data['#input-phone-email'])
                     .then((userInfo) => {
@@ -202,12 +210,23 @@ function initializeAccountPopup() {
 
         const p1 = document.createElement('p');
         p1.textContent = 'Thông tin tài khoản';
+        p1.onclick = () => {
+            location.hash = '#/user?info=tttk';
+        }
 
         const p2 = document.createElement('p');
         p2.textContent = 'Đơn hàng của tôi';
+        p2.onclick = () => {
+            location.hash = '#/user?info=dhct';
+        }
 
         const p3 = document.createElement('p');
         p3.textContent = 'Đăng xuất';
+        p3.onclick = () => {
+            localStorage.removeItem('user_id');
+            location.hash = '#/home';
+            location.reload();
+        }
 
         dropDown.appendChild(p1);
         dropDown.appendChild(p2);
@@ -258,9 +277,18 @@ function initializeAccountPopup() {
             validatePhoneNum();
         }
     });
+
+    BUTTON_CART.addEventListener('click', () => {
+        BUTTON_ACCOUNT.click();
+        if (localStorage.getItem('user_id')) {
+            location.hash = `#/cart`
+        }
+    })
+
     if (localStorage.getItem('user_id')) {
         showDropDown();
     }
+
 }
 
 /**
@@ -367,6 +395,8 @@ async function initializeUrlHandling() {
         }
     });
 
+    // chuyển qua showDropDown
+
     await pageInit(curr_page, query);
     await pageUpdate(curr_page, query);
 }
@@ -387,7 +417,6 @@ function initializationAddress() {
 function main() {
     initializationAddress();
     initializeAccountPopup();
-
     initializeUrlHandling();
 }
 

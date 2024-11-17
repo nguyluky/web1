@@ -1,4 +1,5 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
+import { toast } from "../../render/popupRender.js";
 import removeDiacritics from "../../until/removeDiacritics.js";
 import urlConverter from "../../until/urlConverter.js";
 
@@ -102,9 +103,20 @@ async function createOrderItemElement(item) {
     return item_detail;
 }
 async function renderOrder(option = 'all') {
+    const user_id = /**@type {String} */(localStorage.getItem('user_id'));
+
+    if (!user_id) {
+        toast({ title: 'Lỗi', message: 'Vui lòng đăng nhập để xem thông tin đơn hàng', type: 'error' });
+        return;
+    }
+
+    const order_data = await fakeDatabase.getOrdertByUserId(user_id);
+
     const container = /**@type {HTMLElement}*/(document.querySelector('.package-content'));
     container.innerHTML = '';
     let count = 0;
+
+
     order_data.forEach(order => {
         if (option === 'all' || order.state === option) {
             count++;
@@ -121,7 +133,15 @@ async function renderOrder(option = 'all') {
     }
 }
 
-function renderUserInfo() {
+async function renderUserInfo() {
+
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) {
+        toast({ title: 'Lỗi', message: 'Vui lòng đăng nhập để xem thông tin cá nhân', type: 'error' });
+        return '';
+    }
+    const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
+
     return `
                     <div class="user-personal">
                         <div class="user-header">Họ và tên:</div>
@@ -248,10 +268,14 @@ function initializationArticle__AccountInfo() {
                 <span>Thông tin tài khoản</span>
             </div>
             <div class="user-personal__container">
+
             </div>
         `;
     const user_container = /**@type {HTMLElement}*/(document.querySelector('.user-personal__container'));
-    if (user_container) user_container.innerHTML = renderUserInfo();
+
+    renderUserInfo().then(data => {
+        if (user_container) user_container.innerHTML = data;
+    })
 
 }
 

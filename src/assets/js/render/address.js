@@ -100,7 +100,11 @@ const css = `
 
 .show {
     display: block;
-}    
+}
+
+.hide {
+    display: none;
+}
 
 `
 
@@ -207,8 +211,7 @@ export class AddressFrom extends HTMLElement {
             div.addEventListener('click', () => {
                 input.placeholder = e.title;
                 this.value = e.value;
-
-                content.classList.remove('show');
+                input.value = '';
 
                 content
                     .querySelector('div[selection="true"]')
@@ -343,24 +346,36 @@ export class AddressFrom extends HTMLElement {
 
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {HTMLInputElement} input
      * @param {HTMLElement} button
      * @param {HTMLElement} contentDropdowContent
      */
-    handleClickOutsideDropdown(event, button, contentDropdowContent) {
-        const target = /** @type {HTMLElement} */ (event.target);
-        const isClickInsideDropdown =
-            this.contains(target) || button.contains(target) || button.isSameNode(target);
+    addClickOutSideHandle(input, button, contentDropdowContent) {
 
-        if (isClickInsideDropdown) return;
-        contentDropdowContent?.classList.remove('show');
-        document.removeEventListener('click', (event) =>
-            this.handleClickOutsideDropdown(
-                event,
-                button,
-                contentDropdowContent,
-            ),
-        );
+        const addressForm = this;
+        function clickOutSide(event) {
+
+            const target = /** @type {HTMLElement} */ (event.target);
+
+            if (target.isSameNode(addressForm)) return;
+
+            const isClickInsideDropdown =
+                button.contains(target) || button.isSameNode(target);
+
+            if (isClickInsideDropdown) return;
+            contentDropdowContent?.classList.remove('show');
+            input.value = '';
+
+            contentDropdowContent?.querySelectorAll('div').forEach((e) => {
+                e.classList.remove('hide');
+            })
+
+
+
+            document.removeEventListener('click', clickOutSide);
+        }
+
+        document.addEventListener('click', clickOutSide);
     }
 
     /**
@@ -409,28 +424,7 @@ export class AddressFrom extends HTMLElement {
     showDropdown(input, button, contentDropdowContent) {
         if (input?.disabled) return;
         contentDropdowContent?.classList.add('show');
-        document.addEventListener('click', (event) =>
-            this.handleClickOutsideDropdown(
-                event,
-                button,
-                contentDropdowContent,
-            ),
-        );
-    }
-
-    /**
-     * @private
-     * @param {HTMLInputElement} input
-     * @param {HTMLDivElement} contentDropdowContent
-     * @returns {void}
-     */
-    resetDropdownOnBlur(input, contentDropdowContent) {
-        if (!input) return;
-        input.value = '';
-
-        contentDropdowContent?.querySelectorAll('div').forEach((e) => {
-            e.classList.remove('hide');
-        });
+        this.addClickOutSideHandle(input, button, contentDropdowContent);
     }
 
     /**
@@ -526,17 +520,9 @@ export class AddressFrom extends HTMLElement {
         content.classList.add('Address__dropdown-content');
         shadow.appendChild(content);
 
-        button.addEventListener('click', () => {
-            this.showDropdown(input, button, content);
-        });
+        button.addEventListener('click', this.showDropdown.bind(this, input, button, content));
 
-        input.addEventListener('input', () => {
-            this.handleSearchInput(input, content);
-        });
-
-        input.addEventListener('focusout', () => {
-            this.resetDropdownOnBlur(input, content);
-        });
+        input.addEventListener('input', this.handleSearchInput.bind(this, input, content));
 
         /**
          * - NOTE: Xử lý sự kiện khi người dùng nhấn các phím điều hướng
