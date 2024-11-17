@@ -76,7 +76,7 @@ function renderRow(row, value, onchange) {
                 appendTotalCell(row, value, onchange);
                 break;
             case 'address': {
-                const col = createTextTableCell(key, value[key], (nv) => {
+                const col = createTextTableCell(key, value[key].address, (nv) => {
                     // @ts-ignore
                     onchange && onchange(value, key, nv);
                 });
