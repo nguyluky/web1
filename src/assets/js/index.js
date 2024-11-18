@@ -222,12 +222,6 @@ function initializeAccountPopup() {
 
         const p3 = document.createElement('p');
         p3.textContent = 'Đăng xuất';
-        p3.onclick = (event) => {
-            event.stopPropagation();
-            localStorage.removeItem('user_id');
-            navigateToPage('home');
-            location.reload();
-        }
 
         dropDown.appendChild(p1);
         dropDown.appendChild(p2);
