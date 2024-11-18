@@ -129,9 +129,17 @@ async function renderOrder(option = 'all') {
     }
 }
 
-async function renderUserInfo() {
+function checkEmail(email) {
+    if (!email) {
+        return "bạn chưa nhập email"
+    }
+    else {
+        return email;
+    }
+}
 
-    const user_id = localStorage.getItem('user_id');
+async function renderUserInfo(user_id) {
+
     if (!user_id) {
         toast({ title: 'Lỗi', message: 'Vui lòng đăng nhập để xem thông tin cá nhân', type: 'error' });
         return '';
@@ -149,7 +157,7 @@ async function renderUserInfo() {
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Email:</div>
-                        <div class="user-info">${personal_info_data?.email}</div>
+                        <div class="user-info">${checkEmail(personal_info_data?.email)}</div>
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Số điện thoại:</div>
@@ -254,10 +262,14 @@ function initializationArticle__OrderInfo() {
         });
     }
 }
-function initializationArticle__AccountInfo() {
+async function initializationArticle__AccountInfo() {
     const article = document.getElementById('article');
-    if (!article) return;
+    const username = document.querySelector('.user-info__name');
+    const user_id = localStorage.getItem('user_id');
+    if (!article || !username || !user_id) return;
+    const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
 
+    username.innerHTML = String(personal_info_data?.name);
     article.className = "user-personal-info";
     article.innerHTML = `
             <div class="article-header">
@@ -269,7 +281,7 @@ function initializationArticle__AccountInfo() {
         `;
     const user_container = /**@type {HTMLElement}*/(document.querySelector('.user-personal__container'));
 
-    renderUserInfo().then(data => {
+    renderUserInfo(user_id).then(data => {
         if (user_container) user_container.innerHTML = data;
     })
 

@@ -6,15 +6,14 @@
         <meta name="description" content="Chào mừng đến với WeSellBooks - nơi bạn có thể dễ dàng mua sách trực tuyến. Chúng tôi chuyên cung cấp sách cũ, sách hiếm và sách giáo trình dành cho sinh viên với giá cả hợp lý.">
         <meta property="og:image" content="https://wesellbooks.id.vn/assets/img/logov1.png">
         <meta name="keywords" content="buy book online, we sell books, wesellbooks">
-        <title>test</title>
+        <title>We sell books</title>
         <!-- <script type="module" defer="" src="./assets/js/index.js"></script> -->
-        <!-- <script type="module" src="./assets/js/cart.js"></script> -->
         <link rel="stylesheet" href="./assets/css/index.css" />
         <link rel="stylesheet" href="./assets/css/share.css">
-        <link rel="stylesheet" href="./assets/css/fontawesome/all.min.css">
-        <!-- <link rel="stylesheet" href="./assets/css/cart.css"> -->
+        <link rel="stylesheet" href="./assets/font-awesome/css/all.min.css" />
         <link rel="icon" href="./assets/img/favicon.png">
-        <!-- <script type="module" src="./assets/js/render/address.js"></script> -->
+        <script type="module" src="./assets/js/render/address.js"></script>
+        <script type="module" src="./assets/js/pages/product/index.js"></script>
 
         <meta name="google-site-verification" content="eEgHLOuD2-ZJ-WcyTLtJggrKQpHJgdIrnxPPXJVEg6s">
     <style id="product-page-style">
@@ -35,6 +34,8 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            position: sticky;
+            top: 0px;
         }
         .product-title {
             font-size: 22px;
@@ -86,7 +87,7 @@
             background-color: #fa3333;
             color: white;
         }
-        .add-to-cart {
+        #add-to-cart-button {
             border: solid rgba(0, 96, 255, 1) 2px;
             background-color: rgb(255, 255, 255);
             color: rgba(0, 96, 255, 1);
@@ -241,6 +242,26 @@
             display: flex;
             gap: 10px;
         }
+
+        .products-header{
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .product-category-container{
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .product-category{
+            padding: 5px;
+            background-color: #cccccc;
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: 600;
+        }
     </style>
     </head>
 <body>
@@ -315,7 +336,7 @@
             </div>
             <div class="buttons-section"> 
                 <button class="buy-now">Mua ngay</button>
-                <button class="add-to-cart">Thêm giỏ hàng</button>
+                <button class="add-to-cart" id="add-to-cart-button">Thêm giỏ hàng</button>
             </div>
         </div>
 
@@ -337,6 +358,10 @@
                     <span class="price-number regular">
                         25000 <sup>₫</sup>
                     </span>
+                </div>
+                <div class="product-category-container">
+                    <div class="product-category" data-category="bgPDF">Giáo trình cơ bản</div>
+                    <div class="product-category" data-category="lvtn">Giáo trình cơ bản</div>
                 </div>
             </div>
             <div class="description-container">
@@ -395,10 +420,12 @@
                 </p>
             </div>
             <div class="other-product-container">
+                <div class="products-header">Sản phẩm tương tự</div>
                 <div class="products">
                     <div class="product-card" data-id="0">
                         <div class="product-img">
                             <div class="discount-tag">-15%</div>
+                            <img src="https://nhasachphuongnam.com/images/detailed/267/ly-thuyet-tro-choi.jpg" alt="">
                         </div>
                         <div class="product-title"><p>Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...</p></div>
                         <div class="product-footer">
@@ -412,6 +439,7 @@
                     <div class="product-card" data-id="0">
                         <div class="product-img">
                             <div class="discount-tag">-15%</div>
+                            <img src="https://nhasachphuongnam.com/images/detailed/267/ly-thuyet-tro-choi.jpg" alt="">
                         </div>
                         <div class="product-title"><p>Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...</p></div>
                         <div class="product-footer">
@@ -425,6 +453,7 @@
                     <div class="product-card" data-id="0">
                         <div class="product-img">
                             <div class="discount-tag">-15%</div>
+                            <img src="https://nhasachphuongnam.com/images/detailed/267/ly-thuyet-tro-choi.jpg" alt="">
                         </div>
                         <div class="product-title"><p>Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...</p></div>
                         <div class="product-footer">
@@ -438,6 +467,7 @@
                     <div class="product-card" data-id="0">
                         <div class="product-img">
                             <div class="discount-tag">-15%</div>
+                            <img src="https://nhasachphuongnam.com/images/detailed/267/ly-thuyet-tro-choi.jpg" alt="">
                         </div>
                         <div class="product-title"><p>Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...</p></div>
                         <div class="product-footer">
