@@ -18,11 +18,11 @@ export async function showUserInfo() {
     if (userInfo && userName && userTel && userAddress) {
         userName.innerHTML = userInfo.name;
         userTel.innerHTML = userInfo.phone_num;
-        // const address = userInfo.address;
-        // console.log(userInfo)
-        // if (userInfo.address.length > 0) {
-        //     userAddress.innerHTML = userInfo.address[0];
-        // }
+        if (userInfo.address.length > 0) {
+            const address = userInfo.address[0].address.split('-');
+            const street = userInfo.address[0].street
+            userAddress.innerHTML = `${street},${address[2]},${address[1]},${address[0]}`;
+        }
 
     }
 }

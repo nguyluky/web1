@@ -1,7 +1,8 @@
 import urlConverter from "./until/urlConverter.js";
 import fakeDatabase from "./db/fakeDBv1.js";
 import { getDeliveryTime, formatNumber, showUserInfo } from "./cart.js";
-import order from "./render/table/orderTabel.js";
+import uuidv from "./until/uuid.js";
+
 
 
 export function getOrder() {
@@ -113,11 +114,11 @@ export async function rendeOrder() {
 
 export function closeDeal() {
     const purchaseBtn = document.querySelector('.btn-danger');
-    purchaseBtn?.addEventListener('click', () => {
+    purchaseBtn?.addEventListener('click', async () => {
         const selectedPaymentOption = document.querySelector('input[name="payment-option"]:checked')
         if (selectedPaymentOption) {
             if (selectedPaymentOption.id === 'cash-option') {
-
+                await pushOrder();
             }
             else {
                 showQR(selectedPaymentOption.id);
@@ -126,7 +127,31 @@ export function closeDeal() {
     })
 }
 
+export async function pushOrder() {
+    const items = [];
+    const orders = getOrder();
+    if (!orders)
+        return;
+    for (const order of orders) {
+        const cart = await fakeDatabase.getCartById(order);
+        if (!cart)
+            return;
 
+        const book = await fakeDatabase.getSachById(cart.sach);
+        if (!book)
+            return;
+
+        const item = { sach: book.id, quantity: cart.quantity, total: book.base_price * (1 - book.discount) };
+        items.push(item);
+    }
+    const data = {
+        id: uuidv(),
+        user_id: localStorage.getItem('user_id'),
+
+
+    }
+
+}
 
 async function showQR(option) {
     console.log('success');
@@ -228,6 +253,10 @@ export function changeCart() {
         location.hash = '#/cart';
     })
 }
+
+
+
+
 
 
 

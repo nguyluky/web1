@@ -394,7 +394,7 @@ async function initializeUrlHandling() {
     await pageUpdate(curr_page, query);
 }
 
-function initializationAddress() {
+export function initializationAddress() {
     document.getElementById('btn-location')?.addEventListener('click', (ev) => {
         if (!localStorage.getItem('user_id')) {
             alert('Vui lòng đăng nhập để thêm địa chỉ mới');

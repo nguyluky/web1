@@ -1,4 +1,5 @@
 import { getOrder, rendeOrder, changeCart, closeDeal } from "../../payment.js";
+import { initializationAddress } from "../../index.js";
 
 export async function initializationPayment() {
     const main = document.querySelector('main');
@@ -234,6 +235,8 @@ export async function initializationPayment() {
 export async function updatePayment() {
     changeCart();
     closeDeal();
+    initializationAddress();
+
 }
 
 export async function removePayment() {
