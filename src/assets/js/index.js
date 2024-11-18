@@ -321,17 +321,17 @@ function initializeAccountPopup() {
  * https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
  */
 async function initializeUrlHandling() {
-    /**
-     * @type {string}
-     */
-    let currPath = '';
     let { page: curr_page, query } = urlConverter(location.hash);
+    /**
+     * @type {PAGES[number] | undefined}
+     */
+    let oldPage;
     for (const page of PAGES) {
         const param = urlIsPage(curr_page.replace('#/', ''), page.pagePath);
         if (param) {
-            currPath = page.pagePath;
             await page.init(param, query);
             await page.update(param, query);
+            oldPage = page;
             break;
         }
     }
@@ -367,15 +367,15 @@ async function initializeUrlHandling() {
             const param = urlIsPage(page, p.pagePath);
             if (!param) { continue; }
 
-            if (currPath !== p.pagePath) {
-                console.log('remove', currPath);
-                await p.remove(param, query);
+            if (oldPage?.pagePath !== p.pagePath) {
+                console.log('remove', oldPage?.pagePath);
+                await oldPage?.remove(param, query);
 
                 showLoading();
 
                 console.log('init', p.pagePath);
                 await p.init(param, query);
-                currPath = p.pagePath;
+                oldPage = p;
             }
 
             console.log('update', p.pagePath);
@@ -385,7 +385,7 @@ async function initializeUrlHandling() {
 
     window.addEventListener('hashchange', handleHashChange);
 
-    if (!currPath) {
+    if (!oldPage) {
         navigateToPage('home');
         return;
     };
