@@ -1,4 +1,4 @@
-import urlConverter from '../../until/urlConverter.js';
+import { navigateToPage } from '../../until/urlConverter.js';
 import {
     createPagination,
     displayProducts,
@@ -21,17 +21,28 @@ function searchFilter() {
     )
         .filter((e) => /**@type {HTMLInputElement} */(e).checked)
         .map((e) => /**@type {HTMLElement} */(e).dataset.category);
-    const { page, query } = urlConverter(location.hash);
-    if (categories.length > 0) {
-        query.set('cs', categories.join(','));
-    } else {
-        query.delete('cs');
-    }
+
+
+
     const minPrice = Number(/**@type {HTMLInputElement} */(document.querySelector('.input-min'))?.value);
     const maxPrice = Number(/**@type {HTMLInputElement} */(document.querySelector('.input-max'))?.value);
-    query.set('minPrice', minPrice + '');
-    query.set('maxPrice', maxPrice + '');
-    location.hash = page + '?' + query.toString();
+    navigateToPage('./', (query) => {
+
+        if (categories.length > 0) {
+            const a = categories.join(',');
+            if (query.get('cs') != a) {
+                query.set('cs', categories.join(','));
+                query.delete('p');
+            }
+        } else {
+            query.delete('cs');
+        }
+
+        query.set('minPrice', minPrice + '');
+        query.set('maxPrice', maxPrice + '');
+
+        return query;
+    })
 }
 
 /**
@@ -56,18 +67,17 @@ function updateFilter(categories_) {
  * @returns {void}
  */
 function setupFilterListeners() {
-    const { page, query } = urlConverter(location.hash);
-    query.delete('p');
     // khi nhập text tìm kiếm
     inputSearch?.addEventListener('keydown', (e) => {
         if (/**@type {KeyboardEvent} */ (e).key === 'Enter') {
-            // NOTE: command tạm
-            // defaultFilter();
-            query.delete('cs');
-            query.delete('minPrice');
-            query.delete('maxPrice');
-            query.set('t', inputSearch.value);
-            location.hash = page + '?' + query.toString();
+
+            navigateToPage('./', (query) => {
+                query.delete('cs');
+                query.delete('minPrice');
+                query.delete('maxPrice');
+                query.set('t', inputSearch.value);
+                return query;
+            });
         }
     });
     // khi lọc theo category
@@ -368,10 +378,9 @@ function initializationAside() {
 }
 
 /**
- * @param {Object} params
+ * @param {{[key: string]: string}} params
  * @param {URLSearchParams} query
  */
-
 export async function initializationSearchPage(params, query) {
     initializationMain();
     initializationArticle();
@@ -380,7 +389,7 @@ export async function initializationSearchPage(params, query) {
 }
 
 /**
- * @param {string} page
+ * @param {{[key: string]: string}} page
  * @param {URLSearchParams} query
  */
 export async function updateSearchPage(page, query) {

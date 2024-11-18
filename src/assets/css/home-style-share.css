@@ -169,7 +169,6 @@ footer.footer .footer_wrapper .footer_box {
     padding: 10px 0;
 }
 
-/* 
 .popup-btn {
     width: auto;
     border: 0;
@@ -185,7 +184,7 @@ footer.footer .footer_wrapper .footer_box {
 
 .popup-btn:active {
     scale: 0.98;
-} */
+}
 .popup-header {
     background: #ffffff;
     padding: 15px;
@@ -279,7 +278,7 @@ footer.footer .footer_wrapper .footer_box {
     }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 700px) {
     :root {
         --width-header: 90vw;
     }
@@ -327,9 +326,13 @@ footer.footer .footer_wrapper .footer_box {
         width: 90%;
     }
 
-    #btn-close {
+    .btn-close {
         top: 14px;
         right: 10px;
+    }
+
+    .popup-mess {
+        color: #efefef;
     }
 }
 

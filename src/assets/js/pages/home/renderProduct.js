@@ -1,7 +1,7 @@
-import { pushCartItemIntoCart } from '../../cart.js';
+import { pushCartItemIntoCart } from '../cart/cart.js';
 import fakeDatabase from '../../db/fakeDBv1.js';
-import urlConverter from '../../until/urlConverter.js';
 import removeDiacritics from '../../until/removeDiacritics.js';
+import { navigateToPage } from '../../until/urlConverter.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = Product_Data;
 let Current_Page = 1;
@@ -175,9 +175,10 @@ function prevPage() {
     if (Current_Page > 1) {
         Current_Page--;
 
-        const { page, query } = urlConverter(location.hash);
-        query.set('p', Current_Page + '');
-        location.hash = page + '?' + query.toString();
+        navigateToPage('./', query => {
+            query.set('p', Current_Page + '');
+            return query;
+        });
     }
 }
 
@@ -188,9 +189,10 @@ function nextPage() {
     if (Current_Page < totalPages) {
         Current_Page++;
 
-        const { page, query } = urlConverter(location.hash);
-        query.set('p', Current_Page + '');
-        location.hash = page + '?' + query.toString();
+        navigateToPage('./', query => {
+            query.set('p', Current_Page + '');
+            return query;
+        });
     }
 }
 
@@ -202,9 +204,10 @@ function goToPage(page) {
     if (Current_Page != page) {
         Current_Page = page;
 
-        const { page: page_, query } = urlConverter(location.hash);
-        query.set('p', Current_Page + '');
-        location.hash = page_ + '?' + query.toString();
+        navigateToPage('./', query => {
+            query.set('p', Current_Page + '');
+            return query;
+        });
     }
 }
 
@@ -232,15 +235,15 @@ export function setupPaginationListeners() {
  *
  * @param {string[]} [categories ]
  * @param {string} [searchText='']
+ * @param {number} [from=NaN]
+ * @param {number} [to=NaN]
  */
 export function selectionConditional(categories, searchText = '', from = NaN, to = NaN) {
     if (categories && categories.length > 0) {
         data = Product_Data.filter((e) => {
-            return (
-                categories.every((category_id) =>
-                    e.category.includes(category_id),
-                )
-            );
+            return e.category.some((category_id) => {
+                return categories.includes(category_id);
+            });
         });
     } else {
         data = Product_Data

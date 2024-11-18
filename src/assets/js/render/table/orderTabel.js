@@ -39,6 +39,12 @@ let cacheEdit = {};
 function handleOnChange(data, key, newValue) {
     console.log('onchange called');
 
+    if (!cacheEdit[data.id]) {
+        cacheEdit[data.id] = {
+            ...data,
+            [key]: newValue,
+        };
+    }
     cacheEdit[data.id] = {
         ...cacheEdit[data.id],
         [key]: newValue,
@@ -70,7 +76,7 @@ function renderRow(row, value, onchange) {
                 appendTotalCell(row, value, onchange);
                 break;
             case 'address': {
-                const col = createTextTableCell(key, value[key], (nv) => {
+                const col = createTextTableCell(key, value[key].address, (nv) => {
                     // @ts-ignore
                     onchange && onchange(value, key, nv);
                 });

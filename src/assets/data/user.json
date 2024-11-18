@@ -1099,6 +1099,17 @@
             "status": "active",
             "datecreated": "2024-03-26T11:26:21Z",
             "address": []
+        },
+        {
+            "id": "100",
+            "name": "Van Tun",
+            "email": "aduadu@gmail.com",
+            "phone_num": "0123456789",
+            "passwd": "aduaduaduadu",
+            "rule": "admin",
+            "status": "active",
+            "datecreated": "2024-07-30T14:55:21Z",
+            "address": []
         }
     ]
 }

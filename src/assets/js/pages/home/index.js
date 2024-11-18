@@ -1,4 +1,3 @@
-import urlConverter from '../../until/urlConverter.js';
 import {
     createPagination,
     displayProducts,
@@ -6,7 +5,8 @@ import {
     setupPaginationListeners,
     updatePagination,
 } from './renderProduct.js';
-import initAddToCartOnButton, { updateCartQuantity } from '../../cart.js';
+import { updateCartQuantity } from '../cart/cart.js';
+import { navigateToPage } from '../../until/urlConverter.js';
 
 /**
  *
@@ -190,7 +190,6 @@ function initializationAside() {
 
     // khi chọn danh mục
     const sub_header = document.querySelectorAll('.catergory__row--sub-header');
-    console.log(sub_header);
     sub_header.forEach((sub) => {
         sub.addEventListener('click', () => {
             sub_header.forEach((e) => e.removeAttribute('selected'));
@@ -199,14 +198,7 @@ function initializationAside() {
 
             if (!category) return;
 
-            // selectionCatergory(category);
-
-            const { page, query } = urlConverter(location.hash);
-            query.set('c', category);
-            query.delete('p');
-            location.hash = page + '?' + query.toString();
-            // displayProducts();
-            // createPagination();
+            navigateToPage('./', { c: category });
         });
     });
 }
@@ -232,7 +224,7 @@ function initializationArticle() {
 
 /**
  *
- * @param {object} params
+ * @param {{[key: string]: string}} params
  * @param {URLSearchParams} query
  */
 export async function initializationHomePage(params, query) {
@@ -244,7 +236,7 @@ export async function initializationHomePage(params, query) {
 
 /**
  *
- * @param {object} params
+ * @param {{[key: string]: string}} params
  * @param {URLSearchParams} query
  */
 export async function updateHomePage(params, query) {

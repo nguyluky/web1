@@ -7,26 +7,26 @@ import {
 } from './popupAccount.js';
 import { validateEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './pages/home/index.js';
-import urlConverter, { urlIsPage } from './until/urlConverter.js';
+import urlConverter, { navigateToPage, urlIsPage } from './until/urlConverter.js';
 import { initializationPageNotFound } from './pages/pageNotFound/index.js';
 import {
     initializationSearchPage,
     updateSearchPage,
 } from './pages/search/search.js';
-import { updateCartQuantity } from './cart.js';
+import { updateCartQuantity } from './pages/cart/cart.js';
 import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
 import { initializationProductPage, removeProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
-import { showListShippingAddressPopup, showNewShippingAddressPopup } from './render/addressPopup.js';
+import { showListShippingAddressPopup } from './render/addressPopup.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
 
 //#region khai bao page
 /**
  * @type {{
  *  pagePath: string,
- *  init: (params: object, query: URLSearchParams) => Promise<*>,
- *  update: (params: object, query: URLSearchParams) => Promise<*>,
- *  remove: (params: object, query: URLSearchParams) => Promise<*>
+ *  init: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>,
+ *  update: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>,
+ *  remove: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>
  * }[]}
  */
 const PAGES = [
@@ -210,12 +210,24 @@ function initializeAccountPopup() {
 
         const p1 = document.createElement('p');
         p1.textContent = 'Thông tin tài khoản';
+        p1.onclick = () => {
+            navigateToPage('user');
+        }
 
         const p2 = document.createElement('p');
         p2.textContent = 'Đơn hàng của tôi';
+        p2.onclick = () => {
+            navigateToPage('user/dhct');
+        }
 
         const p3 = document.createElement('p');
         p3.textContent = 'Đăng xuất';
+        p3.onclick = (event) => {
+            event.stopPropagation();
+            localStorage.removeItem('user_id');
+            navigateToPage('home');
+            location.reload();
+        }
 
         dropDown.appendChild(p1);
         dropDown.appendChild(p2);
@@ -310,91 +322,83 @@ function initializeAccountPopup() {
  */
 async function initializeUrlHandling() {
     let { page: curr_page, query } = urlConverter(location.hash);
-
-    /** 
-     * @param {string} page
-     * @param {URLSearchParams} query 
-     */
-    async function pageInit(page, query) {
-        for (const { pagePath, init } of PAGES) {
-            const params = urlIsPage(page.replace('#/', ''), pagePath);
-            if (params) {
-                await init(params, query);
-                return;
-            }
-        }
-
-        initializationPageNotFound({}, query);
-    }
-
     /**
-     * @param {string} curr_page
-     * @param {URLSearchParams} query
+     * @type {PAGES[number] | undefined}
      */
-    async function pageUpdate(curr_page, query) {
-        for (const { pagePath, update } of PAGES) {
-            const params = urlIsPage(curr_page.replace('#/', ''), pagePath);
-            if (params) {
-                await update(params, query);
-                return;
-            }
+    let oldPage;
+    for (const page of PAGES) {
+        const param = urlIsPage(curr_page.replace('#/', ''), page.pagePath);
+        if (param) {
+            await page.init(param, query);
+            await page.update(param, query);
+            oldPage = page;
+            break;
         }
     }
 
-    /**
-     * 
-     * @param {string} page 
-     * @param {URLSearchParams} query
-     * @returns {void}
-     */
-    function pageRemove(page, query) {
-        for (const { pagePath, remove } of PAGES) {
-            const params = urlIsPage(page.replace('#/', ''), pagePath);
-            if (params) {
-                remove(page, query);
-                return;
-            }
-        }
+
+    function showLoading() {
+        const main = document.querySelector('main');
+        if (!main) return;
+        main.innerHTML = `<div style="height: 100vh">
+                <div class="dot-spinner-wrapper">
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>
+
+                    <p style="margin-left: 10px">Đang tải dữ liệu</p>
+                </div>
+            </div>`
     }
 
     /** Khi hash thai đổi */
     async function handleHashChange() {
-        const { page, query } = urlConverter(location.hash);
-        console.log(page, query);
+        let { page, query } = urlConverter(location.hash);
+        page = page.replace('#/', '');
 
-        if (page != curr_page) {
-            await pageRemove(curr_page, query);
-            await pageInit(page, query);
+        for (const p of PAGES) {
+            const param = urlIsPage(page, p.pagePath);
+            if (!param) { continue; }
 
-            curr_page = page;
+            if (oldPage?.pagePath !== p.pagePath) {
+                console.log('remove', oldPage?.pagePath);
+                await oldPage?.remove(param, query);
+
+                showLoading();
+
+                console.log('init', p.pagePath);
+                await p.init(param, query);
+                oldPage = p;
+            }
+
+            console.log('update', p.pagePath);
+            await p.update(param, query);
         }
-
-        await pageUpdate(page, query);
     }
 
     window.addEventListener('hashchange', handleHashChange);
 
-    if (!curr_page) location.hash = '#/home';
-    document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
-        if (/** @type {KeyboardEvent} */ (e).key === 'Enter') {
-            console.log('enter');
-            location.hash =
-                '#/search?t=' +
-                /** @type {HTMLInputElement} */ (e.target).value;
-        }
-    });
-    document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
-        location.hash = '#/user?info=tttk';
-    });
-
-    document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
-        location.hash = '#/user?info=dhct';
-    });
-    await pageInit(curr_page, query);
-    await pageUpdate(curr_page, query);
+    if (!oldPage) {
+        navigateToPage('home');
+        return;
+    };
 }
+<<<<<<< HEAD
 
 export function initializationAddress() {
+=======
+/**
+ * 
+ */
+function initializationAddress() {
+>>>>>>> main
     document.getElementById('btn-location')?.addEventListener('click', (ev) => {
         if (!localStorage.getItem('user_id')) {
             alert('Vui lòng đăng nhập để thêm địa chỉ mới');
@@ -406,11 +410,20 @@ export function initializationAddress() {
     })
 }
 
+function initializationSearch() {
+    document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
+        if (/** @type {KeyboardEvent} */ (e).key === 'Enter') {
+            navigateToPage('search', { t: /** @type {HTMLInputElement} */ (e.target).value });
+        }
+    });
+}
+
 /** Main */
 function main() {
     initializationAddress();
     initializeAccountPopup();
     initializeUrlHandling();
+    initializationSearch();
 }
 
 main();

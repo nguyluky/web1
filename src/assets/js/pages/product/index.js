@@ -1,7 +1,7 @@
 
 /**
  *
- * @param {object} params
+ * @param {{[key: string]: string}} params
  * @param {URLSearchParams} query
  */
 export async function initializationProductPage(params, query) {
@@ -184,7 +184,7 @@ export async function initializationProductPage(params, query) {
 
 /**
  *
- * @param {object} params
+ * @param {{[key: string]: string}} params
  * @param {URLSearchParams} query
  */
 export async function updateProductPage(params, query) {
@@ -193,7 +193,7 @@ export async function updateProductPage(params, query) {
 
 /**
  * 
- * @param {object} params 
+ * @param {{[key: string]: string}} params 
  * @param {URLSearchParams} query 
  */
 export async function removeProductPage(params, query) {

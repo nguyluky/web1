@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { getOrder, rendeOrder, changeCart, closeDeal } from "../../payment.js";
 import { initializationAddress } from "../../index.js";
+=======
+import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
+>>>>>>> main
 
 export async function initializationPayment() {
     const main = document.querySelector('main');

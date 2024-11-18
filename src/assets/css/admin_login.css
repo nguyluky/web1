@@ -77,7 +77,9 @@ body {
     font-size: 15px;
     letter-spacing: 1px;
 }
-
+.form-input:has(input:focus) {
+    box-shadow: 0 0 5px #29c5f6;
+}
 #show-hide {
     background: rgba(0, 0, 0, 0.16);
     padding-right: 8px;

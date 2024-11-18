@@ -52,7 +52,7 @@ function formatLineChartData() {
     }
     orders.forEach((e) => {
         if (
-            e.state == 'giaohangthanhcong' &&
+            e.state != 'huy' &&
             from <= new Date(e.last_update) &&
             new Date(e.last_update) <= to
         ) {
@@ -74,12 +74,17 @@ function formatLineChartData() {
     const pointSize = 16;
 
     const base = (widgetWidth - pointSize * 2) / (values.length - 1);
-    const topMostPoint = Math.max(...values.map((e) => e.value));
+    const topMostPoint = Math.ceil((Math.max(...values.map((e) => e.value))) / 100000) * 100000;
     let leftOffset = pointSize; //padding for left axis labels
     let nextPoint = 0;
     let rise = 0;
     let cssValues = [];
-
+    const top = topMostPoint / 1000;
+    const verticalAxis = document.querySelectorAll('#vertical-axis span');
+    verticalAxis[0].textContent = '' + top;
+    verticalAxis[1].textContent = '' + (top * 3 / 4);
+    verticalAxis[2].textContent = '' + (top * 2 / 4);
+    verticalAxis[3].textContent = '' + (top * 1 / 4);
     for (var i = 0, len = values.length - 1; i < len; i++) {
         var currentValue = {
             left: 0,
@@ -139,11 +144,11 @@ function createOderInfoForUser(order) {
     details.appendChild(document.createElement('hr'));
     summary.innerHTML = `<div>Mã đơn: ${order.id}</div><div>Tổng đơn: ${order.total}</div>`;
     let head = document.createElement('div');
-    head.innerHTML = `<div>Mã sách</div><div>Số lượng</div>`;
+    head.innerHTML = `<div>Mã sách</div><div>Số lượng</div><div>Thành tiền</div>`;
     details.appendChild(head);
     order.items.forEach((item) => {
         let product = document.createElement('div');
-        product.innerHTML = `<div>${item.sach}</div><div>${item.quantity}</div>`;
+        product.innerHTML = `<div>${item.sach}</div><div>${item.quantity}</div><div>${item.total}</div>`;
         details.appendChild(product);
     });
     return details;
@@ -156,7 +161,7 @@ async function renderLeaderboard(from, to) {
         return (
             from.getTime() <= date.getTime() &&
             date.getTime() <= to.getTime() &&
-            order.state == 'giaohangthanhcong'
+            order.state != 'huy'
         )
     });
     data.forEach((e) => {
@@ -248,7 +253,7 @@ async function productRank(from, to) {
         if (
             from.getTime() <= date.getTime() &&
             date.getTime() <= to.getTime() &&
-            order.state == 'giaohangthanhcong'
+            order.state != 'huy'
         ) {
             order.items.forEach((e) => {
                 if (data[e.sach]) {
@@ -256,6 +261,7 @@ async function productRank(from, to) {
                         orderId: order.id,
                         quantity: e.quantity,
                         user: order.user_id,
+                        total: e.total,
                     });
                 } else
                     data[e.sach] = [
@@ -263,6 +269,7 @@ async function productRank(from, to) {
                             orderId: order.id,
                             quantity: e.quantity,
                             user: order.user_id,
+                            total: e.total,
                         },
                     ];
             });
@@ -270,16 +277,18 @@ async function productRank(from, to) {
     });
     books.forEach((e) => {
         let quantity = 0;
+        let total = 0;
         if (data[e.id]) {
             data[e.id].forEach((x) => {
                 quantity += x.quantity;
+                total += x.total;
             });
         }
         array.push({
             id: e.id,
             name: e.title,
             quantity: quantity,
-            total: e.base_price * (1 - e.discount) * quantity,
+            total: total,
         });
     });
     array.sort((a, b) => {
@@ -293,8 +302,8 @@ async function productRank(from, to) {
         sum += value.total;
         chart?.appendChild(createARow(value, index));
     });
-    const footer = document.querySelector('.product-rank__footer span');
-    if (footer) footer.innerHTML = String(sum) + ' VNĐ';
+    const title = document.querySelector('.product-rank__title span');
+    if (title) title.innerHTML = String(sum) + ' VNĐ';
     const showOrder = document.querySelector('.info-order__product');
     const name = document.querySelector('#product-name strong');
 
@@ -328,12 +337,15 @@ async function createOderInfoForProduct(order) {
     summary.innerHTML = `<div>Mã đơn: ${order.orderId}</div><div>Số lượng: ${order.quantity}</div>`;
     let user = await fakeDatabase.getUserInfoByUserId(order.user);
     let userInfo = document.createElement('div');
-    userInfo.innerHTML = `Khách mua hàng:<br>${user?.name}`;
+    userInfo.innerHTML = `<strong>Khách mua hàng:</strong><br>${user?.name}`;
     details.appendChild(userInfo);
+    let total = document.createElement('div');
+    total.innerHTML = `<strong>Tổng tiền: </strong>${order.total}`;
+    details.appendChild(total);
     return details;
 }
 function renderByDateRange() {
-    const chooseDate = document.querySelector('#product-rank .choose-date');
+    const chooseDate = document.querySelector('.choose-date');
     const from = /**@type {HTMLInputElement} */ (
         chooseDate?.querySelector('#from-date input')
     );
