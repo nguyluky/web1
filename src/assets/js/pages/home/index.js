@@ -190,7 +190,7 @@ function initializationAside() {
 
     // khi chọn danh mục
     const sub_header = document.querySelectorAll('.catergory__row--sub-header');
-
+    console.log(sub_header);
     sub_header.forEach((sub) => {
         sub.addEventListener('click', () => {
             sub_header.forEach((e) => e.removeAttribute('selected'));
