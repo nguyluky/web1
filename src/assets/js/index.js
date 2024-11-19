@@ -15,7 +15,7 @@ import {
 } from './pages/search/search.js';
 import { updateCartQuantity } from './pages/cart/cart.js';
 import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
-import { initializationProductPage, removeProductPage } from './pages/product/index.js';
+import { initializationProductPage, removeProductPage, updateProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 import { showListShippingAddressPopup } from './render/addressPopup.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
@@ -52,7 +52,7 @@ const PAGES = [
     {
         pagePath: 'product/:id',
         init: initializationProductPage,
-        update: async () => { },
+        update: updateProductPage,
         remove: removeProductPage,
     },
     {
