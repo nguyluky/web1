@@ -43,7 +43,7 @@ export function createPopupBase(title, context, onOk, onCancel, onClose) {
 
     if (onOk) {
         const okButton = document.createElement('button');
-        okButton.className = 'button_1 btn-ouline-primary';
+        okButton.className = 'button_1 btn-primary';
         okButton.textContent = 'Lưu';
         okButton.onclick = onOk;
         popupFooter.appendChild(okButton);
@@ -59,7 +59,7 @@ export function createPopupBase(title, context, onOk, onCancel, onClose) {
 
     if (onClose) {
         const closeButton = document.createElement('button');
-        closeButton.className = 'button_1 btn-primary';
+        closeButton.className = 'button_1 btn-ouline-primary';
         closeButton.textContent = 'Thoát';
         closeButton.onclick = onClose;
         popupFooter.appendChild(closeButton);
@@ -145,4 +145,4 @@ export function createImgPreviewPopup(
 /**
  *
  */
-export function createCategoryPopup() {}
+export function createCategoryPopup() { }

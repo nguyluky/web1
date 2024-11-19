@@ -310,9 +310,13 @@ footer.footer .footer_wrapper .footer_box {
     }
 
     .popup-header {
-        background: #0a68f4;
-        text-align: left;
+        background: rgb(27, 168, 255);
+        text-align: center;
         color: #fff;
+    }
+
+    .popup-mess {
+        display: none;
     }
 
     .popup-body {
@@ -327,8 +331,12 @@ footer.footer .footer_wrapper .footer_box {
     }
 
     .btn-close {
-        top: 14px;
-        right: 10px;
+        top: 18px;
+        left: 10px;
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        color: #efefef;
     }
 
     .popup-mess {

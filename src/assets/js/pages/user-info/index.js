@@ -1,15 +1,8 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { toast } from "../../render/popupRender.js";
+import { dateToString } from "../../until/formatDate.js";
 import removeDiacritics from "../../until/removeDiacritics.js";
 import { navigateToPage } from "../../until/urlConverter.js";
-
-document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
-    location.hash = '#/user?info=tttk';
-});
-
-document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
-    location.hash = '#/user?info=dhct';
-});
 
 const status = {
     daxacnhan: {
@@ -17,7 +10,7 @@ const status = {
         color: 'rgba(219, 198, 38, 1)'
     },
     doixacnhan: {
-        text: 'Chờ xác nhận',
+        text: 'Chờ xử lý',
         color: 'rgba(208, 128, 8, 1)'
     },
     danggiaohang: {
@@ -42,6 +35,11 @@ function create_user_gender(user_id) {
     }
 }
 // tạo container chứa thông tin đơn hàng
+/**
+ * 
+ * @param {import("../../until/type.js").Order} order 
+ * @returns 
+ */
 function createOrderContainer(order) {
     const package_details = document.createElement('div');
     package_details.className = "package-details";
@@ -53,16 +51,16 @@ function createOrderContainer(order) {
 
     package_details.innerHTML = `
         <div class="package-details__top">
-            <div class="package-details__id">Mã đơn hàng: <span>${order.id}</span></div>
-            <div class="package-details__total">
-                <div class="package-details__total--header">Thành tiền:</div>
-                <span class="package-details__total--number">
-                    ${order.total} <sup>₫</sup>
-                </span>
-            </div>
+            <div class="package-details__id">Mã đơn: <span>${order.id}</span></div>
+            <div class="package-details__date">Ngày đặt: <span>${dateToString(order.date)}<span></div>
             <div class="package-details__status">
-                <div class="package-details__status--header">Trạng thái:</div>
                 <div class="package-details__status--text" style="color:${status[order.state].color}">${status[order.state].text}</div>
+            </div>
+            <div class="package-details__total">
+                <div class="package-details__total--header">Tổng tiền:</div>
+                <span class="package-details__total--number">
+                    ${order.total} ₫
+                </span>
             </div>
         </div>
         <div class="package-details__bottom"></div>
@@ -313,7 +311,6 @@ export async function initializationUserInfoPage(params, query) {
 
     initializationMain();
     initializationAside();
-    initializationArticle__AccountInfo();
     setupEvent();
 }
 
@@ -330,13 +327,12 @@ export async function updateUserInfoPage(params, query) {
         case 'dhct':
             user_option[0].classList.remove('selected');
             user_option[1].classList.add('selected');
-            initializationArticle__OrderInfo();
+            await initializationArticle__OrderInfo();
             break;
-
         default:
             user_option[0].classList.add('selected');
             user_option[1].classList.remove('selected');
-            initializationArticle__AccountInfo();
+            await initializationArticle__AccountInfo();
     }
 }
 
