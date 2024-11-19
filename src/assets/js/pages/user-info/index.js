@@ -3,14 +3,6 @@ import { toast } from "../../render/popupRender.js";
 import removeDiacritics from "../../until/removeDiacritics.js";
 import { navigateToPage } from "../../until/urlConverter.js";
 
-document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
-    location.hash = '#/user?info=tttk';
-});
-
-document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
-    location.hash = '#/user?info=dhct';
-});
-
 const status = {
     daxacnhan: {
         text: 'Đã xác nhận',
@@ -313,7 +305,7 @@ export async function initializationUserInfoPage(params, query) {
 
     initializationMain();
     initializationAside();
-    initializationArticle__AccountInfo();
+    // initializationArticle__AccountInfo();
     setupEvent();
 }
 
