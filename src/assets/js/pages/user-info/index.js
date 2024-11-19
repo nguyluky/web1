@@ -332,7 +332,6 @@ export async function updateUserInfoPage(params, query) {
             user_option[1].classList.add('selected');
             initializationArticle__OrderInfo();
             break;
-
         default:
             user_option[0].classList.add('selected');
             user_option[1].classList.remove('selected');

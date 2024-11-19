@@ -7,6 +7,7 @@ import { AddressFrom } from "./address.js";
  * 
  * @param {MouseEvent} e 
  * @param {HTMLElement} element 
+ * @returns {boolean}
  */
 function isClickOutSide(e, element) {
     const taget =  /** @type {HTMLElement | null} */ (e.target);
@@ -23,11 +24,12 @@ function isClickOutSide(e, element) {
 
 /**
  * 
+ * @param {import("../until/type").UserAddress | undefined} data 
  * @param {(newAddress: import("../until/type").UserAddress) => Promise<any>} onOk 
  * @param {() => any} onCancle
  * @returns {void}
  */
-export function showNewShippingAddressPopup(onOk, onCancle) {
+export function showNewShippingAddressPopup(data, onOk, onCancle) {
     const html = `<div class="popup">
         <button class="btn-close">
             <i class="fa-solid fa-xmark"></i>
@@ -334,7 +336,7 @@ export function showListShippingAddressPopup() {
             console.log('click')
 
             element.style.display = 'none';
-            showNewShippingAddressPopup(async (address) => {
+            showNewShippingAddressPopup(undefined, async (address) => {
                 await fakeDatabase.addUserAddress(userId, address)
                 element.style.display = '';
 
