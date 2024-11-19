@@ -3,14 +3,6 @@ import { toast } from "../../render/popupRender.js";
 import removeDiacritics from "../../until/removeDiacritics.js";
 import { navigateToPage } from "../../until/urlConverter.js";
 
-document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
-    location.hash = '#/user?info=tttk';
-});
-
-document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
-    location.hash = '#/user?info=dhct';
-});
-
 const status = {
     daxacnhan: {
         text: 'Đã xác nhận',
@@ -313,7 +305,6 @@ export async function initializationUserInfoPage(params, query) {
 
     initializationMain();
     initializationAside();
-    initializationArticle__AccountInfo();
     setupEvent();
 }
 
@@ -330,12 +321,12 @@ export async function updateUserInfoPage(params, query) {
         case 'dhct':
             user_option[0].classList.remove('selected');
             user_option[1].classList.add('selected');
-            initializationArticle__OrderInfo();
+            await initializationArticle__OrderInfo();
             break;
         default:
             user_option[0].classList.add('selected');
             user_option[1].classList.remove('selected');
-            initializationArticle__AccountInfo();
+            await initializationArticle__AccountInfo();
     }
 }
 
