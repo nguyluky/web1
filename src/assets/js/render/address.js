@@ -1,5 +1,5 @@
 import fakeDatabase from '../db/fakeDBv1.js';
-import removeDiacritics from '../until/removeDiacritics.js';
+import { removeDiacritics } from '../until/format.js';
 
 
 const css = `

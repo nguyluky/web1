@@ -1,6 +1,6 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
-import { getDeliveryTime, formatNumber, showUserInfo } from "../cart/cart.js";
-import order from "../../render/table/orderTabel.js";
+import { getDeliveryTime, showUserInfo } from "../cart/cart.js";
+import { formatNumber } from "../../until/format.js";
 import { getSearchParam } from "../../until/urlConverter.js";
 
 

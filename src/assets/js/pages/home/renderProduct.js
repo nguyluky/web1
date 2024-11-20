@@ -1,6 +1,6 @@
 import { pushCartItemIntoCart } from '../cart/cart.js';
 import fakeDatabase from '../../db/fakeDBv1.js';
-import removeDiacritics from '../../until/removeDiacritics.js';
+import { removeDiacritics } from '../../until/format.js';
 import { navigateToPage } from '../../until/urlConverter.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = Product_Data;

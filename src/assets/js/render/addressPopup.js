@@ -1,5 +1,5 @@
 import fakeDatabase from "../db/fakeDBv1.js";
-import text2htmlElement from "../until/text2htmlElement.js";
+import { text2htmlElement } from "../until/format.js";
 import { AddressFrom } from "./address.js";
 
 

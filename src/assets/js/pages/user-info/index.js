@@ -1,7 +1,6 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { toast } from "../../render/popupRender.js";
-import { dateToString } from "../../until/formatDate.js";
-import removeDiacritics from "../../until/removeDiacritics.js";
+import { dateToString, removeDiacritics } from "../../until/format.js";
 import { navigateToPage } from "../../until/urlConverter.js";
 
 const status = {

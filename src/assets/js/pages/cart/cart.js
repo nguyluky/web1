@@ -2,6 +2,7 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import uuidv from '../../until/uuid.js';
 import { toast } from '../../render/popupRender.js';
 import { navigateToPage } from '../../until/urlConverter.js';
+import { formatNumber } from '../../until/format.js';
 
 export async function showUserInfo() {
     const user_id = localStorage.getItem("user_id");
@@ -90,9 +91,6 @@ export function getDeliveryTime() {
     return date;
 }
 
-export function formatNumber(num) {
-    return num.toLocaleString('vi-VN');
-}
 
 /**
  *

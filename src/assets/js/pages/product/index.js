@@ -1,5 +1,5 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
-import urlConverter, { navigateToPage } from '../../until/urlConverter.js';
+import { navigateToPage } from '../../until/urlConverter.js';
 import { pushCartItemIntoCart } from '../cart/cart.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = [];
@@ -100,11 +100,11 @@ async function createCategory(category_id) {
     return product_category;
 }
 
-// /**
-//  *
-//  * @param {import('../../until/type.js').Sach} general_info
-//  * @returns {String}
-//  */
+/**
+ *
+ * @param {import('../../until/type.js').Sach | undefined} general_info
+ * @returns {HTMLElement}
+ */
 function rendergeneralInfo(general_info) {
     const product_container = document.createElement('div');
     product_container.className = "product-title-container";
