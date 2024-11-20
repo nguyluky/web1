@@ -216,7 +216,7 @@
 
 .product-price-detail{
     display: flex;
-    gap: 20px;
+    gap: 50px;
     align-items: center;
 }
 

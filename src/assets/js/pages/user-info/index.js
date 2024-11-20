@@ -181,7 +181,7 @@ function initializationMain() {
     `
 }
 
-function initializationAside() {
+function initializationAside(personal_info_data) {
     const aside = document.querySelector('.aside');
     if (!aside) return;
     aside.innerHTML = `
@@ -190,7 +190,7 @@ function initializationAside() {
             <div class="user-info__img">
                 <img src="assets/img/Default_pfp.svg.png" alt="">
             </div>
-            <div class="user-info__name">Tên tài khoản</div>
+            <div class="user-info__name">${personal_info_data?.name}</div>
         </div>
         <div class="user-info__content">
             <div class="user-info__row selected" data-value="tttk">
@@ -260,14 +260,10 @@ function initializationArticle__OrderInfo() {
         });
     }
 }
-async function initializationArticle__AccountInfo() {
+function initializationArticle__AccountInfo() {
     const article = document.getElementById('article');
-    const username = document.querySelector('.user-info__name');
     const user_id = localStorage.getItem('user_id');
-    if (!article || !username || !user_id) return;
-    const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
-
-    username.innerHTML = String(personal_info_data?.name);
+    if (!article || !user_id) return;
     article.className = "user-personal-info";
     article.innerHTML = `
             <div class="article-header">
@@ -302,7 +298,9 @@ function setupEvent() {
  */
 export async function initializationUserInfoPage(params, query) {
 
-
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) return;
+    const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
     const cssRep = await fetch('./assets/css/user_info.css');
     const style = document.createElement('style');
     style.textContent = await cssRep.text();
@@ -310,7 +308,7 @@ export async function initializationUserInfoPage(params, query) {
     document.head.appendChild(style);
 
     initializationMain();
-    initializationAside();
+    initializationAside(personal_info_data);
     setupEvent();
 }
 
@@ -327,12 +325,12 @@ export async function updateUserInfoPage(params, query) {
         case 'dhct':
             user_option[0].classList.remove('selected');
             user_option[1].classList.add('selected');
-            await initializationArticle__OrderInfo();
+            initializationArticle__OrderInfo();
             break;
         default:
             user_option[0].classList.add('selected');
             user_option[1].classList.remove('selected');
-            await initializationArticle__AccountInfo();
+            initializationArticle__AccountInfo();
     }
 }
 
