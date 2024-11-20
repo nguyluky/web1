@@ -3,27 +3,23 @@ import uuidv from '../../until/uuid.js';
 import { toast } from '../../render/popupRender.js';
 import { navigateToPage } from '../../until/urlConverter.js';
 import { formatNumber } from '../../until/format.js';
+import { showListShippingAddressPopup } from '../../render/addressPopup.js';
 
-export async function showUserInfo() {
+export async function showUserInfo(index = 0) {
     const user_id = localStorage.getItem("user_id");
 
     if (!user_id) {
         return;
     }
-
+    document.querySelector('.info-content')?.setAttribute('data-index', index + '');
     const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
     const userName = document.querySelector('.contact-info__name');
     const userTel = document.querySelector('.contact-info__phone-num');
     const userAddress = document.querySelector('.address-info');
     if (userInfo && userName && userTel && userAddress) {
-        userName.innerHTML = userInfo.name;
-        userTel.innerHTML = userInfo.phone_num;
-        // const address = userInfo.address;
-        // console.log(userInfo)
-        // if (userInfo.address.length > 0) {
-        //     userAddress.innerHTML = userInfo.address[0];
-        // }
-
+        userName.innerHTML = userInfo.address[index].name;
+        userTel.innerHTML = userInfo.address[index].phone_num;
+        userAddress.innerHTML = `${userInfo.address[index].street}, ${userInfo.address[index].address.replace(/ - /g, ', ')}`;
     }
 }
 
@@ -560,7 +556,15 @@ export async function buyBooks() {
     })
 }
 
-
+export function changeAddress() {
+    document.getElementById('change-address-btn')
+        ?.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const index = /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index;
+            showListShippingAddressPopup(Number(index));
+        });
+}
 
 // mainCart();
 

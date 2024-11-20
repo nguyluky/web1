@@ -1,4 +1,4 @@
-import { showUserInfo, renderCart, updateCartQuantity, buyBooks } from "./cart.js";
+import { showUserInfo, renderCart, updateCartQuantity, buyBooks, changeAddress } from "./cart.js";
 
 
 const html = `
@@ -114,7 +114,7 @@ export async function initializationCart(params, query) {
     main.classList.add('main-cart');
     main.innerHTML = html;
 
-
+    changeAddress();
     updateCartQuantity();
     showUserInfo();
     await renderCart();

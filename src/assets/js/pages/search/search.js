@@ -24,8 +24,8 @@ function searchFilter() {
 
 
 
-    const minPrice = Number(/**@type {HTMLInputElement} */(document.querySelector('.input-min'))?.value);
-    const maxPrice = Number(/**@type {HTMLInputElement} */(document.querySelector('.input-max'))?.value);
+    const mn = Number(/**@type {HTMLInputElement} */(document.querySelector('.input-min'))?.value);
+    const mx = Number(/**@type {HTMLInputElement} */(document.querySelector('.input-max'))?.value);
     navigateToPage('./', (query) => {
 
         if (categories.length > 0) {
@@ -38,8 +38,8 @@ function searchFilter() {
             query.delete('cs');
         }
 
-        query.set('minPrice', minPrice + '');
-        query.set('maxPrice', maxPrice + '');
+        query.set('mn', mn + '');
+        query.set('mx', mx + '');
 
         return query;
     })
@@ -73,13 +73,14 @@ function setupFilterListeners() {
 
             navigateToPage('./', (query) => {
                 query.delete('cs');
-                query.delete('minPrice');
-                query.delete('maxPrice');
+                query.delete('mn');
+                query.delete('mx');
                 query.set('t', inputSearch.value);
                 return query;
             });
         }
     });
+
     // khi lọc theo category
     const filterPopup = document.querySelector('#search-filter');
     filterPopup
@@ -90,6 +91,10 @@ function setupFilterListeners() {
 
             // updateSearchPage();
         });
+    const showFilter = document.querySelector('#filter-btn');
+    showFilter?.addEventListener('click', () => {
+        filterPopup?.classList.toggle('hide');
+    });
 }
 
 /**
@@ -152,7 +157,7 @@ function initializationAside() {
     const aside = document.querySelector('aside');
     if (!aside) return;
 
-    aside.innerHTML = `<div id="search-filter">
+    aside.innerHTML = `<div id="search-filter" class="hide">
                         <div class="filter-header">Tất cả các bộ lọc</div>
                         <div class="filter-body">
                             <div class="filter-checkbox">
@@ -318,20 +323,20 @@ function initializationAside() {
     // khi nhập số tiền
     priceInput.forEach((input) => {
         input.addEventListener("input", (e) => {
-            let minPrice = parseInt(/**@type {HTMLInputElement} */(priceInput[0]).value),
-                maxPrice = parseInt(/**@type {HTMLInputElement} */(priceInput[1]).value);
+            let mn = parseInt(/**@type {HTMLInputElement} */(priceInput[0]).value),
+                mx = parseInt(/**@type {HTMLInputElement} */(priceInput[1]).value);
             // nếu nhập đúng điều kiện
-            if (maxPrice - minPrice >= priceGap && maxPrice <= Number(/**@type {HTMLInputElement} */(rangeInput[1]).max)) {
+            if (mx - mn >= priceGap && mx <= Number(/**@type {HTMLInputElement} */(rangeInput[1]).max)) {
                 if (/**@type {HTMLElement} */ (e.target).className === "input-min") {
 
-                    rangeInput[0].value = minPrice + '';
+                    rangeInput[0].value = mn + '';
 
-                    range.style.left = (minPrice / +rangeInput[0].max) * 100 + "%";
+                    range.style.left = (mn / +rangeInput[0].max) * 100 + "%";
                 } else {
 
-                    rangeInput[1].value = maxPrice + '';
+                    rangeInput[1].value = mx + '';
 
-                    range.style.right = 100 - (maxPrice / +rangeInput[1].max) * 100 + "%";
+                    range.style.right = 100 - (mx / +rangeInput[1].max) * 100 + "%";
                 }
             }
         });
@@ -396,8 +401,8 @@ export async function updateSearchPage(page, query) {
     const p = query.get('p') || '';
     const t = query.get('t') || '';
     const cs = query.get('cs')?.split(',') || [];
-    const from = NaN || Number(query.get('minPrice'));
-    const to = Number(query.get('maxPrice')) || NaN;
+    const from = NaN || Number(query.get('mn'));
+    const to = Number(query.get('mx')) || NaN;
     const searchFor = document.querySelector('.article-header span span');
     if (searchFor) searchFor.textContent = t;
     updateFilter(cs);
@@ -408,4 +413,9 @@ export async function updateSearchPage(page, query) {
         updatePagination(+p);
     }
     displayProducts();
+}
+
+export async function removeSearchBar() {
+    const search = /**@type {HTMLInputElement} */ (document.querySelector('.search-bar'));
+    if (search) search.value = '';
 }

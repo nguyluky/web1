@@ -728,6 +728,25 @@ class FakeDatabase {
         user.address.push(address);
         return requestToPromise(userStore.put(user));
     }
+
+    /**
+     * 
+     * @param {string} user_id 
+     * @param {import('../until/type.js').UserAddress[]} addressArray 
+     * @returns 
+     */
+    async updateUserAddress(user_id, addressArray) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.USER);
+        const transaction = db.transaction(ObjectStoreName.USER, 'readwrite');
+        const userStore = transaction.objectStore(ObjectStoreName.USER);
+        const user = await requestToPromise(userStore.get(user_id));
+        user.address = [];
+        addressArray.forEach((e) => {
+            user.address.push(e);
+        });
+        return requestToPromise(userStore.put(user));
+    }
 }
 
 const fakeDatabase = new FakeDatabase();

@@ -167,6 +167,13 @@ export class AddressFrom extends HTMLElement {
     set value(value) {
         this._value = value;
         this._internals.setFormValue(this._value);
+        this.update().then(() => {
+            if (this._input) {
+                this._input.placeholder = value;
+
+            }
+        })
+        this.updateChildrenAddressForm();
     }
 
     /**
@@ -220,13 +227,8 @@ export class AddressFrom extends HTMLElement {
 
                 const event = new CustomEvent('change');
                 this.dispatchEvent(event);
+                this.updateChildrenAddressForm();
 
-                const [ttp, qh, px] = document.getElementsByName(this._name);
-
-                if (this._type == 'TTP' && qh instanceof AddressFrom)
-                    qh.update();
-                else if (this._type == 'QH' && px instanceof AddressFrom)
-                    px.update();
             });
             content.appendChild(div);
         });
@@ -250,7 +252,14 @@ export class AddressFrom extends HTMLElement {
         this._internals = this.attachInternals();
 
     }
+    updateChildrenAddressForm() {
+        const [ttp, qh, px] = document.getElementsByName(this._name);
 
+        if (this._type == 'TTP' && qh instanceof AddressFrom)
+            qh.update();
+        else if (this._type == 'QH' && px instanceof AddressFrom)
+            px.update();
+    }
     attributeChangedCallback(name, oldValue, newValue) {
 
 
@@ -297,7 +306,7 @@ export class AddressFrom extends HTMLElement {
         `;
     }
 
-    update() {
+    async update() {
         this.setLoading();
 
         const [ttp, qh, px] = document.getElementsByName(this._name);

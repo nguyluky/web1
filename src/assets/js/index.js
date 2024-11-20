@@ -11,6 +11,7 @@ import urlConverter, { navigateToPage, urlIsPage } from './until/urlConverter.js
 import { initializationPageNotFound } from './pages/pageNotFound/index.js';
 import {
     initializationSearchPage,
+    removeSearchBar,
     updateSearchPage,
 } from './pages/search/search.js';
 import { updateCartQuantity } from './pages/cart/cart.js';
@@ -40,7 +41,7 @@ const PAGES = [
         pagePath: 'search',
         init: initializationSearchPage,
         update: updateSearchPage,
-        remove: async () => { },
+        remove: removeSearchBar,
     },
     {
         // :?tab có nghĩa là tab có thể có hoặc không

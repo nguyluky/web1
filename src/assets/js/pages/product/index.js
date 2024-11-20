@@ -1,6 +1,7 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
+import { toast } from '../../render/popupRender.js';
 import { navigateToPage } from '../../until/urlConverter.js';
-import { pushCartItemIntoCart } from '../cart/cart.js';
+import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = [];
 let Current_Page = 1;
@@ -24,6 +25,7 @@ export async function initializationProductPage(params, query) {
     const product_id = params.id;
 
     const general_info = await fakeDatabase.getSachById(product_id);
+    if (!general_info) return;
     const container = rendergeneralInfo(general_info);
 
     main.innerHTML = `
@@ -51,17 +53,16 @@ export async function initializationProductPage(params, query) {
     `;
     const product_categories = (document.querySelectorAll('.product-category'));
     let cates = Array.from(product_categories).map((e) => { return /**@type {HTMLElement} */(e).dataset.category });
-    console.log(cates);
 
-    console.log(product_categories);
     data = Product_Data.filter((book) => {
         return cates.some(e => { return book.category.includes(String(e)) && book.id != product_id })
     })
 
-    console.log(data);
-
     setEventListener(product_id);
+    shuffle(data); // trước khi display sản phẩm tương tự thì sẽ shuffle lại mảng
     displayProducts();
+    updateCartQuantity();
+    globalThis.scrollTo({ top: 0, behavior: "smooth" }); // kéo lên đầu trang mỗi khi tạo trang product
 }
 
 /**
@@ -82,6 +83,38 @@ export async function removeProductPage(params, query) {
     document.getElementById('product-page-style')?.remove();
 }
 
+function addquantity(total, quantity, sale_price) {
+    quantity.value++;
+    sale_price = sale_price * quantity.value;
+    quantity.innerHTML = quantity.value;
+    total.innerHTML = sale_price;
+}
+
+function minusquantity(total, quantity, sale_price) {
+    if (quantity.value > 1) {
+        quantity.value--;
+        sale_price = sale_price * quantity.value;
+        quantity.innerHTML = quantity.value;
+        total.innerHTML = sale_price;
+    }
+}
+
+function changequantity(total, quantity, sale_price) {
+    sale_price = sale_price * quantity.value;
+    total.innerHTML = sale_price;
+}
+
+// hàm sắp xếp random
+function shuffle(array) {
+    let currentIndex = array.length;
+
+    while (currentIndex != 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+}
 
 async function createCategory(category_id) {
     const categories = await fakeDatabase.getAllCategory();
@@ -102,8 +135,8 @@ async function createCategory(category_id) {
 
 /**
  *
- * @param {import('../../until/type.js').Sach | undefined} general_info
- * @returns {HTMLElement}
+ * @param {import('../../until/type.js').Sach} general_info
+ * @returns {HTMLDivElement}
  */
 function rendergeneralInfo(general_info) {
     const product_container = document.createElement('div');
@@ -150,22 +183,6 @@ function rendergeneralInfo(general_info) {
     return product_container;
 }
 
-function addquantity(total, quantity, sale_price) {
-    quantity.value++;
-    sale_price = sale_price * quantity.value;
-    quantity.innerHTML = quantity.value;
-    total.innerHTML = sale_price;
-}
-
-function minusquantity(total, quantity, sale_price) {
-    if (quantity.value > 1) {
-        quantity.value--;
-        sale_price = sale_price * quantity.value;
-        quantity.innerHTML = quantity.value;
-        total.innerHTML = sale_price;
-    }
-}
-
 async function renderleftsection(general_info) {
 
     const thumbnail = await fakeDatabase.getImgById(String(general_info?.thumbnail));
@@ -186,7 +203,7 @@ async function renderleftsection(general_info) {
                     <button class="dscr-quantity">
                         -
                     </button>
-                    <input type="text" value="1" class="quantity-num">
+                    <input type="number" value="1" class="quantity-num">
                     <button class="inc-quantity">
                         +
                     </button>
@@ -213,11 +230,20 @@ function setEventListener(product_id) {
     let sale_price = Number(total.innerHTML);
 
     if (!inputquantity) return;
+
     decrebtn.addEventListener('click', e => {
         minusquantity(total, inputquantity, sale_price);
     });
     increbtn.addEventListener('click', e => {
         addquantity(total, inputquantity, sale_price);
+    });
+
+    inputquantity.addEventListener('change', e => {
+        if (Number(inputquantity.value) < 1) {
+            inputquantity.value = '1';
+            toast({ message: 'Số lượng phải lớn hơn 0', type: 'error' });
+        }
+        changequantity(total, inputquantity, sale_price);
     });
 
     const add_to_cart = document.querySelector('.add-to-cart');
@@ -328,4 +354,3 @@ async function displayProducts() {
         productlist.appendChild(productItem);
     }
 }
-

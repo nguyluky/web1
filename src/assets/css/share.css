@@ -349,3 +349,15 @@ main.main {
     display: flex;
     gap: 10px;
 }
+
+.set-default {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    width: max-content;
+    cursor: pointer;
+}
+
+.set-default input[type='checkbox'] {
+    height: 16px;
+}

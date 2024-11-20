@@ -427,7 +427,11 @@ article.article.page-not-found {
     line-height: 19px;
 }
 
-.shipping-info__item .name > span {
+.shipping-info__item.sladd {
+    box-shadow: 0 0 5px 0 rgb(11, 116, 229);
+}
+
+.shipping-info__item .name > span:last-child {
     text-size-adjust: 100%;
     line-height: 19px;
     box-sizing: border-box;
@@ -465,7 +469,10 @@ article.article.page-not-found {
     -webkit-box-pack: center;
     justify-content: center;
 }
-
+.action > div {
+    cursor: pointer;
+    color: #0a68f4;
+}
 @media screen and (max-width: 500px) {
     .header_wrapper .right .button_1 > span {
         display: none;
