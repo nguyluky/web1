@@ -1,16 +1,11 @@
-<<<<<<< HEAD:src/assets/js/payment.js
-import urlConverter from "./until/urlConverter.js";
-import fakeDatabase from "./db/fakeDBv1.js";
-import { getDeliveryTime, formatNumber, showUserInfo } from "./cart.js";
-import uuidv from "./until/uuid.js";
 
-=======
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { getDeliveryTime, formatNumber, showUserInfo } from "../cart/cart.js";
 import order from "../../render/table/orderTabel.js";
-import { getSearchParam } from "../../until/urlConverter.js";
->>>>>>> main:src/assets/js/pages/payment/payment.js
-
+import { getSearchParam, navigateToPage } from "../../until/urlConverter.js";
+import uuidv from "../../until/uuid.js";
+import address from "../../db/addressDb.js";
+import { toast } from "../../render/popupRender.js";
 
 export function getOrder() {
     const payment = getSearchParam('payment');
@@ -124,24 +119,34 @@ export function closeDeal() {
         const selectedPaymentOption = document.querySelector('input[name="payment-option"]:checked')
         if (selectedPaymentOption) {
             if (selectedPaymentOption.id === 'cash-option') {
-<<<<<<< HEAD:src/assets/js/payment.js
-                await pushOrder();
-=======
+                console.log('hihi')
+                await pushOrder(selectedPaymentOption.id);
                 // TODO: Add to order table
->>>>>>> main:src/assets/js/pages/payment/payment.js
             }
             else {
-                showQR(selectedPaymentOption.id);
+                await showQR(selectedPaymentOption.id);
+                await pushOrder(selectedPaymentOption.id);
             }
         }
     })
 }
 
-export async function pushOrder() {
+async function pushOrder(option) {
     const items = [];
     const orders = getOrder();
+    let total = 0;
+
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id)
+        return;
+    const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
+    if (!userInfo)
+        return;
+
     if (!orders)
         return;
+
+    const is_pay = option === 'cash-option' ? false : true;
     for (const order of orders) {
         const cart = await fakeDatabase.getCartById(order);
         if (!cart)
@@ -152,15 +157,35 @@ export async function pushOrder() {
             return;
 
         const item = { sach: book.id, quantity: cart.quantity, total: book.base_price * (1 - book.discount) };
+        total += item.total;
         items.push(item);
+        await fakeDatabase.deleteCartById(order);
     }
     const data = {
-        id: uuidv(),
-        user_id: localStorage.getItem('user_id'),
-
-
-    }
-
+        id: uuidv(10),
+        user_id: user_id,
+        items,
+        date: new Date(),
+        state: 'doixacnhan',
+        last_update: new Date(),
+        is_pay,
+        total,
+        address: {
+            name: userInfo.name,
+            phone_num: userInfo.phone_num,
+            email: userInfo.email,
+            street: userInfo.address[0].street,
+            address: userInfo.address[0].address
+        }
+    };
+    fakeDatabase.addOrder(data).then(e => {
+        toast({ title: 'Đặt hàng thành công', type: 'success' });
+        fakeDatabase.getOrdertByUserId(user_id).then(e => {
+            console.log(e);
+        })
+            .catch(() => { });
+        navigateToPage('cart');
+    })
 }
 
 async function showQR(option) {
@@ -250,7 +275,6 @@ async function showQR(option) {
         </div>`;
     setTimeout(async () => {
         modal.classList.remove('show-modal');
-
     }, 10000);
 }
 
@@ -260,7 +284,7 @@ export function changeCart() {
     if (!buttonChangeCart)
         return;
     buttonChangeCart.addEventListener('click', () => {
-        location.hash = '#/cart';
+        navigateToPage('cart')
     })
 }
 

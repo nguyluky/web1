@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { getOrder, rendeOrder, changeCart, closeDeal } from "../../payment.js";
-import { initializationAddress } from "../../index.js";
-=======
 import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
->>>>>>> main
+import { handleAddressPopup } from "../../index.js";
 
 export async function initializationPayment() {
     const main = document.querySelector('main');
@@ -232,15 +228,14 @@ export async function initializationPayment() {
         </div>`;
 
     await rendeOrder();
-
+    console.log(getOrder());
 }
 
 
 export async function updatePayment() {
     changeCart();
     closeDeal();
-    initializationAddress();
-
+    document.querySelector('#change-address-btn')?.addEventListener('click', handleAddressPopup)
 }
 
 export async function removePayment() {

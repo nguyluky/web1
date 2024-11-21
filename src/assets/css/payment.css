@@ -238,3 +238,7 @@
     font-size: 14px;
     flex-shrink: 0;
 }
+
+.card-icon i {
+    width: 32px;
+}

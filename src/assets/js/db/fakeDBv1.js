@@ -327,7 +327,7 @@ class FakeDatabase {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.USER);
 
-        const user_id = uuidv();
+        const user_id = uuidv(10);
 
         /** @type {UserInfo} */
         const data = {

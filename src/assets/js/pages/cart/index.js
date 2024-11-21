@@ -1,3 +1,4 @@
+import { handleAddressPopup } from "../../index.js";
 import { showUserInfo, renderCart, updateCartQuantity, buyBooks } from "./cart.js";
 
 
@@ -128,6 +129,7 @@ export async function initializationCart(params, query) {
  */
 export async function updateCart(params, query) {
     buyBooks();
+    document.querySelector('#change-address-btn')?.addEventListener('click', handleAddressPopup)
 }
 
 /**

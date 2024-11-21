@@ -19,7 +19,7 @@ import { initializationProductPage, removeProductPage } from './pages/product/in
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 import { showListShippingAddressPopup } from './render/addressPopup.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
-
+import { toast } from './render/popupRender.js';
 //#region khai bao page
 /**
  * @type {{
@@ -126,7 +126,7 @@ function initializeAccountPopup() {
                             validatePassword(userInfo);
                         } else {
                             showCreateAccount(MODAL);
-                            validateCrateNewAccount(data['#input-phone-email']);
+                            validateCreateNewAccount(data['#input-phone-email']);
                         }
                         backSignIn();
                         // @ts-ignore
@@ -151,8 +151,10 @@ function initializeAccountPopup() {
             onSubmit: () => {
                 localStorage.setItem('user_id', userInfo.id);
                 MODAL?.classList.remove('show-modal');
+                toast({ title: 'Đăng nhập thành công', type: 'success' })
                 showDropDown();
                 updateCartQuantity();
+
             },
         });
     }
@@ -162,7 +164,7 @@ function initializeAccountPopup() {
      * 
      * @param {string} userPhoneOrEmail 
      */
-    function validateCrateNewAccount(userPhoneOrEmail) {
+    function validateCreateNewAccount(userPhoneOrEmail) {
         validator({
             form: '.input-auth-form',
             rules: [
@@ -190,6 +192,7 @@ function initializeAccountPopup() {
                         localStorage.setItem('user_id', e.id);
                         MODAL?.classList.remove('show-modal');
                         showDropDown();
+                        toast({ title: 'Tạo tài khoản thành công', type: 'success' })
                     })
                     .catch(() => {
                         alert('Tạo tài khoản không thành công');
@@ -225,8 +228,8 @@ function initializeAccountPopup() {
         p3.onclick = (event) => {
             event.stopPropagation();
             localStorage.removeItem('user_id');
-            navigateToPage('home');
-            location.reload();
+            navigateToPage('home')
+            // location.reload();
         }
 
         dropDown.appendChild(p1);
@@ -272,6 +275,7 @@ function initializeAccountPopup() {
     BUTTON_ACCOUNT.addEventListener('click', () => {
         if (!localStorage.getItem('user_id')) {
             MODAL.classList.add('show-modal');
+            // document.querySelector('.dropdown-btn-content')?.remove();
             showSignIn(MODAL);
             closeSignIn(MODAL);
             inputFill();
@@ -390,24 +394,22 @@ async function initializeUrlHandling() {
         return;
     };
 }
-<<<<<<< HEAD
 
-export function initializationAddress() {
-=======
+export function handleAddressPopup(e) {
+    if (!localStorage.getItem('user_id')) {
+        alert('Vui lòng đăng nhập để thêm địa chỉ mới');
+        return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    showListShippingAddressPopup();
+}
+
 /**
  * 
  */
 function initializationAddress() {
->>>>>>> main
-    document.getElementById('btn-location')?.addEventListener('click', (ev) => {
-        if (!localStorage.getItem('user_id')) {
-            alert('Vui lòng đăng nhập để thêm địa chỉ mới');
-            return;
-        }
-        ev.preventDefault();
-        ev.stopPropagation();
-        showListShippingAddressPopup();
-    })
+    document.getElementById('btn-location')?.addEventListener('click', handleAddressPopup);
 }
 
 function initializationSearch() {
