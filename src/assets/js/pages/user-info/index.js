@@ -3,6 +3,7 @@ import { showNewShippingAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
 import { dateToString, removeDiacritics } from "../../until/format.js";
 import { navigateToPage } from "../../until/urlConverter.js";
+import { updateCartQuantity } from "../cart/cart.js";
 
 const status = {
     daxacnhan: {
@@ -347,7 +348,6 @@ async function initializationArticle__AddressInfo() {
             </div>
             <hr>
             <div class="user-address">
-                <div class="user-address-title">Địa chỉ</div>
                 <div class="user-all-address">
             </div>
         `;
@@ -356,11 +356,12 @@ async function initializationArticle__AddressInfo() {
     const containers = document.querySelectorAll('.user-address__container');
     const all_address = document.querySelector('.user-all-address');
     if (!btn_add_address || !containers) return;
+    // ấn thêm địa chỉ
     btn_add_address.addEventListener('click', (ev) => {
-        console.log('???');
         ev.stopPropagation();
         ev.stopImmediatePropagation();
-        showNewShippingAddressPopup(undefined, async (address, bool) => {
+        // hiện popup cho nhập địa chỉ
+        showNewShippingAddressPopup(undefined, address_data, async (address, bool) => {
             if (bool)
                 address_data.unshift(address);
             else
@@ -371,15 +372,31 @@ async function initializationArticle__AddressInfo() {
         }, () => { });
     });
     containers.forEach((container, index) => {
+        // nhấn cập nhật địa chỉ
         container.querySelector('.update-address')?.addEventListener('click', (ev) => {
             ev.stopPropagation();
             ev.stopImmediatePropagation();
-            showNewShippingAddressPopup(address_data[index], async (address) => {
+            showNewShippingAddressPopup(index, address_data, async (address, bool) => {
                 address_data[index] = address;
+                if (bool) { [address_data[0], address_data[index]] = [address_data[index], address_data[0]]; }
                 await fakeDatabase.updateUserAddress(user_id, address_data);
                 initializationArticle__AddressInfo();
                 return;
             }, () => { });
+        });
+        container.querySelector('.delete-address')?.addEventListener('click', async (ev) => {
+            ev.stopPropagation();
+            ev.stopImmediatePropagation();
+            address_data.splice(index, 1);
+            await fakeDatabase.updateUserAddress(user_id, address_data);
+            initializationArticle__AddressInfo();
+        });
+        container.querySelector('.set-default-btn')?.addEventListener('click', async (ev) => {
+            ev.stopPropagation();
+            ev.stopImmediatePropagation();
+            [address_data[0], address_data[index]] = [address_data[index], address_data[0]];
+            await fakeDatabase.updateUserAddress(user_id, address_data);
+            initializationArticle__AddressInfo();
         });
     });
 }
@@ -408,7 +425,7 @@ export async function initializationUserInfoPage(params, query) {
     style.textContent = await cssRep.text();
     style.id = 'user-info-style'
     document.head.appendChild(style);
-
+    updateCartQuantity();
     initializationMain();
     initializationAside(personal_info_data);
     switchTab();

@@ -277,7 +277,7 @@ label:has(.btn-add-address) {
 .user-address__container {
     display: flex;
     flex-direction: column;
-    padding: 10px 0;
+    padding: 20px 0;
     font-size: 14px;
     color: #999;
 }
@@ -307,13 +307,16 @@ label:has(.btn-add-address) {
     padding: 5px;
     cursor: pointer;
 }
-
+.user-address__details {
+    margin-right: 10px;
+}
 .set-default-btn {
     all: unset;
     border: 1px solid #999;
     color: black;
     padding: 5px;
     cursor: pointer;
+    margin-top: 8px;
 }
 
 .set-default-btn.disable {
@@ -321,17 +324,19 @@ label:has(.btn-add-address) {
     cursor: not-allowed;
 }
 
-.user-address__name,
-.user-address__title {
+.user-address__name {
     font-weight: 400;
     font-size: 16px;
     color: #000;
 }
 
 .user-address__default {
+    font-size: 15px;
     margin-top: 5px;
     color: #189eff;
-    padding: 3px 5px;
-    border: 1px solid #189eff;
+    font-weight: 600;
+    text-underline-offset: 2px;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
     width: max-content;
 }
