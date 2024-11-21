@@ -3,14 +3,16 @@ import uuidv from '../../until/uuid.js';
 import { toast } from '../../render/popupRender.js';
 import { navigateToPage } from '../../until/urlConverter.js';
 import { handleAddressPopup } from '../../index.js';
+import { formatNumber } from '../../until/format.js';
+import { showListShippingAddressPopup } from '../../render/addressPopup.js';
 
-export async function showUserInfo() {
+export async function showUserInfo(index = 0) {
     const user_id = localStorage.getItem("user_id");
 
     if (!user_id) {
         return;
     }
-
+    document.querySelector('.info-content')?.setAttribute('data-index', index + '');
     const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
     const userName = document.querySelector('.contact-info__name');
     const userTel = document.querySelector('.contact-info__phone-num');
@@ -95,9 +97,6 @@ export function getDeliveryTime() {
     return date;
 }
 
-export function formatNumber(num) {
-    return num.toLocaleString('vi-VN');
-}
 
 /**
  *
@@ -570,7 +569,15 @@ export async function buyBooks() {
     })
 }
 
-
+export function changeAddress() {
+    document.getElementById('change-address-btn')
+        ?.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const index = /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index;
+            showListShippingAddressPopup(Number(index));
+        });
+}
 
 // mainCart();
 

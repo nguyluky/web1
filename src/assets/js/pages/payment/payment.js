@@ -1,11 +1,14 @@
 
 import fakeDatabase from "../../db/fakeDBv1.js";
-import { getDeliveryTime, formatNumber, showUserInfo } from "../cart/cart.js";
+import { getDeliveryTime, showUserInfo } from "../cart/cart.js";
 import order from "../../render/table/orderTabel.js";
 import { getSearchParam, navigateToPage } from "../../until/urlConverter.js";
 import uuidv from "../../until/uuid.js";
 import address from "../../db/addressDb.js";
 import { toast } from "../../render/popupRender.js";
+import { formatNumber } from "../../until/format.js";
+
+
 
 export function getOrder() {
     const payment = getSearchParam('payment');

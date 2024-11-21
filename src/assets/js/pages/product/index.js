@@ -1,3 +1,11 @@
+import fakeDatabase from '../../db/fakeDBv1.js';
+import { toast } from '../../render/popupRender.js';
+import { navigateToPage } from '../../until/urlConverter.js';
+import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
+const Product_Data = await fakeDatabase.getAllBooks();
+let data = [];
+let Current_Page = 1;
+let Products_Per_page = 4;
 
 /**
  *
@@ -8,178 +16,53 @@ export async function initializationProductPage(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
 
+    const cssRep = await fetch('./assets/css/product.css');
     const style = document.createElement('style');
+    style.textContent = await cssRep.text();
     style.id = 'product-page-style';
-    style.innerHTML = `
-    .main_wapper {
-        display: grid;
-        grid-template-columns: 1fr 3fr 1fr;
-        border: 0px;
-        gap: 10px;
-    }
-
-    .left-section,
-    .center-section,
-    .right-section {
-        padding: 10px;
-    }
-    .left-section,
-    .right-section {
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-    }
-    .center-section img {
-        border: 1px solid #ddd;
-        background-color: #f9f9f9;
-        width: 100px;
-        height: auto;
-    }
-    .center-section .description {
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-        margin-top: 10px;
-        font-size: 14px;
-    }
-    .product-title {
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .price {
-        color: red;
-        font-size: 24px;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-    .shipping-info {
-        font-size: 12px;
-        color: gray;
-        margin-top: 10px;
-    }
-    .quantity-section {
-        margin-top: 10px;
-    }
-    .quantity-section input {
-        width: 50px;
-        text-align: center;
-    }
-    .total-price {
-        font-size: 18px;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-    .buttons {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    .buttons button {
-        width: max-content;
-        border-radius: 5px;
-        padding: 10px;
-        border: none;
-        color: #fff;
-        cursor: pointer;
-    }
-    .buy-now {
-        background-color: red;
-    }
-    .add-to-cart {
-        background-color: gray;
-    }
-    `
-
     document.head.appendChild(style);
+
+    const product_id = params.id;
+
+    const general_info = await fakeDatabase.getSachById(product_id);
+    if (!general_info) return;
+    const container = rendergeneralInfo(general_info);
 
     main.innerHTML = `
     <div class="main_wapper">
         <div class="left-section">
-                <img
-                    src="https://nhasachphuongnam.com/images/detailed/267/ly-thuyet-tro-choi.jpg"
-                    alt="Lý thuyết trò chơi"
-                    width="100%"
-                />
-                <p>Đặc điểm nổi bật:</p>
-                <ul>
-                    <li>Có ghi chép đầu đủ</li>
-                    <li>Kèm chú thích</li>
-                    <li>Sách đẹp còn nguyên 90%</li>
-                </ul>
-            </div>
+            ${await renderleftsection(general_info)}
+        </div>
 
-            <div class="center-section">
-                <p class="product-title">
-                    Pháp luật đại cương (Dùng trong các trường đại học, cao đẳng
-                    và trung cấp)
-                </p>
-                <p class="price">10.000đ</p>
-                <div class="description">
-                    <h4>Mô tả sản phẩm</h4>
-                    <p>
-                        Ở bất cứ quốc gia, xã hội nào, pháp luật có vai trò rất
-                        quan trọng trong đời sống xã hội.Đối với Nhà nước,pháp
-                        luật được coi là công cụ hữu hiệu nhất để quản lý tất cả
-                        các vấn đề trong xã hội bởi pháp luật là một khuôn mẫu
-                        và có tính bắt buộc chung nên mọi người trong xã hội đều
-                        cần phải tuân thủ theo các quy định của pháp luật. Nếu
-                        như không chấp hành hoặc chấp hành không đúng các quy
-                        định của pháp luật thì sẽ bị áp dụng các chế tài tương
-                        ứng tùy thuộc vào hành vi vi phạm.Đối với công dân,
-                        pháp luật là phương tiện quan trọng để mọi người dân bảo
-                        vệ được các quyền và lợi ích hợp pháp của mình. Thông
-                        qua pháp luật đảm bảo cho người dân được thực hiện các
-                        quyền cũng như nghĩa vụ của mình theo quy định và quyền
-                        lợi này sẽ được quy định và bảo vệ một cách tốt
-                        nhất.Đối với toàn xã hộinói chung thì pháp luật đã thể
-                        hiện được vai trò của mình trong việc đảm bảo sự vận
-                        hành của toàn xã hội, tạo lập và duy trì sự bình đẳng
-                        trong cộng đồng để đảm bảo cho xã hội phát triển một
-                        cách ổn định và bền vững nhất thì pháp luật có vai trò
-                        rất quan trọng để mọi người trong xã hội thực hiện. Ở
-                        Việt Nam, trong những năm qua, Đảng và Nhà nước ta đã
-                        chủ trương tăng cường giáo dục pháp luật trong các nhà
-                        trường thông qua các chương trình môn học, giáo trình,
-                        tài liệu giảng dạy pháp luật bảo đảm đúng tinh thần và
-                        nội dung của Hiến pháp và pháp luật hiện hành.
-                    </p>
-                </div>
-                <div class="reviews">
-                    <h4>Khách hàng đánh giá</h4>
-                </div>
+        <div class="center-section">
+            <div class="product-title-container">
+                ${container.innerHTML}
             </div>
-
-            <div class="right-section">
-                <h4>Thông tin vận chuyển:</h4>
-                <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLsxwaJCU8a7ksWpC4YY29UKpcSJvyEcj8-g&s"
-                    alt="Ship ngay"
-                    height="30px"
-                />
-                <p class="shipping-info">
-                    Giao hàng siêu nhanh sau giờ hành chính
+            <div class="description-container">
+                <h4>Mô tả sản phẩm</h4>
+                <p class="description-details">
+                    ${general_info?.details}
                 </p>
-                <p class="shipping-info">Giao hàng siêu nhanh</p>
-                <p class="shipping-info">Miễn phí</p>
-                <div class="quantity-section">
-                    <label for="quantity">Số lượng:</label>
-                    <input
-                        type="number"
-                        id="quantity"
-                        name="quantity"
-                        value="2"
-                        min="1"
-                    />
-                </div>
-                <p class="total-price">Tạm tính: 20.000đ</p>
-                <div class="buttons">
-                    <button class="buy-now">Mua ngay</button>
-                    <button class="add-to-cart">Thêm giỏ hàng</button>
+            </div>
+            <div class="other-product-container">
+                <div class="products-header">Sản phẩm tương tự</div>
+                <div class="products">
                 </div>
             </div>
     </div>
-    `
+    `;
+    const product_categories = (document.querySelectorAll('.product-category'));
+    let cates = Array.from(product_categories).map((e) => { return /**@type {HTMLElement} */(e).dataset.category });
+
+    data = Product_Data.filter((book) => {
+        return cates.some(e => { return book.category.includes(String(e)) && book.id != product_id })
+    })
+
+    setEventListener(product_id);
+    shuffle(data); // trước khi display sản phẩm tương tự thì sẽ shuffle lại mảng
+    displayProducts();
+    updateCartQuantity();
+    globalThis.scrollTo({ top: 0, behavior: "smooth" }); // kéo lên đầu trang mỗi khi tạo trang product
 }
 
 /**
@@ -188,7 +71,7 @@ export async function initializationProductPage(params, query) {
  * @param {URLSearchParams} query
  */
 export async function updateProductPage(params, query) {
-
+    initializationProductPage(params, query);
 }
 
 /**
@@ -198,4 +81,276 @@ export async function updateProductPage(params, query) {
  */
 export async function removeProductPage(params, query) {
     document.getElementById('product-page-style')?.remove();
+}
+
+function addquantity(total, quantity, sale_price) {
+    quantity.value++;
+    sale_price = sale_price * quantity.value;
+    quantity.innerHTML = quantity.value;
+    total.innerHTML = sale_price;
+}
+
+function minusquantity(total, quantity, sale_price) {
+    if (quantity.value > 1) {
+        quantity.value--;
+        sale_price = sale_price * quantity.value;
+        quantity.innerHTML = quantity.value;
+        total.innerHTML = sale_price;
+    }
+}
+
+function changequantity(total, quantity, sale_price) {
+    sale_price = sale_price * quantity.value;
+    total.innerHTML = sale_price;
+}
+
+// hàm sắp xếp random
+function shuffle(array) {
+    let currentIndex = array.length;
+
+    while (currentIndex != 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+}
+
+async function createCategory(category_id) {
+    const categories = await fakeDatabase.getAllCategory();
+    const product_category = document.createElement('div');
+
+    let category_name = '';
+    categories.forEach(cate => {
+        if (cate.id == category_id) {
+            category_name = cate.name;
+        }
+    });
+    product_category.className = "product-category";
+    product_category.setAttribute('data-category', category_id);
+    product_category.innerHTML = category_name;
+
+    return product_category;
+}
+
+/**
+ *
+ * @param {import('../../until/type.js').Sach} general_info
+ * @returns {HTMLDivElement}
+ */
+function rendergeneralInfo(general_info) {
+    const product_container = document.createElement('div');
+    product_container.className = "product-title-container";
+
+    const product_title = document.createElement('div');
+    product_title.className = "product-title";
+    product_title.innerHTML = String(general_info?.title);
+    product_container.appendChild(product_title);
+
+    const category_container = document.createElement('div');
+    category_container.className = "product-category-container";
+    general_info?.category.forEach(async category => {
+        const inner_category = await createCategory(category);
+        category_container.appendChild(inner_category);
+    });
+
+    product_container.appendChild(category_container);
+
+    const price_container = document.createElement('div');
+    price_container.className = "price-number-container";
+
+    const discount = document.createElement('div');
+    discount.className = "discount";
+    if (general_info?.discount == 0) discount.classList.add('hide');
+    discount.innerHTML = `-${String(Number(general_info?.discount) * 100)}%`;
+
+    const sale_price = document.createElement('span');
+    sale_price.className = "price-number sale";
+    sale_price.innerHTML = `${String(
+        Math.round(Number(general_info?.base_price) * (1 - Number(general_info?.discount))),
+    )} <sup>₫</sup>`;
+    price_container.appendChild(sale_price);
+    price_container.appendChild(discount);
+
+    const regular_price = document.createElement('span');
+    regular_price.className = "price-number regular";
+    if (general_info?.discount == 0) regular_price.classList.add('hide');
+    regular_price.innerHTML = `${String(general_info?.base_price)} <sup>₫</sup>`
+    price_container.appendChild(regular_price);
+
+    product_container.appendChild(price_container);
+
+    return product_container;
+}
+
+async function renderleftsection(general_info) {
+
+    const thumbnail = await fakeDatabase.getImgById(String(general_info?.thumbnail));
+    let source = './assets/img/default-image.png';
+    if (thumbnail) source = thumbnail.data;
+
+    const sale_price = Math.round(Number(general_info?.base_price) * (1 - Number(general_info?.discount)));
+
+    return `
+            <div class="left-section__product-img">
+                <img src=${source} alt="">
+            </div>
+            <div class="quantity">
+                <div class="quantity-header">
+                    Số lượng:
+                </div>
+                <div class="quantity-form">
+                    <button class="dscr-quantity">
+                        -
+                    </button>
+                    <input type="number" value="1" class="quantity-num">
+                    <button class="inc-quantity">
+                        +
+                    </button>
+                </div>
+            </div>
+            <div class="total-container">
+                <div class="total-price__header">Tạm tính:</div>
+                <span class="price-number total">
+                    <span>${sale_price}</span> <sup>₫</sup>
+                </span>
+            </div>
+            <div class="buttons-section"> 
+                <button class="buy-now">Mua ngay</button>
+                <button class="add-to-cart" id="add-to-cart-button">Thêm giỏ hàng</button>
+            </div>
+    `;
+}
+
+function setEventListener(product_id) {
+    const decrebtn = /**@type {HTMLElement}*/(document.querySelector('.dscr-quantity'));
+    const increbtn = /**@type {HTMLElement}*/(document.querySelector('.inc-quantity'));
+    let inputquantity = /**@type {HTMLInputElement}*/(document.querySelector('.quantity-num'));
+    let total = /**@type {HTMLElement}*/(document.querySelector('.price-number.total span'));
+    let sale_price = Number(total.innerHTML);
+
+    if (!inputquantity) return;
+
+    decrebtn.addEventListener('click', e => {
+        minusquantity(total, inputquantity, sale_price);
+    });
+    increbtn.addEventListener('click', e => {
+        addquantity(total, inputquantity, sale_price);
+    });
+
+    inputquantity.addEventListener('change', e => {
+        if (Number(inputquantity.value) < 1) {
+            inputquantity.value = '1';
+            toast({ message: 'Số lượng phải lớn hơn 0', type: 'error' });
+        }
+        changequantity(total, inputquantity, sale_price);
+    });
+
+    const add_to_cart = document.querySelector('.add-to-cart');
+    add_to_cart?.addEventListener('click', e => {
+        pushCartItemIntoCart(product_id, Number(inputquantity.value));
+    });
+
+    const categories = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.product-category'));
+    categories.forEach(category => {
+        category.addEventListener('click', e => {
+            navigateToPage('home', { c: String(category.dataset.category) });
+        });
+    });
+
+}
+
+/**
+ * 
+ * @param {import('../../until/type.js').Sach} product 
+ * @returns {Promise<HTMLDivElement>}
+ */
+
+async function createProduct(product) {
+    const productItem = document.createElement('div');
+    productItem.classList.add('product-card');
+    productItem.setAttribute('data-id', product.id);
+    const img = await fakeDatabase.getImgById(product.thumbnail);
+    let source = './assets/img/default-image.png';
+    if (img) source = img.data;
+
+    const productImg = document.createElement('div');
+    productImg.classList.add('product-img');
+    productItem.appendChild(productImg);
+
+    const discountTag = document.createElement('div');
+    discountTag.classList.add('discount-tag');
+    if (product.discount == 0) discountTag.classList.add('hide');
+    discountTag.innerHTML = `-${String(product.discount * 100)}%`;
+    productImg.appendChild(discountTag);
+
+    const imgTag = document.createElement('img');
+    imgTag.src = source;
+    imgTag.alt = '';
+    productImg.appendChild(imgTag);
+
+    const productTitle = document.createElement('div');
+    productTitle.classList.add('product-title');
+    productTitle.innerHTML = `<p>${product.title}</p>`;
+    productItem.appendChild(productTitle);
+
+    const productFooter = document.createElement('div');
+    productFooter.classList.add('product-footer');
+    productItem.appendChild(productFooter);
+
+    const productPrice = document.createElement('div');
+    productPrice.classList.add('product-price-detail');
+    productFooter.appendChild(productPrice);
+
+    const salePrice = document.createElement('span');
+    salePrice.classList.add('other-sale');
+    salePrice.innerHTML = `${String(
+        Math.round(product.base_price * (1 - product.discount)),
+    )} <sup>₫</sup>`;
+    productPrice.appendChild(salePrice);
+
+    const regularPrice = document.createElement('span');
+    regularPrice.classList.add('other-regular');
+    if (product.discount == 0) regularPrice.classList.add('hide');
+    regularPrice.innerHTML = `${String(product.base_price)} <sup>₫</sup>`;
+    productPrice.appendChild(regularPrice);
+
+    // productItem.addEventListener('click', (event) => {
+    //     const target = /**@type {HTMLInputElement}*/(event.target);
+    //     //if (addToCart.isSameNode(target)) return;
+    //     location.hash = `#/product/${product.id}`;
+    // });
+
+    productItem.addEventListener('click', e => {
+        navigateToPage(`product/${product.id}`)
+    });
+
+    return productItem;
+}
+
+async function displayProducts() {
+    //const noProduct = /**@type {HTMLElement}*/ (document.querySelector('.no-product'));
+
+    const productlist = /**@type {HTMLElement}*/ (
+        document.querySelector('.products')
+    );
+    const header = /**@type {HTMLElement}*/ (
+        document.querySelector('.products-header')
+    );
+    productlist.innerHTML = '';
+    // if (data.length == 0) {
+    //     header.style.display = 'none';
+    //     noProduct.style.display = '';
+    //     return;
+    // }
+    // noProduct.style.display = 'none';
+    header.style.display = '';
+    const start = (Current_Page - 1) * Products_Per_page;
+    const end = start + Products_Per_page;
+    const Products_To_Display = data.slice(start, end);
+
+    for (const product of Products_To_Display) {
+        const productItem = await createProduct(product);
+        productlist.appendChild(productItem);
+    }
 }

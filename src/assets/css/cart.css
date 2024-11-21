@@ -101,7 +101,7 @@
     display: flex;
     font-size: 16px;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-block: 10px;
 }
 
 .contact-info__name {
@@ -118,7 +118,7 @@
 }
 
 .address-info {
-    font-size: 11px;
+    font-size: 14px;
     color: rgb(128, 128, 137);
     line-height: 15px;
 }

@@ -33,6 +33,10 @@ body {
     background: #f5f5fa;
 }
 
+main.main {
+    min-height: calc(100vh - 100px);
+}
+
 .card {
     box-sizing: border-box;
     padding: 10px;
@@ -344,4 +348,16 @@ body {
 .group-flex {
     display: flex;
     gap: 10px;
+}
+
+.set-default {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    width: max-content;
+    cursor: pointer;
+}
+
+.set-default input[type='checkbox'] {
+    height: 16px;
 }

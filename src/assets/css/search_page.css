@@ -10,9 +10,10 @@
     display: flex;
     flex-direction: column;
 }
-#filter-btn {
+#search-filter.hide {
     display: none;
 }
+
 #filter-btn:hover {
     color: #0a68f4;
 }

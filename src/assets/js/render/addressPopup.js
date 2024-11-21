@@ -1,5 +1,6 @@
 import fakeDatabase from "../db/fakeDBv1.js";
-import text2htmlElement from "../until/text2htmlElement.js";
+import { showUserInfo } from "../pages/cart/cart.js";
+import { text2htmlElement } from "../until/format.js";
 import { AddressFrom } from "./address.js";
 
 
@@ -7,6 +8,7 @@ import { AddressFrom } from "./address.js";
  * 
  * @param {MouseEvent} e 
  * @param {HTMLElement} element 
+ * @returns {boolean}
  */
 function isClickOutSide(e, element) {
     const taget =  /** @type {HTMLElement | null} */ (e.target);
@@ -23,11 +25,14 @@ function isClickOutSide(e, element) {
 
 /**
  * 
- * @param {(newAddress: import("../until/type").UserAddress) => Promise<any>} onOk 
+ * @param {import("../until/type").UserAddress | undefined} data 
+ * @param {(newAddress: import("../until/type").UserAddress, boolean) => Promise<any>} onOk 
  * @param {() => any} onCancle
  * @returns {void}
  */
-export function showNewShippingAddressPopup(onOk, onCancle) {
+
+// mới sửa lại hàm, nếu có data thì hiện lên form với dữ liệu đó
+export function showNewShippingAddressPopup(data, onOk, onCancle) {
     const html = `<div class="popup">
         <button class="btn-close">
             <i class="fa-solid fa-xmark"></i>
@@ -108,6 +113,10 @@ export function showNewShippingAddressPopup(onOk, onCancle) {
                         <span class="form-error"></span>
                     </label>
                 </div>
+                <label class="set-default">
+                    <input type="checkbox"/>
+                    <span>Đặt làm địa chỉ mặc định</span>
+                </label>
             </form>
         </div>
         <div class="popup-button">
@@ -125,6 +134,23 @@ export function showNewShippingAddressPopup(onOk, onCancle) {
     const popupWrapper = document.getElementById('popup-wrapper');
     popupWrapper?.appendChild(element);
 
+    const name = /**@type {HTMLInputElement} */ (document.getElementsByName('name')[0]);
+    const phone_num = /**@type {HTMLInputElement} */ (document.getElementsByName('phone_num')[0]);
+    const email = /**@type {HTMLInputElement} */ (document.getElementsByName('email')[0]);
+    const street = /**@type {HTMLInputElement} */ (document.getElementsByName('street')[0]);
+    const pay_address = /**@type {NodeListOf<AddressFrom>}*/ (document.getElementsByName('pay_address'));
+
+    if (data) {
+        name.value = data.name;
+        phone_num.value = data.phone_num;
+        email.value = data.email;
+        street.value = data.street;
+        const address = data.address.split(' - ');
+        pay_address[0].value = address[0];
+        pay_address[1].value = address[1];
+        pay_address[2].value = address[2];
+    }
+    console.log(pay_address[0].value, pay_address[1].value, pay_address[2].value);
     /**
      * 
      * @param {MouseEvent} ev 
@@ -163,14 +189,6 @@ export function showNewShippingAddressPopup(onOk, onCancle) {
             return;
         }
 
-        const name = /**@type {HTMLInputElement} */ (document.getElementsByName('name')[0]);
-        const phone_num = /**@type {HTMLInputElement} */ (document.getElementsByName('phone_num')[0]);
-        const email = /**@type {HTMLInputElement} */ (document.getElementsByName('email')[0]);
-        const street = /**@type {HTMLInputElement} */ (document.getElementsByName('street')[0]);
-        const pay_address = /**@type {NodeListOf<AddressFrom>}*/ (document.getElementsByName('pay_address'));
-
-
-
         const address = {
             name: name.value,
             phone_num: phone_num.value,
@@ -180,8 +198,9 @@ export function showNewShippingAddressPopup(onOk, onCancle) {
         }
 
         console.log(address);
+        const setToDefault = /**@type {HTMLInputElement} */ (document.querySelector('.set-default input'));
 
-        onOk(address).then(() => {
+        onOk(address, setToDefault.checked).then(() => {
             element.remove();
         });
     })
@@ -197,15 +216,18 @@ export function showNewShippingAddressPopup(onOk, onCancle) {
 /**
  * 
  * @param {import("../until/type").UserAddress} address
+ * @param {number} i
  * @returns {HTMLElement | null}
  */
-export function createAddressItem(address) {
+export function createAddressItem(address, i = NaN, sl = false) {
+    if (isNaN(i)) {
+        i = document.querySelectorAll('.shipping-info__item').length;
+    }
     const html = `
-    <div class="shipping-info__item">
+    <div class="shipping-info__item ${sl ? 'sladd' : ''}" data-id="${i}">
         <div class="info">
             <div class="name">
-                ${address.name}
-                <span><span>Địa chỉ mặc định</span></span>
+                <span>${address.name}</span><span>${i == 0 ? 'Địa chỉ mặc định' : ''}</span>
             </div>
             <div class="address">
                 <span>Địa chỉ: </span>${address.street}, ${address.address.replace(/ - /g, ', ')}
@@ -215,19 +237,39 @@ export function createAddressItem(address) {
             </div>
         </div>
         <div class="action">
-            Chỉnh sửa
+            <div class="action__update">Cập nhật</div>
+            ${i == 0 ? '' : '<div class="action__delete">Xoá</div>'}
         </div>
-    </div>`
+    </div>`;
 
     return text2htmlElement(html.trim());
 }
-
-
+/**
+ * 
+ * @param {import("../until/type").UserAddress} address 
+ * @param {Number} i 
+ * @returns 
+ */
+export function updateAddressItem(address, i) {
+    const item = document.querySelector(`.shipping-info__item[data-id="${i}"]`);
+    if (!item) {
+        return;
+    }
+    const name = item.querySelector('.name span');
+    const address_ = item.querySelector('.address');
+    const phone = item.querySelector('.phone');
+    if (!name || !address_ || !phone) {
+        return;
+    }
+    name.textContent = address.name;
+    address_.innerHTML = `<span>Địa chỉ: </span>${address.street}, ${address.address.replace(/ - /g, ', ')}`
+    phone.innerHTML = `<span>Điện thoại: </span>${address.phone_num}`
+}
 /**
  * 
  * @returns {void}
  */
-export function showListShippingAddressPopup() {
+export function showListShippingAddressPopup(indexOfAddress = 0) {
     const html = `
         <div class="popup">
             <button class="btn-close">
@@ -261,7 +303,7 @@ export function showListShippingAddressPopup() {
             </div>
             <div class="popup-button">
                 <button class="button_1">CANCEL</button>
-                <button class="button_1 btn-danger">
+                <button class="button_1 btn-danger" id="choose-address-btn">
                     GIAO ĐẾN ĐỊA CHỈ NÀY
                 </button>
             </div>
@@ -324,35 +366,104 @@ export function showListShippingAddressPopup() {
             </div>
         </div>`;
 
-        const select = popupBody.querySelector('.select');
+        const select = document.querySelector('.popup-body .select');
+        const shippingInfoNew = document.querySelector('.popup-body .shipping-info__new');
 
-        const shippingInfoNew = popupBody.querySelector('.shipping-info__new');
-
-        shippingInfoNew?.addEventListener('click', (ev) => {
-            ev.stopPropagation();
-            ev.stopImmediatePropagation();
-            console.log('click')
-
-            element.style.display = 'none';
-            showNewShippingAddressPopup(async (address) => {
-                await fakeDatabase.addUserAddress(userId, address)
-                element.style.display = '';
-
-                const addressItem = createAddressItem(address);
-                if (addressItem)
-                    select?.insertBefore(addressItem, shippingInfoNew);
-
-            }, () => {
-                element.style.display = '';
-            });
-        });
-
-
-
-        addressList.forEach((address) => {
-            const addressItem = createAddressItem(address);
+        addressList.forEach((address, i) => {
+            const addressItem = createAddressItem(address, i, i === indexOfAddress);
             if (addressItem)
                 select?.insertBefore(addressItem, shippingInfoNew);
+        });
+        addEvent(userId, addressList);
+    })
+}
+
+// thêm event cho các nút update và delete
+function addEvent(userId, addressList) {
+
+    const select = document.querySelector('.popup-body .select');
+    const element =  /**@type {HTMLElement} */ (document.querySelector('.popup'));
+    const shippingInfoNew = document.querySelector('.popup-body .shipping-info__new');
+    let addressItems = /**@type {NodeListOf<HTMLElement>} */ (select?.querySelectorAll('.shipping-info__item'));
+
+    shippingInfoNew?.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+        console.log('click')
+
+        element.style.display = 'none';
+        showNewShippingAddressPopup(undefined, async (address, bool) => {
+            element.remove();
+            console.log(bool);
+            if (bool)
+                addressList.unshift(address);
+            else
+                addressList.push(address);
+            await fakeDatabase.updateUserAddress(userId, addressList);
+            showListShippingAddressPopup();
+            return;
+        }, () => {
+            element.style.display = '';
+        });
+    });
+
+    addressItems?.forEach((item) => {
+        item.addEventListener('click', (ev) => {
+            addressItems.forEach((item) => {
+                item.classList.remove('sladd');
+            })
+            item.classList.add('sladd');
         })
+        // nếu nhấn update
+        item.querySelector('.action__update')
+            ?.addEventListener('click', (ev) => {
+                //khúc này copy từ trên
+                ev.stopPropagation();
+                ev.stopImmediatePropagation();
+                const index = Number(item.dataset.id);
+                console.log(index);
+                element.style.display = 'none';
+                // hiển thị địa chỉ đang chọn
+                showNewShippingAddressPopup(addressList[index], async (address, bool) => {
+                    addressList[index] = address;
+                    if (bool) {
+                        [addressList[0], addressList[index]] = [addressList[index], addressList[0]];
+                        await fakeDatabase.updateUserAddress(userId, addressList);
+                        element.remove();
+                        showListShippingAddressPopup();
+                        return;
+                    }
+
+                    await fakeDatabase.updateUserAddress(userId, addressList);
+                    element.style.display = '';
+                    updateAddressItem(address, index);
+                }, () => {
+                    element.style.display = '';
+                });
+            })
+        item.querySelector('.action__delete')
+            ?.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                ev.stopImmediatePropagation();
+                const index = Number(item.dataset.id);
+                addressList.splice(index, 1);
+                fakeDatabase.updateUserAddress(userId, addressList);
+                item.remove();
+                addressItems = /**@type {NodeListOf<HTMLElement>} */ (select?.querySelectorAll('.shipping-info__item'));
+                addressItems.forEach((item, i) => {
+                    item.dataset.id = '' + i;
+                })
+            })
+    })
+    document.getElementById('choose-address-btn')?.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+        const addressItem = /**@type {HTMLElement} */ (select?.querySelector('.shipping-info__item.sladd'));
+        if (!addressItem) {
+            alert('Bạn chưa chọn địa chỉ');
+            return;
+        }
+        showUserInfo(Number(addressItem.dataset.id))
+        element.remove();
     })
 }

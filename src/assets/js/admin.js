@@ -115,7 +115,7 @@ const buttonSaveState = {
                 '<i class="fa-solid fa-pen"></i><span>Edit</span>');
 
         tableEditOff(
-            /**@type {NodeListOf<HTMLTableCellElement>}*/ (
+            /**@type {NodeListOf<HTMLTableCellElement>}*/(
                 document.querySelectorAll('#content_table td')
             ),
         );
@@ -128,7 +128,7 @@ const buttonSaveState = {
         btnSave?.classList.add('canedit');
 
         tableEditOn(
-            /**@type {NodeListOf<HTMLTableCellElement>}*/ (
+            /**@type {NodeListOf<HTMLTableCellElement>}*/(
                 document.querySelectorAll('#content_table td')
             ),
         );
@@ -138,6 +138,15 @@ const buttonSaveState = {
 /** Xử lý render dữ liệu tương ứng với tab hiện tại */
 /** @param {string} inputValue */
 async function renderManagement(inputValue = '') {
+    const titleTabs = {
+        user: 'User',
+        cart: 'Cart',
+        sach: 'Sách',
+        dashboard: 'Dashboard',
+        order: 'Order',
+    };
+    let web_title = document.querySelector('head title');
+    if (web_title) web_title.innerHTML = `Admin Web - ${titleTabs[tab]}`;
     if (tab == 'dashboard') {
         document.querySelector('.dashboard-wrapper')?.classList.remove('hide');
         document.querySelector('.table-wrapper')?.classList.add('hide');
@@ -153,18 +162,7 @@ async function renderManagement(inputValue = '') {
     );
     input.value = inputValue;
     if (!title || !input) return;
-
-    const titleTabs = {
-        user: 'User',
-        cart: 'Cart',
-        sach: 'Sách',
-        category: 'Category',
-        order: 'Order',
-    };
     title.innerHTML = titleTabs[tab];
-    let web_title = document.querySelector('head title');
-    if (web_title) web_title.innerHTML = `Admin Web - ${titleTabs[tab]}`;
-
     loadingTable && (loadingTable.style.display = 'flex');
     const data = fakeDBManagement[tab] ? await fakeDBManagement[tab]() : [];
     loadingTable && (loadingTable.style.display = 'none');
@@ -231,7 +229,7 @@ function setupMainButtonEvents() {
                         buttonAddState.add();
                         buttonSaveState.edit();
                     })
-                    .catch(() => {});
+                    .catch(() => { });
                 toast({
                     title: 'Thành công!',
                     message: 'Bạn đã lưu chỉnh sửa thành công.',
@@ -242,7 +240,7 @@ function setupMainButtonEvents() {
             () => {
                 tabManagement[tab].removeAllChange?.();
                 renderManagement(
-                    /** @type {HTMLInputElement} */ (
+                    /** @type {HTMLInputElement} */(
                         document.getElementById('search-input')
                     )?.value,
                 )
@@ -250,7 +248,7 @@ function setupMainButtonEvents() {
                         buttonAddState.add();
                         buttonSaveState.edit();
                     })
-                    .catch(() => {});
+                    .catch(() => { });
             },
         );
     }

@@ -1,15 +1,7 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { toast } from "../../render/popupRender.js";
-import removeDiacritics from "../../until/removeDiacritics.js";
+import { dateToString, removeDiacritics } from "../../until/format.js";
 import { navigateToPage } from "../../until/urlConverter.js";
-
-document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:first-child')?.addEventListener('click', () => {
-    location.hash = '#/user?info=tttk';
-});
-
-document.querySelector('.dropdown-btn-content.dropdown-pos-left-bottom p:nth-child(2)')?.addEventListener('click', () => {
-    location.hash = '#/user?info=dhct';
-});
 
 const status = {
     daxacnhan: {
@@ -17,7 +9,7 @@ const status = {
         color: 'rgba(219, 198, 38, 1)'
     },
     doixacnhan: {
-        text: 'Chờ xác nhận',
+        text: 'Chờ xử lý',
         color: 'rgba(208, 128, 8, 1)'
     },
     danggiaohang: {
@@ -42,6 +34,11 @@ function create_user_gender(user_id) {
     }
 }
 // tạo container chứa thông tin đơn hàng
+/**
+ * 
+ * @param {import("../../until/type.js").Order} order 
+ * @returns 
+ */
 function createOrderContainer(order) {
     const package_details = document.createElement('div');
     package_details.className = "package-details";
@@ -53,16 +50,16 @@ function createOrderContainer(order) {
 
     package_details.innerHTML = `
         <div class="package-details__top">
-            <div class="package-details__id">Mã đơn hàng: <span>${order.id}</span></div>
-            <div class="package-details__total">
-                <div class="package-details__total--header">Thành tiền:</div>
-                <span class="package-details__total--number">
-                    ${order.total} <sup>₫</sup>
-                </span>
-            </div>
+            <div class="package-details__id">Mã đơn: <span>${order.id}</span></div>
+            <div class="package-details__date">Ngày đặt: <span>${dateToString(order.date)}<span></div>
             <div class="package-details__status">
-                <div class="package-details__status--header">Trạng thái:</div>
                 <div class="package-details__status--text" style="color:${status[order.state].color}">${status[order.state].text}</div>
+            </div>
+            <div class="package-details__total">
+                <div class="package-details__total--header">Tổng tiền:</div>
+                <span class="package-details__total--number">
+                    ${order.total} ₫
+                </span>
             </div>
         </div>
         <div class="package-details__bottom"></div>
@@ -129,9 +126,17 @@ async function renderOrder(option = 'all') {
     }
 }
 
-async function renderUserInfo() {
+function checkEmail(email) {
+    if (!email) {
+        return "bạn chưa nhập email"
+    }
+    else {
+        return email;
+    }
+}
 
-    const user_id = localStorage.getItem('user_id');
+async function renderUserInfo(user_id) {
+
     if (!user_id) {
         toast({ title: 'Lỗi', message: 'Vui lòng đăng nhập để xem thông tin cá nhân', type: 'error' });
         return '';
@@ -149,7 +154,7 @@ async function renderUserInfo() {
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Email:</div>
-                        <div class="user-info">${personal_info_data?.email}</div>
+                        <div class="user-info">${checkEmail(personal_info_data?.email)}</div>
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Số điện thoại:</div>
@@ -175,7 +180,7 @@ function initializationMain() {
     `
 }
 
-function initializationAside() {
+function initializationAside(personal_info_data) {
     const aside = document.querySelector('.aside');
     if (!aside) return;
     aside.innerHTML = `
@@ -184,7 +189,7 @@ function initializationAside() {
             <div class="user-info__img">
                 <img src="assets/img/Default_pfp.svg.png" alt="">
             </div>
-            <div class="user-info__name">Tên tài khoản</div>
+            <div class="user-info__name">${personal_info_data?.name}</div>
         </div>
         <div class="user-info__content">
             <div class="user-info__row selected" data-value="tttk">
@@ -256,8 +261,8 @@ function initializationArticle__OrderInfo() {
 }
 function initializationArticle__AccountInfo() {
     const article = document.getElementById('article');
-    if (!article) return;
-
+    const user_id = localStorage.getItem('user_id');
+    if (!article || !user_id) return;
     article.className = "user-personal-info";
     article.innerHTML = `
             <div class="article-header">
@@ -269,7 +274,7 @@ function initializationArticle__AccountInfo() {
         `;
     const user_container = /**@type {HTMLElement}*/(document.querySelector('.user-personal__container'));
 
-    renderUserInfo().then(data => {
+    renderUserInfo(user_id).then(data => {
         if (user_container) user_container.innerHTML = data;
     })
 
@@ -292,7 +297,9 @@ function setupEvent() {
  */
 export async function initializationUserInfoPage(params, query) {
 
-
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) return;
+    const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
     const cssRep = await fetch('./assets/css/user_info.css');
     const style = document.createElement('style');
     style.textContent = await cssRep.text();
@@ -300,8 +307,7 @@ export async function initializationUserInfoPage(params, query) {
     document.head.appendChild(style);
 
     initializationMain();
-    initializationAside();
-    initializationArticle__AccountInfo();
+    initializationAside(personal_info_data);
     setupEvent();
 }
 
@@ -320,7 +326,6 @@ export async function updateUserInfoPage(params, query) {
             user_option[1].classList.add('selected');
             initializationArticle__OrderInfo();
             break;
-
         default:
             user_option[0].classList.add('selected');
             user_option[1].classList.remove('selected');
