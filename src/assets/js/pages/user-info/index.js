@@ -1,4 +1,5 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
+import { showNewShippingAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
 import { dateToString, removeDiacritics } from "../../until/format.js";
 import { navigateToPage } from "../../until/urlConverter.js";
@@ -95,6 +96,38 @@ async function createOrderItemElement(item) {
         </div>`;
     return item_detail;
 }
+/**
+ * 
+ * @param {import("../../until/type.js").UserAddress} address 
+ * @param {Number} i
+ */
+function createAddressContainer(address, i) {
+    const address_container = document.createElement('div');
+    address_container.className = "user-address__container";
+    address_container.setAttribute('data-addId', '' + i)
+    address_container.innerHTML = `
+        <div class="user-address__info">
+            <div class="user-address__contact">
+                <div class="user-address__name">${address.name}</div>
+                <span></span>
+                <div class="user-address__phone">${address.phone_num}</div>
+            </div>
+            <div class="user-address__action">
+                <button class="update-address">Cập nhật</button>
+                ${i == 0 ? '' : '<button class="delete-address">Xóa</button>'}
+            </div>
+        </div>
+        <div class="user-address__address">
+            <div>
+                <div class="user-address__street">${address.street}</div>
+                <div class="user-address__details">${address.address.replaceAll(/ - /g, ', ')}</div>
+            </div>
+            <button class="set-default-btn ${i == 0 ? 'disable' : ''}">Thiết lập mặc định</button>
+        </div>
+        ${i == 0 ? '<div class="user-address__default">Mặc định</div>' : ''}
+        `;
+    return address_container;
+}
 async function renderOrder(option = 'all') {
     const user_id = /**@type {String} */(localStorage.getItem('user_id'));
 
@@ -159,13 +192,19 @@ async function renderUserInfo(user_id) {
                     <div class="user-personal">
                         <div class="user-header">Số điện thoại:</div>
                         <div class="user-info">${personal_info_data?.phone_num}</div>
-                    </div>
-                    <div class="user-personal">
-                        <div class="user-header">Địa chỉ giao hàng:</div>
-                        <div class="user-info">273 Đ. An Dương Vương, Phường 3, Quận 5, Hồ Chí Minh</div>
-                    </div>        
+                    </div>       
     `;
 }
+
+async function renderAddressInfo(address_data) {
+    const container = document.querySelector('.user-all-address');
+    if (!container) return;
+    container.innerHTML = '';
+    address_data?.forEach((address, index) => {
+        container?.appendChild(createAddressContainer(address, index));
+    });
+}
+
 function initializationMain() {
     const main = document.querySelector('main');
     if (!main) return;
@@ -192,13 +231,21 @@ function initializationAside(personal_info_data) {
             <div class="user-info__name">${personal_info_data?.name}</div>
         </div>
         <div class="user-info__content">
-            <div class="user-info__row selected" data-value="tttk">
-                <div class="user-info__row--icon"><i class="fa-solid fa-user"></i></div>
-                <div class="user-info__row--name">Thông tin tài khoản</div>
+            <div class="user-info-tab">
+                <div class="user-info__row info-tab" data-value="account/profile">
+                    <div class="user-info__row--icon"><i class="fa-solid fa-user"></i></div>
+                    <div class="user-info__row--name">Thông tin tài khoản</div>
+                </div>
+                <div class="info-tab__more"> 
+                    <div class="info-tab" data-value="account/profile">Hồ sơ</div>
+                    <div class="info-tab" data-value="account/address">Địa chỉ</div>
+                </div>
             </div>
-            <div class="user-info__row" data-value="dhct">
-                <div class="user-info__row--icon"><i class="fa-solid fa-box-archive"></i></div>
-                <div class="user-info__row--name">Đơn hàng của tôi</div>
+            <div class="user-info-tab">
+                <div class="user-info__row info-tab" data-value="purchase">      
+                    <div class="user-info__row--icon"><i class="fa-solid fa-box-archive"></i></div>
+                    <div class="user-info__row--name">Đơn hàng của tôi</div>
+                </div>
             </div>
         </div>
     </div>
@@ -266,10 +313,11 @@ function initializationArticle__AccountInfo() {
     article.className = "user-personal-info";
     article.innerHTML = `
             <div class="article-header">
-                <span>Thông tin tài khoản</span>
+                <span>Hồ sơ tài khoản</span>
             </div>
+            <hr>
             <div class="user-personal__container">
-
+                
             </div>
         `;
     const user_container = /**@type {HTMLElement}*/(document.querySelector('.user-personal__container'));
@@ -279,9 +327,64 @@ function initializationArticle__AccountInfo() {
     })
 
 }
-
-function setupEvent() {
-    const user_option = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.user-info__row'));
+async function initializationArticle__AddressInfo() {
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) {
+        toast({ title: 'Lỗi', message: 'Vui lòng đăng nhập để xem thông tin địa chỉ', type: 'error' });
+        return '';
+    }
+    const address_data = (await fakeDatabase.getUserInfoByUserId(user_id))?.address;
+    const article = document.getElementById('article');
+    if (!article || address_data == undefined) return;
+    article.className = "user-personal-info";
+    article.innerHTML = `
+            <div class="article-header">
+                <span>Địa chỉ của tôi</span>
+                <label>
+                    <i class="fa-regular fa-plus"></i>
+                    <button class="btn-add-address">Thêm địa chỉ mới</button>
+                </label>
+            </div>
+            <hr>
+            <div class="user-address">
+                <div class="user-address-title">Địa chỉ</div>
+                <div class="user-all-address">
+            </div>
+        `;
+    await renderAddressInfo(address_data);
+    const btn_add_address = document.querySelector('.btn-add-address');
+    const containers = document.querySelectorAll('.user-address__container');
+    const all_address = document.querySelector('.user-all-address');
+    if (!btn_add_address || !containers) return;
+    btn_add_address.addEventListener('click', (ev) => {
+        console.log('???');
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+        showNewShippingAddressPopup(undefined, async (address, bool) => {
+            if (bool)
+                address_data.unshift(address);
+            else
+                address_data.push(address);
+            await fakeDatabase.updateUserAddress(user_id, address_data);
+            initializationArticle__AddressInfo();
+            return;
+        }, () => { });
+    });
+    containers.forEach((container, index) => {
+        container.querySelector('.update-address')?.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            ev.stopImmediatePropagation();
+            showNewShippingAddressPopup(address_data[index], async (address) => {
+                address_data[index] = address;
+                await fakeDatabase.updateUserAddress(user_id, address_data);
+                initializationArticle__AddressInfo();
+                return;
+            }, () => { });
+        });
+    });
+}
+function switchTab() {
+    const user_option = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.info-tab'));
     user_option.forEach(option => {
         option.addEventListener('click', () => {
             navigateToPage('user/' + option.dataset.value);
@@ -308,7 +411,7 @@ export async function initializationUserInfoPage(params, query) {
 
     initializationMain();
     initializationAside(personal_info_data);
-    setupEvent();
+    switchTab();
 }
 
 
@@ -318,18 +421,30 @@ export async function initializationUserInfoPage(params, query) {
  * @returns {Promise<void>}
  */
 export async function updateUserInfoPage(params, query) {
-    const info = params.tab;
-    const user_option = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.user-info__row'));
-    switch (info) {
-        case 'dhct':
-            user_option[0].classList.remove('selected');
-            user_option[1].classList.add('selected');
+    const tab = params.tab;
+    const more_option = /**@type {HTMLElement} */ (document.querySelector('.user-info-tab .info-tab__more'));
+    const allTabs = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.info-tab'));
+    if (!more_option || !allTabs) return;
+    allTabs.forEach(e => e.classList.remove('selected'));
+    switch (tab) {
+        case 'account':
+            more_option.style.display = 'flex';
+            const info = params.info;
+            switch (info) {
+                case 'address':
+                    allTabs[2].classList.add('selected');
+                    initializationArticle__AddressInfo();
+                    break;
+                default:
+                    allTabs[1].classList.add('selected');
+                    initializationArticle__AccountInfo();
+            }
+            break;
+        case 'purchase':
+            more_option.style.display = 'none';
+            allTabs[3].classList.add('selected');
             initializationArticle__OrderInfo();
             break;
-        default:
-            user_option[0].classList.add('selected');
-            user_option[1].classList.remove('selected');
-            initializationArticle__AccountInfo();
     }
 }
 

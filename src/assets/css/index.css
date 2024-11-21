@@ -79,6 +79,8 @@ aside.aside {
     font-weight: 700;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
 
 .product-container {
@@ -305,6 +307,7 @@ aside.aside {
         white-space: nowrap;
         overflow: auto;
         padding: 0;
+        flex-wrap: wrap;
     }
 
     .catergory__content::-webkit-scrollbar {
@@ -378,6 +381,9 @@ aside.aside {
 @media screen and (max-width: 840px) {
     :root {
         --coutnt-row: 2;
+    }
+    .center .input_text {
+        display: none;
     }
 }
 

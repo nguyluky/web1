@@ -101,7 +101,7 @@
     display: flex;
     font-size: 16px;
     font-weight: 600;
-    margin-block: 10px;
+    margin-block: 8px;
 }
 
 .contact-info__name {
@@ -120,7 +120,7 @@
 .address-info {
     font-size: 14px;
     color: rgb(128, 128, 137);
-    line-height: 15px;
+    line-height: 18px;
 }
 .coupon {
     font-size: 13px;
