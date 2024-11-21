@@ -282,7 +282,7 @@ aside.aside {
         top: 0;
         height: fit-content;
     }
-    .aside:has(#search-filter) {
+    .aside:not(:has(.catergory__content)) {
         position: relative;
         top: 0;
     }
@@ -318,10 +318,6 @@ aside.aside {
         font-size: 15px;
         font-weight: 500;
         padding: 0px 10px;
-    }
-
-    .card {
-        padding-left: 5px;
     }
 
     .catergory__row--sub {

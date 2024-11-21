@@ -1,6 +1,6 @@
 import { pushCartItemIntoCart } from '../cart/cart.js';
 import fakeDatabase from '../../db/fakeDBv1.js';
-import { removeDiacritics } from '../../until/format.js';
+import { formatNumber, removeDiacritics } from '../../until/format.js';
 import { navigateToPage } from '../../until/urlConverter.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = Product_Data;
@@ -80,7 +80,7 @@ export async function createProduct(product) {
 
     const salePrice = document.createElement('span');
     salePrice.classList.add('sale-price');
-    salePrice.innerHTML = `${String(
+    salePrice.innerHTML = `${formatNumber(
         Math.round(product.base_price * (1 - product.discount)),
     )} <sup>₫</sup>`;
     productPrice.appendChild(salePrice);
@@ -88,7 +88,7 @@ export async function createProduct(product) {
     const regularPrice = document.createElement('span');
     regularPrice.classList.add('regular-price');
     if (product.discount == 0) regularPrice.classList.add('hide');
-    regularPrice.innerHTML = `${String(product.base_price)} <sup>₫</sup>`;
+    regularPrice.innerHTML = `${formatNumber(product.base_price)} <sup>₫</sup>`;
     productPrice.appendChild(regularPrice);
 
     const addToCart = document.createElement('img');

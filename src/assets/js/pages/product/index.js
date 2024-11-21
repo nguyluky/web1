@@ -1,5 +1,6 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import { toast } from '../../render/popupRender.js';
+import { text2htmlElement } from '../../until/format.js';
 import { navigateToPage } from '../../until/urlConverter.js';
 import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
 const Product_Data = await fakeDatabase.getAllBooks();
@@ -221,6 +222,41 @@ async function renderleftsection(general_info) {
             </div>
     `;
 }
+function showImage(src) {
+    const wrapper = document.getElementById('popup-wrapper');
+    const html = `<div class="popup" id="popup-img">
+            <div>
+                <img src="${src}" alt>
+            </div>
+        </div>`;
+    const element = /**@type {HTMLElement} */ (text2htmlElement(html));
+    if (!wrapper) return
+    wrapper.appendChild(element);
+    const close = (ev) => {
+        if ((ev.target).closest('.popup') === null) {
+            element.remove();
+            wrapper?.removeEventListener('click', close);
+        }
+    }
+    wrapper.addEventListener('click', close);
+    function changeSize() {
+        let h = window.innerHeight;
+        let w = window.innerWidth;
+        console.log(h, w);
+        const img = /**@type {HTMLImageElement} */ (element.querySelector('.popup img'));
+        if (!img) return;
+        let imgH = img.height;
+        let imgW = img.width;
+        if (imgH && imgW) {
+            if (imgH / h > imgW / w)
+                img.setAttribute('style', `height: ${0.9 * h < 700 ? '90vh' : '700px'}`);
+            else
+                img.setAttribute('style', `width: ${0.9 * w < 800 ? '90vw' : '800px'}`);
+        }
+    }
+    changeSize();
+    window.addEventListener('resize', () => changeSize());
+}
 
 function setEventListener(product_id) {
     const decrebtn = /**@type {HTMLElement}*/(document.querySelector('.dscr-quantity'));
@@ -230,7 +266,10 @@ function setEventListener(product_id) {
     let sale_price = Number(total.innerHTML);
 
     if (!inputquantity) return;
-
+    document.querySelector('.left-section__product-img')
+        ?.addEventListener('click', (e) => {
+            showImage(/**@type {HTMLImageElement}*/(e.target).src);
+        });
     decrebtn.addEventListener('click', e => {
         minusquantity(total, inputquantity, sale_price);
     });

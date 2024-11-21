@@ -44,7 +44,6 @@ main.main {
     background-color: #ffffff;
 }
 
-
 .ct-input {
     height: 40px;
     box-sizing: border-box;
@@ -54,9 +53,10 @@ main.main {
     width: 100%;
 }
 
-.ct-input.phone, .ct-input.email{
-    display: flex;
-    flex-direction: column;
+.ct-input.phone,
+.ct-input.email {
+    display: block;
+    width: 100%;
 }
 
 .ct-input .icon_input {
@@ -69,7 +69,7 @@ main.main {
 }
 
 .ct-input:not(:has(.icon_input)) input {
-    margin-left: 10px;
+    padding-left: 10px;
 }
 
 .ct-input input {
@@ -79,14 +79,6 @@ main.main {
     background: none;
     outline: none;
     width: 100%;
-}
-
-.ct-input > div{
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 10px;
-    padding-left: 0px;
 }
 
 .ct-input.radio {
@@ -132,10 +124,10 @@ main.main {
 .ct-input .input_text {
     position: relative;
     padding: 0 10px;
+    font-size: 14px;
     color: #0a68f4;
     display: flex;
     align-items: center;
-    justify-self: center;
     text-wrap: nowrap;
     white-space: nowrap;
 }
@@ -364,6 +356,9 @@ main.main {
     gap: 10px;
 }
 
+.group-flex > label > div {
+    padding: 10px 0;
+}
 .set-default {
     display: flex;
     align-items: center;
@@ -372,17 +367,17 @@ main.main {
     gap: 10px;
 }
 
-.set-default > input{
+.set-default > input {
     cursor: pointer;
     opacity: 0.4;
 }
 
-.set-default >input:checked{
+.set-default > input:checked {
     opacity: 1;
     accent-color: #2f86eb;
 }
 
-.set-default > span{
+.set-default > span {
     cursor: pointer;
     font-size: 15px;
     font-weight: 400;
