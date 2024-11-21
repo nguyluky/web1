@@ -182,7 +182,7 @@ function renderRow(row, value, onchange) {
                 const col = createTextTableCell(key, value[key], (nv) => {
                     // @ts-ignore
                     onchange && onchange(value, key, nv);
-                });
+                }, true, "Vui lòng nhập dữ liệu");
                 row.appendChild(col);
             }
         }
@@ -241,10 +241,10 @@ function addUser() {
     /** @type {UserInfo} */
     const data = {
         id: uuidv(8),
-        email: 'Nhập email',
-        name: 'Nhập tên',
-        passwd: 'Nhập mật khẩu',
-        phone_num: 'Nhập số điện thoại',
+        email: '',
+        name: '',
+        passwd: '',
+        phone_num: '',
         rule: 'user',
         status: 'active',
         datecreated: now,
@@ -267,11 +267,11 @@ function addUser() {
         renderRow,
     );
 
-    row.querySelectorAll('td').forEach((e) => {
-        e.addEventListener('click', (event) => {
-            e.getAttribute('ischange') != 'true' && document.execCommand('selectAll', false);
-        });
-    })
+    // row.querySelectorAll('td').forEach((e) => {
+    //     e.addEventListener('click', (event) => {
+    //         e.getAttribute('ischange') != 'true' && document.execCommand('selectAll', false);
+    //     });
+    // })
 
     defaultAddRow(table, row);
 }

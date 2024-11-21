@@ -120,11 +120,13 @@ function appendUserIdCell(row, value, onchange) {
         false,
     );
 
-    user_id.style.minWidth = '100px';
-    fakeDatabase.getUserInfoByUserId(value.user_id).then((user) => {
-        user_id.textContent = user?.name || '';
-        user_id.setAttribute('default-value', user?.name || '');
-    });
+    // user_id.style.minWidth = '100px';
+    user_id.style.maxWidth = '100px';
+    user_id.textContent = value.user_id;
+    // fakeDatabase.getUserInfoByUserId(value.user_id).then((user) => {
+    //     user_id.textContent = user?.name || '';
+    //     user_id.setAttribute('default-value', user?.name || '');
+    // });
 
     row.appendChild(user_id);
 }
