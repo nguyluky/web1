@@ -19,15 +19,18 @@ const customCells = [];
  * @param {string} value
  * @param {(nv: string) => any} [onchange]
  * @param {boolean} [canEditable]
+ * @param {string} [placeholder]
  * @returns {HTMLTableCellElement} td
  */
-export function createTextTableCell(key, value, onchange, canEditable = true) {
+export function createTextTableCell(key, value, onchange, canEditable = true, placeholder = '') {
     const td = document.createElement('td');
     td.textContent = value;
     td.setAttribute('contenteditable', 'false');
     td.setAttribute('key', key);
     td.setAttribute('ctype', 'text');
     td.setAttribute('default-value', value);
+
+    if (placeholder) td.setAttribute('placeholder', placeholder);
 
     if (!canEditable) td.setAttribute('can-editable', 'false');
     else td.setAttribute('can-editable', 'true');
