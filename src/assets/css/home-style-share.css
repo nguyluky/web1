@@ -473,6 +473,16 @@ article.article.page-not-found {
     cursor: pointer;
     color: #0a68f4;
 }
+
+.action > div:hover {
+    text-decoration: underline;
+}
+
+.action{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 @media screen and (max-width: 500px) {
     .header_wrapper .right .button_1 > span {
         display: none;

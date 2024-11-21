@@ -44,6 +44,7 @@ main.main {
     background-color: #ffffff;
 }
 
+
 .ct-input {
     height: 40px;
     box-sizing: border-box;
@@ -51,6 +52,11 @@ main.main {
     border: 1px solid #dddde3;
     border-radius: 8px;
     width: 100%;
+}
+
+.ct-input.phone, .ct-input.email{
+    display: flex;
+    flex-direction: column;
 }
 
 .ct-input .icon_input {
@@ -73,6 +79,14 @@ main.main {
     background: none;
     outline: none;
     width: 100%;
+}
+
+.ct-input > div{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    padding-left: 0px;
 }
 
 .ct-input.radio {
@@ -355,7 +369,24 @@ main.main {
     align-items: center;
     margin-top: 10px;
     width: max-content;
+    gap: 10px;
+}
+
+.set-default > input{
     cursor: pointer;
+    opacity: 0.4;
+}
+
+.set-default >input:checked{
+    opacity: 1;
+    accent-color: #2f86eb;
+}
+
+.set-default > span{
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 400;
+    color: #2f86eb;
 }
 
 .set-default input[type='checkbox'] {
