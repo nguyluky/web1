@@ -119,14 +119,13 @@ export function navigateToPage(page, query) {
     }
 
     /**
-     * @type {URLSearchParams}
+     * @type {URLSearchParams | undefined}
      */
-    let search;
+    let search = undefined;
 
     if (typeof query === 'function')
         search = query(currentQuery);
-    else
-        search = new URLSearchParams(query);
+    else if (query) { search = new URLSearchParams(query) };
 
     if (search) {
         hash += '?' + search.toString();
