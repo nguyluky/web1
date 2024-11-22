@@ -1,6 +1,6 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import { toast } from '../../render/popupRender.js';
-import { text2htmlElement } from '../../until/format.js';
+import { formatNumber, text2htmlElement } from '../../until/format.js';
 import { navigateToPage } from '../../until/router.js';
 import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
 const Product_Data = await fakeDatabase.getAllBooks();
@@ -170,7 +170,7 @@ function rendergeneralInfo(general_info) {
     const sale_price = document.createElement('span');
     sale_price.className = "price-number sale";
     sale_price.innerHTML = `${String(
-        Math.round(Number(general_info?.base_price) * (1 - Number(general_info?.discount))),
+        formatNumber(Math.round(Number(general_info?.base_price) * (1 - Number(general_info?.discount)))),
     )} <sup>₫</sup>`;
     price_container.appendChild(sale_price);
     price_container.appendChild(discount);
@@ -178,7 +178,7 @@ function rendergeneralInfo(general_info) {
     const regular_price = document.createElement('span');
     regular_price.className = "price-number regular";
     if (general_info?.discount == 0) regular_price.classList.add('hide');
-    regular_price.innerHTML = `${String(general_info?.base_price)} <sup>₫</sup>`
+    regular_price.innerHTML = `${String(formatNumber(general_info?.base_price))} <sup>₫</sup>`
     price_container.appendChild(regular_price);
 
     product_container.appendChild(price_container);
@@ -215,7 +215,7 @@ async function renderleftsection(general_info) {
             <div class="total-container">
                 <div class="total-price__header">Tạm tính:</div>
                 <span class="price-number total">
-                    <span>${sale_price}</span> <sup>₫</sup>
+                    <span>${formatNumber(sale_price)}</span> <sup>₫</sup>
                 </span>
             </div>
             <div class="buttons-section"> 
@@ -346,14 +346,14 @@ async function createProduct(product) {
     const salePrice = document.createElement('span');
     salePrice.classList.add('other-sale');
     salePrice.innerHTML = `${String(
-        Math.round(product.base_price * (1 - product.discount)),
+        formatNumber(Math.round(product.base_price * (1 - product.discount))),
     )} <sup>₫</sup>`;
     productPrice.appendChild(salePrice);
 
     const regularPrice = document.createElement('span');
     regularPrice.classList.add('other-regular');
     if (product.discount == 0) regularPrice.classList.add('hide');
-    regularPrice.innerHTML = `${String(product.base_price)} <sup>₫</sup>`;
+    regularPrice.innerHTML = `${String(formatNumber(product.base_price))} <sup>₫</sup>`;
     productPrice.appendChild(regularPrice);
 
     // productItem.addEventListener('click', (event) => {
