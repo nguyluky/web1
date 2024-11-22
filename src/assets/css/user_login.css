@@ -250,6 +250,15 @@ btn-login-password:hover {
     margin-top: 10px;
 }
 
+.popup-error{
+    border: solid 1px;
+    position: relative;
+    background-color: white;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow:0 0 5px 0 rgb(255, 66, 78);
+}
+
 /*login Email*/
 .loginEmail-heading {
     margin: 20px 0px;

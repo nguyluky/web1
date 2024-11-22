@@ -19,7 +19,7 @@ export async function showUserInfo(index = 0) {
     if (userInfo && userName && userTel && userAddress) {
         userName.innerHTML = userInfo.address[index].name;
         userTel.innerHTML = userInfo.address[index].phone_num;
-        userAddress.innerHTML = `${userInfo.address[index].street}, ${userInfo.address[index].address.replace(/ - /g, ', ')}`;
+        userAddress.innerHTML = `${userInfo.address[index].street}<br>${userInfo.address[index].address.replace(/ - /g, ', ')}`;
     }
 }
 

@@ -18,7 +18,6 @@ import { updateCartQuantity } from './pages/cart/cart.js';
 import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
 import { initializationProductPage, removeProductPage, updateProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
-import { showListShippingAddressPopup } from './render/addressPopup.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
 
 //#region khai bao page
@@ -45,7 +44,7 @@ const PAGES = [
     },
     {
         // :?tab có nghĩa là tab có thể có hoặc không
-        pagePath: 'user/:?tab',
+        pagePath: 'user/:tab/:?info',
         init: initializationUserInfoPage,
         update: updateUserInfoPage,
         remove: async () => { },
@@ -210,15 +209,15 @@ function initializeAccountPopup() {
         );
 
         const p1 = document.createElement('p');
-        p1.textContent = 'Thông tin tài khoản';
+        p1.textContent = 'Tài khoản của tôi';
         p1.onclick = () => {
-            navigateToPage('user');
+            navigateToPage('user/account/profile');
         }
 
         const p2 = document.createElement('p');
         p2.textContent = 'Đơn hàng của tôi';
         p2.onclick = () => {
-            navigateToPage('user/dhct');
+            navigateToPage('user/purchase');
         }
 
         const p3 = document.createElement('p');
@@ -397,20 +396,6 @@ async function initializeUrlHandling() {
         return;
     };
 }
-/**
- * 
- */
-function initializationAddress() {
-    document.getElementById('btn-location')?.addEventListener('click', (ev) => {
-        if (!localStorage.getItem('user_id')) {
-            alert('Vui lòng đăng nhập để thêm địa chỉ mới');
-            return;
-        }
-        ev.preventDefault();
-        ev.stopPropagation();
-        showListShippingAddressPopup();
-    })
-}
 
 function initializationSearch() {
     document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
@@ -422,7 +407,6 @@ function initializationSearch() {
 
 /** Main */
 function main() {
-    initializationAddress();
     initializeAccountPopup();
     initializeUrlHandling();
     initializationSearch();

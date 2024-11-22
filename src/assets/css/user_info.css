@@ -37,9 +37,20 @@
     gap: 10px;
     cursor: pointer;
 }
+.info-tab__more {
+    margin: 10px 0 0 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
+.info-tab__more > div:hover,
 .user-info__row:hover {
     color: #189eff;
+}
+
+.info-tab {
+    cursor: pointer;
 }
 
 .user-personal__container {
@@ -117,6 +128,10 @@
     border-radius: 8px;
     width: 100%;
     padding: 10px;
+}
+
+.input-search:hover{
+    border: 1px solid #000000;
 }
 .no-order {
     display: flex;
@@ -242,4 +257,134 @@
 
 .package-details__total--number {
     color: #ff4141;
+}
+
+label:has(.btn-add-address) {
+    background-color: #189eff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 6px 10px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+.btn-add-address {
+    all: unset;
+}
+
+.user-address {
+    display: flex;
+    padding-top: 12px;
+    flex-direction: column;
+}
+
+.user-address__container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    font-size: 14px;
+    color: #999;
+}
+
+.user-address__container + .user-address__container {
+    border-top: 1px solid #aaa;
+}
+
+.user-address__info,
+.user-address__address,
+.user-address__info > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-address__contact > span {
+    display: block;
+    height: 20px;
+    margin: 0 5px;
+    border-right: 1px solid #999;
+}
+
+.user-address__action > button {
+    all: unset;
+    color: #189eff;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.user-address__action > button:hover{
+    text-decoration: underline;
+}
+.user-address__details {
+    margin-right: 10px;
+}
+.set-default-btn {
+    all: unset;
+    border: 1px solid #999;
+    color: black;
+    padding: 5px;
+    cursor: pointer;
+    margin-top: 8px;
+    border-radius: 4px;
+}
+
+.set-default-btn.disable {
+    color: #999;
+    cursor: not-allowed;
+}
+
+.user-address__name {
+    font-weight: 400;
+    font-size: 16px;
+    color: #000;
+}
+
+.user-address__default {
+    font-size: 15px;
+    margin-top: 5px;
+    color: #189eff;
+    font-weight: 600;
+    text-underline-offset: 2px;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    width: max-content;
+}
+
+@media screen and (max-width: 840px) {
+    .package-category-header{
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    .package-details__status{
+        display: block;
+    }
+
+    .package-details div{
+        font-size: 14px;
+    }
+    .package-details__top{
+        flex-direction: column;
+        gap: 5px;
+        align-items:start;
+    }
+    .package-details__total{
+        justify-content: space-between;
+        gap: 0px;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .package-category{
+        padding: 10px 20px;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
 }
