@@ -60,7 +60,6 @@ const loadingTable = document.getElementById('loading');
  */
 const tabManagement = {
     user: userRender,
-    cart: cartRender,
     sach: sachRender,
     order: orderRender,
 };
@@ -72,7 +71,6 @@ const tabManagement = {
  */
 const fakeDBManagement = {
     user: () => fakeDatabase.getAllUserInfo(),
-    cart: () => fakeDatabase.getALlCart(),
     sach: () => fakeDatabase.getAllBooks(),
     order: () => fakeDatabase.getAllOrder(),
 };
@@ -140,7 +138,6 @@ const buttonSaveState = {
 async function renderManagement(inputValue = '') {
     const titleTabs = {
         user: 'User',
-        cart: 'Cart',
         sach: 'Sách',
         dashboard: 'Dashboard',
         order: 'Order',

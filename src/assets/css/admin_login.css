@@ -69,7 +69,7 @@ body {
 .form-input input {
     height: 100%;
     flex: 1;
-    min-width: 200px;
+    min-width: 150px;
     padding: 10px 0 10px 15px;
     background: transparent;
     border-left: 4px solid #29c5f6;
@@ -119,6 +119,7 @@ input:-webkit-autofill:active {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    gap: 10px;
 }
 
 .login-btn {
@@ -158,9 +159,9 @@ a:active {
     color: #29c5f6;
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 500px) {
     .form-container {
-        font-size: 14px;
+        font-size: 15px;
         letter-spacing: 0.5px;
     }
 
@@ -170,5 +171,30 @@ a:active {
 
     .form-input {
         height: 40px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .form-container {
+        font-size: 13px;
+        letter-spacing: 0.4px;
+    }
+
+    .form-input input::placeholder {
+        font-size: 12px;
+    }
+
+    .login-body {
+        padding: 40px 15px;
+    }
+
+    .form-input {
+        height: 35px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .remember {
+        font-size: 12px;
     }
 }
