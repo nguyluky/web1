@@ -391,3 +391,19 @@ main.main {
 .set-default input[type='checkbox'] {
     height: 16px;
 }
+
+@media screen and (max-width: 500px){
+    .group-flex{
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #toast{
+        left: 0px;
+        top: 10px
+    }
+
+    .toast--error{
+        padding: 10px 0px;
+    }
+}

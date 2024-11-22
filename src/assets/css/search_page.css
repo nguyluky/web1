@@ -134,3 +134,11 @@ input[type='range']::-moz-range-thumb {
 .article {
     position: relative;
 }
+
+@media screen and (max-width: 500px) {
+    .filter-header{
+        font-size: 16px;
+        margin: 0px;
+        margin-bottom: 10px;
+    }
+}
