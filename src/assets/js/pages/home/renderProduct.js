@@ -1,7 +1,7 @@
 import { pushCartItemIntoCart } from '../cart/cart.js';
 import fakeDatabase from '../../db/fakeDBv1.js';
 import { formatNumber, removeDiacritics } from '../../until/format.js';
-import { navigateToPage } from '../../until/urlConverter.js';
+import { navigateToPage } from '../../until/router.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = Product_Data;
 let Current_Page = 1;

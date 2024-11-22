@@ -130,7 +130,7 @@
     padding: 10px;
 }
 
-.input-search:hover{
+.input-search:hover {
     border: 1px solid #000000;
 }
 .no-order {
@@ -317,7 +317,7 @@ label:has(.btn-add-address) {
     cursor: pointer;
 }
 
-.user-address__action > button:hover{
+.user-address__action > button:hover {
     text-decoration: underline;
 }
 .user-address__details {
@@ -356,24 +356,24 @@ label:has(.btn-add-address) {
 }
 
 @media screen and (max-width: 840px) {
-    .package-category-header{
+    .package-category-header {
         font-size: 14px;
         font-weight: 400;
     }
 
-    .package-details__status{
+    .package-details__status {
         display: block;
     }
 
-    .package-details div{
+    .package-details div {
         font-size: 14px;
     }
-    .package-details__top{
+    .package-details__top {
         flex-direction: column;
         gap: 5px;
-        align-items:start;
+        align-items: start;
     }
-    .package-details__total{
+    .package-details__total {
         justify-content: space-between;
         gap: 0px;
         width: 100%;
@@ -381,10 +381,17 @@ label:has(.btn-add-address) {
 }
 
 @media screen and (max-width: 500px) {
-    .package-category{
+    .package-category {
         padding: 10px 20px;
         flex-direction: column;
         gap: 10px;
     }
-    
+}
+
+#no-address {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 20px;
 }

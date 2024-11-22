@@ -6,7 +6,7 @@ import {
     updatePagination,
 } from './renderProduct.js';
 import { updateCartQuantity } from '../cart/cart.js';
-import { navigateToPage } from '../../until/urlConverter.js';
+import { navigateToPage } from '../../until/router.js';
 
 /**
  *

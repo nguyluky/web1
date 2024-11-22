@@ -193,6 +193,13 @@ function updateMangement() {
     return tabManagement[tab].doSave();
 }
 
+
+/**
+ * 
+ * 
+ * 
+ * @returns {void}
+ */
 function handleContentOverflow() {
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
@@ -349,6 +356,10 @@ function handlePopState(event) {
     renderManagement();
 }
 
+
+/**
+ * Xử lý các sự kiện cho side bar
+ */
 function setupSiderBar() {
     const drop_menu = document.querySelector('.aside');
 

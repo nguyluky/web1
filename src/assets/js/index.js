@@ -7,7 +7,7 @@ import {
 } from './popupAccount.js';
 import { validateEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './pages/home/index.js';
-import urlConverter, { navigateToPage, urlIsPage } from './until/urlConverter.js';
+import urlConverter, { navigateToPage, urlIsPage } from './until/router.js';
 import { initializationPageNotFound } from './pages/pageNotFound/index.js';
 import {
     initializationSearchPage,
@@ -316,8 +316,7 @@ function initializeAccountPopup() {
  *    hash của URL.
  * 2. Phân tích cú pháp hash của URL hiện tại để xác định trạng thái ban đầu của
  *    ứng dụng.
- * 3. Thiết lập các trình nghe sự kiện hoặc trình xử lý bổ sung cần thiết cho các
- *    thay đổi URL.
+ * 3. Gọi hàm render update remove phù hợp dựa trên trạng thái ban đầu.
  *
  * Cách sử dụng:
  *
@@ -346,7 +345,10 @@ async function initializeUrlHandling() {
         }
     }
 
-
+    /**
+     * Hiển thị loading spinner trong khi chuyển trang.
+     * @returns {void}
+     */
     function showLoading() {
         const main = document.querySelector('main');
         if (!main) return;
@@ -373,10 +375,12 @@ async function initializeUrlHandling() {
         let { page, query } = urlConverter(location.hash);
         page = page.replace('#/', '');
 
+        let isMach = false;
+
         for (const p of PAGES) {
             const param = urlIsPage(page, p.pagePath);
             if (!param) { continue; }
-
+            isMach = true;
             if (oldPage?.pagePath !== p.pagePath) {
                 console.log('remove', oldPage?.pagePath);
                 await oldPage?.remove(param, query);
@@ -391,6 +395,14 @@ async function initializeUrlHandling() {
             console.log('update', p.pagePath);
             await p.update(param, query);
         }
+
+        if (!isMach) {
+            for (const p of PAGES) {
+                p.pagePath === '404' && await p.init({}, query);
+                oldPage = p;
+            }
+        }
+
     }
 
     window.addEventListener('hashchange', handleHashChange);
@@ -401,6 +413,7 @@ async function initializeUrlHandling() {
     };
 }
 
+/** Khởi tạo chức năng tìm kiếm */
 function initializationSearch() {
     document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
         if (/** @type {KeyboardEvent} */ (e).key === 'Enter') {
