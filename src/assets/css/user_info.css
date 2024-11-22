@@ -358,7 +358,7 @@ label:has(.btn-add-address) {
 @media screen and (max-width: 840px) {
     .package-category-header {
         font-size: 14px;
-        font-weight: 400;
+        font-weight: 500;
     }
 
     .package-details__status {
@@ -382,9 +382,58 @@ label:has(.btn-add-address) {
 
 @media screen and (max-width: 500px) {
     .package-category {
-        padding: 10px 20px;
+        padding: 10px 15px;
         flex-direction: column;
         gap: 10px;
+    }
+
+    .user-personal-info{
+        padding: 10px 15px;
+    }
+
+    .user-personal__container div{
+        font-size: 14px;
+    }
+
+    .user-personal{
+        display: block;
+    }
+
+    label:has(.btn-add-address){
+        padding: 4px 6px;
+    }
+
+    .btn-add-address{
+        font-size: 14px;
+    }
+
+    .user-address__name{
+        font-size: 14px;
+    }
+
+    .user-address__action{
+        font-size: 12px;
+    }
+
+    .user-address__address{
+        margin-top: 10px;
+    }
+
+    .set-default-btn{
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .package-search{
+        padding: 10px 15px;
+    }
+
+    .input-search{
+        font-size: 14px;
+    }
+
+    #no-address > img{
+        width: 80%;
     }
 }
 

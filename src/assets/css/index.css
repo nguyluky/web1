@@ -413,6 +413,11 @@ aside.aside {
         font-weight: 400;
     }
 
+    .filter-checkbox{
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
 }
 
 /* @media screen and (max-width: 700px) {
