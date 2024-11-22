@@ -7,7 +7,7 @@ import {
 } from './popupAccount.js';
 import { validateEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './pages/home/index.js';
-import urlConverter, { navigateToPage, urlIsPage } from './until/urlConverter.js';
+import urlConverter, { navigateToPage, urlIsPage } from './until/router.js';
 import { initializationPageNotFound } from './pages/pageNotFound/index.js';
 import {
     initializationSearchPage,
@@ -397,6 +397,7 @@ async function initializeUrlHandling() {
     };
 }
 
+/** Khởi tạo chức năng tìm kiếm */
 function initializationSearch() {
     document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
         if (/** @type {KeyboardEvent} */ (e).key === 'Enter') {

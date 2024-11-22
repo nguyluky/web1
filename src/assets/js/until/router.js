@@ -132,3 +132,29 @@ export function navigateToPage(page, query) {
     }
     location.hash = hash
 }
+
+/**
+ * 
+ * @param {string} url 
+ */
+export async function addStyle(url) {
+    if (document.getElementById(encodeURIComponent(url))) return;
+    const res = await fetch(url);
+    const text = await res.text();
+
+    const style = document.createElement('style');
+    style.id = encodeURIComponent(url);
+    style.innerHTML = text;
+    document.head.appendChild(style);
+}
+
+/**
+ * 
+ * @param {string} url 
+ */
+export function removeStyle(url) {
+    const style = document.getElementById(encodeURIComponent(url));
+    if (style) {
+        document.head.removeChild(style);
+    }
+}

@@ -1,3 +1,4 @@
+import { addStyle, removeStyle } from "../../until/router.js";
 import { showUserInfo, renderCart, updateCartQuantity, buyBooks, changeAddress } from "./cart.js";
 
 
@@ -103,13 +104,7 @@ export async function initializationCart(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
 
-    const cssRep = await fetch('./assets/css/cart.css');
-
-    const style = document.createElement('style');
-    style.textContent = await cssRep.text();
-    style.id = 'cart-style'
-    document.head.appendChild(style);
-
+    await addStyle('./assets/css/cart.css');
 
     main.classList.add('main-cart');
     main.innerHTML = html;
@@ -137,8 +132,7 @@ export async function updateCart(params, query) {
  */
 export async function removeCart(params, query) {
     const main = document.querySelector('main');
-    if (!main) return;
 
-    main.classList.remove('main-cart');
-    document.getElementById('cart-style')?.remove()
+    main?.classList.remove('main-cart');
+    await removeStyle('./assets/css/cart.css');
 }

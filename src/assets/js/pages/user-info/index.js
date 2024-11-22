@@ -2,7 +2,7 @@ import fakeDatabase from "../../db/fakeDBv1.js";
 import { showNewShippingAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
 import { dateToString, removeDiacritics } from "../../until/format.js";
-import { navigateToPage } from "../../until/urlConverter.js";
+import { navigateToPage } from "../../until/router.js";
 import { updateCartQuantity } from "../cart/cart.js";
 
 const status = {
@@ -531,18 +531,20 @@ export async function updateUserInfoPage(params, query) {
     allTabs.forEach(e => e.classList.remove('selected'));
     switch (tab) {
         case 'account':
-            more_option.style.display = 'flex';
-            const info = params.info;
-            switch (info) {
-                case 'address':
-                    allTabs[2].classList.add('selected');
-                    initializationArticle__AddressInfo();
-                    break;
-                default:
-                    allTabs[1].classList.add('selected');
-                    initializationArticle__AccountInfo();
+            {
+                more_option.style.display = 'flex';
+                const info = params.info;
+                switch (info) {
+                    case 'address':
+                        allTabs[2].classList.add('selected');
+                        initializationArticle__AddressInfo();
+                        break;
+                    default:
+                        allTabs[1].classList.add('selected');
+                        initializationArticle__AccountInfo();
+                }
+                break;
             }
-            break;
         case 'purchase':
             more_option.style.display = 'none';
             allTabs[3].classList.add('selected');

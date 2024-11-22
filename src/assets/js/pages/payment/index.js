@@ -1,26 +1,15 @@
+import { addStyle } from "../../until/router.js";
 import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
 
 export async function initializationPayment() {
     const main = document.querySelector('main');
     if (!main) return;
 
-    const cssRep1 = await fetch('./assets/css/cart.css');
-    const style1 = document.createElement('style');
-    style1.textContent = await cssRep1.text();
-    style1.id = 'cart-style';
-    document.head.appendChild(style1);
+    await addStyle('./assets/css/cart.css');
+    await addStyle('./assets/css/payment.css');
 
-
-
-    const cssRep = await fetch('./assets/css/payment.css');
-    const style = document.createElement('style');
-    style.textContent = await cssRep.text();
-    style.id = 'payment-style';
-    document.head.appendChild(style);
-    main.classList.add('main-payment');
-
-    // const searchBar = document.querySelector('.center');
-    // searchBar?.classList.add('hide')
+    const searchBar = document.querySelector('.center');
+    searchBar?.classList.add('hide')
 
     main.innerHTML = `
         <div class="main-component main_wapper">
@@ -238,9 +227,10 @@ export async function updatePayment() {
 
 export async function removePayment() {
     const main = document.querySelector('main');
-    if (!main) return;
+    main?.classList.remove('main-payment');
 
-    main.classList.remove('main-payment');
+    const searchBar = document.querySelector('.center');
+    searchBar?.classList.remove('hide')
 
     document.getElementById('payment-style')?.remove();
     document.getElementById('cart-style')?.remove();

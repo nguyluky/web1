@@ -1,7 +1,7 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import { toast } from '../../render/popupRender.js';
 import { text2htmlElement } from '../../until/format.js';
-import { navigateToPage } from '../../until/urlConverter.js';
+import { navigateToPage } from '../../until/router.js';
 import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = [];
@@ -17,11 +17,13 @@ export async function initializationProductPage(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
 
-    const cssRep = await fetch('./assets/css/product.css');
-    const style = document.createElement('style');
-    style.textContent = await cssRep.text();
-    style.id = 'product-page-style';
-    document.head.appendChild(style);
+    if (!document.querySelector('#product-page-style')) {
+        const cssRep = await fetch('./assets/css/product.css');
+        const style = document.createElement('style');
+        style.textContent = await cssRep.text();
+        style.id = 'product-page-style';
+        document.head.appendChild(style);
+    }
 
     const product_id = params.id;
 

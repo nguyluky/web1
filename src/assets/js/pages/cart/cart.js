@@ -1,7 +1,7 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import uuidv from '../../until/uuid.js';
 import { toast } from '../../render/popupRender.js';
-import { navigateToPage } from '../../until/urlConverter.js';
+import { navigateToPage } from '../../until/router.js';
 import { formatNumber } from '../../until/format.js';
 import { showListShippingAddressPopup } from '../../render/addressPopup.js';
 

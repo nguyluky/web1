@@ -1,4 +1,4 @@
-import { navigateToPage } from '../../until/urlConverter.js';
+import { navigateToPage } from '../../until/router.js';
 import {
     createPagination,
     displayProducts,
