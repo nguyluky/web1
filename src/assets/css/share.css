@@ -53,6 +53,10 @@ main.main {
     width: 100%;
 }
 
+.ct-input:hover{
+    border: 1px solid black;
+}
+
 .ct-input.phone,
 .ct-input.email {
     display: block;

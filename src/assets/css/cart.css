@@ -363,6 +363,22 @@ input[type='checkbox'] {
     margin-bottom: 20px;
     color: rgb(120, 120, 120);
 }
+
+@media screen and (max-width: 1120px) {
+    .main-cart-content {
+        grid-template-columns: 1fr;
+    }
+
+    .left-content {
+        grid-row: 2;
+        min-height: auto;
+    }
+
+    .left-content .right {
+        grid-column: 1;
+    }
+}
+
 @media screen and (max-width: 1000px) {
     .main-cart-content {
         grid-template-columns: 1fr;

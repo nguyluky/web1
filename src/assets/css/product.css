@@ -73,6 +73,11 @@
     color: rgba(0, 96, 255, 1);
 }
 
+#add-to-cart-button:hover{
+    background-color:rgba(0, 96, 255, 1);
+    color: white;
+}
+
 .total-price__header {
     font-size: 16px;
     font-weight: 600;
@@ -249,6 +254,11 @@
     font-weight: 600;
     cursor: pointer;
 }
+
+.product-category:hover{
+    color: #189eff;
+}
+
 #popup-img {
     all: unset;
     position: absolute;
@@ -261,6 +271,18 @@
     object-fit: contain;
 }
 
+
+/* responsive */
+
+@media screen and (max-width: 1220px) {
+    :root {
+        --coutnt-row: 2;
+    }
+
+    .products {
+        gap: 15px 15px;
+    }
+}
 @media screen and (max-width: 1030px) {
     .main_wapper {
         display: flex;
