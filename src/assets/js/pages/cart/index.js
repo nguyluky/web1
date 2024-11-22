@@ -140,5 +140,6 @@ export async function removeCart(params, query) {
     if (!main) return;
 
     main.classList.remove('main-cart');
-    document.getElementById('cart-style')?.remove()
+    document.getElementById('cart-style')?.remove();
+    document.getElementById('no-info')?.remove();
 }

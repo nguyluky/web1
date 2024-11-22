@@ -21,7 +21,7 @@ export async function initializationProductPage(params, query) {
     const style = document.createElement('style');
     style.textContent = await cssRep.text();
     style.id = 'product-page-style';
-    document.head.appendChild(style);
+    if (!document.getElementById('product-page-style')) document.head.appendChild(style);
 
     const product_id = params.id;
 

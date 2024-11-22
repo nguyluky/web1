@@ -109,7 +109,6 @@
 }
 
 .contact-info__name::after {
-    content: '';
     height: 16px;
     border-right: 0.8px solid rgb(128, 128, 137);
     margin-right: 8px;

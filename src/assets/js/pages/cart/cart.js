@@ -12,14 +12,25 @@ export async function showUserInfo(index = 0) {
         return;
     }
     document.querySelector('.info-content')?.setAttribute('data-index', index + '');
-    const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
+    const userInfo = (await fakeDatabase.getUserInfoByUserId(user_id))?.address;
     const userName = document.querySelector('.contact-info__name');
     const userTel = document.querySelector('.contact-info__phone-num');
     const userAddress = document.querySelector('.address-info');
-    if (userInfo && userName && userTel && userAddress) {
-        userName.innerHTML = userInfo.address[index].name;
-        userTel.innerHTML = userInfo.address[index].phone_num;
-        userAddress.innerHTML = `${userInfo.address[index].street}<br>${userInfo.address[index].address.replace(/ - /g, ', ')}`;
+    let style = document.getElementById('no-info');
+    if (!style) {
+        style = document.createElement('style');
+        style.id = 'no-info';
+        document.head.appendChild(style);
+    }
+    if (!userName || !userTel || !userAddress) return;
+    if (userInfo && userInfo?.length > 0) {
+        userName.innerHTML = userInfo[index].name;
+        userTel.innerHTML = userInfo[index].phone_num;
+        userAddress.innerHTML = `${userInfo[index].street}<br>${userInfo[index].address.replace(/ - /g, ', ')}`;
+        style.innerHTML = `.contact-info__name::after {content: ''}`;
+    } else {
+        userName.innerHTML = 'Chưa có thông tin giao hàng';
+        style.innerHTML = `.contact-info {justify-content: center}`;
     }
 }
 

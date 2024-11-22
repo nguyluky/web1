@@ -19,6 +19,7 @@ import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-inf
 import { initializationProductPage, removeProductPage, updateProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
+import { toast } from './render/popupRender.js';
 
 //#region khai bao page
 /**
@@ -150,6 +151,9 @@ function initializeAccountPopup() {
             ],
             onSubmit: () => {
                 localStorage.setItem('user_id', userInfo.id);
+                if (userInfo.rule === 'admin') {
+                    localStorage.setItem('admin_id', userInfo.id);
+                }
                 MODAL?.classList.remove('show-modal');
                 showDropDown();
                 updateCartQuantity();
@@ -221,11 +225,20 @@ function initializeAccountPopup() {
         }
 
         const p3 = document.createElement('p');
-        p3.textContent = 'Đăng xuất';
+        p3.textContent = 'Chuyển đến admin';
+        p3.onclick = () => {
+            location.href = '/admin/index.html';
+        }
+
+        const p4 = document.createElement('p');
+        p4.textContent = 'Đăng xuất';
 
         dropDown.appendChild(p1);
         dropDown.appendChild(p2);
-        dropDown.appendChild(p3);
+        if (localStorage.getItem('admin_id')) {
+            dropDown.appendChild(p3);
+        }
+        dropDown.appendChild(p4);
 
         BUTTON_ACCOUNT?.appendChild(dropDown);
     }
@@ -274,8 +287,11 @@ function initializeAccountPopup() {
     });
 
     BUTTON_CART.addEventListener('click', () => {
-        BUTTON_ACCOUNT.click();
-        if (localStorage.getItem('user_id')) {
+        if (!localStorage.getItem('user_id')) {
+            toast({ title: 'Chưa đăng nhập', message: 'Quý khách vui lòng đăng nhập để xem giỏ hàng', type: 'warning' });
+            BUTTON_ACCOUNT.click();
+        }
+        else {
             location.hash = `#/cart`
         }
     })

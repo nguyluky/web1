@@ -6,6 +6,8 @@
 import fakeDatabase from './db/fakeDBv1.js';
 // load tât cả thông tin user từ fakeDatabase
 await fakeDatabase.getAllUserInfo();
+const phone = /**@type {HTMLInputElement} */ (document.getElementById('input-phone'));
+const password = /**@type {HTMLInputElement} */ (document.getElementById('password'));
 // và không chuyển hướng
 document.getElementById('show-hide-icon')?.addEventListener('click', () => {
     let e = /** @type {HTMLInputElement} */ (
@@ -25,8 +27,6 @@ document.getElementById('show-hide-icon')?.addEventListener('click', () => {
 
 document.querySelector('form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const phone = /**@type {HTMLInputElement} */ (document.getElementById('input-phone'));
-    const password = /**@type {HTMLInputElement} */ (document.getElementById('password'));
     const admin = await fakeDatabase.getUserInfoByPhoneOrEmail(phone.value);
 
     if (admin === undefined || admin.rule !== 'admin') {
@@ -43,7 +43,8 @@ document.querySelector('form')?.addEventListener('submit', async (event) => {
     let rmb_btn = /** @type {HTMLInputElement} */ (
         document.querySelector('.remember input[type="checkbox"]')
     );
-    if (rmb_btn.checked) localStorage.setItem('isAdmin', 'true');
-    else sessionStorage.setItem('isAdmin', 'true');
+    if (rmb_btn.checked) localStorage.setItem('admin_id', admin.id);
+    else sessionStorage.setItem('admin_id', admin.id);
     location.href = '/admin/index.html';
 });
+

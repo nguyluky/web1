@@ -289,8 +289,8 @@ function setupMainButtonEvents() {
     }
 
     function handleButtonSignOut() {
-        window.localStorage.removeItem('isAdmin');
-        window.sessionStorage.removeItem('isAdmin');
+        window.localStorage.removeItem('admin_id');
+        window.sessionStorage.removeItem('admin_id');
         location.href = '/admin/login.html';
     }
 
@@ -447,10 +447,15 @@ function setupSiderBar() {
 
     document.addEventListener('click', handleClickOutside);
 }
+function checkLogin() {
+    if (!window.localStorage.getItem('admin_id') && !window.sessionStorage.getItem('admin_id')) {
+        location.href = '/admin/login.html';
+    }
+}
 
 /** Main funstion */
 async function main() {
-    //
+    checkLogin();
     setupMainButtonEvents();
     setupSiderBar();
     renderManagement();
