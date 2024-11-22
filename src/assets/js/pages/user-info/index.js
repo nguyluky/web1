@@ -25,19 +25,51 @@ const status = {
         color: 'rgba(212, 13, 13, 1)'
     }
 }
+
+/**
+ * 
+ * Tạo giới tính ngẫu nhiên từ user_id
+ * 
+ * @param {string} user_id 
+ * @returns {string}
+ */
 function create_user_gender(user_id) {
-    if (user_id % 2 == 0) {
+
+    // hash
+    /**
+     * 
+     * Generate a Hash 32bit from string
+     * 
+     * @param {string} string 
+     * @returns {number}
+     */
+    function hashCode(string) {
+        var hash = 0,
+            i, chr;
+        if (string.length === 0) return hash;
+        for (i = 0; i < string.length; i++) {
+            chr = string.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    }
+
+    if (hashCode(user_id) % 2 == 0) {
         return "Nữ";
     }
     else {
         return "Nam";
     }
 }
-// tạo container chứa thông tin đơn hàng
+
+
 /**
  * 
+ * tạo container chứa thông tin đơn hàng
+ * 
  * @param {import("../../until/type.js").Order} order 
- * @returns 
+ * @returns {HTMLElement}
  */
 function createOrderContainer(order) {
     const package_details = document.createElement('div');
@@ -67,7 +99,13 @@ function createOrderContainer(order) {
     package_details.querySelector('.package-details__bottom')?.appendChild(all_items_detail);
     return package_details;
 }
-// tạo container chứa thông tin chi tiết từng sản phẩm
+
+/**
+ * tạo container chứa thông tin chi tiết từng sản phẩmz
+ * 
+ * @param {import("../../until/type.js").Order['items'][number]} item 
+ * @returns {Promise<HTMLElement>}
+ */
 async function createOrderItemElement(item) {
     const item_detail = document.createElement('div');
     const sach = await fakeDatabase.getSachById(item.sach);
@@ -95,6 +133,12 @@ async function createOrderItemElement(item) {
         </div>`;
     return item_detail;
 }
+
+/**
+ * 
+ * @param {string} option 
+ * @returns {Promise<void>}
+ */
 async function renderOrder(option = 'all') {
     const user_id = /**@type {String} */(localStorage.getItem('user_id'));
 
@@ -126,6 +170,11 @@ async function renderOrder(option = 'all') {
     }
 }
 
+/**
+ * 
+ * @param {string} [email] 
+ * @returns {string}
+ */
 function checkEmail(email) {
     if (!email) {
         return "bạn chưa nhập email"
@@ -135,6 +184,11 @@ function checkEmail(email) {
     }
 }
 
+/**
+ * 
+ * @param {string} user_id 
+ * @returns {Promise<string>}
+ */
 async function renderUserInfo(user_id) {
 
     if (!user_id) {
@@ -166,6 +220,11 @@ async function renderUserInfo(user_id) {
                     </div>        
     `;
 }
+
+/**
+ * 
+ * @returns {void}
+ */
 function initializationMain() {
     const main = document.querySelector('main');
     if (!main) return;
@@ -180,6 +239,11 @@ function initializationMain() {
     `
 }
 
+/**
+ * 
+ * @param {import("../../until/type.js").UserInfo} personal_info_data 
+ * @returns {void}
+ */
 function initializationAside(personal_info_data) {
     const aside = document.querySelector('.aside');
     if (!aside) return;
@@ -204,6 +268,11 @@ function initializationAside(personal_info_data) {
     </div>
     `;
 }
+
+/**
+ * 
+ * @returns {void}
+ */
 function initializationArticle__OrderInfo() {
     // const { page, query } = urlConverter(location.hash);
     const article = document.getElementById('article');
@@ -259,6 +328,11 @@ function initializationArticle__OrderInfo() {
         });
     }
 }
+
+/**
+ * 
+ * @returns {void}
+ */
 function initializationArticle__AccountInfo() {
     const article = document.getElementById('article');
     const user_id = localStorage.getItem('user_id');
@@ -280,6 +354,10 @@ function initializationArticle__AccountInfo() {
 
 }
 
+
+/**
+ * event khi click vào thông tin người dùng
+ */
 function setupEvent() {
     const user_option = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.user-info__row'));
     user_option.forEach(option => {
@@ -305,6 +383,11 @@ export async function initializationUserInfoPage(params, query) {
     style.textContent = await cssRep.text();
     style.id = 'user-info-style'
     document.head.appendChild(style);
+
+    if (!personal_info_data) {
+        navigateToPage('home');
+        return;
+    }
 
     initializationMain();
     initializationAside(personal_info_data);
@@ -333,6 +416,11 @@ export async function updateUserInfoPage(params, query) {
     }
 }
 
+/**
+ * @param {{[key: string]: string}} params 
+ * @param {URLSearchParams} query
+ * @returns {Promise<void>}
+ */
 export async function removeUserInfoPage(params, query) {
     document.getElementById('user-info-style')?.remove();
 }
