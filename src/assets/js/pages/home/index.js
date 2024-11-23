@@ -181,6 +181,18 @@ function initializationAside() {
     const catergory_row = document.querySelectorAll('.catergory__row--header');
     catergory_row.forEach((row) => {
         row.addEventListener('click', () => {
+
+            catergory_row.forEach((e) => {
+                if (!e.isSameNode(row)) {
+                    const catergory_sub_row = e.parentElement?.querySelector(
+                        '.catergory__row--sub',
+                    );
+
+                    catergory_sub_row?.classList.remove('show');
+
+                }
+            });
+
             const catergory_sub_row = row.parentElement?.querySelector(
                 '.catergory__row--sub',
             );

@@ -62,7 +62,6 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
             >
                 <label class="ct-input">
                     <input type="text" placeholder="Họ và Tên" name="name" required/>
-                    <span class="form-error"></span>
                 </label>
 
                 <div class="group-flex">
@@ -75,17 +74,14 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
                                 name="phone_num"
                             />
                         </div>
-                        <span class="form-error"></span>
                     </label>
                     <label class="ct-input email">
                         <div><input type="text" placeholder="Email" name="email"/></div>
-                        <span class="form-error"></span>
                     </label>
                 </div>
 
                 <label class="ct-input">
                     <input type="text" placeholder="Địa chỉ" name="street" required/>
-                    <span class="form-error"></span>
                 </label>
 
                 <div class="group-flex">
@@ -96,7 +92,6 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
                             placeholder="Tỉnh/Thành Phố"
                             name="pay_address"
                         ></address-form>
-                        <span class="form-error"></span>
                     </label>
                     <label>
                         <address-form
@@ -105,7 +100,6 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
                             placeholder="Quận/Huyện"
                             name="pay_address"
                         ></address-form>
-                        <span class="form-error"></span>
                     </label>
                     <label>
                         <address-form
@@ -114,7 +108,6 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
                             placeholder="Phường/Xã"
                             name="pay_address"
                         ></address-form>
-                        <span class="form-error"></span>
                     </label>
                 </div>
                 ${index == 0 ? '' : '<label class="set-default"><input type = "checkbox"/><span>Đặt làm địa chỉ mặc định</span></label>'}
@@ -181,30 +174,33 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
 
         if (!form) { return; }
 
-        const isValid = Array.from(form.elements).some((el) => {
+        let isValid = Array.from(form.elements).some((el) => {
             // @ts-ignore
-            return !el.reportValidity() || !validateNumberPhone(phone_num.value) || (email.value != '' ? !validateEmail(email.value) : false);
+            return !el.reportValidity();
         });
 
         console.log(isValid);
 
+        if (!validateNumberPhone(phone_num.value)) {
+            phone_num.setCustomValidity("Số điện thoại không đúng định dạng");
+            phone_num.reportValidity();
+            isValid = true;
+        }
+        else {
+            phone_num.setCustomValidity("");
+        }
+
+        if (!validateEmail(email.value) && email.value != '') {
+            email.setCustomValidity("Email không đúng định dạng");
+            phone_num.reportValidity();
+            isValid = true;
+        }
+        else {
+            phone_num.setCustomValidity("");
+        }
+
         if (isValid) {
             // nhập sai thì hiện popup error
-            if (!validateNumberPhone(phone_num.value)) {
-                const phone_err = /**@type {HTMLSpanElement}*/(form.querySelector('.ct-input.phone span'));
-                if (phone_err) {
-                    phone_err.innerHTML = 'Số điện thoại không đúng định dạng';
-                    phone_err.classList.add('popup-error');
-                }
-            } else {
-                if (validateEmail(email.value) == false) {
-                    const mail_err = form.querySelector('.ct-input.email span');
-                    if (mail_err) {
-                        mail_err.innerHTML = 'Email không đúng định dạng';
-                        mail_err.classList.add('popup-error');
-                    }
-                }
-            }
             return;
         }
 
