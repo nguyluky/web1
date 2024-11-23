@@ -374,4 +374,13 @@
 .credit-name {
     flex: 1 1 0%;
     /* max-width: 135px; */
+.header_wrapper:has(.center.hide) {
+    grid-template-columns: 1fr auto;
+}
+
+@media screen and (max-width: 700px) {
+    .header_wrapper {
+        grid-template-columns: 1fr auto;
+        padding: 0;
+    }
 }

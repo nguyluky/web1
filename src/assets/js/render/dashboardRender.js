@@ -1,5 +1,5 @@
 import fakeDatabase from '../db/fakeDBv1.js';
-import { dateToString } from '../until/formatDate.js';
+import { dateToString } from '../until/format.js';
 
 let orders = [];
 let books = [];
@@ -377,7 +377,7 @@ async function count() {
     const countProduct = document.querySelector('#amount-product .num');
     const countUser = document.querySelector('#amount-user .num');
     if (!countProduct || !countUser) return;
-    countProduct.innerHTML = orders.length.toString();
+    countProduct.innerHTML = books.length.toString();
     const users = await fakeDatabase.getAllUserInfo();
     countUser.innerHTML = users.length.toString();
 }

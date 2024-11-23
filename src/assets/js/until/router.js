@@ -119,17 +119,42 @@ export function navigateToPage(page, query) {
     }
 
     /**
-     * @type {URLSearchParams}
+     * @type {URLSearchParams | undefined}
      */
-    let search;
+    let search = undefined;
 
     if (typeof query === 'function')
         search = query(currentQuery);
-    else
-        search = new URLSearchParams(query);
+    else if (query) { search = new URLSearchParams(query) };
 
     if (search) {
         hash += '?' + search.toString();
     }
     location.hash = hash
+}
+
+/**
+ * 
+ * @param {string} url 
+ */
+export async function addStyle(url) {
+    if (document.getElementById(encodeURIComponent(url))) return;
+    const res = await fetch(url);
+    const text = await res.text();
+
+    const style = document.createElement('style');
+    style.id = encodeURIComponent(url);
+    style.innerHTML = text;
+    document.head.appendChild(style);
+}
+
+/**
+ * 
+ * @param {string} url 
+ */
+export function removeStyle(url) {
+    const style = document.getElementById(encodeURIComponent(url));
+    if (style) {
+        document.head.removeChild(style);
+    }
 }

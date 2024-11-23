@@ -1,6 +1,7 @@
 import fakeDatabase from "../db/fakeDBv1.js";
 import { showUserInfo } from "../pages/cart/cart.js";
 import { text2htmlElement } from "../until/format.js";
+import { validateEmail, validateNumberPhone } from "../until/validator.js";
 import { AddressFrom } from "./address.js";
 
 
@@ -25,20 +26,21 @@ function isClickOutSide(e, element) {
 
 /**
  * 
- * @param {import("../until/type").UserAddress | undefined} data 
+ * @param {import("../until/type").UserAddress[]} list
  * @param {(newAddress: import("../until/type").UserAddress, boolean) => Promise<any>} onOk 
  * @param {() => any} onCancle
  * @returns {void}
  */
 
 // mới sửa lại hàm, nếu có data thì hiện lên form với dữ liệu đó
-export function showNewShippingAddressPopup(data, onOk, onCancle) {
+export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
+    let data = list[index];
     const html = `<div class="popup">
         <button class="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
         <div class="popup-header">
-            <h3>Add new shipping Address</h3>
+            ${index == undefined ? '<h3>Thêm địa chỉ giao hàng mới</h3>' : '<h3>Cập nhật địa chỉ giao hàng</h3>'}
             <!-- <div class="popup-mess">
                 Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao
                 hàng cùng phí đóng gói, vận chuyển một cách chính xác
@@ -64,17 +66,19 @@ export function showNewShippingAddressPopup(data, onOk, onCancle) {
                 </label>
 
                 <div class="group-flex">
-                    <label class="ct-input">
-                        <input
-                            required
-                            type="text"
-                            placeholder="Số điện thoại"
-                            name="phone_num"
-                        />
+                    <label class="ct-input phone">
+                        <div>
+                            <input
+                                required
+                                type="text"
+                                placeholder="Số điện thoại"
+                                name="phone_num"
+                            />
+                        </div>
                         <span class="form-error"></span>
                     </label>
-                    <label class="ct-input">
-                        <input type="text" placeholder="Email" name="email"/>
+                    <label class="ct-input email">
+                        <div><input type="text" placeholder="Email" name="email"/></div>
                         <span class="form-error"></span>
                     </label>
                 </div>
@@ -113,17 +117,14 @@ export function showNewShippingAddressPopup(data, onOk, onCancle) {
                         <span class="form-error"></span>
                     </label>
                 </div>
-                <label class="set-default">
-                    <input type="checkbox"/>
-                    <span>Đặt làm địa chỉ mặc định</span>
-                </label>
-            </form>
-        </div>
+                ${index == 0 ? '' : '<label class="set-default"><input type = "checkbox"/><span>Đặt làm địa chỉ mặc định</span></label>'}
+            </form >
+        </div >
         <div class="popup-button">
             <button class="button_1 cancel">CANCEL</button>
             <button class="button_1 btn-danger ok">OK</button>
         </div>
-    </div>`;
+    </div > `;
 
     const element = /**@type {HTMLElement} */ (text2htmlElement(html.trim()));
 
@@ -176,16 +177,34 @@ export function showNewShippingAddressPopup(data, onOk, onCancle) {
         ev.stopImmediatePropagation();
 
 
-        const from = /**@type {HTMLFormElement} */ (element.querySelector('form'));
+        const form = /**@type {HTMLFormElement} */ (element.querySelector('form'));
 
-        if (!from) { return; }
+        if (!form) { return; }
 
-        const isValid = Array.from(from.elements).some((el) => {
+        const isValid = Array.from(form.elements).some((el) => {
             // @ts-ignore
-            return !el.reportValidity();
+            return !el.reportValidity() || !validateNumberPhone(phone_num.value) || (email.value != '' ? !validateEmail(email.value) : false);
         });
 
+        console.log(isValid);
+
         if (isValid) {
+            // nhập sai thì hiện popup error
+            if (!validateNumberPhone(phone_num.value)) {
+                const phone_err = /**@type {HTMLSpanElement}*/(form.querySelector('.ct-input.phone span'));
+                if (phone_err) {
+                    phone_err.innerHTML = 'Số điện thoại không đúng định dạng';
+                    phone_err.classList.add('popup-error');
+                }
+            } else {
+                if (validateEmail(email.value) == false) {
+                    const mail_err = form.querySelector('.ct-input.email span');
+                    if (mail_err) {
+                        mail_err.innerHTML = 'Email không đúng định dạng';
+                        mail_err.classList.add('popup-error');
+                    }
+                }
+            }
             return;
         }
 
@@ -196,11 +215,9 @@ export function showNewShippingAddressPopup(data, onOk, onCancle) {
             street: street.value,
             address: Array.from(pay_address).map((el) => el.value).join(' - ')
         }
-
-        console.log(address);
         const setToDefault = /**@type {HTMLInputElement} */ (document.querySelector('.set-default input'));
 
-        onOk(address, setToDefault.checked).then(() => {
+        onOk(address, (index != 0 ? setToDefault.checked : true)).then(() => {
             element.remove();
         });
     })
@@ -224,7 +241,7 @@ export function createAddressItem(address, i = NaN, sl = false) {
         i = document.querySelectorAll('.shipping-info__item').length;
     }
     const html = `
-    <div class="shipping-info__item ${sl ? 'sladd' : ''}" data-id="${i}">
+        <div class="shipping-info__item ${sl ? 'sladd' : ''}" data-id="${i}" >
         <div class="info">
             <div class="name">
                 <span>${address.name}</span><span>${i == 0 ? 'Địa chỉ mặc định' : ''}</span>
@@ -240,7 +257,7 @@ export function createAddressItem(address, i = NaN, sl = false) {
             <div class="action__update">Cập nhật</div>
             ${i == 0 ? '' : '<div class="action__delete">Xoá</div>'}
         </div>
-    </div>`;
+    </div> `;
 
     return text2htmlElement(html.trim());
 }
@@ -262,8 +279,8 @@ export function updateAddressItem(address, i) {
         return;
     }
     name.textContent = address.name;
-    address_.innerHTML = `<span>Địa chỉ: </span>${address.street}, ${address.address.replace(/ - /g, ', ')}`
-    phone.innerHTML = `<span>Điện thoại: </span>${address.phone_num}`
+    address_.innerHTML = `<span> Địa chỉ: </span > ${address.street}, ${address.address.replace(/ - /g, ', ')} `
+    phone.innerHTML = `<span> Điện thoại: </span > ${address.phone_num} `
 }
 /**
  * 
@@ -271,7 +288,7 @@ export function updateAddressItem(address, i) {
  */
 export function showListShippingAddressPopup(indexOfAddress = 0) {
     const html = `
-        <div class="popup">
+        <div class="popup" >
             <button class="btn-close">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -307,7 +324,7 @@ export function showListShippingAddressPopup(indexOfAddress = 0) {
                     GIAO ĐẾN ĐỊA CHỈ NÀY
                 </button>
             </div>
-        </div>`
+        </div> `
 
     const element = /**@type {HTMLElement} */ (text2htmlElement(html.trim()));
 
@@ -325,7 +342,7 @@ export function showListShippingAddressPopup(indexOfAddress = 0) {
 
     if (!userId) {
         alert('Bạn cần đăng nhập để xem thông tin địa chỉ');
-        return
+        return;
     }
 
     document.querySelector('#popup-wrapper')?.appendChild(element);
@@ -360,11 +377,11 @@ export function showListShippingAddressPopup(indexOfAddress = 0) {
         }
 
         popupBody.innerHTML = `
-        <div class="select">
+        <div class="select" >
             <div class="shipping-info__new">
                 <span>Thêm địa chỉ mới</span>
             </div>
-        </div>`;
+        </div> `;
 
         const select = document.querySelector('.popup-body .select');
         const shippingInfoNew = document.querySelector('.popup-body .shipping-info__new');
@@ -378,7 +395,7 @@ export function showListShippingAddressPopup(indexOfAddress = 0) {
     })
 }
 
-// thêm event cho các nút update và delete
+// thêm event cho các nút update, delete, thêm địa chỉ
 function addEvent(userId, addressList) {
 
     const select = document.querySelector('.popup-body .select');
@@ -392,7 +409,7 @@ function addEvent(userId, addressList) {
         console.log('click')
 
         element.style.display = 'none';
-        showNewShippingAddressPopup(undefined, async (address, bool) => {
+        showNewShippingAddressPopup(undefined, addressList, async (address, bool) => {
             element.remove();
             console.log(bool);
             if (bool)
@@ -407,8 +424,9 @@ function addEvent(userId, addressList) {
         });
     });
 
+    // handle chọn địa chỉ
     addressItems?.forEach((item) => {
-        item.addEventListener('click', (ev) => {
+        item.addEventListener('click', async (ev) => {
             addressItems.forEach((item) => {
                 item.classList.remove('sladd');
             })
@@ -424,7 +442,7 @@ function addEvent(userId, addressList) {
                 console.log(index);
                 element.style.display = 'none';
                 // hiển thị địa chỉ đang chọn
-                showNewShippingAddressPopup(addressList[index], async (address, bool) => {
+                showNewShippingAddressPopup(index, addressList, async (address, bool) => {
                     addressList[index] = address;
                     if (bool) {
                         [addressList[0], addressList[index]] = [addressList[index], addressList[0]];
@@ -441,6 +459,8 @@ function addEvent(userId, addressList) {
                     element.style.display = '';
                 });
             })
+
+        // nếu nhấn xóa
         item.querySelector('.action__delete')
             ?.addEventListener('click', (ev) => {
                 ev.stopPropagation();
@@ -455,6 +475,8 @@ function addEvent(userId, addressList) {
                 })
             })
     })
+
+    // nếu nhấn giao đến địa chỉ
     document.getElementById('choose-address-btn')?.addEventListener('click', (ev) => {
         ev.stopPropagation();
         ev.stopImmediatePropagation();
@@ -465,5 +487,5 @@ function addEvent(userId, addressList) {
         }
         showUserInfo(Number(addressItem.dataset.id))
         element.remove();
-    })
+    });
 }

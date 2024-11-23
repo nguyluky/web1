@@ -53,6 +53,16 @@ main.main {
     width: 100%;
 }
 
+.ct-input:hover{
+    border: 1px solid black;
+}
+
+.ct-input.phone,
+.ct-input.email {
+    display: block;
+    width: 100%;
+}
+
 .ct-input .icon_input {
     color: #dddde3;
     display: flex;
@@ -63,7 +73,7 @@ main.main {
 }
 
 .ct-input:not(:has(.icon_input)) input {
-    margin-left: 10px;
+    padding-left: 10px;
 }
 
 .ct-input input {
@@ -118,10 +128,10 @@ main.main {
 .ct-input .input_text {
     position: relative;
     padding: 0 10px;
+    font-size: 14px;
     color: #0a68f4;
     display: flex;
     align-items: center;
-    justify-self: center;
     text-wrap: nowrap;
     white-space: nowrap;
 }
@@ -350,14 +360,50 @@ main.main {
     gap: 10px;
 }
 
+.group-flex > label > div {
+    padding: 10px 0;
+}
 .set-default {
     display: flex;
     align-items: center;
     margin-top: 10px;
     width: max-content;
+    gap: 10px;
+}
+
+.set-default > input {
     cursor: pointer;
+    opacity: 0.4;
+}
+
+.set-default > input:checked {
+    opacity: 1;
+    accent-color: #2f86eb;
+}
+
+.set-default > span {
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 400;
+    color: #2f86eb;
 }
 
 .set-default input[type='checkbox'] {
     height: 16px;
+}
+
+@media screen and (max-width: 500px){
+    .group-flex{
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #toast{
+        left: 0px;
+        top: 10px
+    }
+
+    .toast--error{
+        padding: 10px 0px;
+    }
 }

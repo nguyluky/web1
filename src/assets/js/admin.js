@@ -60,7 +60,6 @@ const loadingTable = document.getElementById('loading');
  */
 const tabManagement = {
     user: userRender,
-    cart: cartRender,
     sach: sachRender,
     order: orderRender,
 };
@@ -72,7 +71,6 @@ const tabManagement = {
  */
 const fakeDBManagement = {
     user: () => fakeDatabase.getAllUserInfo(),
-    cart: () => fakeDatabase.getALlCart(),
     sach: () => fakeDatabase.getAllBooks(),
     order: () => fakeDatabase.getAllOrder(),
 };
@@ -140,7 +138,6 @@ const buttonSaveState = {
 async function renderManagement(inputValue = '') {
     const titleTabs = {
         user: 'User',
-        cart: 'Cart',
         sach: 'Sách',
         dashboard: 'Dashboard',
         order: 'Order',
@@ -193,6 +190,13 @@ function updateMangement() {
     return tabManagement[tab].doSave();
 }
 
+
+/**
+ * 
+ * 
+ * 
+ * @returns {void}
+ */
 function handleContentOverflow() {
     const width = window.innerWidth;
     const contentDiv = document.querySelector('table > tr > th');
@@ -228,14 +232,16 @@ function setupMainButtonEvents() {
                     .then(() => {
                         buttonAddState.add();
                         buttonSaveState.edit();
+
+                        toast({
+                            title: 'Thành công!',
+                            message: 'Bạn đã lưu chỉnh sửa thành công.',
+                            type: 'success',
+                            duration: 5000,
+                        });
+
                     })
-                    .catch(() => { });
-                toast({
-                    title: 'Thành công!',
-                    message: 'Bạn đã lưu chỉnh sửa thành công.',
-                    type: 'success',
-                    duration: 5000,
-                });
+
             },
             () => {
                 tabManagement[tab].removeAllChange?.();
@@ -287,8 +293,8 @@ function setupMainButtonEvents() {
     }
 
     function handleButtonSignOut() {
-        window.localStorage.removeItem('isAdmin');
-        window.sessionStorage.removeItem('isAdmin');
+        window.localStorage.removeItem('admin_id');
+        window.sessionStorage.removeItem('admin_id');
         location.href = '/admin/login.html';
     }
 
@@ -306,12 +312,28 @@ function handlePopState(event) {
         if (event.state?.tab != tab) {
             history.go(1);
             showPopup('Xác nhận sửa', 'Bạn có chắc là muốn sửa không', () => {
-                buttonAddState.add();
-                buttonSaveState.edit();
-                updateMangement();
+                updateMangement().then(() => {
+                    buttonAddState.add();
+                    buttonSaveState.edit();
 
-                // @ts-ignore
-                history.back(1);
+                    toast({
+                        title: 'Thành công!',
+                        message: 'Bạn đã lưu chỉnh sửa thành công.',
+                        type: 'success',
+                        duration: 5000,
+                    });
+
+                    // @ts-ignore
+                    history.back(1);
+
+                }).then((e) => {
+                    toast({
+                        title: 'Lỗi!',
+                        message: String(e),
+                        type: 'error',
+                        duration: 5000,
+                    });
+                });
             });
         }
 
@@ -331,6 +353,10 @@ function handlePopState(event) {
     renderManagement();
 }
 
+
+/**
+ * Xử lý các sự kiện cho side bar
+ */
 function setupSiderBar() {
     const drop_menu = document.querySelector('.aside');
 
@@ -348,14 +374,17 @@ function setupSiderBar() {
                 'Xác nhận sửa',
                 'Bạn có chắc là muốn sửa không',
                 () => {
-                    buttonAddState.add();
-                    buttonSaveState.edit();
-                    updateMangement();
 
-                    tabElements.forEach((e) => (e.checked = false));
-                    this.checked = true;
-                    tab = this.value;
-                    renderManagement();
+                    updateMangement().then(() => {
+                        buttonAddState.add();
+                        buttonSaveState.edit();
+                        tabElements.forEach((e) => (e.checked = false));
+                        this.checked = true;
+                        tab = this.value;
+                        renderManagement();
+                    }).then(() => {
+                    });
+
                 },
                 () => {
                     buttonAddState.add();
@@ -426,10 +455,15 @@ function setupSiderBar() {
 
     document.addEventListener('click', handleClickOutside);
 }
+function checkLogin() {
+    if (!window.localStorage.getItem('admin_id') && !window.sessionStorage.getItem('admin_id')) {
+        location.href = '/admin/login.html';
+    }
+}
 
 /** Main funstion */
 async function main() {
-    //
+    checkLogin();
     setupMainButtonEvents();
     setupSiderBar();
     renderManagement();

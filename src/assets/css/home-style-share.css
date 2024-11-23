@@ -47,7 +47,9 @@ header.header {
     align-items: center;
     gap: 5px;
 }
-
+.header_wrapper .center {
+    max-width: 700px;
+}
 .cart {
     display: flex;
     align-items: center;
@@ -344,6 +346,16 @@ footer.footer .footer_wrapper .footer_box {
     }
 }
 
+@media screen and (max-width: 500px){
+    .popup-header{
+        font-size: 16px;
+    }
+
+    .btn-close{
+        top: 15px;
+    }
+}
+
 .catergory__header {
     font-size: 18px;
     font-weight: 700;
@@ -472,6 +484,16 @@ article.article.page-not-found {
 .action > div {
     cursor: pointer;
     color: #0a68f4;
+}
+
+.action > div:hover {
+    text-decoration: underline;
+}
+
+.action{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 @media screen and (max-width: 500px) {
     .header_wrapper .right .button_1 > span {

@@ -1,6 +1,7 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import { toast } from '../../render/popupRender.js';
-import { navigateToPage } from '../../until/urlConverter.js';
+import { formatNumber, text2htmlElement } from '../../until/format.js';
+import { navigateToPage } from '../../until/router.js';
 import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
 const Product_Data = await fakeDatabase.getAllBooks();
 let data = [];
@@ -16,11 +17,13 @@ export async function initializationProductPage(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
 
-    const cssRep = await fetch('./assets/css/product.css');
-    const style = document.createElement('style');
-    style.textContent = await cssRep.text();
-    style.id = 'product-page-style';
-    document.head.appendChild(style);
+    if (!document.querySelector('#product-page-style')) {
+        const cssRep = await fetch('./assets/css/product.css');
+        const style = document.createElement('style');
+        style.textContent = await cssRep.text();
+        style.id = 'product-page-style';
+        document.head.appendChild(style);
+    }
 
     const product_id = params.id;
 
@@ -167,7 +170,7 @@ function rendergeneralInfo(general_info) {
     const sale_price = document.createElement('span');
     sale_price.className = "price-number sale";
     sale_price.innerHTML = `${String(
-        Math.round(Number(general_info?.base_price) * (1 - Number(general_info?.discount))),
+        formatNumber(Math.round(Number(general_info?.base_price) * (1 - Number(general_info?.discount)))),
     )} <sup>₫</sup>`;
     price_container.appendChild(sale_price);
     price_container.appendChild(discount);
@@ -175,7 +178,7 @@ function rendergeneralInfo(general_info) {
     const regular_price = document.createElement('span');
     regular_price.className = "price-number regular";
     if (general_info?.discount == 0) regular_price.classList.add('hide');
-    regular_price.innerHTML = `${String(general_info?.base_price)} <sup>₫</sup>`
+    regular_price.innerHTML = `${String(formatNumber(general_info?.base_price))} <sup>₫</sup>`
     price_container.appendChild(regular_price);
 
     product_container.appendChild(price_container);
@@ -212,7 +215,7 @@ async function renderleftsection(general_info) {
             <div class="total-container">
                 <div class="total-price__header">Tạm tính:</div>
                 <span class="price-number total">
-                    <span>${sale_price}</span> <sup>₫</sup>
+                    <span>${formatNumber(sale_price)}</span> <sup>₫</sup>
                 </span>
             </div>
             <div class="buttons-section"> 
@@ -220,6 +223,41 @@ async function renderleftsection(general_info) {
                 <button class="add-to-cart" id="add-to-cart-button">Thêm giỏ hàng</button>
             </div>
     `;
+}
+function showImage(src) {
+    const wrapper = document.getElementById('popup-wrapper');
+    const html = `<div class="popup" id="popup-img">
+            <div>
+                <img src="${src}" alt>
+            </div>
+        </div>`;
+    const element = /**@type {HTMLElement} */ (text2htmlElement(html));
+    if (!wrapper) return
+    wrapper.appendChild(element);
+    const close = (ev) => {
+        if ((ev.target).closest('.popup') === null) {
+            element.remove();
+            wrapper?.removeEventListener('click', close);
+        }
+    }
+    wrapper.addEventListener('click', close);
+    function changeSize() {
+        let h = window.innerHeight;
+        let w = window.innerWidth;
+        console.log(h, w);
+        const img = /**@type {HTMLImageElement} */ (element.querySelector('.popup img'));
+        if (!img) return;
+        let imgH = img.height;
+        let imgW = img.width;
+        if (imgH && imgW) {
+            if (imgH / h > imgW / w)
+                img.setAttribute('style', `height: ${0.9 * h < 700 ? '90vh' : '700px'}`);
+            else
+                img.setAttribute('style', `width: ${0.9 * w < 800 ? '90vw' : '800px'}`);
+        }
+    }
+    changeSize();
+    window.addEventListener('resize', () => changeSize());
 }
 
 function setEventListener(product_id) {
@@ -230,7 +268,10 @@ function setEventListener(product_id) {
     let sale_price = Number(total.innerHTML);
 
     if (!inputquantity) return;
-
+    document.querySelector('.left-section__product-img')
+        ?.addEventListener('click', (e) => {
+            showImage(/**@type {HTMLImageElement}*/(e.target).src);
+        });
     decrebtn.addEventListener('click', e => {
         minusquantity(total, inputquantity, sale_price);
     });
@@ -305,14 +346,14 @@ async function createProduct(product) {
     const salePrice = document.createElement('span');
     salePrice.classList.add('other-sale');
     salePrice.innerHTML = `${String(
-        Math.round(product.base_price * (1 - product.discount)),
+        formatNumber(Math.round(product.base_price * (1 - product.discount))),
     )} <sup>₫</sup>`;
     productPrice.appendChild(salePrice);
 
     const regularPrice = document.createElement('span');
     regularPrice.classList.add('other-regular');
     if (product.discount == 0) regularPrice.classList.add('hide');
-    regularPrice.innerHTML = `${String(product.base_price)} <sup>₫</sup>`;
+    regularPrice.innerHTML = `${String(formatNumber(product.base_price))} <sup>₫</sup>`;
     productPrice.appendChild(regularPrice);
 
     // productItem.addEventListener('click', (event) => {

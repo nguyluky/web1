@@ -7,7 +7,7 @@ import {
 } from './popupAccount.js';
 import { validateEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './pages/home/index.js';
-import urlConverter, { navigateToPage, urlIsPage } from './until/urlConverter.js';
+import urlConverter, { navigateToPage, urlIsPage } from './until/router.js';
 import { initializationPageNotFound } from './pages/pageNotFound/index.js';
 import {
     initializationSearchPage,
@@ -18,9 +18,10 @@ import { updateCartQuantity } from './pages/cart/cart.js';
 import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
 import { initializationProductPage, removeProductPage, updateProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
-import { showListShippingAddressPopup } from './render/addressPopup.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
 import { toast } from './render/popupRender.js';
+import { showListShippingAddressPopup } from './render/addressPopup.js';
+
 //#region khai bao page
 /**
  * @type {{
@@ -45,7 +46,7 @@ const PAGES = [
     },
     {
         // :?tab có nghĩa là tab có thể có hoặc không
-        pagePath: 'user/:?tab',
+        pagePath: 'user/:tab/:?info',
         init: initializationUserInfoPage,
         update: updateUserInfoPage,
         remove: async () => { },
@@ -151,6 +152,9 @@ function initializeAccountPopup() {
             ],
             onSubmit: () => {
                 localStorage.setItem('user_id', userInfo.id);
+                if (userInfo.rule === 'admin') {
+                    localStorage.setItem('admin_id', userInfo.id);
+                }
                 MODAL?.classList.remove('show-modal');
                 toast({ title: 'Đăng nhập thành công', type: 'success' })
                 showDropDown();
@@ -213,15 +217,15 @@ function initializeAccountPopup() {
         );
 
         const p1 = document.createElement('p');
-        p1.textContent = 'Thông tin tài khoản';
+        p1.textContent = 'Tài khoản của tôi';
         p1.onclick = () => {
-            navigateToPage('user');
+            navigateToPage('user/account/profile');
         }
 
         const p2 = document.createElement('p');
         p2.textContent = 'Đơn hàng của tôi';
         p2.onclick = () => {
-            navigateToPage('user/dhct');
+            navigateToPage('user/purchase');
         }
 
         const p3 = document.createElement('p');
@@ -232,10 +236,20 @@ function initializeAccountPopup() {
             navigateToPage('home')
             // location.reload();
         }
+        p3.textContent = 'Chuyển đến admin';
+        p3.onclick = () => {
+            location.href = '/admin/index.html';
+        }
+
+        const p4 = document.createElement('p');
+        p4.textContent = 'Đăng xuất';
 
         dropDown.appendChild(p1);
         dropDown.appendChild(p2);
-        dropDown.appendChild(p3);
+        if (localStorage.getItem('admin_id')) {
+            dropDown.appendChild(p3);
+        }
+        dropDown.appendChild(p4);
 
         BUTTON_ACCOUNT?.appendChild(dropDown);
     }
@@ -288,8 +302,11 @@ function initializeAccountPopup() {
     });
 
     BUTTON_CART.addEventListener('click', () => {
-        BUTTON_ACCOUNT.click();
-        if (localStorage.getItem('user_id')) {
+        if (!localStorage.getItem('user_id')) {
+            toast({ title: 'Chưa đăng nhập', message: 'Quý khách vui lòng đăng nhập để xem giỏ hàng', type: 'warning' });
+            BUTTON_ACCOUNT.click();
+        }
+        else {
             location.hash = `#/cart`
         }
     })
@@ -314,8 +331,7 @@ function initializeAccountPopup() {
  *    hash của URL.
  * 2. Phân tích cú pháp hash của URL hiện tại để xác định trạng thái ban đầu của
  *    ứng dụng.
- * 3. Thiết lập các trình nghe sự kiện hoặc trình xử lý bổ sung cần thiết cho các
- *    thay đổi URL.
+ * 3. Gọi hàm render update remove phù hợp dựa trên trạng thái ban đầu.
  *
  * Cách sử dụng:
  *
@@ -344,7 +360,10 @@ async function initializeUrlHandling() {
         }
     }
 
-
+    /**
+     * Hiển thị loading spinner trong khi chuyển trang.
+     * @returns {void}
+     */
     function showLoading() {
         const main = document.querySelector('main');
         if (!main) return;
@@ -371,10 +390,12 @@ async function initializeUrlHandling() {
         let { page, query } = urlConverter(location.hash);
         page = page.replace('#/', '');
 
+        let isMach = false;
+
         for (const p of PAGES) {
             const param = urlIsPage(page, p.pagePath);
             if (!param) { continue; }
-
+            isMach = true;
             if (oldPage?.pagePath !== p.pagePath) {
                 console.log('remove', oldPage?.pagePath);
                 await oldPage?.remove(param, query);
@@ -389,6 +410,14 @@ async function initializeUrlHandling() {
             console.log('update', p.pagePath);
             await p.update(param, query);
         }
+
+        if (!isMach) {
+            for (const p of PAGES) {
+                p.pagePath === '404' && await p.init({}, query);
+                oldPage = p;
+            }
+        }
+
     }
 
     window.addEventListener('hashchange', handleHashChange);
@@ -416,6 +445,7 @@ function initializationAddress() {
     document.getElementById('btn-location')?.addEventListener('click', handleAddressPopup);
 }
 
+/** Khởi tạo chức năng tìm kiếm */
 function initializationSearch() {
     document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
         if (/** @type {KeyboardEvent} */ (e).key === 'Enter') {
@@ -426,7 +456,6 @@ function initializationSearch() {
 
 /** Main */
 function main() {
-    initializationAddress();
     initializeAccountPopup();
     initializeUrlHandling();
     initializationSearch();

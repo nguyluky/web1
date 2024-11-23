@@ -1,3 +1,7 @@
+td {
+    color: gray;
+}
+
 td .custom-datetime-input[type='datetime-local'] {
     border: none;
     outline: none;
@@ -19,6 +23,10 @@ td:has(.input-clickable) {
     width: 0;
 }
 
+td select {
+    color: #323232;
+}
+
 td select:disabled ~ .input-clickable,
 td input:disabled ~ .input-clickable {
     height: 100%;
@@ -37,6 +45,10 @@ td[contenteditable='true']
     display: block;
     border-radius: 3px;
 } */
+
+td[contenteditable='true'] {
+    color: #323232;
+}
 
 .img-wrapper {
     height: 200px;
@@ -129,6 +141,12 @@ td[key='details'] {
 tr:has(td[error]) {
     /* background: rgb(236, 86, 86) !important; */
     border: 1px solid rgb(236, 86, 86);
+}
+
+[placeholder]:empty::before {
+    content: attr(placeholder);
+    color: #555;
+    pointer-events: none;
 }
 
 /* td[error] {

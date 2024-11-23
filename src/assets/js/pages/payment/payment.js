@@ -2,14 +2,13 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { getDeliveryTime, showUserInfo } from "../cart/cart.js";
 import order from "../../render/table/orderTabel.js";
-import { getSearchParam, navigateToPage } from "../../until/urlConverter.js";
 import uuidv from "../../until/uuid.js";
 import address from "../../db/addressDb.js";
 import { toast } from "../../render/popupRender.js";
 import { formatNumber } from "../../until/format.js";
 import { validator, isCreditCard } from "../../until/validator.js";
-
-
+import { navigateToPage } from "../../until/router.js";
+import { getSearchParam } from "../../until/router.js";
 
 
 export function getOrder() {
