@@ -108,7 +108,7 @@ export function showInputPassword(modal) {
                 <button id="btn-exit">
                     <img src="./assets/img/exit.png" alt="" />
                 </button>
-                <div class="modal-body-left modal-demo">
+                <div class="modal-body-left">
                     <div class="auth-form">
                         <button id="back-btn">
                             <img src="./assets/img/back.png" alt="" />
