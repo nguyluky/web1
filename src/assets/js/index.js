@@ -7,6 +7,7 @@ import {
 } from './popupAccount.js';
 import { validateEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './pages/home/index.js';
+import urlConverter, { changeTitle, navigateToPage, urlIsPage } from './until/router.js';
 import urlConverter, { initializeUrlHandling, navigateToPage, urlIsPage } from './until/router.js';
 import {
     initializationSearchPage,
@@ -322,6 +323,7 @@ function initializationSearch() {
 
 /** Main */
 function main() {
+    changeTitle();
     initializeAccountPopup();
     initializeUrlHandling(PAGES);
     initializationSearch();
