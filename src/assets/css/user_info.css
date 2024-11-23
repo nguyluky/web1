@@ -388,7 +388,7 @@ label:has(.btn-add-address) {
     }
 
     .user-personal-info{
-        padding: 10px 15px;
+        padding: 20px 15px;
     }
 
     .user-personal__container div{
@@ -434,6 +434,10 @@ label:has(.btn-add-address) {
 
     #no-address > img{
         width: 80%;
+    }
+
+    .user-info{
+        width: 100%;
     }
 }
 

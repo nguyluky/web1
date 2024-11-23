@@ -400,10 +400,10 @@ main.main {
 
     #toast{
         left: 0px;
-        top: 10px
+        top: 50px
     }
 
-    .toast--error{
+    .toast--error, .toast--success, .toast--info, .toast--warning{
         padding: 10px 0px;
     }
 }

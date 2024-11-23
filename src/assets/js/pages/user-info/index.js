@@ -232,10 +232,13 @@ async function renderUserInfo(user_id) {
     }
     const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
 
+    const user_default_address = personal_info_data?.address[0];
+    console.log(user_default_address);
+
     return `
                     <div class="user-personal">
                         <div class="user-header">Họ và tên:</div>
-                        <div class="user-info">${personal_info_data?.name}</div>
+                        <div class="user-info">${user_default_address?.name}</div>
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Giới tính:</div>
@@ -243,12 +246,16 @@ async function renderUserInfo(user_id) {
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Email:</div>
-                        <div class="user-info">${checkEmail(personal_info_data?.email)}</div>
+                        <div class="user-info">${checkEmail(user_default_address?.email)}</div>
                     </div>
                     <div class="user-personal">
                         <div class="user-header">Số điện thoại:</div>
-                        <div class="user-info">${personal_info_data?.phone_num}</div>
+                        <div class="user-info">${user_default_address?.phone_num}</div>
                     </div>       
+                    <div class="user-personal">
+                        <div class="user-header">Địa chỉ giao:</div>
+                        <div class="user-info">${user_default_address?.street}, ${user_default_address?.address.replace(/ - /g, ', ')}</div>
+                    </div>
     `;
 }
 
@@ -395,7 +402,7 @@ function initializationArticle__AccountInfo() {
     article.className = "user-personal-info";
     article.innerHTML = `
             <div class="article-header">
-                <span>Hồ sơ tài khoản</span>
+                <span>Hồ sơ người mua hàng</span>
             </div>
             <hr>
             <div class="user-personal__container">
