@@ -62,19 +62,20 @@
 
 .user-personal {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
 }
 
 .user-header {
     font-size: 16px;
     font-weight: 600;
-    width: 140px;
+    width: 180px;
 }
 
 .user-info {
     font-size: 16px;
     font-weight: 300;
-    width: 450px;
+    flex: 1;
 }
 
 .package-category {
@@ -355,6 +356,58 @@ label:has(.btn-add-address) {
     width: max-content;
 }
 
+label:has(#input-fullname) {
+    display: flex;
+    width: 100%;
+    max-width: 500px;
+    height: 30px;
+    align-items: center;
+    border: 1px solid #999;
+}
+
+#input-fullname {
+    all: unset;
+    margin-left: 10px;
+}
+
+#user-gender {
+    display: flex;
+    gap: 20px;
+    justify-content: left;
+    align-items: center;
+}
+
+#user-gender > label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#save-info-btn {
+    margin-left: 190px;
+    width: max-content;
+    background-color: #189eff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+#save-info-btn:active {
+    opacity: 0.8;
+}
+
+.lmao {
+    color: #189eff;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 500;
+    font-size: 14px;
+    margin-left: 5px;
+}
 @media screen and (max-width: 840px) {
     .package-category-header {
         font-size: 14px;
@@ -378,6 +431,9 @@ label:has(.btn-add-address) {
         gap: 0px;
         width: 100%;
     }
+    .user-header {
+        width: 140px;
+    }
 }
 
 @media screen and (max-width: 500px) {
@@ -387,56 +443,61 @@ label:has(.btn-add-address) {
         gap: 10px;
     }
 
-    .user-personal-info{
+    .user-personal-info {
         padding: 20px 15px;
     }
 
-    .user-personal__container div{
+    .user-personal__container div {
         font-size: 14px;
     }
 
-    .user-personal{
-        display: block;
+    .user-personal__container {
+        gap: 20px;
     }
 
-    label:has(.btn-add-address){
+    .user-personal {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    label:has(.btn-add-address) {
         padding: 4px 6px;
     }
 
-    .btn-add-address{
+    .btn-add-address {
         font-size: 14px;
     }
 
-    .user-address__name{
+    .user-address__name {
         font-size: 14px;
     }
 
-    .user-address__action{
+    .user-address__action {
         font-size: 12px;
     }
 
-    .user-address__address{
+    .user-address__address {
         margin-top: 10px;
     }
 
-    .set-default-btn{
+    .set-default-btn {
         font-size: 12px;
         text-align: center;
     }
 
-    .package-search{
+    .package-search {
         padding: 10px 15px;
     }
 
-    .input-search{
+    .input-search {
         font-size: 14px;
     }
 
-    #no-address > img{
+    #no-address > img {
         width: 80%;
     }
 
-    .user-info{
+    .user-info {
         width: 100%;
     }
 }

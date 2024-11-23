@@ -207,20 +207,6 @@ async function renderOrder(option = 'all') {
 
 /**
  * 
- * @param {string} [email] 
- * @returns {string}
- */
-function checkEmail(email) {
-    if (!email) {
-        return "bạn chưa nhập email"
-    }
-    else {
-        return email;
-    }
-}
-
-/**
- * 
  * @param {string} user_id 
  * @returns {Promise<string>}
  */
@@ -236,27 +222,81 @@ async function renderUserInfo(user_id) {
     console.log(user_default_address);
 
     return `
-                    <div class="user-personal">
-                        <div class="user-header">Họ và tên:</div>
-                        <div class="user-info">${user_default_address?.name}</div>
-                    </div>
-                    <div class="user-personal">
-                        <div class="user-header">Giới tính:</div>
-                        <div class="user-info">${create_user_gender(/**@type {String}*/(localStorage.getItem('user_id')))}</div>
-                    </div>
-                    <div class="user-personal">
-                        <div class="user-header">Email:</div>
-                        <div class="user-info">${checkEmail(user_default_address?.email)}</div>
-                    </div>
-                    <div class="user-personal">
-                        <div class="user-header">Số điện thoại:</div>
-                        <div class="user-info">${user_default_address?.phone_num}</div>
-                    </div>       
-                    <div class="user-personal">
-                        <div class="user-header">Địa chỉ giao:</div>
-                        <div class="user-info">${user_default_address?.street}, ${user_default_address?.address.replace(/ - /g, ', ')}</div>
-                    </div>
+        <div class="user-personal">
+            <div class="user-header">Tên đăng nhập:</div>
+            <div class="user-info">${personal_info_data?.name}</div>
+        </div>
+        <div class="user-personal">
+            <div class="user-header">Họ và tên:</div>
+            <div class="user-info">
+                <label>
+                    <input id="input-fullname" type="text" value="${personal_info_data?.fullname}">
+                </label>
+            </div>
+        </div>
+        
+        <div class="user-personal">
+            <div class="user-header">Email:</div>
+            <div class="user-info">
+                ${maskInfo(personal_info_data?.email)}
+                <span class="lmao">${personal_info_data?.email ? 'Thay đổi' : 'Thêm mới'}</span>
+            </div>
+        </div>
+        <div class="user-personal">
+            <div class="user-header">Số điện thoại:</div>
+            <div class="user-info">
+                ${maskInfo(personal_info_data?.phone_num)}
+                <span class="lmao">${personal_info_data?.phone_num ? 'Thay đổi' : 'Thêm mới'}</span>
+            </div>
+        </div>       
+        <div class="user-personal">
+            <div class="user-header">Giới tính:</div>
+            <div class="user-info">
+                <div id="user-gender">
+                    <label>
+                        <input type="radio" name="gender" value="nam" ${personal_info_data?.gender == 'nam' ? 'checked' : ''}>
+                        <span>Nam</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="nu" ${personal_info_data?.gender == 'nu' ? 'checked' : ''}>
+                        <span>Nữ</span>
+                    </label>                
+                    <label>
+                        <input type="radio" name="gender" value="khac" ${personal_info_data?.gender == 'khac' ? 'checked' : ''}> 
+                        <span>Khác</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="save-info-btn">Lưu</div>
     `;
+}
+/**
+ * 
+ * @param {String | undefined} input 
+ * @returns {String}
+ */
+function maskInfo(input) {
+    if (!input) return "";
+
+    if (input.includes('@')) {
+        let [localPart, domain] = input.split('@');
+        if (localPart.length > 2) {
+            localPart = localPart.slice(0, 2) + "*".repeat(localPart.length - 2);
+        } else {
+            localPart = "*".repeat(localPart.length);
+        }
+        return `${localPart}@${domain}`;
+    }
+
+    if (/^\d+$/.test(input)) {
+        if (input.length > 4) {
+            return input.slice(0, 2) + "*".repeat(input.length - 4) + input.slice(-2);
+        } else {
+            return "*".repeat(input.length);
+        }
+    }
+    return "";
 }
 
 async function renderAddressInfo(address_data) {
@@ -393,9 +433,9 @@ function initializationArticle__OrderInfo() {
 
 /**
  * 
- * @returns {void}
+ * @returns {Promise<void>}
  */
-function initializationArticle__AccountInfo() {
+async function initializationArticle__AccountInfo() {
     const article = document.getElementById('article');
     const user_id = localStorage.getItem('user_id');
     if (!article || !user_id) return;
@@ -411,10 +451,22 @@ function initializationArticle__AccountInfo() {
         `;
     const user_container = /**@type {HTMLElement}*/(document.querySelector('.user-personal__container'));
 
-    renderUserInfo(user_id).then(data => {
+    await renderUserInfo(user_id).then(data => {
         if (user_container) user_container.innerHTML = data;
     })
 
+    const save = document.getElementById('save-info-btn');
+    console.log(save);
+    save?.addEventListener('click', async () => {
+        const fullname = /**@type {HTMLInputElement}*/(document.getElementById('input-fullname'));
+        const gender = /**@type {HTMLInputElement}*/ (document.querySelector('input[type="radio"]:checked'));
+        const new_Info = await fakeDatabase.getUserInfoByUserId(user_id);
+        if (!new_Info || !fullname) return;
+        new_Info.fullname = fullname?.value;
+        new_Info.gender = gender ? gender.value : '';
+        fakeDatabase.updateUserInfo(new_Info);
+        toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
+    });
 }
 async function initializationArticle__AddressInfo() {
     const user_id = localStorage.getItem('user_id');

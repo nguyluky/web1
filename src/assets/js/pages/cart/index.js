@@ -133,6 +133,6 @@ export async function updateCart(params, query) {
 export async function removeCart(params, query) {
     const main = document.querySelector('main');
     main?.classList.remove('main-cart');
-    await removeStyle('./assets/css/cart.css');
     document.getElementById('no-info')?.remove();
+    await removeStyle('./assets/css/cart.css');
 }

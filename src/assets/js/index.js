@@ -15,7 +15,7 @@ import {
     updateSearchPage,
 } from './pages/search/search.js';
 import { updateCartQuantity } from './pages/cart/cart.js';
-import { initializationUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
+import { initializationUserInfoPage, removeUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
 import { initializationProductPage, removeProductPage, updateProductPage } from './pages/product/index.js';
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
@@ -48,7 +48,7 @@ const PAGES = [
         pagePath: 'user/:tab/:?info',
         init: initializationUserInfoPage,
         update: updateUserInfoPage,
-        remove: async () => { },
+        remove: removeUserInfoPage,
     },
     {
         pagePath: 'product/:id',

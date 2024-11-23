@@ -37,6 +37,8 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *     id: string;
  *     email: string;
  *     name: string;
+ *     fullname: string;
+ *     gender: 'nam' | 'nu' | 'khac' | String;
  *     passwd: string;
  *     phone_num: string;
  *     rule: 'admin' | 'user';

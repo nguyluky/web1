@@ -1,4 +1,4 @@
-import { addStyle } from "../../until/router.js";
+import { addStyle, removeStyle } from "../../until/router.js";
 import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
 
 export async function initializationPayment() {
@@ -232,7 +232,7 @@ export async function removePayment() {
     const searchBar = document.querySelector('.center');
     searchBar?.classList.remove('hide')
 
-    document.getElementById('payment-style')?.remove();
-    document.getElementById('cart-style')?.remove();
+    await removeStyle('./assets/css/cart.css');
+    await removeStyle('./assets/css/payment.css');
 
 }

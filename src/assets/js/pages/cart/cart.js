@@ -16,13 +16,13 @@ export async function showUserInfo(index = 0) {
     const userName = document.querySelector('.contact-info__name');
     const userTel = document.querySelector('.contact-info__phone-num');
     const userAddress = document.querySelector('.address-info');
+    if (!userName || !userTel || !userAddress) return;
     let style = document.getElementById('no-info');
     if (!style) {
         style = document.createElement('style');
         style.id = 'no-info';
         document.head.appendChild(style);
     }
-    if (!userName || !userTel || !userAddress) return;
     if (userInfo && userInfo?.length > 0) {
         userName.innerHTML = userInfo[index].name;
         userTel.innerHTML = userInfo[index].phone_num;
