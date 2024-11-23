@@ -6,9 +6,15 @@ import uuidv from "../../until/uuid.js";
 import address from "../../db/addressDb.js";
 import { toast } from "../../render/popupRender.js";
 import { formatNumber } from "../../until/format.js";
-import { validator, isCreditCard } from "../../until/validator.js";
+import { validator, isCreditCard, getParent } from "../../until/validator.js";
 import { navigateToPage } from "../../until/router.js";
 import { getSearchParam } from "../../until/router.js";
+
+
+/**
+ * 
+ * @returns @typedef {import("../../until/type.js").Credit} Credit 
+ */
 
 
 export function getOrder() {
@@ -71,7 +77,7 @@ export async function rendeOrder() {
     let originalPrice = 0, discountPrice = 0, deliveryPrice = 10000;
 
 
-    const orders = getOrder();
+    const orders = getOrder() || [];
     const deliveryTime = getDeliveryTime();
 
 
@@ -81,9 +87,6 @@ export async function rendeOrder() {
 
     showUserInfo();
 
-
-    if (!orders)
-        return;
     for (const order of orders) {
         const cart = await fakeDatabase.getCartById(order);
         if (!cart)
@@ -151,31 +154,55 @@ function validateCreditCard() {
             validator.isRequired('#input-cvv'),
             validator.checkCVV('#input-cvv'),
         ],
-        onSubmit: (data) => {
+        onSubmit: async (data) => {
             console.log(data);
+            const user_id = localStorage.getItem('user_id');
             const modal = document.querySelector('.js-modal');
-            const type = isCreditCard(data['#input-creditID']);
-            const parentElement = document.querySelector('.credit-info');
-            const addCreditBtn = document.getElementById('add-credit');
-            if (!parentElement || !modal || !addCreditBtn) {
+
+            if (!modal || !user_id) {
                 return;
             }
             modal.classList.remove('show-modal');
 
-            const creditInfo = document.createElement('div');
-            creditInfo.classList.add('credit__info');
-            let img;
-            if (!type)
-                return;
-            else if (type === 'Visa')
-                img = './assets/img/visa.png';
-            else if (type === 'MasterCard')
-                img = './assets/img/masterCard.svg';
-            else
-                img = './assets/img/jcb.svg'
-            creditInfo.innerHTML = `
+            const credit = {
+                id: data['#input-creditID'],
+                name: data['#input-credit-user'],
+                exp: new Date(data['#EXP__date']),
+                cvv: +data['#input-cvv']
+            }
+
+            await fakeDatabase.addCreditCardToUser(credit, user_id)
+
+            createCredit(credit);
+        }
+    });
+}
+
+/**
+ * 
+ * @param {Credit} data 
+ * @returns 
+ */
+function createCredit(data) {
+    const parentElement = document.querySelector('.credit-info');
+    const addCreditBtn = document.getElementById('add-credit');
+    if (!parentElement || !addCreditBtn)
+        return;
+    const type = isCreditCard(data.id);
+    const creditInfo = document.createElement('div');
+    creditInfo.classList.add('credit__info');
+    let img;
+    if (!type)
+        return;
+    else if (type === 'Visa')
+        img = './assets/img/visa.png';
+    else if (type === 'MasterCard')
+        img = './assets/img/masterCard.svg';
+    else
+        img = './assets/img/jcb.svg'
+    creditInfo.innerHTML = `
                 <label for="">
-                    <input type="radio" />
+                    <input type="radio" name='check-credit'/>
                     <div class="credit__text">
                         <span>
                             <img
@@ -186,30 +213,50 @@ function validateCreditCard() {
                         <div class="credit-name">
                             ${type}
                         </div>
-                        <div>****${parseInt(data['#input-creditID']) % 10000}</div>
+                        <div>****${parseInt(data.id) % 10000}</div>
                     </div>
                 </label>`;
 
-            parentElement.insertBefore(creditInfo, addCreditBtn);
+    parentElement.insertBefore(creditInfo, addCreditBtn);
 
+    creditInfo.querySelector('input')?.addEventListener('change', () => {
+        const creditCardOption = /**@type {HTMLInputElement} */ (document.getElementById('creditCard-option'))
+        if (!creditCardOption.checked) {
+            creditCardOption.checked = true;
         }
-    });
-}
-
-export function showCreditCard() {
-    const creditOption = /** @type{HTMLInputElement}*/(document.getElementById('creditCard-option'));
-    creditOption.addEventListener('change', () => {
-        if (creditOption.checked) {
-            console.log('htd')
-            document.querySelector('.credit-info')?.classList.remove('hide');
-            addCreditCard();
-        }
-        else {
-            document.querySelector('.credit-info')?.classList.add('hide');
-
-        }
+        // if ()
     })
+
 }
+
+export async function showCreditCard() {
+    const user_id = localStorage.getItem('user_id') || ' ';
+    const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
+    if (!userInfo || !userInfo.credits)
+        return;
+    userInfo.credits.forEach(credit => {
+        createCredit(credit);
+    })
+
+
+
+}
+
+// export function showCreditCard() {
+//     // TODO: fix khi uncheck nó không có cẩn
+//     const creditOption = /** @type{HTMLInputElement}*/(document.getElementById('creditCard-option'));
+//     creditOption.addEventListener('change', () => {
+//         if (creditOption.checked) {
+//             console.log('htd')
+//             document.querySelector('.credit-info')?.classList.remove('hide');
+//             addCreditCard();
+//         }
+//         else {
+//             document.querySelector('.credit-info')?.classList.add('hide');
+
+//         }
+//     })
+// }
 
 export function addCreditCard() {
     const addCreditBtn = document.getElementById('add-credit');

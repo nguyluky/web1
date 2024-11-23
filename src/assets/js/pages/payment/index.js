@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-import { getOrder, rendeOrder, changeCart, closeDeal, showCreditCard, closeCreditForm } from "./payment.js";
+import { getOrder, rendeOrder, changeCart, closeDeal, showCreditCard, closeCreditForm, addCreditCard } from "./payment.js";
 import { handleAddressPopup } from "../../index.js";
-=======
 import { addStyle } from "../../until/router.js";
-import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
->>>>>>> main
+// import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
 
 export async function initializationPayment() {
     const main = document.querySelector('main');
@@ -164,7 +161,7 @@ export async function initializationPayment() {
                                         </div>
                                     </span>
                                 </label>
-                                <div class="credit-info hide">
+                                <div class="credit-info">
 
                                     <button
                                         id="add-credit"
@@ -287,6 +284,7 @@ export async function updatePayment() {
     changeCart();
     closeDeal();
     document.querySelector('#change-address-btn')?.addEventListener('click', handleAddressPopup)
+    addCreditCard();
     showCreditCard();
     // closeCreditForm();
 }

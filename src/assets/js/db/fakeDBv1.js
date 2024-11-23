@@ -367,6 +367,17 @@ class FakeDatabase {
         return await requestToPromise(userget);
     }
 
+    async addCreditCardToUser(credit_info, user_id) {
+        if (!db) await this.awaitUntilReady();
+        await this.ensureDataLoaded(ObjectStoreName.USER);
+
+        const userInfo = await this.getUserInfoByUserId(user_id);
+        if (userInfo) {
+            userInfo.credits.push(credit_info);
+            const data = db.transaction(ObjectStoreName.USER, 'readwrite').objectStore(ObjectStoreName.USER);
+            return await requestToPromise(data.put(userInfo));
+        }
+    }
     /**
      * @param {string} phone_num
      * @returns {Promise<UserInfo>}
