@@ -90,7 +90,7 @@ function addquantity(total, quantity, sale_price) {
     quantity.value++;
     sale_price = sale_price * quantity.value;
     quantity.innerHTML = quantity.value;
-    total.innerHTML = sale_price;
+    total.innerHTML = formatNumber(sale_price * 1000);
 }
 
 function minusquantity(total, quantity, sale_price) {
@@ -98,13 +98,13 @@ function minusquantity(total, quantity, sale_price) {
         quantity.value--;
         sale_price = sale_price * quantity.value;
         quantity.innerHTML = quantity.value;
-        total.innerHTML = sale_price;
+        total.innerHTML = formatNumber(sale_price * 1000);
     }
 }
 
 function changequantity(total, quantity, sale_price) {
     sale_price = sale_price * quantity.value;
-    total.innerHTML = sale_price;
+    total.innerHTML = formatNumber(sale_price * 1000);
 }
 
 // hàm sắp xếp random
@@ -282,9 +282,11 @@ function setEventListener(product_id) {
     inputquantity.addEventListener('change', e => {
         if (Number(inputquantity.value) < 1) {
             inputquantity.value = '1';
-            toast({ message: 'Số lượng phải lớn hơn 0', type: 'error' });
+            toast({ message: 'Số lượng phải lớn hơn 0', type: 'warning' });
         }
-        changequantity(total, inputquantity, sale_price);
+        else {
+            changequantity(total, inputquantity, sale_price);
+        }
     });
 
     const add_to_cart = document.querySelector('.add-to-cart');
