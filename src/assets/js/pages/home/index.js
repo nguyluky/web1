@@ -106,7 +106,7 @@ function initializationAside() {
                     </li>
                     <li
                         class="catergory__row--sub-header"
-                        data-value="dtddtdaclcadt"
+                        data-value="dtdadt"
                     >
                         <span>Đại trà</span>
                     </li>
