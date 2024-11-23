@@ -339,7 +339,8 @@ class FakeDatabase {
             rule: 'user',
             status: 'active',
             datecreated: new Date(),
-            address: []
+            address: [],
+            credits: [],
         };
 
         const data_ = db

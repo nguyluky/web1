@@ -4,8 +4,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>We sell books</title>
-        <script type="module" src="./assets/js/cart.js"></script>
-        <script type="module" src="./assets/js/payment.js"></script>
+        <!-- <script type="module" src="./assets/js/cart.js"></script> -->
+        <!-- <script
+            type="module"
+            src="./assets/js/pages/payment/payment.js"
+        ></script> -->
         <!-- <script type="module" src="./assets/js/index.js"></script> -->
         <link rel="stylesheet" href="./assets/css/cart.css" />
         <link rel="stylesheet" href="./assets/css/index.css" />
@@ -102,67 +105,128 @@
                             </h3>
 
                             <div>
-                                <label class="payment-option">
-                                    <input
-                                        type="radio"
-                                        name="payment-option"
-                                        id="cash-option"
-                                        checked
-                                    />
-                                    <span class="payment-text">
-                                        <img
-                                            src="./assets/img/payCash.png"
-                                            alt=""
+                                <div>
+                                    <label class="payment-option">
+                                        <input
+                                            type="radio"
+                                            name="payment-option"
+                                            id="cash-option"
+                                            checked
                                         />
-                                        <div>Thanh toán tiền mặt</div>
-                                        <!-- </div> -->
-                                    </span>
-                                </label>
+                                        <span class="payment-text">
+                                            <img
+                                                src="./assets/img/payCash.png"
+                                                alt=""
+                                            />
+                                            <div class="method-content__title">
+                                                <span>Thanh toán tiền mặt</span>
+                                            </div>
+                                        </span>
+                                    </label>
+                                </div>
 
-                                <label class="payment-option">
-                                    <input
-                                        type="radio"
-                                        name="payment-option"
-                                        id="momo-option"
-                                    />
-                                    <span class="payment-text">
-                                        <img
-                                            src="./assets/img/momo.jpg"
-                                            alt=""
+                                <div>
+                                    <label class="payment-option">
+                                        <input
+                                            type="radio"
+                                            name="payment-option"
+                                            id="momo-option"
                                         />
-                                        <div>Ví Momo</div>
-                                    </span>
-                                </label>
+                                        <span class="payment-text">
+                                            <img
+                                                src="./assets/img/momo.jpg"
+                                                alt=""
+                                            />
+                                            <div class="method-content__title">
+                                                <span>Ví Momo</span>
+                                            </div>
+                                        </span>
+                                    </label>
+                                </div>
 
-                                <label class="payment-option">
-                                    <input
-                                        type="radio"
-                                        name="payment-option"
-                                        id="zaloPay"
-                                    />
-                                    <span class="payment-text">
-                                        <img
-                                            src="./assets/img/zaloPay.png"
-                                            alt=""
+                                <div>
+                                    <label class="payment-option">
+                                        <input
+                                            type="radio"
+                                            name="payment-option"
+                                            id="zaloPay-option"
                                         />
-                                        <div>Ví ZaloPay</div>
-                                    </span>
-                                </label>
+                                        <span class="payment-text">
+                                            <img
+                                                src="./assets/img/zaloPay.png"
+                                                alt=""
+                                            />
+                                            <div class="method-content__title">
+                                                <span>Ví ZaloPay</span>
+                                            </div>
+                                        </span>
+                                    </label>
+                                </div>
 
-                                <label class="payment-option">
-                                    <input
-                                        type="radio"
-                                        name="payment-option"
-                                        id="creditCard"
-                                    />
-                                    <span class="payment-text">
-                                        <img
-                                            src="./assets/img/credit.png"
-                                            alt=""
+                                <div>
+                                    <label class="payment-option">
+                                        <input
+                                            type="radio"
+                                            name="payment-option"
+                                            id="creditCard-option"
                                         />
-                                        <div>Thẻ tín dụng</div>
-                                    </span>
-                                </label>
+                                        <span class="payment-text">
+                                            <img
+                                                src="./assets/img/credit.png"
+                                                alt=""
+                                            />
+                                            <div class="method-content">
+                                                <div
+                                                    class="method-content__title"
+                                                >
+                                                    <span
+                                                        >Thẻ tín dụng/Ghi
+                                                        nợ</span
+                                                    >
+                                                </div>
+                                                <div class="card-icon">
+                                                    <img
+                                                        src="./assets/img/masterCard.svg"
+                                                        alt=""
+                                                    />
+                                                    <img
+                                                        src="./assets/img/visa.png"
+                                                        alt=""
+                                                    />
+                                                    <img
+                                                        src="./assets/img/jcb.svg"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </label>
+                                    <div class="credit-info">
+                                        <div class="credit__info">
+                                            <label for="">
+                                                <input type="radio" />
+                                                <div class="credit__text">
+                                                    <span>
+                                                        <img
+                                                            src="./assets/img/visa.png"
+                                                            alt=""
+                                                        />
+                                                    </span>
+                                                    <div class="credit-name">
+                                                        Visa
+                                                    </div>
+                                                    <div>****2525</div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <button
+                                            id="add-credit"
+                                            class="button_1"
+                                        >
+                                            + Thêm thẻ mới
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -362,28 +426,85 @@
             </div>
         </div> -->
 
-        <div class="modal js-modal show-modal">
+        <div class="modal js-modal">
             <div class="modal-overlay"></div>
-            <div class="modal-container modal-demo">
-                <div class="header-content">
+            <div class="credit-content modal-demo">
+                <div class="credit-title">
                     <h4>Thêm Thẻ Tín dung/Ghi nợ</h4>
                     <div class="card-icon">
-                        <i class="fa-brands fa-cc-visa"></i>
-                        <i class="fa-brands fa-cc-jcb"></i>
-                        <i class="fa-brands fa-cc-mastercard"></i>
+                        <img src="./assets/img/masterCard.svg" alt="" />
+                        <img src="./assets/img/visa.png" alt="" />
+                        <img src="./assets/img/jcb.svg" alt="" />
                     </div>
                 </div>
+                <form class="add-card-form">
+                    <div class="input-credit">
+                        <div for="" class="input-title">Số thẻ</div>
+                        <div class="input-text">
+                            <input
+                                type="number"
+                                placeholder="VD: 4123 4567 8901 2345"
+                                id="input-creditID"
+                            />
+                        </div>
+                        <span class="form-error"></span>
+                    </div>
 
-                <form class="body-content">
-                    <label for=""
-                        >Chi tiết thẻ
-                        <input type="text" placeholder="Số thẻ" />
-                        <input type="text" />
-                    </label>
+                    <div class="input-credit">
+                        <div class="input-title">Tên in trên thẻ</div>
+
+                        <div class="input-text">
+                            <input
+                                type="text"
+                                name=""
+                                id="input-credit-user"
+                                placeholder="VD: NGUYEN VAN A"
+                            />
+                        </div>
+                        <span class="form-error"></span>
+                    </div>
+
+                    <div class="input-credit2">
+                        <div class="input-credit" style="margin-right: 15px">
+                            <div class="input-title">Ngày hết hạn:</div>
+                            <div class="input-text">
+                                <input
+                                    type="text"
+                                    name=""
+                                    placeholder="MM/YY"
+                                    id="EXP__date"
+                                />
+                            </div>
+                            <span class="form-error"></span>
+                        </div>
+
+                        <div class="input-credit">
+                            <div class="input-title">Mã bảo mật:</div>
+                            <div class="input-text">
+                                <input
+                                    type="number"
+                                    name=""
+                                    id="input-cvv"
+                                    placeholder="VD: 123"
+                                />
+                            </div>
+                            <span class="form-error"></span>
+                        </div>
+                    </div>
+                    <div class="btn-form">
+                        <button class="button_1" id="back-payment">
+                            Trở lại
+                        </button>
+                        <input
+                            type="submit"
+                            value="Xác nhận"
+                            class="button_1"
+                            id="credit-btn"
+                        />
+                    </div>
                 </form>
             </div>
         </div>
-
         <div id="toast"></div>
     </body>
 </html>

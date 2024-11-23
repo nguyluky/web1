@@ -92,7 +92,8 @@ export function getDeliveryTime() {
     const date = {
         date: dayName,
         day: today.getDate(),
-        month: today.getMonth() + 1
+        month: today.getMonth() + 1,
+        year: today.getFullYear
     }
     return date;
 }

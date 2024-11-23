@@ -1,4 +1,4 @@
-import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
+import { getOrder, rendeOrder, changeCart, closeDeal, showCreditCard, closeCreditForm } from "./payment.js";
 import { handleAddressPopup } from "../../index.js";
 
 export async function initializationPayment() {
@@ -52,12 +52,10 @@ export async function initializationPayment() {
                                         width="24px"
                                     />
                                     <span
-                                        >Đảm bảo nhận hàng trước 01/12</span
+                                        ></span
                                     >
                                 </div>
-                                <div id="total-ship-quantity">
-                                        Có 3 sản phẩm hỗ trợ hình thức này
-                                    </div>
+                                <div id="total-ship-quantity"></div>
                             </div>
                         </div>
 
@@ -76,53 +74,113 @@ export async function initializationPayment() {
                         </h3>
 
                         <div>
-                            <label class="payment-option">
-                                <input
-                                    type="radio"
-                                    name="payment-option"
-                                    id="cash-option"
-                                    checked
-                                />
-                                <span class="payment-text">
-                                    <img
-                                        src="./assets/img/payCash.png"
-                                        alt=""
-                                        
+                            <div>
+                                <label class="payment-option">
+                                    <input
+                                        type="radio"
+                                        name="payment-option"
+                                        id="cash-option"
+                                        checked
                                     />
-                                    <div>Thanh toán tiền mặt</div>
-                                    <!-- </div> -->
-                                </span>
-                            </label>
+                                    <span class="payment-text">
+                                        <img
+                                            src="./assets/img/payCash.png"
+                                            alt=""
+                                            
+                                        />
+                                        <div class="method-content__title">
+                                            <span>Thanh toán tiền mặt</span>
+                                        </div>                                
+                                    </span>
+                                </label>
+                            </div>
 
-                            <label class="payment-option">
-                                <input
-                                    type="radio"
-                                    name="payment-option"
-                                    id="momo-option"
-                                />
-                                <span class="payment-text">
-                                    <img
-                                        src="./assets/img/momo.jpg"
-                                        alt=""
+                            <div>
+                                <label class="payment-option">
+                                    <input
+                                        type="radio"
+                                        name="payment-option"
+                                        id="momo-option"
                                     />
-                                    <div>Ví Momo</div>
-                                </span>
-                            </label>
+                                    <span class="payment-text">
+                                        <img
+                                            src="./assets/img/momo.jpg"
+                                            alt=""
+                                        />
+                                        <div class="method-content__title">
+                                            <span>Ví Momo</span>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
 
-                            <label class="payment-option">
-                                <input
-                                    type="radio"
-                                    name="payment-option"
-                                    id="zaloPay-option"
-                                />
-                                <span class="payment-text">
-                                    <img
-                                        src="./assets/img/zaloPay.png"
-                                        alt=""
+                            <div>
+                                <label class="payment-option">
+                                    <input
+                                        type="radio"
+                                        name="payment-option"
+                                        id="zaloPay-option"
                                     />
-                                    <div>Ví ZaloPay</div>
-                                </span>
-                            </label>
+                                    <span class="payment-text">
+                                        <img
+                                            src="./assets/img/zaloPay.png"
+                                            alt=""
+                                        />
+                                        <div class="method-content__title">
+                                            <span>Ví ZaloPay</span>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div>
+                                <label class="payment-option">
+                                    <input
+                                        type="radio"
+                                        name="payment-option"
+                                        id="creditCard-option"
+                                    />
+                                    <span class="payment-text">
+                                        <img
+                                            src="./assets/img/credit.png"
+                                            alt=""
+                                        />
+                                        <div class="method-content">
+                                            <div
+                                                class="method-content__title"
+                                            >
+                                                <span
+                                                    >Thẻ tín dụng/Ghi
+                                                    nợ</span
+                                                >
+                                            </div>
+                                            <div class="card-icon">
+                                                <img
+                                                    src="./assets/img/masterCard.svg"
+                                                    alt=""
+                                                />
+                                                <img
+                                                    src="./assets/img/visa.png"
+                                                    alt=""
+                                                />
+                                                <img
+                                                    src="./assets/img/jcb.svg"
+                                                    alt=""
+                                                />
+                                            </div>
+                                        </div>
+                                    </span>
+                                </label>
+                                <div class="credit-info hide">
+
+                                    <button
+                                        id="add-credit"
+                                        class="button_1"
+                                    >
+                                        + Thêm thẻ mới
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -236,6 +294,8 @@ export async function updatePayment() {
     changeCart();
     closeDeal();
     document.querySelector('#change-address-btn')?.addEventListener('click', handleAddressPopup)
+    showCreditCard();
+    // closeCreditForm();
 }
 
 export async function removePayment() {

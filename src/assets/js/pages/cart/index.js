@@ -22,7 +22,7 @@ const html = `
                 <i id="delete-all-cart" class="fa-regular fa-trash-can"></i>
             </div>
             <div class="left-content-body">
-                <div class="cart-items"></div>
+                <div class="cart-items"></div> 
                 <!-- <div class="cart-vouchers"></div>  -->
             </div>
         </div>

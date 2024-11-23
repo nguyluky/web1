@@ -273,6 +273,9 @@ function initializeAccountPopup() {
         }
     }
 
+
+
+
     BUTTON_ACCOUNT.addEventListener('click', () => {
         if (!localStorage.getItem('user_id')) {
             MODAL.classList.add('show-modal');
