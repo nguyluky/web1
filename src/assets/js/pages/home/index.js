@@ -5,7 +5,6 @@ import {
     setupPaginationListeners,
     updatePagination,
 } from './renderProduct.js';
-import { updateCartQuantity } from '../cart/cart.js';
 import { navigateToPage } from '../../until/router.js';
 
 /**
@@ -16,6 +15,9 @@ function initializationMain() {
 
     if (!main) return;
 
+    if (!localStorage.getItem('user_id')) {
+        document.querySelector('.dropdown-btn-content')?.remove();
+    }
     main.innerHTML = `
     <div class="main_wapper">
         <aside class="aside"></aside>
@@ -243,7 +245,6 @@ export async function initializationHomePage(params, query) {
     initializationMain();
     initializationArticle();
     initializationAside();
-    updateCartQuantity();
 }
 
 /**

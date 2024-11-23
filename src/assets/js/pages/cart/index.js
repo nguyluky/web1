@@ -1,4 +1,4 @@
-import { addStyle, removeStyle } from "../../until/router.js";
+import { addStyle, navigateToPage, removeStyle } from "../../until/router.js";
 import { showUserInfo, renderCart, updateCartQuantity, buyBooks, changeAddress } from "./cart.js";
 
 
@@ -22,7 +22,7 @@ const html = `
                 <i id="delete-all-cart" class="fa-regular fa-trash-can"></i>
             </div>
             <div class="left-content-body">
-                <div class="cart-items"></div>
+                <div class="cart-items"></div> 
                 <!-- <div class="cart-vouchers"></div>  -->
             </div>
         </div>
@@ -101,6 +101,10 @@ const html = `
  * @returns {Promise<void>}
  */
 export async function initializationCart(params, query) {
+
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) { navigateToPage('home'); return; }
+
     const main = document.querySelector('main');
     if (!main) return;
 
@@ -110,7 +114,6 @@ export async function initializationCart(params, query) {
     main.innerHTML = html;
 
     changeAddress();
-    updateCartQuantity();
     showUserInfo();
     await renderCart();
 

@@ -45,8 +45,19 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *     status: 'active' | 'block';
  *     datecreated: Date;
  *     address: UserAddress[];
+ *     credits: Credit[];
  * }} UserInfo
  */
+
+/**
+ * @typedef {{
+ *      id: string;
+ *      name: string;
+ *      exp: Date;
+ *      cvv: number;
+ * }} Credit
+ *
+*/
 
 /**
  * @typedef {{

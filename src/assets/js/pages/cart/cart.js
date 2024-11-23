@@ -3,7 +3,7 @@ import uuidv from '../../until/uuid.js';
 import { toast } from '../../render/popupRender.js';
 import { navigateToPage } from '../../until/router.js';
 import { formatNumber } from '../../until/format.js';
-import { showListShippingAddressPopup } from '../../render/addressPopup.js';
+import { showListShippingAddressPopup, showShippingFromeAddressPopup } from '../../render/addressPopup.js';
 
 export async function showUserInfo(index = 0) {
     const user_id = localStorage.getItem("user_id");
@@ -17,6 +17,19 @@ export async function showUserInfo(index = 0) {
     const userTel = document.querySelector('.contact-info__phone-num');
     const userAddress = document.querySelector('.address-info');
     if (!userName || !userTel || !userAddress) return;
+    // if (userInfo && userName && userTel && userAddress) {
+    // if (userInfo.address.length > 0) {
+    //     userName.innerHTML = userInfo.address[0].name;
+    //     userTel.innerHTML = userInfo.address[0].phone_num;
+    //     const address = userInfo.address[0].address.split('-');
+    //     const street = userInfo.address[0].street
+    //     userAddress.innerHTML = `${street},${address[2]},${address[1]},${address[0]}`;
+    // }
+    // else {
+    //     userName.innerHTML = userInfo.name;
+    //     userTel.innerHTML = userInfo.phone_num;
+    // }
+
     let style = document.getElementById('no-info');
     if (!style) {
         style = document.createElement('style');
@@ -33,6 +46,7 @@ export async function showUserInfo(index = 0) {
         style.innerHTML = `.contact-info {justify-content: center}`;
     }
 }
+
 
 
 /**
@@ -93,7 +107,8 @@ export function getDeliveryTime() {
     const date = {
         date: dayName,
         day: today.getDate(),
-        month: today.getMonth() + 1
+        month: today.getMonth() + 1,
+        year: today.getFullYear
     }
     return date;
 }
@@ -309,7 +324,8 @@ export async function pushCartItemIntoCart(bookId, incrQuantity = 1) {
         return cart.sach === bookId;
     });
     if (!cart) {
-        cart_id = uuidv();
+        // NOTE: 
+        cart_id = uuidv(10);
         quantity = incrQuantity;
     } else {
         cart_id = cart.id;
@@ -337,11 +353,9 @@ function showEmptyCart() {
         }
         const emptyCart = document.createElement('div');
         emptyCart.classList.add('empty-cart');
-        emptyCart.innerHTML = `
-            <div class="empty-cart">
-                <img src="./assets/img/emptyCart.png" alt="" />
-                <span>Giỏ hàng trống</span>
-            </div>
+        emptyCart.innerHTML = `  
+            <img src="./assets/img/emptyCart.png" alt="" />
+            <span>Giỏ hàng trống</span>         
         `;
         mainComponent.appendChild(emptyCart);
     }
@@ -545,10 +559,10 @@ export async function buyBooks() {
     if (!user_id) {
         return;
     }
-    const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
     const buyBtn = document.querySelector('.btn-danger');
 
-    buyBtn?.addEventListener('click', () => {
+    buyBtn?.addEventListener('click', async (e) => {
+        const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
         const orders = /**@type {NodeListOf<HTMLInputElement>} */(document.querySelectorAll('input[name="check-book"]:checked'))
         const orderItems = [];
         for (const order of orders) {
@@ -561,6 +575,17 @@ export async function buyBooks() {
         else if (userInfo && userInfo.status === 'block') {
             toast({ title: 'Tài khoản của bạn đã bị chặn', type: 'error' });
             return
+        }
+        else if (userInfo?.address.length === 0) {
+            showShippingFromeAddressPopup(async (address, bool) => {
+                if (bool)
+                    userInfo?.address.unshift(address);
+                else
+                    userInfo?.address.push(address);
+                await fakeDatabase.updateUserAddress(user_id, userInfo?.address);
+                return;
+            }, () => { });
+            return;
         }
 
         navigateToPage('payment', { payment: orderItems.join(',') });
