@@ -229,8 +229,9 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
 /**
  * 
  * @param {import("../until/type").UserAddress} address
- * @param {number} i
- * @returns {HTMLElement | null}
+ * @param {number} [i]
+ * @param {boolean} [sl=false] 
+ * @returns {HTMLElement}
  */
 export function createAddressItem(address, i = NaN, sl = false) {
     if (isNaN(i)) {
