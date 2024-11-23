@@ -2,7 +2,7 @@ import fakeDatabase from "../../db/fakeDBv1.js";
 import { showNewShippingAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
 import { dateToString, removeDiacritics } from "../../until/format.js";
-import { navigateToPage } from "../../until/router.js";
+import { errorPage, navigateToPage } from "../../until/router.js";
 import { updateCartQuantity } from "../cart/cart.js";
 
 const status = {
@@ -511,7 +511,8 @@ function switchTab() {
 export async function initializationUserInfoPage(params, query) {
 
     const user_id = localStorage.getItem('user_id');
-    if (!user_id) return;
+    if (!user_id) { navigateToPage('home'); return; }
+
     const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
     const cssRep = await fetch('./assets/css/user_info.css');
     const style = document.createElement('style');
@@ -537,7 +538,8 @@ export async function initializationUserInfoPage(params, query) {
  * @returns {Promise<void>}
  */
 export async function updateUserInfoPage(params, query) {
-    const tab = params.tab;
+    const tab = params.tab || 'account';
+
     const more_option = /**@type {HTMLElement} */ (document.querySelector('.user-info-tab .info-tab__more'));
     const allTabs = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.info-tab'));
     if (!more_option || !allTabs) return;
@@ -546,15 +548,18 @@ export async function updateUserInfoPage(params, query) {
         case 'account':
             {
                 more_option.style.display = 'flex';
-                const info = params.info;
+                const info = params.info || 'profile';
                 switch (info) {
                     case 'address':
                         allTabs[2].classList.add('selected');
                         initializationArticle__AddressInfo();
                         break;
-                    default:
+                    case 'profile':
                         allTabs[1].classList.add('selected');
                         initializationArticle__AccountInfo();
+                        break;
+                    default:
+                        errorPage(404);
                 }
                 break;
             }
@@ -563,6 +568,8 @@ export async function updateUserInfoPage(params, query) {
             allTabs[3].classList.add('selected');
             initializationArticle__OrderInfo();
             break;
+        default:
+            errorPage(404);
     }
 }
 

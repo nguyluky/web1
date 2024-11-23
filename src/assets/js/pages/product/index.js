@@ -1,12 +1,14 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import { toast } from '../../render/popupRender.js';
 import { formatNumber, text2htmlElement } from '../../until/format.js';
-import { navigateToPage } from '../../until/router.js';
+import { addStyle, errorPage, navigateToPage, removeStyle } from '../../until/router.js';
 import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
-const Product_Data = await fakeDatabase.getAllBooks();
+
 let data = [];
 let Current_Page = 1;
 let Products_Per_page = 4;
+
+const Product_Data = await fakeDatabase.getAllBooks();
 
 /**
  *
@@ -17,18 +19,16 @@ export async function initializationProductPage(params, query) {
     const main = document.querySelector('main');
     if (!main) return;
 
-    if (!document.querySelector('#product-page-style')) {
-        const cssRep = await fetch('./assets/css/product.css');
-        const style = document.createElement('style');
-        style.textContent = await cssRep.text();
-        style.id = 'product-page-style';
-        document.head.appendChild(style);
-    }
+
+    await addStyle('./assets/css/product.css');
 
     const product_id = params.id;
 
     const general_info = await fakeDatabase.getSachById(product_id);
-    if (!general_info) return;
+    if (!general_info) {
+        errorPage(404, "Sản phẩm bạn đang tìm kiếm hiện không tồn tại vui lòng thử lại sau vài phút hoặc liên hệ với chúng tôi để được hỗ trợ");
+        return;
+    }
     const container = rendergeneralInfo(general_info);
 
     main.innerHTML = `
@@ -64,7 +64,6 @@ export async function initializationProductPage(params, query) {
     setEventListener(product_id);
     shuffle(data); // trước khi display sản phẩm tương tự thì sẽ shuffle lại mảng
     displayProducts();
-    updateCartQuantity();
     globalThis.scrollTo({ top: 0, behavior: "smooth" }); // kéo lên đầu trang mỗi khi tạo trang product
 }
 
@@ -83,7 +82,7 @@ export async function updateProductPage(params, query) {
  * @param {URLSearchParams} query 
  */
 export async function removeProductPage(params, query) {
-    document.getElementById('product-page-style')?.remove();
+    await removeStyle('./assets/css/product.css');
 }
 
 function addquantity(total, quantity, sale_price) {

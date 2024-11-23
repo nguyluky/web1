@@ -7,8 +7,7 @@ import {
 } from './popupAccount.js';
 import { validateEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './pages/home/index.js';
-import urlConverter, { navigateToPage, urlIsPage } from './until/router.js';
-import { initializationPageNotFound } from './pages/pageNotFound/index.js';
+import urlConverter, { initializeUrlHandling, navigateToPage, urlIsPage } from './until/router.js';
 import {
     initializationSearchPage,
     removeSearchBar,
@@ -23,12 +22,7 @@ import { toast } from './render/popupRender.js';
 
 //#region khai bao page
 /**
- * @type {{
- *  pagePath: string,
- *  init: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>,
- *  update: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>,
- *  remove: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>
- * }[]}
+ * @type {import('./until/router.js').PAGE[]}
  */
 const PAGES = [
     {
@@ -61,12 +55,6 @@ const PAGES = [
         init: initializationCart,
         update: updateCart,
         remove: removeCart
-    },
-    {
-        pagePath: '404',
-        init: initializationPageNotFound,
-        update: async () => { },
-        remove: async () => { },
     },
     {
         pagePath: 'payment',
@@ -302,117 +290,6 @@ function initializeAccountPopup() {
 
 }
 
-/**
- * Khởi tạo xử lý URL cho ứng dụng.
- *
- * Hàm này thiết lập các trình nghe sự kiện và trình xử lý cần thiết để quản lý
- * các thay đổi URL trong ứng dụng. Nó đảm bảo rằng ứng dụng có thể phản hồi các
- * đường dẫn và tham số URL khác nhau, cho phép điều hướng và quản lý trạng thái
- * dựa trên URL.
- *
- * Cách hoạt động:
- *
- * 1. Thêm một trình nghe sự kiện cho sự kiện 'hashchange' để xử lý các thay đổi
- *    hash của URL.
- * 2. Phân tích cú pháp hash của URL hiện tại để xác định trạng thái ban đầu của
- *    ứng dụng.
- * 3. Gọi hàm render update remove phù hợp dựa trên trạng thái ban đầu.
- *
- * Cách sử dụng:
- *
- * InitializeUrlHandling();
- *
- * Ví dụ:
- *
- * // Gọi hàm này một lần khi khởi động ứng dụng initializeUrlHandling();
- *
- * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
- * https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
- */
-async function initializeUrlHandling() {
-    let { page: curr_page, query } = urlConverter(location.hash);
-    /**
-     * @type {PAGES[number] | undefined}
-     */
-    let oldPage;
-    for (const page of PAGES) {
-        const param = urlIsPage(curr_page.replace('#/', ''), page.pagePath);
-        if (param) {
-            await page.init(param, query);
-            await page.update(param, query);
-            oldPage = page;
-            break;
-        }
-    }
-
-    /**
-     * Hiển thị loading spinner trong khi chuyển trang.
-     * @returns {void}
-     */
-    function showLoading() {
-        const main = document.querySelector('main');
-        if (!main) return;
-        main.innerHTML = `<div style="height: 100vh">
-                <div class="dot-spinner-wrapper">
-                    <div class="dot-spinner">
-                        <div class="dot-spinner__dot"></div>
-                        <div class="dot-spinner__dot"></div>
-                        <div class="dot-spinner__dot"></div>
-                        <div class="dot-spinner__dot"></div>
-                        <div class="dot-spinner__dot"></div>
-                        <div class="dot-spinner__dot"></div>
-                        <div class="dot-spinner__dot"></div>
-                        <div class="dot-spinner__dot"></div>
-                    </div>
-
-                    <p style="margin-left: 10px">Đang tải dữ liệu</p>
-                </div>
-            </div>`
-    }
-
-    /** Khi hash thai đổi */
-    async function handleHashChange() {
-        let { page, query } = urlConverter(location.hash);
-        page = page.replace('#/', '');
-
-        let isMach = false;
-
-        for (const p of PAGES) {
-            const param = urlIsPage(page, p.pagePath);
-            if (!param) { continue; }
-            isMach = true;
-            if (oldPage?.pagePath !== p.pagePath) {
-                console.log('remove', oldPage?.pagePath);
-                await oldPage?.remove(param, query);
-
-                showLoading();
-
-                console.log('init', p.pagePath);
-                await p.init(param, query);
-                oldPage = p;
-            }
-
-            console.log('update', p.pagePath);
-            await p.update(param, query);
-        }
-
-        if (!isMach) {
-            for (const p of PAGES) {
-                p.pagePath === '404' && await p.init({}, query);
-                oldPage = p;
-            }
-        }
-
-    }
-
-    window.addEventListener('hashchange', handleHashChange);
-
-    if (!oldPage) {
-        navigateToPage('home');
-        return;
-    };
-}
-
 /** Khởi tạo chức năng tìm kiếm */
 function initializationSearch() {
 
@@ -433,8 +310,9 @@ function initializationSearch() {
 /** Main */
 function main() {
     initializeAccountPopup();
-    initializeUrlHandling();
+    initializeUrlHandling(PAGES);
     initializationSearch();
+    updateCartQuantity();
 }
 
 main();

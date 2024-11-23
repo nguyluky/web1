@@ -1,7 +1,11 @@
-import { addStyle } from "../../until/router.js";
+import { addStyle, navigateToPage } from "../../until/router.js";
 import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
 
 export async function initializationPayment() {
+
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) { navigateToPage('home'); return; }
+
     const main = document.querySelector('main');
     if (!main) return;
 

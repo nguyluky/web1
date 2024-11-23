@@ -1,3 +1,6 @@
+let oldPathPage = '';
+
+
 /**
  *
  * @param {string} url
@@ -94,6 +97,7 @@ export function getSearchParam(key) {
  *      query.set('id', '123');
  *      return query;
  * }
+ * 
  */
 export function navigateToPage(page, query) {
     let { page: currentPage, query: currentQuery } = urlConverter(location.hash);
@@ -156,5 +160,190 @@ export function removeStyle(url) {
     const style = document.getElementById(encodeURIComponent(url));
     if (style) {
         document.head.removeChild(style);
+    }
+}
+
+
+/**
+ * @typedef {{
+ *  pagePath: string,
+ *  init: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>,
+ *  update: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>,
+ *  remove: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>
+ * }} PAGE
+ */
+
+
+
+/**
+ * Khởi tạo xử lý URL cho ứng dụng.
+ *
+ * Hàm này thiết lập các trình nghe sự kiện và trình xử lý cần thiết để quản lý
+ * các thay đổi URL trong ứng dụng. Nó đảm bảo rằng ứng dụng có thể phản hồi các
+ * đường dẫn và tham số URL khác nhau, cho phép điều hướng và quản lý trạng thái
+ * dựa trên URL.
+ *
+ * Cách hoạt động:
+ *
+ * 1. Thêm một trình nghe sự kiện cho sự kiện 'hashchange' để xử lý các thay đổi
+ *    hash của URL.
+ * 2. Phân tích cú pháp hash của URL hiện tại để xác định trạng thái ban đầu của
+ *    ứng dụng.
+ * 3. Gọi hàm render update remove phù hợp dựa trên trạng thái ban đầu.
+ *
+ * Cách sử dụng:
+ *
+ * InitializeUrlHandling();
+ *
+ * Ví dụ:
+ *
+ * // Gọi hàm này một lần khi khởi động ứng dụng initializeUrlHandling();
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/hashchange_event
+ * 
+ * @param {PAGE[]} pages
+ * 
+ */
+export async function initializeUrlHandling(pages) {
+
+    // MAP
+
+    let pageObject = {};
+    pages.forEach(page => {
+        pageObject[page.pagePath] = page;
+    });
+
+    let { page: curr_page, query } = urlConverter(location.hash);
+
+    for (const path of Object.keys(pageObject)) {
+        const param = urlIsPage(curr_page.replace('#/', ''), path);
+        if (param) {
+            const page = pageObject[path];
+            await page.init(param, query);
+            await page.update(param, query);
+            oldPathPage = path;
+            break;
+        }
+    }
+
+    /**
+     * Hiển thị loading spinner trong khi chuyển trang.
+     * @returns {void}
+     */
+    function showLoading() {
+        const main = document.querySelector('main');
+        if (!main) return;
+        main.innerHTML = `<div style="height: 100vh">
+                <div class="dot-spinner-wrapper">
+                    <div class="dot-spinner">
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                        <div class="dot-spinner__dot"></div>
+                    </div>
+
+                    <p style="margin-left: 10px">Đang tải dữ liệu</p>
+                </div>
+            </div>`
+    }
+
+    /** Khi hash thai đổi */
+    async function handleHashChange() {
+        let { page: urlPath, query } = urlConverter(location.hash);
+        urlPath = urlPath.replace('#/', '');
+
+        let isMach = false;
+
+        for (const path of Object.keys(pageObject)) {
+            const param = urlIsPage(urlPath, path);
+            if (!param) { continue; }
+
+            isMach = true;
+            const page = pageObject[path];
+
+            if (path != oldPathPage) {
+                console.log('remove page:', oldPathPage);
+                await pageObject[oldPathPage]?.remove(param, query);
+                showLoading();
+                console.log('init page:', path);
+                await page.init(param, query);
+                oldPathPage = path;
+            }
+
+            console.log('update page:', path);
+            await page.update(param, query);
+            break;
+
+        }
+
+        if (!isMach) {
+            const page = pageObject[oldPathPage];
+            await page.remove({}, query);
+            console.log('404 page');
+            errorPage(404);
+        }
+
+    }
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    if (!oldPathPage) {
+        navigateToPage('home');
+        return;
+    };
+}
+
+/**
+ * 
+ * @param {number} code 
+ * @param {string} [message]
+ * @returns {void}
+ */
+export function errorPage(code, message) {
+    const main = document.querySelector('main');
+    if (!main) return;
+    main.innerHTML = errorPageHtml(code);
+    oldPathPage = 'error';
+
+    if (message) {
+        const span = document.createElement('span');
+        span.innerText = message;
+        main.querySelector('span')?.replaceWith(span);
+    }
+}
+
+function errorPageHtml(code) {
+    switch (code) {
+        case 404:
+            return `
+            <div class="main_wapper">
+                <article class="article page-not-found">
+                    <img src="/assets/img/error-illustration-1.svg" alt="404" />
+                    <h1>404</h1>
+                    <strong>Page not found</strong>
+                    <span
+                        >Chúng tôi không tìm thấy trang bạn đang cố truy cập,
+                        vui lòng về lại trang chính hoặc liên hệ với admin để
+                        được giúp đỡ.</span
+                    >
+                </article>
+            </div>`
+        default:
+            return `
+            <div class="main_wapper">
+                <article class="article page-not-found">
+                    <img src="/assets/img/error-illustration-1.svg" alt="404" />
+                    <h1>500</h1>
+                    <strong>Server Error</strong>
+                    <span
+                        >Đây không phải lỗi của bạn đây là lỗi ở phía chúng tôi.</span
+                    >
+                </article>
+            </div>`
     }
 }

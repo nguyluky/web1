@@ -5,7 +5,6 @@ import {
     setupPaginationListeners,
     updatePagination,
 } from './renderProduct.js';
-import { updateCartQuantity } from '../cart/cart.js';
 import { navigateToPage } from '../../until/router.js';
 
 /**
@@ -243,7 +242,6 @@ export async function initializationHomePage(params, query) {
     initializationMain();
     initializationArticle();
     initializationAside();
-    updateCartQuantity();
 }
 
 /**
