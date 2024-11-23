@@ -19,7 +19,6 @@ import { initializationProductPage, removeProductPage, updateProductPage } from 
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
 import { toast } from './render/popupRender.js';
-import { showListShippingAddressPopup } from './render/addressPopup.js';
 
 //#region khai bao page
 /**
@@ -217,13 +216,6 @@ function initializeAccountPopup() {
         }
 
         const p3 = document.createElement('p');
-        p3.textContent = 'Đăng xuất';
-        p3.onclick = (event) => {
-            event.stopPropagation();
-            localStorage.removeItem('user_id');
-            navigateToPage('home')
-            // location.reload();
-        }
         p3.textContent = 'Chuyển đến admin';
         p3.onclick = () => {
             location.href = '/admin/index.html';
@@ -231,6 +223,12 @@ function initializeAccountPopup() {
 
         const p4 = document.createElement('p');
         p4.textContent = 'Đăng xuất';
+        p4.onclick = (event) => {
+            event.stopPropagation();
+            localStorage.removeItem('user_id');
+            navigateToPage('home')
+            toast({ title: 'Đăng xuất thành công', type: 'success' })
+        }
 
         dropDown.appendChild(p1);
         dropDown.appendChild(p2);

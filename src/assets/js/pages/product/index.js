@@ -4,11 +4,11 @@ import { formatNumber, text2htmlElement } from '../../until/format.js';
 import { addStyle, errorPage, navigateToPage, removeStyle } from '../../until/router.js';
 import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
 
-let data = [];
+let SPtt = [];
 let Current_Page = 1;
 let Products_Per_page = 4;
 
-const Product_Data = await fakeDatabase.getAllBooks();
+let Product_Data = [];
 
 /**
  *
@@ -54,15 +54,21 @@ export async function initializationProductPage(params, query) {
             </div>
     </div>
     `;
-    const product_categories = (document.querySelectorAll('.product-category'));
-    let cates = Array.from(product_categories).map((e) => { return /**@type {HTMLElement} */(e).dataset.category });
 
-    data = Product_Data.filter((book) => {
+    let cates = general_info.category
+
+    if (Product_Data.length == 0) {
+        Product_Data = await fakeDatabase.getAllBooks();
+    }
+    SPtt = Product_Data.filter((book) => {
         return cates.some(e => { return book.category.includes(String(e)) && book.id != product_id })
     })
 
+    console.log(SPtt);
+
+
     setEventListener(product_id);
-    shuffle(data); // trước khi display sản phẩm tương tự thì sẽ shuffle lại mảng
+    shuffle(SPtt); // trước khi display sản phẩm tương tự thì sẽ shuffle lại mảng
     displayProducts();
     globalThis.scrollTo({ top: 0, behavior: "smooth" }); // kéo lên đầu trang mỗi khi tạo trang product
 }
@@ -380,16 +386,10 @@ async function displayProducts() {
         document.querySelector('.products-header')
     );
     productlist.innerHTML = '';
-    // if (data.length == 0) {
-    //     header.style.display = 'none';
-    //     noProduct.style.display = '';
-    //     return;
-    // }
-    // noProduct.style.display = 'none';
     header.style.display = '';
     const start = (Current_Page - 1) * Products_Per_page;
     const end = start + Products_Per_page;
-    const Products_To_Display = data.slice(start, end);
+    const Products_To_Display = SPtt.slice(start, end);
 
     for (const product of Products_To_Display) {
         const productItem = await createProduct(product);

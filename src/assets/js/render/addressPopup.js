@@ -26,21 +26,21 @@ function isClickOutSide(e, element) {
 
 /**
  * 
- * @param {import("../until/type").UserAddress[]} list
- * @param {(newAddress: import("../until/type").UserAddress, boolean) => Promise<any>} onOk 
+ * // mới sửa lại hàm, nếu có data thì hiện lên form với dữ liệu đó
+ * 
+ * @param {(newAddress: import("../until/type").UserAddress, setDefault: boolean) => Promise<any>} onOk 
  * @param {() => any} onCancle
+ * @param {import("../until/type").UserAddress} [data]
+ * @param {boolean} [isDefault = false]
  * @returns {void}
  */
-
-// mới sửa lại hàm, nếu có data thì hiện lên form với dữ liệu đó
-export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
-    let data = list[index];
+export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = false) {
     const html = `<div class="popup">
         <button class="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
         <div class="popup-header">
-            ${index == undefined ? '<h3>Thêm địa chỉ giao hàng mới</h3>' : '<h3>Cập nhật địa chỉ giao hàng</h3>'}
+            ${data ? '<h3>Thêm địa chỉ giao hàng mới</h3>' : '<h3>Cập nhật địa chỉ giao hàng</h3>'}
             <!-- <div class="popup-mess">
                 Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao
                 hàng cùng phí đóng gói, vận chuyển một cách chính xác
@@ -110,7 +110,7 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
                         ></address-form>
                     </label>
                 </div>
-                ${index == 0 ? '' : '<label class="set-default"><input type = "checkbox"/><span>Đặt làm địa chỉ mặc định</span></label>'}
+                ${isDefault ? '' : '<label class="set-default"><input type = "checkbox"/><span>Đặt làm địa chỉ mặc định</span></label>'}
             </form >
         </div >
         <div class="popup-button">
@@ -213,7 +213,7 @@ export function showNewShippingAddressPopup(index, list, onOk, onCancle) {
         }
         const setToDefault = /**@type {HTMLInputElement} */ (document.querySelector('.set-default input'));
 
-        onOk(address, (index != 0 ? setToDefault.checked : true)).then(() => {
+        onOk(address, (!data ? setToDefault.checked : true)).then(() => {
             element.remove();
         });
     })
@@ -262,7 +262,7 @@ export function createAddressItem(address, i = NaN, sl = false) {
  * 
  * @param {import("../until/type").UserAddress} address 
  * @param {Number} i 
- * @returns 
+ * @returns {void}
  */
 export function updateAddressItem(address, i) {
     const item = document.querySelector(`.shipping-info__item[data-id="${i}"]`);
@@ -280,7 +280,7 @@ export function updateAddressItem(address, i) {
     phone.innerHTML = `<span> Điện thoại: </span > ${address.phone_num} `
 }
 /**
- * 
+ * @param {number} [indexOfAddress=0] 
  * @returns {void}
  */
 export function showListShippingAddressPopup(indexOfAddress = 0) {
@@ -393,6 +393,11 @@ export function showListShippingAddressPopup(indexOfAddress = 0) {
 }
 
 // thêm event cho các nút update, delete, thêm địa chỉ
+/**
+ * 
+ * @param {string} userId 
+ * @param {import("../until/type").UserAddress[]} addressList 
+ */
 function addEvent(userId, addressList) {
 
     const select = document.querySelector('.popup-body .select');
@@ -406,10 +411,10 @@ function addEvent(userId, addressList) {
         console.log('click')
 
         element.style.display = 'none';
-        showNewShippingAddressPopup(undefined, addressList, async (address, bool) => {
+        showShippingFromeAddressPopup(async (address, isDefault) => {
             element.remove();
-            console.log(bool);
-            if (bool)
+            console.log(isDefault);
+            if (isDefault)
                 addressList.unshift(address);
             else
                 addressList.push(address);
@@ -439,7 +444,7 @@ function addEvent(userId, addressList) {
                 console.log(index);
                 element.style.display = 'none';
                 // hiển thị địa chỉ đang chọn
-                showNewShippingAddressPopup(index, addressList, async (address, bool) => {
+                showShippingFromeAddressPopup(async (address, bool) => {
                     addressList[index] = address;
                     if (bool) {
                         [addressList[0], addressList[index]] = [addressList[index], addressList[0]];
@@ -454,7 +459,7 @@ function addEvent(userId, addressList) {
                     updateAddressItem(address, index);
                 }, () => {
                     element.style.display = '';
-                });
+                }, addressList[index], index === 0);
             })
 
         // nếu nhấn xóa

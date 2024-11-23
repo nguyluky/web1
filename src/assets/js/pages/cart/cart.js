@@ -1,10 +1,9 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
 import uuidv from '../../until/uuid.js';
 import { toast } from '../../render/popupRender.js';
-import { handleAddressPopup } from '../../index.js';
 import { navigateToPage } from '../../until/router.js';
 import { formatNumber } from '../../until/format.js';
-import { showListShippingAddressPopup } from '../../render/addressPopup.js';
+import { showListShippingAddressPopup, showShippingFromeAddressPopup } from '../../render/addressPopup.js';
 
 export async function showUserInfo(index = 0) {
     const user_id = localStorage.getItem("user_id");
@@ -560,10 +559,10 @@ export async function buyBooks() {
     if (!user_id) {
         return;
     }
-    const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
     const buyBtn = document.querySelector('.btn-danger');
 
-    buyBtn?.addEventListener('click', (e) => {
+    buyBtn?.addEventListener('click', async (e) => {
+        const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
         const orders = /**@type {NodeListOf<HTMLInputElement>} */(document.querySelectorAll('input[name="check-book"]:checked'))
         const orderItems = [];
         for (const order of orders) {
@@ -578,8 +577,15 @@ export async function buyBooks() {
             return
         }
         else if (userInfo?.address.length === 0) {
-            handleAddressPopup(e);
-            return
+            showShippingFromeAddressPopup(async (address, bool) => {
+                if (bool)
+                    userInfo?.address.unshift(address);
+                else
+                    userInfo?.address.push(address);
+                await fakeDatabase.updateUserAddress(user_id, userInfo?.address);
+                return;
+            }, () => { });
+            return;
         }
 
         navigateToPage('payment', { payment: orderItems.join(',') });

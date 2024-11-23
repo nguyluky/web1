@@ -126,7 +126,6 @@ export async function initializationCart(params, query) {
  */
 export async function updateCart(params, query) {
     buyBooks();
-    document.querySelector('#change-address-btn')?.addEventListener('click', handleAddressPopup)
 }
 
 /**

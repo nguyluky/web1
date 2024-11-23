@@ -1,5 +1,5 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
-import { showNewShippingAddressPopup } from "../../render/addressPopup.js";
+import { showShippingFromeAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
 import { dateToString, removeDiacritics } from "../../until/format.js";
 import { errorPage, navigateToPage } from "../../until/router.js";
@@ -449,7 +449,7 @@ async function initializationArticle__AddressInfo() {
         ev.stopPropagation();
         ev.stopImmediatePropagation();
         // hiện popup cho nhập địa chỉ
-        showNewShippingAddressPopup(undefined, address_data, async (address, bool) => {
+        showShippingFromeAddressPopup(async (address, bool) => {
             if (bool)
                 address_data.unshift(address);
             else
@@ -464,13 +464,13 @@ async function initializationArticle__AddressInfo() {
         container.querySelector('.update-address')?.addEventListener('click', (ev) => {
             ev.stopPropagation();
             ev.stopImmediatePropagation();
-            showNewShippingAddressPopup(index, address_data, async (address, bool) => {
+            showShippingFromeAddressPopup(async (address, bool) => {
                 address_data[index] = address;
                 if (bool) { [address_data[0], address_data[index]] = [address_data[index], address_data[0]]; }
                 await fakeDatabase.updateUserAddress(user_id, address_data);
                 initializationArticle__AddressInfo();
                 return;
-            }, () => { });
+            }, () => { }, address_data[index], index === 0);
         });
         container.querySelector('.delete-address')?.addEventListener('click', async (ev) => {
             ev.stopPropagation();
