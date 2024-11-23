@@ -172,6 +172,7 @@ export function removeStyle(url) {
  *  init: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>,
  *  update: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>,
  *  remove: (params: {[key: string] : string}, query: URLSearchParams) => Promise<*>
+ *  title?: string | ((params: {[key: string] : string}, query: URLSearchParams) => string)
  * }} PAGE
  */
 
@@ -224,6 +225,7 @@ export async function initializeUrlHandling(pages) {
             const page = pageObject[path];
             await page.init(param, query);
             await page.update(param, query);
+            page.title && (document.title = typeof page.title === 'function' ? page.title(param, query) : page.title);
             oldPathPage = path;
             break;
         }
@@ -279,6 +281,7 @@ export async function initializeUrlHandling(pages) {
 
             console.log('update page:', path);
             await page.update(param, query);
+            page.title && (document.title = typeof page.title === 'function' ? page.title(param, query) : page.title);
             break;
 
         }
@@ -348,74 +351,4 @@ function errorPageHtml(code) {
                 </article>
             </div>`
     }
-}
-
-const pagePath = {
-    home: 'home',
-    search: 'search',
-    user: 'user/:tab/:?info',
-    product: 'product/:id',
-    cart: 'cart',
-    payment: 'payment',
-};
-export async function changeTitle() {
-    let { page, query } = urlConverter(location.hash);
-    page = page.replace('#/', '');
-    const root = page.split('/')[0];
-    const param = urlIsPage(page, pagePath[root]);
-    console.log(root);
-    if (param)
-        switch (root) {
-            case 'home':
-                const cate = query.get('c');
-                if (cate === null) {
-                    document.title = 'Home | We sell books';
-                }
-                else {
-                    const category = await fakeDatabase.getCategoryById(cate);
-                    document.title = `${category?.name} | We sell books`;
-                }
-                break;
-            case 'product':
-                if (param.id) {
-                    const product = await fakeDatabase.getSachById(param.id);
-                    document.title = `${product?.title} | We sell books`;
-                } else
-                    document.title = 'Sản phẩm | We sell books';
-                break;
-            case 'cart':
-                document.title = 'Giỏ hàng | We sell books';
-                break;
-            case 'user':
-                switch (param.tab) {
-                    case 'account':
-                        switch (param.info) {
-                            case 'profile':
-                                document.title = 'Hồ sơ tài khoản | We sell books';
-                                break;
-                            case 'address':
-                                document.title = 'Địa chỉ giao hàng | We sell books';
-                                break;
-                            default:
-                                document.title = 'Account | We sell books';
-                                break;
-                        }
-                        break;
-                    case 'purchase':
-                        document.title = 'Đơn hàng của tôi | We sell books';
-                        break;
-                }
-                break;
-            case 'search':
-
-                document.title = `Tìm kiếm cho ${query.get('t')} | We sell books`;
-                break;
-            case 'payment':
-                document.title = 'Thanh toán | We sell books';
-                break;
-            default:
-                document.title = '404';
-                break;
-        }
-    window.addEventListener('hashchange', changeTitle);
 }

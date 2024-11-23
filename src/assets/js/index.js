@@ -7,8 +7,7 @@ import {
 } from './popupAccount.js';
 import { validateEmail, validator } from './until/validator.js';
 import { initializationHomePage, updateHomePage } from './pages/home/index.js';
-import urlConverter, { changeTitle, navigateToPage, urlIsPage } from './until/router.js';
-import urlConverter, { initializeUrlHandling, navigateToPage, urlIsPage } from './until/router.js';
+import { initializeUrlHandling, navigateToPage } from './until/router.js';
 import {
     initializationSearchPage,
     removeSearchBar,
@@ -31,12 +30,16 @@ const PAGES = [
         init: initializationHomePage,
         update: updateHomePage,
         remove: async () => { },
+        title: 'Home | WebSellBooks',
     },
     {
         pagePath: 'search',
         init: initializationSearchPage,
         update: updateSearchPage,
         remove: removeSearchBar,
+        title: (p, q) => {
+            return `Tìm kiếm: ${q.get('t')} | WebSellBooks`
+        },
     },
     {
         // :?tab có nghĩa là tab có thể có hoặc không
@@ -44,24 +47,46 @@ const PAGES = [
         init: initializationUserInfoPage,
         update: updateUserInfoPage,
         remove: async () => { },
+        title: (param, q) => {
+            switch (param.tab) {
+                case 'account':
+                    switch (param.info) {
+                        case 'profile':
+                            return 'Hồ sơ tài khoản | We sell books';
+                        case 'address':
+                            return 'Địa chỉ giao hàng | We sell books';
+                        default:
+                            return '404 | We sell books';
+                    }
+                case 'purchase':
+                    return 'Đơn hàng của tôi | We sell books';
+                default:
+                    return '404 | We sell books';
+            }
+        }
     },
     {
         pagePath: 'product/:id',
         init: initializationProductPage,
         update: updateProductPage,
         remove: removeProductPage,
+        title: (param) => {
+            return `Sản phẩm ${param.id} | WebSellBooks`
+        }
     },
     {
         pagePath: 'cart',
         init: initializationCart,
         update: updateCart,
-        remove: removeCart
+        remove: removeCart,
+        title: 'Giỏ hàng | WebSellBooks'
     },
     {
         pagePath: 'payment',
         init: initializationPayment,
         update: updatePayment,
         remove: removePayment,
+        title: 'Thanh toán | WebSellBooks',
     }
 ]
 
@@ -323,7 +348,6 @@ function initializationSearch() {
 
 /** Main */
 function main() {
-    changeTitle();
     initializeAccountPopup();
     initializeUrlHandling(PAGES);
     initializationSearch();
