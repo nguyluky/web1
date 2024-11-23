@@ -2,7 +2,7 @@ import fakeDatabase from "../../db/fakeDBv1.js";
 import { showShippingFromeAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
 import { dateToString, removeDiacritics } from "../../until/format.js";
-import { errorPage, navigateToPage } from "../../until/router.js";
+import { addStyle, errorPage, navigateToPage, removeStyle } from "../../until/router.js";
 import { updateCartQuantity } from "../cart/cart.js";
 
 const status = {
@@ -513,13 +513,9 @@ export async function initializationUserInfoPage(params, query) {
     const user_id = localStorage.getItem('user_id');
     if (!user_id) { navigateToPage('home'); return; }
 
-    const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
-    const cssRep = await fetch('./assets/css/user_info.css');
-    const style = document.createElement('style');
-    style.textContent = await cssRep.text();
-    style.id = 'user-info-style'
-    document.head.appendChild(style);
+    await addStyle('./assets/css/user_info.css');
 
+    const personal_info_data = await fakeDatabase.getUserInfoByUserId(user_id);
     if (!personal_info_data) {
         navigateToPage('home');
         return;
@@ -579,5 +575,5 @@ export async function updateUserInfoPage(params, query) {
  * @returns {Promise<void>}
  */
 export async function removeUserInfoPage(params, query) {
-    document.getElementById('user-info-style')?.remove();
+    await removeStyle('./assets/css/user_info.css');
 }

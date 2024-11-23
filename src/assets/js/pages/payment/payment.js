@@ -130,6 +130,7 @@ export function closeDeal() {
                 await pushOrder(selectedPaymentOption.id);
             }
             else if (selectedPaymentOption.id === 'creditCard-option') {
+                // TODO: 
                 // showCreditForm();
                 // validateCreditCard();
             }
@@ -181,7 +182,7 @@ function validateCreditCard() {
 /**
  * 
  * @param {Credit} data 
- * @returns 
+ * @returns {void}
  */
 function createCredit(data) {
     const parentElement = document.querySelector('.credit-info');
@@ -242,22 +243,6 @@ export async function showCreditCard() {
 
 }
 
-// export function showCreditCard() {
-//     // TODO: fix khi uncheck nó không có cẩn
-//     const creditOption = /** @type{HTMLInputElement}*/(document.getElementById('creditCard-option'));
-//     creditOption.addEventListener('change', () => {
-//         if (creditOption.checked) {
-//             console.log('htd')
-//             document.querySelector('.credit-info')?.classList.remove('hide');
-//             addCreditCard();
-//         }
-//         else {
-//             document.querySelector('.credit-info')?.classList.add('hide');
-
-//         }
-//     })
-// }
-
 export function addCreditCard() {
     const addCreditBtn = document.getElementById('add-credit');
     addCreditBtn?.addEventListener('click', () => {
@@ -266,6 +251,22 @@ export function addCreditCard() {
         closeCreditForm();
         validateCreditCard();
     })
+
+    // NOTE: tôi thêm cái bà nói ở đây nha
+    // code hơi xấu tí thông cảm
+    document.getElementsByName('payment-option').forEach(element => {
+        element.addEventListener('change', (e) => {
+            if (element.id === 'creditCard-option') {
+                // @ts-ignore
+                document.querySelector('.credit__info:first-child input')?.click();
+            }
+            else {
+                // @ts-ignore
+                document.querySelector('.credit__info input:checked').checked = false;
+            }
+        })
+    })
+
 }
 
 export function closeCreditForm() {
@@ -273,13 +274,6 @@ export function closeCreditForm() {
         e.preventDefault();
         document.querySelector('.js-modal')?.classList.remove('show-modal');
     })
-    // const backBtn = document.getElementById('pback-payment');
-    // if (backBtn) {
-    //     backBtn.onclick = (e) => {
-    //         e.stopPropagation();
-    //         document.querySelector('.js-modal')?.classList.remove('show-modal');
-    //     }
-    // }
 }
 
 async function pushOrder(option) {
