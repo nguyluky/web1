@@ -415,12 +415,20 @@ async function initializeUrlHandling() {
 
 /** Khởi tạo chức năng tìm kiếm */
 function initializationSearch() {
-    document.querySelector('.search-bar')?.addEventListener('keydown', (e) => {
+
+    const input = /**@type {HTMLInputElement} */ (document.querySelector('.search-bar'));
+    input?.addEventListener('keydown', (e) => {
         if (/** @type {KeyboardEvent} */ (e).key === 'Enter') {
             navigateToPage('search', { t: /** @type {HTMLInputElement} */ (e.target).value });
         }
     });
+
+    document.querySelector('header div.center div.input_text')?.addEventListener('click', () => {
+        navigateToPage('search', { t: input?.value });
+    });
 }
+
+
 
 /** Main */
 function main() {
