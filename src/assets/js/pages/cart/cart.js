@@ -465,6 +465,10 @@ async function initDeleteCartItem() {
                     }
                     updateCartQuantity();
                     updatePaymentSummary();
+                    const totalCartQuantity = document.getElementById('total-cart-quantity');
+                    if (totalCartQuantity) {
+                        totalCartQuantity.innerHTML = `Tất cả (${carts.length} sản phẩm)`;
+                    }
                 })
                 // @ts-ignore
                 .catch((e) => { });
