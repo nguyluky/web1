@@ -1,5 +1,5 @@
 import fakeDatabase from "../db/fakeDBv1.js";
-import { showUserInfo } from "../pages/cart/cart.js";
+import { showUserAddressInfo } from "../pages/cart/cart.js";
 import { text2htmlElement } from "../until/format.js";
 import { validateEmail, validateNumberPhone } from "../until/validator.js";
 import { AddressFrom } from "./address.js";
@@ -281,9 +281,11 @@ export function updateAddressItem(address, i) {
 }
 /**
  * @param {number} [indexOfAddress=0] 
+ * @param {(index: number) => void} [onOk]
+ * @param {() => void} [onCancle]
  * @returns {void}
  */
-export function showListShippingAddressPopup(indexOfAddress = 0) {
+export function showListShippingAddressPopup(indexOfAddress = 0, onOk, onCancle) {
     const html = `
         <div class="popup" >
             <button class="btn-close">
@@ -388,7 +390,7 @@ export function showListShippingAddressPopup(indexOfAddress = 0) {
             if (addressItem)
                 select?.insertBefore(addressItem, shippingInfoNew);
         });
-        addEvent(userId, addressList);
+        addEvent(userId, addressList, onOk, onCancle);
     })
 }
 
@@ -396,9 +398,11 @@ export function showListShippingAddressPopup(indexOfAddress = 0) {
 /**
  * 
  * @param {string} userId 
+ * @param {(index: number) => any} [onOk]
+ * @param {() => any} [onCancle]
  * @param {import("../until/type").UserAddress[]} addressList 
  */
-function addEvent(userId, addressList) {
+function addEvent(userId, addressList, onOk, onCancle) {
 
     const select = document.querySelector('.popup-body .select');
     const element =  /**@type {HTMLElement} */ (document.querySelector('.popup'));
@@ -487,7 +491,7 @@ function addEvent(userId, addressList) {
             alert('Bạn chưa chọn địa chỉ');
             return;
         }
-        showUserInfo(Number(addressItem.dataset.id))
         element.remove();
+        onOk && onOk(Number(addressItem.dataset.id));
     });
 }

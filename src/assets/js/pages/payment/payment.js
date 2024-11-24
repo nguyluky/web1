@@ -1,14 +1,11 @@
 
 import fakeDatabase from "../../db/fakeDBv1.js";
-import { getDeliveryTime, showUserInfo } from "../cart/cart.js";
-import order from "../../render/table/orderTabel.js";
+import { getDeliveryTime, showUserAddressInfo } from "../cart/cart.js";
 import uuidv from "../../until/uuid.js";
-import address from "../../db/addressDb.js";
 import { toast } from "../../render/popupRender.js";
 import { formatNumber } from "../../until/format.js";
 import { validator, isCreditCard, getParent } from "../../until/validator.js";
-import { navigateToPage } from "../../until/router.js";
-import { getSearchParam } from "../../until/router.js";
+import { getSearchParam, navigateToPage } from "../../until/router.js";
 
 
 /**
@@ -85,7 +82,8 @@ export async function rendeOrder() {
         deliveryText.innerHTML = `Đảm bảo nhận hàng trước ${deliveryTime.date}, ${deliveryTime.day}/${deliveryTime.month}`;
     }
 
-    showUserInfo();
+    const indexAddress = +(getSearchParam('a') || '0');
+    showUserAddressInfo(indexAddress);
 
     for (const order of orders) {
         const cart = await fakeDatabase.getCartById(order);

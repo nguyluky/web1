@@ -1,5 +1,5 @@
 import { addStyle, navigateToPage, removeStyle } from "../../until/router.js";
-import { showUserInfo, renderCart, updateCartQuantity, buyBooks, changeAddress } from "./cart.js";
+import { showUserAddressInfo, renderCart, updateCartQuantity, buyBooks, initChangeAddressEvent } from "./cart.js";
 
 
 const html = `
@@ -113,8 +113,8 @@ export async function initializationCart(params, query) {
     main.classList.add('main-cart');
     main.innerHTML = html;
 
-    changeAddress();
-    showUserInfo();
+    initChangeAddressEvent();
+    showUserAddressInfo();
     await renderCart();
 
 }

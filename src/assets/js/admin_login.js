@@ -43,7 +43,11 @@ document.querySelector('form')?.addEventListener('submit', async (event) => {
     let rmb_btn = /** @type {HTMLInputElement} */ (
         document.querySelector('.remember input[type="checkbox"]')
     );
-    if (rmb_btn.checked) localStorage.setItem('admin_id', admin.id);
+    if (rmb_btn.checked) {
+        //NOTE: nếu đăng nhập bằng thì tài khoản hiện tại của user cũng cập nhật luân
+        localStorage.setItem('admin_id', admin.id);
+        localStorage.setItem('user_id', admin.id);
+    }
     else sessionStorage.setItem('admin_id', admin.id);
     location.href = '/admin/index.html';
 });
