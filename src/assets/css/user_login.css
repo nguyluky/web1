@@ -120,6 +120,7 @@
     font-size: 24px;
     outline: none;
 }
+
 .input-auth-form .input-group::after {
     content: '';
     border-bottom: 1px solid rgb(224, 224, 224);
@@ -186,7 +187,8 @@
 #login-password,
 #password,
 #input-password,
-#input-email {
+#input-email,
+#input-name {
     font-size: 14px;
 }
 .input-group label {
@@ -250,13 +252,13 @@ btn-login-password:hover {
     margin-top: 10px;
 }
 
-.popup-error{
+.popup-error {
     border: solid 1px;
     position: relative;
     background-color: white;
     padding: 5px;
     border-radius: 4px;
-    box-shadow:0 0 5px 0 rgb(255, 66, 78);
+    box-shadow: 0 0 5px 0 rgb(255, 66, 78);
 }
 
 /*login Email*/

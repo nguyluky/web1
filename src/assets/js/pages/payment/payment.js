@@ -130,9 +130,15 @@ export function closeDeal() {
                 await pushOrder(selectedPaymentOption.id);
             }
             else if (selectedPaymentOption.id === 'creditCard-option') {
-                // TODO: 
-                // showCreditForm();
-                // validateCreditCard();
+                const checkCredit = document.querySelector('input[name="check-credit"]:checked');
+                if (!checkCredit) {
+                    showCreditForm();
+                    closeCreditForm();
+                    validateCreditCard();
+                }
+                else {
+                    pushOrder(selectedPaymentOption.id);
+                }
             }
             else {
                 showQR(selectedPaymentOption.id).then(pushOrder);
@@ -238,9 +244,6 @@ export async function showCreditCard() {
     userInfo.credits.forEach(credit => {
         createCredit(credit);
     })
-
-
-
 }
 
 export function addCreditCard() {
@@ -270,10 +273,19 @@ export function addCreditCard() {
 }
 
 export function closeCreditForm() {
-    document.getElementById('back-payment')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelector('.js-modal')?.classList.remove('show-modal');
-    })
+    // document.getElementById('back-payment')?.addEventListener('click', (e) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     document.querySelector('.js-modal')?.classList.remove('show-modal');
+    // })
+    const backBtn = document.getElementById('back-payment');
+    if (backBtn) {
+        backBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            document.querySelector('.js-modal')?.classList.remove('show-modal');
+        }
+    }
 }
 
 async function pushOrder(option) {
