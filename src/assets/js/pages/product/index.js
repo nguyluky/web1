@@ -308,19 +308,8 @@ function setEventListener(product_id) {
     });
 
     const buy_now = document.querySelector('.buy-now');
-    buy_now?.addEventListener('click', async e => {
-        const user_id = localStorage.getItem('user_id');
-        if (!user_id) {
-            toast({
-                message: 'Vui lòng đăng nhập để mua hàng',
-                type: 'error'
-            })
-            return;
-        }
-        const cart_id = uuidv(10);
-        await fakeDatabase.createCartItem(cart_id, user_id, product_id, Number(inputquantity.value));
-        updateCartQuantity();
-        navigateToPage('payment', { payment: cart_id });
+    buy_now?.addEventListener('click', e => {
+        pushCartItemIntoCart(product_id, Number(inputquantity.value), 'payment');
     });
 
 }
