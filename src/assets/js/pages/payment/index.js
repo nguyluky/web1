@@ -167,7 +167,6 @@ const html = `
         <div class="right info-user card">
             <div class="info-header">
                 <span>Giao tới</span>
-                <button id="change-address-btn">Thay đổi</button>
             </div>
             <div class="info-content">
                 <div class="contact-info">
@@ -198,11 +197,6 @@ const html = `
                 </div>
                 <div class="order-quantity">
                     <span id="total-quantity">2 sản phẩm.</span>
-                    <span id="show-order-info"
-                        >Xem thông tin<i
-                            class="fa-solid fa-angle-up"
-                        ></i
-                    ></span>
                 </div>
             </div>
             <div class="price-summary-body">
