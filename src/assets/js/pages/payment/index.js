@@ -280,14 +280,15 @@ export async function initializationPayment() {
 
     await rendeOrder();
     console.log(getOrder());
-}
-
-
-export async function updatePayment() {
     changeCart();
     closeDeal();
     addCreditCard();
     showCreditCard();
+}
+
+
+export async function updatePayment() {
+
     // closeCreditForm();
 }
 
