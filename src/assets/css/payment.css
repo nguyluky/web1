@@ -29,10 +29,9 @@
 
 .btn-danger {
     font-size: 16px;
-    
 }
 
-#purchase-btn{
+#purchase-btn {
     width: 100%;
 }
 
@@ -266,6 +265,7 @@
     padding: 36px;
     box-sizing: border-box;
     width: 500px;
+    max-width: calc(100vw - 40px);
     position: relative;
     margin: auto;
 }
@@ -383,19 +383,18 @@
 .header_wrapper:has(.center.hide) {
     grid-template-columns: 1fr auto;
 }
-@media screen and (max-width: 1120px){
-    #purchase-btn{
+@media screen and (max-width: 1120px) {
+    #purchase-btn {
         width: 50%;
     }
-    
 }
 
-@media screen and (max-width: 840px){
-    .order-item.order-grid{
+@media screen and (max-width: 840px) {
+    .order-item.order-grid {
         grid-area: 1 /2;
     }
 
-    #add-credit{
+    #add-credit {
         width: 50%;
     }
 }
@@ -407,12 +406,12 @@
     }
 }
 
-@media screen and (max-width: 500px){
-    #add-credit{
+@media screen and (max-width: 500px) {
+    #add-credit {
         width: 100%;
     }
 
-    .credit-info{
+    .credit-info {
         margin-left: 0px;
     }
 }
