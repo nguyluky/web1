@@ -29,6 +29,10 @@
 
 .btn-danger {
     font-size: 16px;
+    
+}
+
+#purchase-btn{
     width: 100%;
 }
 
@@ -44,6 +48,7 @@
     margin-top: 20px;
     background-color: white;
     padding: 16px;
+    border-radius: 4px;
 }
 
 /* .payment-type div {
@@ -378,10 +383,36 @@
 .header_wrapper:has(.center.hide) {
     grid-template-columns: 1fr auto;
 }
+@media screen and (max-width: 1120px){
+    #purchase-btn{
+        width: 50%;
+    }
+    
+}
+
+@media screen and (max-width: 840px){
+    .order-item.order-grid{
+        grid-area: 1 /2;
+    }
+
+    #add-credit{
+        width: 50%;
+    }
+}
 
 @media screen and (max-width: 700px) {
     .header_wrapper {
         grid-template-columns: 1fr auto;
         padding: 0;
+    }
+}
+
+@media screen and (max-width: 500px){
+    #add-credit{
+        width: 100%;
+    }
+
+    .credit-info{
+        margin-left: 0px;
     }
 }

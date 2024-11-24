@@ -344,15 +344,25 @@ function handleMinus() {
  * 
  * @param {string} bookId 
  * @param {number} [incrQuantity=1]
+ * @param {String} [page = null]
  * @returns {Promise<void>}
  */
-export async function pushCartItemIntoCart(bookId, incrQuantity = 1) {
+export async function pushCartItemIntoCart(bookId, incrQuantity = 1, page = '') {
     const user_id = localStorage.getItem('user_id');
     if (!user_id) {
-        toast({
-            title: 'Vui lòng đăng nhập để xem giỏ hàng',
-            type: 'error',
-        });
+        if (page === '') {
+            toast({
+                title: 'Vui lòng đăng nhập để xem giỏ hàng',
+                type: 'error',
+            });
+        } else {
+            if (page === 'payment') {
+                toast({
+                    message: 'Vui lòng đăng nhập để mua hàng',
+                    type: 'error'
+                });
+            }
+        }
         return;
     }
     const carts = await fakeDatabase.getCartByUserId(user_id);
@@ -369,12 +379,17 @@ export async function pushCartItemIntoCart(bookId, incrQuantity = 1) {
         quantity = cart.quantity + incrQuantity;
     }
     await fakeDatabase.createCartItem(cart_id, user_id, bookId, quantity);
-    toast({
-        title: 'Thành công',
-        message: 'Đã thêm vào giỏ hàng',
-        type: 'success'
-    })
+    if (page === '') {
+        toast({
+            title: 'Thành công',
+            message: 'Đã thêm vào giỏ hàng',
+            type: 'success'
+        });
+    }
     updateCartQuantity();
+    if (page === 'payment') {
+        navigateToPage('payment', { payment: cart_id });
+    }
 }
 
 /**

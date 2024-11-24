@@ -2,7 +2,8 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import { toast } from '../../render/popupRender.js';
 import { formatNumber, text2htmlElement } from '../../until/format.js';
 import { addStyle, errorPage, navigateToPage, removeStyle } from '../../until/router.js';
-import { pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
+import uuidv from '../../until/uuid.js';
+import { buyBooks, pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
 
 let SPtt = [];
 let Current_Page = 1;
@@ -304,6 +305,11 @@ function setEventListener(product_id) {
         category.addEventListener('click', e => {
             navigateToPage('home', { c: String(category.dataset.category) });
         });
+    });
+
+    const buy_now = document.querySelector('.buy-now');
+    buy_now?.addEventListener('click', e => {
+        pushCartItemIntoCart(product_id, Number(inputquantity.value), 'payment');
     });
 
 }
