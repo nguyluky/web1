@@ -464,6 +464,7 @@ export async function updateCartQuantity() {
         cartQuantity.innerHTML = String(carts.length);
     }
     if (totalCartQuantity) {
+        console.log('lamo');
         totalCartQuantity.innerHTML = `Tất cả (${carts.length} sản phẩm)`;
     }
 }

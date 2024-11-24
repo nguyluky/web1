@@ -112,7 +112,7 @@ export async function initializationCart(params, query) {
 
     main.classList.add('main-cart');
     main.innerHTML = html;
-
+    updateCartQuantity();
     changeAddress();
     showUserInfo();
     await renderCart();

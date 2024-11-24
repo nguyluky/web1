@@ -1,7 +1,7 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { showShippingFromeAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
-import { dateToString, removeDiacritics } from "../../until/format.js";
+import { dateToString, removeDiacritics, text2htmlElement } from "../../until/format.js";
 import { addStyle, errorPage, navigateToPage, removeStyle } from "../../until/router.js";
 import { updateCartQuantity } from "../cart/cart.js";
 
@@ -25,43 +25,6 @@ const status = {
     huy: {
         text: 'Đã hủy',
         color: 'rgba(212, 13, 13, 1)'
-    }
-}
-
-/**
- * 
- * Tạo giới tính ngẫu nhiên từ user_id
- * 
- * @param {string} user_id 
- * @returns {string}
- */
-function create_user_gender(user_id) {
-
-    // hash
-    /**
-     * 
-     * Generate a Hash 32bit from string
-     * 
-     * @param {string} string 
-     * @returns {number}
-     */
-    function hashCode(string) {
-        var hash = 0,
-            i, chr;
-        if (string.length === 0) return hash;
-        for (i = 0; i < string.length; i++) {
-            chr = string.charCodeAt(i);
-            hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
-        }
-        return hash;
-    }
-
-    if (hashCode(user_id) % 2 == 0) {
-        return "Nữ";
-    }
-    else {
-        return "Nam";
     }
 }
 
@@ -238,14 +201,14 @@ async function renderUserInfo(user_id) {
         <div class="user-personal">
             <div class="user-header">Email:</div>
             <div class="user-info">
-                ${maskInfo(personal_info_data?.email)}
+                <span onfocus="document.execCommand('selectAll', false, null);">${maskInfo(personal_info_data?.email)}</span>
                 <span class="lmao">${personal_info_data?.email ? 'Thay đổi' : 'Thêm mới'}</span>
             </div>
         </div>
         <div class="user-personal">
             <div class="user-header">Số điện thoại:</div>
             <div class="user-info">
-                ${maskInfo(personal_info_data?.phone_num)}
+                <span onfocus="document.execCommand('selectAll', false, null);">${maskInfo(personal_info_data?.phone_num)}</span>
                 <span class="lmao">${personal_info_data?.phone_num ? 'Thay đổi' : 'Thêm mới'}</span>
             </div>
         </div>       
@@ -433,16 +396,27 @@ function initializationArticle__OrderInfo() {
 
 /**
  * 
+ * @param {HTMLElement} container 
+ */
+function selectAllText(container) {
+    window.getSelection()?.removeAllRanges();
+    var range = document.createRange();
+    range.selectNode(container);
+    window.getSelection()?.addRange(range);
+}
+/**
+ * 
  * @returns {Promise<void>}
  */
 async function initializationArticle__AccountInfo() {
     const article = document.getElementById('article');
     const user_id = localStorage.getItem('user_id');
     if (!article || !user_id) return;
+    const new_Info = await fakeDatabase.getUserInfoByUserId(user_id);
     article.className = "user-personal-info";
     article.innerHTML = `
             <div class="article-header">
-                <span>Hồ sơ người mua hàng</span>
+                <span>Hồ sơ của tôi</span>
             </div>
             <hr>
             <div class="user-personal__container">
@@ -460,13 +434,37 @@ async function initializationArticle__AccountInfo() {
     save?.addEventListener('click', async () => {
         const fullname = /**@type {HTMLInputElement}*/(document.getElementById('input-fullname'));
         const gender = /**@type {HTMLInputElement}*/ (document.querySelector('input[type="radio"]:checked'));
-        const new_Info = await fakeDatabase.getUserInfoByUserId(user_id);
-        if (!new_Info || !fullname) return;
+        const contact = /**@type {NodeListOf<HTMLElement>}*/(document.querySelectorAll('.user-info > span:not(.lmao)'));
+        if (!new_Info || !fullname || !contact) return;
         new_Info.fullname = fullname?.value;
         new_Info.gender = gender ? gender.value : '';
+        new_Info.email = contact[0].textContent ?? '';
+        new_Info.phone_num = contact[1].textContent ?? '';
         fakeDatabase.updateUserInfo(new_Info);
         toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
+        contact[0].textContent = maskInfo(new_Info.email);
+        contact[1].textContent = maskInfo(new_Info.phone_num);
     });
+
+    const changeInfo = document.querySelectorAll('.lmao');
+    changeInfo.forEach(e => {
+        e.addEventListener('click', () => {
+            const text = /**@type {HTMLElement}*/(/**@type {HTMLElement}*/(e.parentElement).querySelector('span'));
+            text.setAttribute('contenteditable', 'true');
+            if (text.textContent?.includes('*'))
+                if (text.textContent?.includes('@')) text.textContent = '' + new_Info?.email;
+                else text.textContent = '' + new_Info?.phone_num;
+
+            text.setAttribute('style', `padding: 10px;`);
+            text.focus();
+            text.addEventListener('focusout', () => {
+                text.setAttribute('contenteditable', 'false');
+                text.setAttribute('style', '');
+                if (text.textContent != '') e.textContent = 'Thay đổi';
+            });
+        });
+    });
+
 }
 async function initializationArticle__AddressInfo() {
     const user_id = localStorage.getItem('user_id');

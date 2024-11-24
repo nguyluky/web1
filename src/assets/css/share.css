@@ -28,6 +28,13 @@
     background: #707070;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 body {
     height: 100vh;
     background: #f5f5fa;
@@ -53,14 +60,8 @@ main.main {
     width: 100%;
 }
 
-.ct-input:hover{
+.ct-input:hover {
     border: 1px solid black;
-}
-
-.ct-input.phone,
-.ct-input.email {
-    display: block;
-    width: 100%;
 }
 
 .ct-input .icon_input {
@@ -360,8 +361,8 @@ main.main {
     gap: 10px;
 }
 
-.group-flex > label > div {
-    padding: 10px 0;
+.group-flex > label > div > input {
+    height: 100%;
 }
 .set-default {
     display: flex;
@@ -392,18 +393,21 @@ main.main {
     height: 16px;
 }
 
-@media screen and (max-width: 500px){
-    .group-flex{
+@media screen and (max-width: 500px) {
+    .group-flex {
         flex-direction: column;
         gap: 10px;
     }
 
-    #toast{
+    #toast {
         left: 0px;
-        top: 50px
+        top: 50px;
     }
 
-    .toast--error, .toast--success, .toast--info, .toast--warning{
+    .toast--error,
+    .toast--success,
+    .toast--info,
+    .toast--warning {
         padding: 10px 0px;
     }
 }

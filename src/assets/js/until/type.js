@@ -118,7 +118,6 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  * @typedef {{
  *    name: string,
  *    phone_num: string,
- *    email: string,
  *    street: string,
  *    address: string,
  * }} UserAddress
