@@ -1,6 +1,6 @@
 
 import fakeDatabase from "../../db/fakeDBv1.js";
-import { getDeliveryTime, showUserAddressInfo } from "../cart/cart.js";
+import { getDeliveryTime, showUserAddressInfo, updateCartQuantity } from "../cart/cart.js";
 import uuidv from "../../until/uuid.js";
 import { toast } from "../../render/popupRender.js";
 import { formatNumber } from "../../until/format.js";
@@ -125,6 +125,7 @@ export function closeDeal() {
         if (selectedPaymentOption) {
             if (selectedPaymentOption.id === 'cash-option') {
                 console.log('hihi')
+                console.log('haha')
                 await pushOrder(selectedPaymentOption.id);
             }
             else if (selectedPaymentOption.id === 'creditCard-option') {
@@ -349,6 +350,9 @@ async function pushOrder(option) {
             address: userInfo.address[0].address
         }
     };
+
+    updateCartQuantity();
+
     fakeDatabase.addOrder(data).then(e => {
         toast({ title: 'Đặt hàng thành công', type: 'success' });
         fakeDatabase.getOrdertByUserId(user_id).then(e => {
