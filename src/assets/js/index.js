@@ -252,6 +252,8 @@ function initializeAccountPopup() {
         p4.onclick = (event) => {
             event.stopPropagation();
             localStorage.removeItem('user_id');
+            localStorage.removeItem('admin_id');
+            sessionStorage.removeItem('admin_id');
             navigateToPage('home')
             toast({ title: 'Đăng xuất thành công', type: 'success' })
         }
@@ -315,7 +317,6 @@ function initializeAccountPopup() {
 
     BUTTON_CART.addEventListener('click', () => {
         if (!localStorage.getItem('user_id')) {
-            toast({ title: 'Chưa đăng nhập', message: 'Quý khách vui lòng đăng nhập để xem giỏ hàng', type: 'warning' });
             BUTTON_ACCOUNT.click();
         }
         else {

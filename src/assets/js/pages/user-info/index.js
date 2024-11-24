@@ -193,7 +193,7 @@ async function renderUserInfo(user_id) {
             <div class="user-header">Họ và tên:</div>
             <div class="user-info">
                 <label>
-                    <input id="input-fullname" type="text" value="${personal_info_data?.fullname}">
+                    <input id="input-fullname" type="text" value="${personal_info_data?.fullname ?? ''}">
                 </label>
             </div>
         </div>
@@ -396,16 +396,6 @@ function initializationArticle__OrderInfo() {
 
 /**
  * 
- * @param {HTMLElement} container 
- */
-function selectAllText(container) {
-    window.getSelection()?.removeAllRanges();
-    var range = document.createRange();
-    range.selectNode(container);
-    window.getSelection()?.addRange(range);
-}
-/**
- * 
  * @returns {Promise<void>}
  */
 async function initializationArticle__AccountInfo() {
@@ -438,8 +428,8 @@ async function initializationArticle__AccountInfo() {
         if (!new_Info || !fullname || !contact) return;
         new_Info.fullname = fullname?.value;
         new_Info.gender = gender ? gender.value : '';
-        new_Info.email = contact[0].textContent ?? '';
-        new_Info.phone_num = contact[1].textContent ?? '';
+        new_Info.email = contact[0].textContent?.includes('*') ? new_Info.email : contact[0].textContent ?? '';
+        new_Info.phone_num = contact[1].textContent?.includes('*') ? new_Info.phone_num : contact[1].textContent ?? '';
         fakeDatabase.updateUserInfo(new_Info);
         toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
         contact[0].textContent = maskInfo(new_Info.email);

@@ -5,7 +5,12 @@ import { navigateToPage } from '../../until/router.js';
 import { formatNumber } from '../../until/format.js';
 import { showListShippingAddressPopup, showShippingFromeAddressPopup } from '../../render/addressPopup.js';
 
-export async function showUserInfo(index = 0) {
+/**
+ * 
+ * @param {number} index 
+ * @returns 
+ */
+export async function showUserAddressInfo(index = 0) {
     const user_id = localStorage.getItem("user_id");
 
     if (!user_id) {
@@ -64,6 +69,12 @@ export async function renderCart() {
     const carts = await fakeDatabase.getCartByUserId(user_id);
     const container = document.querySelector('.left-content-body');
     const cartItems = document.querySelector('.cart-items');
+
+    const totalCartQuantity = document.getElementById('total-cart-quantity');
+    if (totalCartQuantity) {
+        totalCartQuantity.innerHTML = `Tất cả (${carts.length} sản phẩm)`;
+    }
+
     if (container && cartItems) {
         if (carts.length === 0) {
             showEmptyCart();
@@ -85,6 +96,7 @@ export async function renderCart() {
         titleBooks.forEach(titleBook => {
             titleBook.addEventListener('click', () => {
                 const parentElement = getParent(titleBook, '.cart-item');
+                // @ts-ignore
                 const book_id = parentElement.dataset.bookId;
                 console.log(parentElement)
                 location.hash = `#/product/${book_id}`;
@@ -209,6 +221,12 @@ async function createCartItem(cart) {
     }
 }
 
+/**
+ * 
+ * @param {Element} element 
+ * @param {string} selector 
+ * @returns {HTMLElement | undefined}
+ */
 function getParent(element, selector) {
     while (element.parentElement) {
         if (element.parentElement.matches(selector)) {
@@ -218,22 +236,28 @@ function getParent(element, selector) {
     }
 }
 
+/**
+ * 
+ */
 function changeQuantity() {
     const quantityInputs = /**@type {NodeListOf<HTMLInputElement>} */ (
         document.querySelectorAll('.quantity-num')
     );
 
     quantityInputs.forEach((quantityInput) => {
+        // @ts-ignore
         quantityInput.addEventListener('change', async (e) => {
             console.log(quantityInput.value);
 
             const parentElement = getParent(quantityInput, '.cart-item');
+            if (!parentElement) return;
             const cartAmount = parentElement.querySelector('.cart-item-amount');
+            if (!cartAmount) return;
             if (!quantityInput.value || !+quantityInput.value || parseInt(quantityInput.value) < 1) {
                 quantityInput.value = '1';
             }
             const cart = await fakeDatabase.getCartById(
-                parentElement.dataset.cartId,
+                parentElement?.dataset.cartId || '',
             );
             if (!cart) return;
             const book = await fakeDatabase.getSachById(cart.sach);
@@ -243,18 +267,22 @@ function changeQuantity() {
             await fakeDatabase.updateCart(cart);
             cartAmount.innerHTML = `${formatNumber(cart.quantity * (book.base_price * (1 - book.discount)))
                 } <sup>₫</sup>`;
-            renderPaymentSummary();
+            updatePaymentSummary();
         });
     });
 }
 
+/**
+ * 
+ */
 function handlePlus() {
     const incrButtons = document.querySelectorAll('.inc-quantity');
     incrButtons.forEach((incrButton) => {
         incrButton.addEventListener('click', async () => {
             const parentElement = getParent(incrButton, '.cart-item');
+            if (!parentElement) { return; }
             const cart_id = parentElement.dataset.cartId;
-            const cart = await fakeDatabase.getCartById(cart_id);
+            const cart = await fakeDatabase.getCartById(cart_id || '');
             if (!cart) {
                 return;
             }
@@ -264,22 +292,29 @@ function handlePlus() {
             }
             cart.quantity++;
             await fakeDatabase.updateCart(cart);
+            // @ts-ignore
             parentElement.querySelector('.quantity-num').value = cart.quantity;
+            // @ts-ignore
             parentElement.querySelector('.cart-item-amount').innerHTML = `
                 ${formatNumber(cart.quantity * (book.base_price * (1 - book.discount)))}
                 <sup>₫</sup>
             `;
-            renderPaymentSummary();
+            updatePaymentSummary();
         });
     });
 }
 
+/**
+ * 
+ */
 function handleMinus() {
     const dcrsButtons = document.querySelectorAll('.dscr-quantity');
     dcrsButtons.forEach((dcrsButton) => {
         dcrsButton.addEventListener('click', async () => {
             const parentElement = getParent(dcrsButton, '.cart-item');
+            // @ts-ignore
             const cart_id = parentElement.dataset.cartId;
+            // @ts-ignore
             const cart = await fakeDatabase.getCartById(cart_id);
             if (!cart) {
                 return;
@@ -291,14 +326,16 @@ function handleMinus() {
             if (cart.quantity > 1) {
                 cart.quantity--;
                 await fakeDatabase.updateCart(cart);
+                // @ts-ignore
                 parentElement.querySelector('.quantity-num').value =
                     cart.quantity;
+                // @ts-ignore
                 parentElement.querySelector('.cart-item-amount').innerHTML = `
                     ${formatNumber(cart.quantity * (book.base_price * (1 - book.discount)))}
                     <sup>₫</sup>
                 `;
             }
-            renderPaymentSummary();
+            updatePaymentSummary();
         });
     });
 }
@@ -376,10 +413,14 @@ function showEmptyCart() {
     }
 }
 
+/**
+ * 
+ */
 async function initAddToCartOnButton() {
     const btnAddCarts = /**@type {NodeListOf<HTMLElement>} */ (
         document.querySelectorAll('.add-to-cart')
     );
+    // @ts-ignore
     let arr = [];
     btnAddCarts.forEach((btnAddCart) => {
         btnAddCart.addEventListener('click', () => {
@@ -391,6 +432,9 @@ async function initAddToCartOnButton() {
     updateCartQuantity();
 }
 
+/**
+ * 
+ */
 async function initDeleteCartItem() {
     const user_id = localStorage.getItem('user_id');
     const deleteButtons = /**@type {NodeListOf<HTMLElement>} */ (
@@ -412,6 +456,7 @@ async function initDeleteCartItem() {
             const cart_id = deleteButton.dataset.cartId;
             fakeDatabase
                 .deleteCartById(cart_id)
+                // @ts-ignore
                 .then(async (e) => {
                     deleteButton.parentElement?.remove();
                     const carts = await fakeDatabase.getCartByUserId(user_id);
@@ -419,8 +464,9 @@ async function initDeleteCartItem() {
                         showEmptyCart();
                     }
                     updateCartQuantity();
-                    renderPaymentSummary();
+                    updatePaymentSummary();
                 })
+                // @ts-ignore
                 .catch((e) => { });
         });
     });
@@ -441,7 +487,9 @@ async function initDeleteCartItem() {
                 console.log("success")
                 for (const trueCheck of trueChecks) {
                     const parentElement = getParent(trueCheck, ".cart-item");
+                    // @ts-ignore
                     const deleteButton = parentElement.querySelector('.cart-item-delete-btn');
+                    // @ts-ignore
                     deleteButton.click();
                 }
             }
@@ -464,23 +512,12 @@ async function initDeleteCartItem() {
 export async function updateCartQuantity() {
     const user_id = localStorage.getItem('user_id');
 
-    if (!user_id) {
-        // toast({
-        //     title: 'Vui lòng đăng nhập để xem giỏ hàng',
-        //     type: 'error',
-        // });
-        return;
-    }
+    if (!user_id) return;
     const carts = await fakeDatabase.getCartByUserId(user_id);
     console.log(carts);
     const cartQuantity = document.querySelector('.cart-count');
-    const totalCartQuantity = document.getElementById('total-cart-quantity');
     if (cartQuantity) {
         cartQuantity.innerHTML = String(carts.length);
-    }
-    if (totalCartQuantity) {
-        console.log('lamo');
-        totalCartQuantity.innerHTML = `Tất cả (${carts.length} sản phẩm)`;
     }
 }
 
@@ -501,7 +538,7 @@ function isCheckBox() {
         otherCheckBoxes.forEach((checkBox) => {
             checkBox.checked = mainCheckBox.checked;
         });
-        renderPaymentSummary();
+        updatePaymentSummary();
     });
 
     otherCheckBoxes.forEach((checkBox) => {
@@ -516,14 +553,16 @@ function isCheckBox() {
                 );
                 mainCheckBox.checked = allChecked;
             }
-            renderPaymentSummary();
+            updatePaymentSummary();
         });
     });
 }
 
 
-// cập nhật tổng giá khi thay đổi số lượng sản phẩm
-async function renderPaymentSummary() {
+/**
+ * update total amount when change quantity of product
+ */
+async function updatePaymentSummary() {
 
     const otherCheckBoxes = /**@type {NodeListOf<HTMLInputElement>} */ (
         document.querySelectorAll('.check-book')
@@ -577,6 +616,7 @@ export async function buyBooks() {
     }
     const buyBtn = document.querySelector('.btn-danger');
 
+    // @ts-ignore
     buyBtn?.addEventListener('click', async (e) => {
         const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
         const orders = /**@type {NodeListOf<HTMLInputElement>} */(document.querySelectorAll('input[name="check-book"]:checked'))
@@ -604,17 +644,22 @@ export async function buyBooks() {
             return;
         }
 
-        navigateToPage('payment', { payment: orderItems.join(',') });
+        navigateToPage('payment', { payment: orderItems.join(','), a: /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index || '' });
     })
 }
 
-export function changeAddress() {
+/**
+ * 
+ */
+export function initChangeAddressEvent() {
     document.getElementById('change-address-btn')
         ?.addEventListener('click', (ev) => {
             ev.preventDefault();
             ev.stopPropagation();
             const index = /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index;
-            showListShippingAddressPopup(Number(index));
+            showListShippingAddressPopup(Number(index), (i) => {
+                showUserAddressInfo(i);
+            });
         });
 }
 

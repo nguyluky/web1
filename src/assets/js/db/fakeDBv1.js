@@ -334,6 +334,8 @@ class FakeDatabase {
             id: user_id,
             name: display_name,
             email,
+            fullname: '',
+            gender: '',
             passwd: password,
             phone_num: std,
             rule: 'user',

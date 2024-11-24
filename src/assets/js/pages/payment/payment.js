@@ -1,14 +1,11 @@
 
 import fakeDatabase from "../../db/fakeDBv1.js";
-import { getDeliveryTime, showUserInfo } from "../cart/cart.js";
-import order from "../../render/table/orderTabel.js";
+import { getDeliveryTime, showUserAddressInfo } from "../cart/cart.js";
 import uuidv from "../../until/uuid.js";
-import address from "../../db/addressDb.js";
 import { toast } from "../../render/popupRender.js";
 import { formatNumber } from "../../until/format.js";
 import { validator, isCreditCard, getParent } from "../../until/validator.js";
-import { navigateToPage } from "../../until/router.js";
-import { getSearchParam } from "../../until/router.js";
+import { getSearchParam, navigateToPage } from "../../until/router.js";
 
 
 /**
@@ -85,7 +82,8 @@ export async function rendeOrder() {
         deliveryText.innerHTML = `Đảm bảo nhận hàng trước ${deliveryTime.date}, ${deliveryTime.day}/${deliveryTime.month}`;
     }
 
-    showUserInfo();
+    const indexAddress = +(getSearchParam('a') || '0');
+    showUserAddressInfo(indexAddress);
 
     for (const order of orders) {
         const cart = await fakeDatabase.getCartById(order);
@@ -130,9 +128,15 @@ export function closeDeal() {
                 await pushOrder(selectedPaymentOption.id);
             }
             else if (selectedPaymentOption.id === 'creditCard-option') {
-                // TODO: 
-                // showCreditForm();
-                // validateCreditCard();
+                const checkCredit = document.querySelector('input[name="check-credit"]:checked');
+                if (!checkCredit) {
+                    showCreditForm();
+                    closeCreditForm();
+                    validateCreditCard();
+                }
+                else {
+                    pushOrder(selectedPaymentOption.id);
+                }
             }
             else {
                 showQR(selectedPaymentOption.id).then(pushOrder);
@@ -175,6 +179,12 @@ function validateCreditCard() {
             await fakeDatabase.addCreditCardToUser(credit, user_id)
 
             createCredit(credit);
+
+            // làm tạm
+            const input = document.querySelectorAll('.credit__info input')
+            // @ts-ignore
+            input[input.length - 1].click();
+
         }
     });
 }
@@ -192,6 +202,7 @@ function createCredit(data) {
     const type = isCreditCard(data.id);
     const creditInfo = document.createElement('div');
     creditInfo.classList.add('credit__info');
+    creditInfo.setAttribute('data-id', data.id);
     let img;
     if (!type)
         return;
@@ -233,14 +244,18 @@ function createCredit(data) {
 export async function showCreditCard() {
     const user_id = localStorage.getItem('user_id') || ' ';
     const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
+    const parentElement = document.querySelector('.credit-info');
     if (!userInfo || !userInfo.credits)
         return;
+
+    if (!parentElement)
+        return;
+
     userInfo.credits.forEach(credit => {
-        createCredit(credit);
+        const ele = document.querySelector(`.credit__info[data-id="${credit.id}"]`);
+        if (!ele)
+            createCredit(credit);
     })
-
-
-
 }
 
 export function addCreditCard() {
@@ -256,13 +271,15 @@ export function addCreditCard() {
     // code hơi xấu tí thông cảm
     document.getElementsByName('payment-option').forEach(element => {
         element.addEventListener('change', (e) => {
+            console.log(element.id)
             if (element.id === 'creditCard-option') {
                 // @ts-ignore
                 document.querySelector('.credit__info:first-child input')?.click();
             }
             else {
-                // @ts-ignore
-                document.querySelector('.credit__info input:checked').checked = false;
+                const credit = /**@type {HTMLInputElement} */ (document.querySelector('.credit__info input:checked'));
+                if (credit)
+                    credit.checked = false;
             }
         })
     })
@@ -270,10 +287,19 @@ export function addCreditCard() {
 }
 
 export function closeCreditForm() {
-    document.getElementById('back-payment')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelector('.js-modal')?.classList.remove('show-modal');
-    })
+    // document.getElementById('back-payment')?.addEventListener('click', (e) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //     document.querySelector('.js-modal')?.classList.remove('show-modal');
+    // })
+    const backBtn = document.getElementById('back-payment');
+    if (backBtn) {
+        backBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            document.querySelector('.js-modal')?.classList.remove('show-modal');
+        }
+    }
 }
 
 async function pushOrder(option) {
