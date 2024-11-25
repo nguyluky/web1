@@ -309,6 +309,15 @@ function setEventListener(product_id) {
 
     const buy_now = document.querySelector('.buy-now');
     buy_now?.addEventListener('click', e => {
+
+        if (!localStorage.getItem('user_id')) {
+            toast({
+                title: 'Vui lòng đăng nhập để xem giỏ hàng',
+                type: 'error',
+            });
+            return;
+        }
+
         // TODO: fuckk
         navigateToPage('payment', { payment: product_id + '-' + inputquantity.value });
 
