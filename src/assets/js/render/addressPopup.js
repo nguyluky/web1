@@ -60,23 +60,17 @@ export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = 
                     border-radius: 5px;
                 "
             >
-                <label class="ct-input">
-                    <input type="text" placeholder="Họ và Tên" name="name" required/>
-                </label>
-
                 <div class="group-flex">
+                    <label class="ct-input">
+                        <input type="text" placeholder="Họ và Tên" name="name" required/>
+                    </label>
                     <label class="ct-input phone">
-                        <div>
                             <input
                                 required
                                 type="text"
                                 placeholder="Số điện thoại"
                                 name="phone_num"
                             />
-                        </div>
-                    </label>
-                    <label class="ct-input email">
-                        <div><input type="text" placeholder="Email" name="email"/></div>
                     </label>
                 </div>
 
@@ -130,14 +124,12 @@ export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = 
 
     const name = /**@type {HTMLInputElement} */ (document.getElementsByName('name')[0]);
     const phone_num = /**@type {HTMLInputElement} */ (document.getElementsByName('phone_num')[0]);
-    const email = /**@type {HTMLInputElement} */ (document.getElementsByName('email')[0]);
     const street = /**@type {HTMLInputElement} */ (document.getElementsByName('street')[0]);
     const pay_address = /**@type {NodeListOf<AddressFrom>}*/ (document.getElementsByName('pay_address'));
 
     if (data) {
         name.value = data.name;
         phone_num.value = data.phone_num;
-        email.value = data.email;
         street.value = data.street;
         const address = data.address.split(' - ');
         pay_address[0].value = address[0];
@@ -190,15 +182,6 @@ export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = 
             phone_num.setCustomValidity("");
         }
 
-        if (!validateEmail(email.value) && email.value != '') {
-            email.setCustomValidity("Email không đúng định dạng");
-            phone_num.reportValidity();
-            isValid = true;
-        }
-        else {
-            phone_num.setCustomValidity("");
-        }
-
         if (isValid) {
             // nhập sai thì hiện popup error
             return;
@@ -207,13 +190,12 @@ export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = 
         const address = {
             name: name.value,
             phone_num: phone_num.value,
-            email: email.value,
             street: street.value,
             address: Array.from(pay_address).map((el) => el.value).join(' - ')
         }
         const setToDefault = /**@type {HTMLInputElement} */ (document.querySelector('.set-default input'));
 
-        onOk(address, (!data ? setToDefault.checked : true)).then(() => {
+        onOk(address, (isDefault ? isDefault : setToDefault.checked)).then(() => {
             element.remove();
         });
     })
@@ -359,8 +341,15 @@ export function showListShippingAddressPopup(indexOfAddress = 0, onOk, onCancle)
     }
 
     element.querySelector('.btn-close')?.addEventListener('click', () => {
+        onCancle && onCancle();
         element.remove();
     });
+
+    element.querySelector('.button_1')?.addEventListener('click', () => {
+        onCancle && onCancle();
+        element.remove();
+    });
+
     document.addEventListener('click', ev_);
 
     fakeDatabase.getUserInfoByUserId(userId).then((userInfo) => {
@@ -417,13 +406,15 @@ function addEvent(userId, addressList, onOk, onCancle) {
         element.style.display = 'none';
         showShippingFromeAddressPopup(async (address, isDefault) => {
             element.remove();
-            console.log(isDefault);
-            if (isDefault)
+            let index = 0;
+            if (isDefault) {
                 addressList.unshift(address);
-            else
+            } else {
                 addressList.push(address);
+                index = addressList.length - 1;
+            }
             await fakeDatabase.updateUserAddress(userId, addressList);
-            showListShippingAddressPopup();
+            showListShippingAddressPopup(index, onOk, onCancle);
             return;
         }, () => {
             element.style.display = '';
@@ -454,7 +445,7 @@ function addEvent(userId, addressList, onOk, onCancle) {
                         [addressList[0], addressList[index]] = [addressList[index], addressList[0]];
                         await fakeDatabase.updateUserAddress(userId, addressList);
                         element.remove();
-                        showListShippingAddressPopup();
+                        showListShippingAddressPopup(0, onOk, onCancle);
                         return;
                     }
 
@@ -474,6 +465,11 @@ function addEvent(userId, addressList, onOk, onCancle) {
                 const index = Number(item.dataset.id);
                 addressList.splice(index, 1);
                 fakeDatabase.updateUserAddress(userId, addressList);
+
+                if (item.classList.contains('sladd')) {
+                    item.parentElement?.querySelector('.shipping-info__item')?.classList.add('sladd')
+                }
+
                 item.remove();
                 addressItems = /**@type {NodeListOf<HTMLElement>} */ (select?.querySelectorAll('.shipping-info__item'));
                 addressItems.forEach((item, i) => {
@@ -491,7 +487,7 @@ function addEvent(userId, addressList, onOk, onCancle) {
             alert('Bạn chưa chọn địa chỉ');
             return;
         }
-        element.remove();
         onOk && onOk(Number(addressItem.dataset.id));
+        element.remove();
     });
 }

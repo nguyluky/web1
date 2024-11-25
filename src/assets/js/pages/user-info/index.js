@@ -1,8 +1,9 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { showShippingFromeAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
-import { dateToString, removeDiacritics } from "../../until/format.js";
+import { dateToString, removeDiacritics, text2htmlElement } from "../../until/format.js";
 import { addStyle, errorPage, navigateToPage, removeStyle } from "../../until/router.js";
+import { validateEmail, validateNumberPhone } from "../../until/validator.js";
 import { updateCartQuantity } from "../cart/cart.js";
 
 const status = {
@@ -25,43 +26,6 @@ const status = {
     huy: {
         text: 'Đã hủy',
         color: 'rgba(212, 13, 13, 1)'
-    }
-}
-
-/**
- * 
- * Tạo giới tính ngẫu nhiên từ user_id
- * 
- * @param {string} user_id 
- * @returns {string}
- */
-function create_user_gender(user_id) {
-
-    // hash
-    /**
-     * 
-     * Generate a Hash 32bit from string
-     * 
-     * @param {string} string 
-     * @returns {number}
-     */
-    function hashCode(string) {
-        var hash = 0,
-            i, chr;
-        if (string.length === 0) return hash;
-        for (i = 0; i < string.length; i++) {
-            chr = string.charCodeAt(i);
-            hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
-        }
-        return hash;
-    }
-
-    if (hashCode(user_id) % 2 == 0) {
-        return "Nữ";
-    }
-    else {
-        return "Nam";
     }
 }
 
@@ -230,7 +194,7 @@ async function renderUserInfo(user_id) {
             <div class="user-header">Họ và tên:</div>
             <div class="user-info">
                 <label>
-                    <input id="input-fullname" type="text" value="${personal_info_data?.fullname}">
+                    <input id="input-fullname" type="text" value="${personal_info_data?.fullname ?? ''}">
                 </label>
             </div>
         </div>
@@ -238,14 +202,14 @@ async function renderUserInfo(user_id) {
         <div class="user-personal">
             <div class="user-header">Email:</div>
             <div class="user-info">
-                ${maskInfo(personal_info_data?.email)}
+                <span onfocus="document.execCommand('selectAll', false, null);">${maskInfo(personal_info_data?.email)}</span>
                 <span class="lmao">${personal_info_data?.email ? 'Thay đổi' : 'Thêm mới'}</span>
             </div>
         </div>
         <div class="user-personal">
             <div class="user-header">Số điện thoại:</div>
             <div class="user-info">
-                ${maskInfo(personal_info_data?.phone_num)}
+                <span onfocus="document.execCommand('selectAll', false, null);">${maskInfo(personal_info_data?.phone_num)}</span>
                 <span class="lmao">${personal_info_data?.phone_num ? 'Thay đổi' : 'Thêm mới'}</span>
             </div>
         </div>       
@@ -439,10 +403,11 @@ async function initializationArticle__AccountInfo() {
     const article = document.getElementById('article');
     const user_id = localStorage.getItem('user_id');
     if (!article || !user_id) return;
+    const new_Info = await fakeDatabase.getUserInfoByUserId(user_id);
     article.className = "user-personal-info";
     article.innerHTML = `
             <div class="article-header">
-                <span>Hồ sơ người mua hàng</span>
+                <span>Hồ sơ của tôi</span>
             </div>
             <hr>
             <div class="user-personal__container">
@@ -455,18 +420,100 @@ async function initializationArticle__AccountInfo() {
         if (user_container) user_container.innerHTML = data;
     })
 
-    const save = document.getElementById('save-info-btn');
-    console.log(save);
-    save?.addEventListener('click', async () => {
-        const fullname = /**@type {HTMLInputElement}*/(document.getElementById('input-fullname'));
+    const save = /** @type {HTMLElement}*/document.getElementById('save-info-btn');
+    if (!save) return;
+    save.style.display = 'none';
+    // khi nhấn thay đổi
+    const changeInfo = document.querySelectorAll('.lmao');
+    changeInfo.forEach(e => {
+        e.addEventListener('click', () => {
+            save.style.display = 'block';
+            const text = /**@type {HTMLElement}*/(/**@type {HTMLElement}*/(e.parentElement).querySelector('span'));
+            text.setAttribute('contenteditable', 'true');
+            if (text.textContent?.includes('*'))
+                if (text.textContent?.includes('@')) text.textContent = '' + new_Info?.email;
+                else text.textContent = '' + new_Info?.phone_num;
+
+            text.setAttribute(
+                'style',
+                `padding: 5px 10px; outline: 2px solid #43b1fa; border-radius: 4px; display: inline-block; min-width: 150px; `
+            );
+            text.focus();
+            text.addEventListener('focusout', () => {
+                text.setAttribute('contenteditable', 'false');
+                text.setAttribute('style', '');
+                if (text.textContent != '') e.textContent = 'Thay đổi';
+                else e.textContent = 'Thêm mới';
+            });
+        });
+    });
+
+    const fullname = /**@type {HTMLInputElement}*/(document.getElementById('input-fullname'));
+    fullname.addEventListener('input', e => {
+        save.style.display = 'block';
+    });
+
+    const gender_radio = /**@type {NodeListOf<HTMLElement>}*/ (document.getElementsByName('gender'));
+    gender_radio.forEach(radio => {
+        radio.addEventListener('change', e => {
+            save.style.display = 'block';
+        });
+    });
+
+    //khi nhấn lưu
+    save.addEventListener('click', async () => {
+
         const gender = /**@type {HTMLInputElement}*/ (document.querySelector('input[type="radio"]:checked'));
-        const new_Info = await fakeDatabase.getUserInfoByUserId(user_id);
-        if (!new_Info || !fullname) return;
+        const contact = /**@type {NodeListOf<HTMLElement>}*/(document.querySelectorAll('.user-info > span:not(.lmao)'));
+        if (!new_Info || !fullname || !contact) return;
+        let flag = 1;
+        const checkduplicate = await fakeDatabase.getUserInfoByPhoneNum(String(contact[1].textContent));
+
+        if (checkduplicate && checkduplicate.id != user_id) {
+            toast({
+                title: 'Lỗi',
+                message: 'Số điện thoại đã tồn tại',
+                type: 'error'
+            });
+            contact[1].textContent = new_Info.phone_num;
+            flag = 0;
+        } else {
+            if (!validateNumberPhone(String(contact[1].textContent)) && !contact[1].textContent?.includes('*')) {
+                toast({
+                    title: 'Số điện thoại không được lưu đúng cách',
+                    message: 'Số điện thoại không đúng định dạng',
+                    type: 'error'
+                });
+                contact[1].textContent = new_Info.phone_num;
+                flag = 0;
+            }
+        }
+        if (!validateEmail(String(contact[0].textContent))) {
+            toast({
+                title: 'Email không được lưu đúng cách',
+                message: 'Email không đúng định dạng',
+                type: 'error'
+            });
+            contact[0].textContent = new_Info.email;
+            flag = 0;
+        }
+
         new_Info.fullname = fullname?.value;
         new_Info.gender = gender ? gender.value : '';
+        new_Info.email = contact[0].textContent?.includes('*') ? new_Info.email : contact[0].textContent ?? '';
+        new_Info.phone_num = contact[1].textContent?.includes('*') ? new_Info.phone_num : contact[1].textContent ?? '';
+        console.log(new_Info);
         fakeDatabase.updateUserInfo(new_Info);
-        toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
+
+        if (flag == 1) {
+            toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
+            contact[0].textContent = maskInfo(new_Info.email);
+            contact[1].textContent = maskInfo(new_Info.phone_num);
+        }
+
+        save.style.display = 'none';
     });
+
 }
 async function initializationArticle__AddressInfo() {
     const user_id = localStorage.getItem('user_id');

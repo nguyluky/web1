@@ -347,7 +347,7 @@
 }
 
 #add-credit {
-    width: 23%;
+    width: max-content;
     font-size: 14px;
     font-weight: 500;
     margin-top: 5px;
@@ -396,6 +396,11 @@
 
     #add-credit {
         width: 50%;
+    }
+
+    .ship-option {
+        width: 100%;
+        box-sizing: border-box;
     }
 }
 

@@ -546,6 +546,11 @@ class FakeDatabase {
         return requestToPromise(cartStore.add(cart_data));
     }
 
+    /**
+     * 
+     * @param {string} cart_id 
+     * @returns 
+     */
     async deleteCartById(cart_id) {
         if (!db) await this.awaitUntilReady();
         await this.ensureDataLoaded(ObjectStoreName.CART);

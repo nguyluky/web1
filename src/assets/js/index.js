@@ -256,6 +256,8 @@ function initializeAccountPopup() {
             sessionStorage.removeItem('admin_id');
             navigateToPage('home')
             toast({ title: 'Đăng xuất thành công', type: 'success' })
+            updateCartQuantity();
+            dropDown.remove();
         }
 
         dropDown.appendChild(p1);
@@ -267,6 +269,8 @@ function initializeAccountPopup() {
 
         BUTTON_ACCOUNT?.appendChild(dropDown);
     }
+
+
 
     /**
      * 
@@ -341,7 +345,8 @@ function initializationSearch() {
     });
 
     document.querySelector('header div.center div.input_text')?.addEventListener('click', () => {
-        navigateToPage('search', { t: input?.value });
+        if (input?.value)
+            navigateToPage('search', { t: input?.value });
     });
 }
 
