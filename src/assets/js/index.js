@@ -169,6 +169,11 @@ function initializeAccountPopup() {
                     localStorage.setItem('admin_id', userInfo.id);
                 }
                 MODAL?.classList.remove('show-modal');
+                if (MODAL) {
+                    // @ts-ignore
+                    MODAL.onclick = undefined;
+                    MODAL.innerHTML = '';
+                }
                 toast({ title: 'Đăng nhập thành công', type: 'success' })
                 showDropDown();
                 updateCartQuantity();
@@ -209,6 +214,11 @@ function initializeAccountPopup() {
                     .then((e) => {
                         localStorage.setItem('user_id', e.id);
                         MODAL?.classList.remove('show-modal');
+                        if (MODAL) {
+                            // @ts-ignore
+                            MODAL.onclick = undefined;
+                            MODAL.innerHTML = '';
+                        }
                         showDropDown();
                         toast({ title: 'Tạo tài khoản thành công', type: 'success' })
                     })
@@ -282,6 +292,13 @@ function initializeAccountPopup() {
         if (btnExit)
             btnExit.onclick = () => {
                 modal?.classList.remove('show-modal');
+
+                if (modal) {
+                    modal.innerHTML = '';
+                    // @ts-ignore
+                    modal.onclick = undefined
+                }
+
             };
         if (modal)
             // NOTE: không nên đổi thành addevntListener

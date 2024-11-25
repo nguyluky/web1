@@ -62,7 +62,7 @@ function renderRow(row, value, onchange = null) {
     Object.keys(cols).forEach((key) => {
         switch (key) {
             case 'category': {
-                const td = createTagInputCell('category', [], [], () => {});
+                const td = createTagInputCell('category', [], [], () => { });
                 row.appendChild(td);
 
                 fakeDatabase.getAllCategory().then((allCategory) => {
@@ -101,13 +101,13 @@ function renderRow(row, value, onchange = null) {
                     value.details,
                     (nv) => {
                         onchange && onchange(value, 'details', nv);
-                    },
+                    }, true, "nhập chi tiết sách"
                 );
                 row.appendChild(detail);
                 break;
             }
             case 'thumbnail': {
-                const td = createThumbnailCell('thumbnail', '', () => {});
+                const td = createThumbnailCell('thumbnail', '', () => { });
 
                 row.appendChild(td);
 
@@ -143,7 +143,7 @@ function renderRow(row, value, onchange = null) {
             case 'title': {
                 const col = createTextTableCell('title', value.title, (nv) => {
                     onchange && onchange(value, 'title', nv);
-                });
+                }, true, "nhập tên sách");
                 col.style.minWidth = '100px';
                 row.appendChild(col);
                 break;
