@@ -3,6 +3,7 @@
  * @returns {boolean}
  */
 export const validateEmail = (email) => {
+    // eslint-disable-next-line no-useless-escape
     const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return regex.test(email) ? true : false;
 };
@@ -44,6 +45,12 @@ export function isCreditCard(value) {
     return false;
 }
 
+/**
+ * 
+ * @param {HTMLElement} element 
+ * @param {string} selector 
+ * @returns {HTMLElement | null | undefined}
+ */
 export function getParent(element, selector) {
     while (element.parentElement) {
         if (element.parentElement.matches(selector)) {
@@ -84,15 +91,16 @@ export function validator(options) {
      * @returns {boolean}
      */
     function validate(inputElement, rule) {
-        const parentElement = inputElement.parentElement;
+        // const parentElement = inputElement.parentElement;
+        const parentElement = getParent(inputElement, '.input-group');
         if (!parentElement) {
-            alert('Không tìm thấy phần tử cha. file validator.js:79');
+            console.error('Không tìm thấy phần tử em. file validator.js');
             return false;
         }
         const errorElement = parentElement.nextElementSibling;
 
         if (!errorElement) {
-            alert('Không tìm thấy phần tử em. file validator.js:85');
+            console.error('Không tìm thấy phần tử em. file validator.js');
             return false;
         }
 
