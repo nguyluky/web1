@@ -195,7 +195,7 @@ export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = 
         }
         const setToDefault = /**@type {HTMLInputElement} */ (document.querySelector('.set-default input'));
 
-        onOk(address, (!data ? setToDefault.checked : true)).then(() => {
+        onOk(address, (isDefault ? isDefault : setToDefault.checked)).then(() => {
             element.remove();
         });
     })
@@ -341,10 +341,12 @@ export function showListShippingAddressPopup(indexOfAddress = 0, onOk, onCancle)
     }
 
     element.querySelector('.btn-close')?.addEventListener('click', () => {
+        onCancle && onCancle();
         element.remove();
     });
 
     element.querySelector('.button_1')?.addEventListener('click', () => {
+        onCancle && onCancle();
         element.remove();
     });
 
@@ -412,7 +414,7 @@ function addEvent(userId, addressList, onOk, onCancle) {
                 index = addressList.length - 1;
             }
             await fakeDatabase.updateUserAddress(userId, addressList);
-            showListShippingAddressPopup(index);
+            showListShippingAddressPopup(index, onOk, onCancle);
             return;
         }, () => {
             element.style.display = '';
@@ -443,7 +445,7 @@ function addEvent(userId, addressList, onOk, onCancle) {
                         [addressList[0], addressList[index]] = [addressList[index], addressList[0]];
                         await fakeDatabase.updateUserAddress(userId, addressList);
                         element.remove();
-                        showListShippingAddressPopup();
+                        showListShippingAddressPopup(0, onOk, onCancle);
                         return;
                     }
 
@@ -463,6 +465,11 @@ function addEvent(userId, addressList, onOk, onCancle) {
                 const index = Number(item.dataset.id);
                 addressList.splice(index, 1);
                 fakeDatabase.updateUserAddress(userId, addressList);
+
+                if (item.classList.contains('sladd')) {
+                    item.parentElement?.querySelector('.shipping-info__item')?.classList.add('sladd')
+                }
+
                 item.remove();
                 addressItems = /**@type {NodeListOf<HTMLElement>} */ (select?.querySelectorAll('.shipping-info__item'));
                 addressItems.forEach((item, i) => {
@@ -480,7 +487,7 @@ function addEvent(userId, addressList, onOk, onCancle) {
             alert('Bạn chưa chọn địa chỉ');
             return;
         }
-        element.remove();
         onOk && onOk(Number(addressItem.dataset.id));
+        element.remove();
     });
 }

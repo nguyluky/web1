@@ -15,9 +15,6 @@ function initializationMain() {
 
     if (!main) return;
 
-    if (!localStorage.getItem('user_id')) {
-        document.querySelector('.dropdown-btn-content')?.remove();
-    }
     main.innerHTML = `
     <div class="main_wapper">
         <aside class="aside"></aside>

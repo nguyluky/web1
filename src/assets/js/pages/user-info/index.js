@@ -3,6 +3,7 @@ import { showShippingFromeAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
 import { dateToString, removeDiacritics, text2htmlElement } from "../../until/format.js";
 import { addStyle, errorPage, navigateToPage, removeStyle } from "../../until/router.js";
+import { validateEmail, validateNumberPhone } from "../../until/validator.js";
 import { updateCartQuantity } from "../cart/cart.js";
 
 const status = {
@@ -419,40 +420,98 @@ async function initializationArticle__AccountInfo() {
         if (user_container) user_container.innerHTML = data;
     })
 
-    const save = document.getElementById('save-info-btn');
-    console.log(save);
-    save?.addEventListener('click', async () => {
-        const fullname = /**@type {HTMLInputElement}*/(document.getElementById('input-fullname'));
-        const gender = /**@type {HTMLInputElement}*/ (document.querySelector('input[type="radio"]:checked'));
-        const contact = /**@type {NodeListOf<HTMLElement>}*/(document.querySelectorAll('.user-info > span:not(.lmao)'));
-        if (!new_Info || !fullname || !contact) return;
-        new_Info.fullname = fullname?.value;
-        new_Info.gender = gender ? gender.value : '';
-        new_Info.email = contact[0].textContent?.includes('*') ? new_Info.email : contact[0].textContent ?? '';
-        new_Info.phone_num = contact[1].textContent?.includes('*') ? new_Info.phone_num : contact[1].textContent ?? '';
-        fakeDatabase.updateUserInfo(new_Info);
-        toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
-        contact[0].textContent = maskInfo(new_Info.email);
-        contact[1].textContent = maskInfo(new_Info.phone_num);
-    });
-
+    const save = /** @type {HTMLElement}*/document.getElementById('save-info-btn');
+    if (!save) return;
+    save.style.display = 'none';
+    // khi nhấn thay đổi
     const changeInfo = document.querySelectorAll('.lmao');
     changeInfo.forEach(e => {
         e.addEventListener('click', () => {
+            save.style.display = 'block';
             const text = /**@type {HTMLElement}*/(/**@type {HTMLElement}*/(e.parentElement).querySelector('span'));
             text.setAttribute('contenteditable', 'true');
             if (text.textContent?.includes('*'))
                 if (text.textContent?.includes('@')) text.textContent = '' + new_Info?.email;
                 else text.textContent = '' + new_Info?.phone_num;
 
-            text.setAttribute('style', `padding: 10px;`);
+            text.setAttribute(
+                'style',
+                `padding: 5px 10px; outline: 2px solid #43b1fa; border-radius: 4px; display: inline-block; min-width: 150px; `
+            );
             text.focus();
             text.addEventListener('focusout', () => {
                 text.setAttribute('contenteditable', 'false');
                 text.setAttribute('style', '');
                 if (text.textContent != '') e.textContent = 'Thay đổi';
+                else e.textContent = 'Thêm mới';
             });
         });
+    });
+
+    const fullname = /**@type {HTMLInputElement}*/(document.getElementById('input-fullname'));
+    fullname.addEventListener('input', e => {
+        save.style.display = 'block';
+    });
+
+    const gender_radio = /**@type {NodeListOf<HTMLElement>}*/ (document.getElementsByName('gender'));
+    gender_radio.forEach(radio => {
+        radio.addEventListener('change', e => {
+            save.style.display = 'block';
+        });
+    });
+
+    //khi nhấn lưu
+    save.addEventListener('click', async () => {
+
+        const gender = /**@type {HTMLInputElement}*/ (document.querySelector('input[type="radio"]:checked'));
+        const contact = /**@type {NodeListOf<HTMLElement>}*/(document.querySelectorAll('.user-info > span:not(.lmao)'));
+        if (!new_Info || !fullname || !contact) return;
+        let flag = 1;
+        const checkduplicate = await fakeDatabase.getUserInfoByPhoneNum(String(contact[1].textContent));
+
+        if (checkduplicate && checkduplicate.id != user_id) {
+            toast({
+                title: 'Lỗi',
+                message: 'Số điện thoại đã tồn tại',
+                type: 'error'
+            });
+            contact[1].textContent = new_Info.phone_num;
+            flag = 0;
+        } else {
+            if (!validateNumberPhone(String(contact[1].textContent)) && !contact[1].textContent?.includes('*')) {
+                toast({
+                    title: 'Số điện thoại không được lưu đúng cách',
+                    message: 'Số điện thoại không đúng định dạng',
+                    type: 'error'
+                });
+                contact[1].textContent = new_Info.phone_num;
+                flag = 0;
+            }
+        }
+        if (!validateEmail(String(contact[0].textContent))) {
+            toast({
+                title: 'Email không được lưu đúng cách',
+                message: 'Email không đúng định dạng',
+                type: 'error'
+            });
+            contact[0].textContent = new_Info.email;
+            flag = 0;
+        }
+
+        new_Info.fullname = fullname?.value;
+        new_Info.gender = gender ? gender.value : '';
+        new_Info.email = contact[0].textContent?.includes('*') ? new_Info.email : contact[0].textContent ?? '';
+        new_Info.phone_num = contact[1].textContent?.includes('*') ? new_Info.phone_num : contact[1].textContent ?? '';
+        console.log(new_Info);
+        fakeDatabase.updateUserInfo(new_Info);
+
+        if (flag == 1) {
+            toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
+            contact[0].textContent = maskInfo(new_Info.email);
+            contact[1].textContent = maskInfo(new_Info.phone_num);
+        }
+
+        save.style.display = 'none';
     });
 
 }

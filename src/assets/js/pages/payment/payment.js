@@ -14,16 +14,57 @@ import { getSearchParam, navigateToPage } from "../../until/router.js";
  */
 
 
-export function getOrder() {
-    const payment = getSearchParam('payment');
-    return payment?.split(',');
+export async function getOrder() {
+    const a = [];
+
+    const fromCart = getSearchParam('carts');
+    if (fromCart) {
+        const cartItem = fromCart.split(',').map(async e => {
+            const cart = await fakeDatabase.getCartById(e);
+            return {
+                sachId: cart?.sach || '',
+                quality: cart?.quantity || 0,
+                cardId: e
+            }
+        })
+
+        if (cartItem)
+            a.push(... await Promise.all(cartItem))
+    }
+
+    const payment = getSearchParam('payment') || '';
+
+    if (payment) {
+
+        const paymentItems = payment.split(',').map(e => {
+            return {
+                sachId: e.split('-')[0],
+                quality: +e.split('-')[1],
+                cardId: undefined
+            }
+        })
+
+        a.push(...paymentItems)
+    }
+
+    return a;
 }
 
-async function createOrder(cart, book) {
+
+/**
+ * 
+ * @param {string} thumbnail 
+ * @param {number} quantity
+ * @param {number} base_price 
+ * @param {number} discount 
+ * @param {string} title 
+ * @returns 
+ */
+async function createOrder(thumbnail, title, quantity, base_price, discount) {
 
 
     let source = './assets/img/default-image.png';
-    const img = await fakeDatabase.getImgById(book.thumbnail);
+    const img = await fakeDatabase.getImgById(thumbnail);
     if (img) {
         source = img.data;
     }
@@ -39,18 +80,18 @@ async function createOrder(cart, book) {
                 alt=""
             />
             <div class="order-title">
-            ${book.title}
+            ${title}
                 
             </div>
         </div>
 
         <div class="cart-item-quantity">
             <div class="quantity-order">
-                ${cart.quantity}
+                ${quantity}
             </div>
         </div>
         <div class="cart-item-amount">
-            ${formatNumber(cart.quantity * (book.base_price * (1 - book.discount)))}
+            ${formatNumber(quantity * (base_price * (1 - discount)))}
             <sup>₫</sup>
         </div>`;
 
@@ -74,7 +115,7 @@ export async function rendeOrder() {
     let originalPrice = 0, discountPrice = 0, deliveryPrice = 10000;
 
 
-    const orders = getOrder() || [];
+    const orders = await getOrder();
     const deliveryTime = getDeliveryTime();
 
 
@@ -86,22 +127,20 @@ export async function rendeOrder() {
     showUserAddressInfo(indexAddress);
 
     for (const order of orders) {
-        const cart = await fakeDatabase.getCartById(order);
-        if (!cart)
-            return;
 
-        const book = await fakeDatabase.getSachById(cart.sach);
+        const book = await fakeDatabase.getSachById(order.sachId);
+
         if (!book)
             return;
 
-        const orderItem = await createOrder(cart, book);
+        const orderItem = await createOrder(book.thumbnail, book.title, order.quality, book.base_price, book.discount);
         if (orderItem) {
             orderItems?.appendChild(orderItem);
         }
 
-        quantity += cart.quantity;
-        originalPrice += cart.quantity * book.base_price;
-        discountPrice -= cart.quantity * book.base_price * book.discount;
+        quantity += order.quality;
+        originalPrice += order.quality * book.base_price;
+        discountPrice -= order.quality * book.base_price * book.discount;
     }
 
 
@@ -305,7 +344,7 @@ export function closeCreditForm() {
 
 async function pushOrder(option) {
     const items = [];
-    const orders = getOrder();
+    const orders = await getOrder();
     let total = 0;
 
     const user_id = localStorage.getItem('user_id');
@@ -320,18 +359,15 @@ async function pushOrder(option) {
 
     const is_pay = option === 'cash-option' ? false : true;
     for (const order of orders) {
-        const cart = await fakeDatabase.getCartById(order);
-        if (!cart)
-            return;
-
-        const book = await fakeDatabase.getSachById(cart.sach);
+        const book = await fakeDatabase.getSachById(order.sachId);
         if (!book)
             return;
 
-        const item = { sach: book.id, quantity: cart.quantity, total: book.base_price * (1 - book.discount) };
+        const item = { sach: book.id, quantity: order.quality, total: book.base_price * (1 - book.discount) };
         total += item.total;
         items.push(item);
-        await fakeDatabase.deleteCartById(order);
+        if (order.cardId)
+            await fakeDatabase.deleteCartById(order.cardId);
     }
     const data = {
         id: uuidv(10),
@@ -454,18 +490,14 @@ export function showCreditForm() {
 async function showQR(option) {
     console.log('success');
     let price = 0;
-    const orders = getOrder();
+    const orders = await getOrder();
     if (!orders)
         return;
     for (const order of orders) {
-        const cart = await fakeDatabase.getCartById(order);
-        if (!cart)
-            return;
-
-        const book = await fakeDatabase.getSachById(cart.sach);
+        const book = await fakeDatabase.getSachById(order.sachId);
         if (!book)
             return;
-        price += cart.quantity * (1 - book.discount) * book.base_price;
+        price += order.quality * (1 - book.discount) * book.base_price;
     }
     const modal = document.querySelector('.js-modal');
     if (!modal)
