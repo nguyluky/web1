@@ -309,7 +309,9 @@ function setEventListener(product_id) {
 
     const buy_now = document.querySelector('.buy-now');
     buy_now?.addEventListener('click', e => {
-        pushCartItemIntoCart(product_id, Number(inputquantity.value), 'payment');
+        // TODO: fuckk
+        navigateToPage('payment', { payment: product_id + '-' + inputquantity.value });
+
     });
 
 }

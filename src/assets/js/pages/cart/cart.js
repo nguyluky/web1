@@ -22,18 +22,6 @@ export async function showUserAddressInfo(index = 0) {
     const userTel = document.querySelector('.contact-info__phone-num');
     const userAddress = document.querySelector('.address-info');
     if (!userName || !userTel || !userAddress) return;
-    // if (userInfo && userName && userTel && userAddress) {
-    // if (userInfo.address.length > 0) {
-    //     userName.innerHTML = userInfo.address[0].name;
-    //     userTel.innerHTML = userInfo.address[0].phone_num;
-    //     const address = userInfo.address[0].address.split('-');
-    //     const street = userInfo.address[0].street
-    //     userAddress.innerHTML = `${street},${address[2]},${address[1]},${address[0]}`;
-    // }
-    // else {
-    //     userName.innerHTML = userInfo.name;
-    //     userTel.innerHTML = userInfo.phone_num;
-    // }
 
     let style = document.getElementById('no-info');
     if (!style) {
@@ -51,8 +39,6 @@ export async function showUserAddressInfo(index = 0) {
         style.innerHTML = `.contact-info {justify-content: center}`;
     }
 }
-
-
 
 /**
  *
@@ -344,25 +330,15 @@ function handleMinus() {
  * 
  * @param {string} bookId 
  * @param {number} [incrQuantity=1]
- * @param {String} [page = null]
  * @returns {Promise<void>}
  */
-export async function pushCartItemIntoCart(bookId, incrQuantity = 1, page = '') {
+export async function pushCartItemIntoCart(bookId, incrQuantity = 1) {
     const user_id = localStorage.getItem('user_id');
     if (!user_id) {
-        if (page === '') {
-            toast({
-                title: 'Vui lòng đăng nhập để xem giỏ hàng',
-                type: 'error',
-            });
-        } else {
-            if (page === 'payment') {
-                toast({
-                    message: 'Vui lòng đăng nhập để mua hàng',
-                    type: 'error'
-                });
-            }
-        }
+        toast({
+            title: 'Vui lòng đăng nhập để xem giỏ hàng',
+            type: 'error',
+        });
         return;
     }
     const carts = await fakeDatabase.getCartByUserId(user_id);
@@ -379,17 +355,12 @@ export async function pushCartItemIntoCart(bookId, incrQuantity = 1, page = '') 
         quantity = cart.quantity + incrQuantity;
     }
     await fakeDatabase.createCartItem(cart_id, user_id, bookId, quantity);
-    if (page === '') {
-        toast({
-            title: 'Thành công',
-            message: 'Đã thêm vào giỏ hàng',
-            type: 'success'
-        });
-    }
+    toast({
+        title: 'Thành công',
+        message: 'Đã thêm vào giỏ hàng',
+        type: 'success'
+    });
     updateCartQuantity();
-    if (page === 'payment') {
-        navigateToPage('payment', { payment: cart_id });
-    }
 }
 
 /**
@@ -454,6 +425,7 @@ async function initDeleteCartItem() {
 
             console.log(deleteButton);
             const cart_id = deleteButton.dataset.cartId;
+            if (!cart_id) return
             fakeDatabase
                 .deleteCartById(cart_id)
                 // @ts-ignore
@@ -648,7 +620,7 @@ export async function buyBooks() {
             return;
         }
 
-        navigateToPage('payment', { payment: orderItems.join(','), a: /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index || '' });
+        navigateToPage('payment', { carts: orderItems.join(','), a: /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index || '' });
     })
 }
 

@@ -120,6 +120,19 @@ export class AddressFrom extends HTMLElement {
      */
     _name = '';
 
+    get disable() {
+        return this._input?.disabled || false;
+    }
+
+    /**
+     * @param {boolean} value
+     */
+    set disable(value) {
+        if (this._input) {
+            this._input.disabled = value;
+        }
+    }
+
     get name() {
         return this._name;
     }
@@ -189,6 +202,8 @@ export class AddressFrom extends HTMLElement {
     set options(value) {
         this._opstions = value;
 
+
+
         const shadow = this.shadowRoot;
 
         if (!shadow) return;
@@ -224,10 +239,10 @@ export class AddressFrom extends HTMLElement {
                     .querySelector('div[selection="true"]')
                     ?.setAttribute('selection', 'false');
                 div.setAttribute('selection', 'true');
+                this.removeDropDow();
 
                 const event = new CustomEvent('change');
                 this.dispatchEvent(event);
-                this.updateChildrenAddressForm();
 
             });
             content.appendChild(div);
@@ -248,16 +263,18 @@ export class AddressFrom extends HTMLElement {
 
     constructor() {
         super();
-
         this._internals = this.attachInternals();
-
     }
     updateChildrenAddressForm() {
         const [ttp, qh, px] = document.getElementsByName(this._name);
 
-        if (this._type == 'TTP' && qh instanceof AddressFrom)
+        if (!(ttp instanceof AddressFrom && qh instanceof AddressFrom && px instanceof AddressFrom)) return
+
+        if (this._type == 'TTP') {
             qh.update();
-        else if (this._type == 'QH' && px instanceof AddressFrom)
+            px.update();
+        }
+        else if (this._type == 'QH')
             px.update();
     }
     attributeChangedCallback(name, oldValue, newValue) {
@@ -311,21 +328,29 @@ export class AddressFrom extends HTMLElement {
 
         const [ttp, qh, px] = document.getElementsByName(this._name);
 
+        // if (!(ttp instanceof AddressFrom && qh instanceof AddressFrom && px instanceof AddressFrom)) {
+        //     console.log('not found');
+        //     return;
+        // }
+
         switch (this._type) {
             case 'TTP': {
-                if (qh instanceof AddressFrom) qh.update();
                 fakeDatabase.getAllTinhThanPho().then((e) => {
                     this.options = e.map((e) => ({ title: e, value: e }));
                 });
                 break;
             }
             case 'QH': {
-                if (px instanceof AddressFrom) px.update();
                 if (ttp instanceof AddressFrom) {
+                    if (ttp.value == '') {
+                        this.options = [];
+                        return;
+                    }
                     fakeDatabase
                         .getAllQuanHuyenByTinhThanhPho(ttp.value)
                         .then((e) => {
                             // console.log(e);
+
                             this.options = e.map((e) => ({
                                 title: e,
                                 value: e,
@@ -336,6 +361,10 @@ export class AddressFrom extends HTMLElement {
             }
             case 'PX': {
                 if (qh instanceof AddressFrom && ttp instanceof AddressFrom) {
+                    if (qh.value == '' || ttp.value == '') {
+                        this.options = [];
+                        return;
+                    }
                     fakeDatabase
                         .getAllPhuongXaByQuanHuyenAndThinThanhPho(
                             ttp.value,
@@ -353,38 +382,15 @@ export class AddressFrom extends HTMLElement {
         }
     }
 
-    /**
-     * @private
-     * @param {HTMLInputElement} input
-     * @param {HTMLElement} button
-     * @param {HTMLElement} contentDropdowContent
-     */
-    addClickOutSideHandle(input, button, contentDropdowContent) {
 
-        const addressForm = this;
-        function clickOutSide(event) {
+    removeDropDow() {
+        this._contentDropdowContent?.classList.remove('show');
+        this._input &&
+            (this._input.value = '');
 
-            const target = /** @type {HTMLElement} */ (event.target);
-
-            if (target.isSameNode(addressForm)) return;
-
-            const isClickInsideDropdown =
-                button.contains(target) || button.isSameNode(target);
-
-            if (isClickInsideDropdown) return;
-            contentDropdowContent?.classList.remove('show');
-            input.value = '';
-
-            contentDropdowContent?.querySelectorAll('div').forEach((e) => {
-                e.classList.remove('hide');
-            })
-
-
-
-            document.removeEventListener('click', clickOutSide);
-        }
-
-        document.addEventListener('click', clickOutSide);
+        this._contentDropdowContent?.querySelectorAll('div').forEach((e) => {
+            e.classList.remove('hide');
+        })
     }
 
     /**
@@ -433,7 +439,7 @@ export class AddressFrom extends HTMLElement {
     showDropdown(input, button, contentDropdowContent) {
         if (input?.disabled) return;
         contentDropdowContent?.classList.add('show');
-        this.addClickOutSideHandle(input, button, contentDropdowContent);
+        // this.initClickOutSideHandle(input, button, contentDropdowContent);
     }
 
     /**
@@ -442,7 +448,7 @@ export class AddressFrom extends HTMLElement {
      * @param {HTMLInputElement} input
      * @param {HTMLDivElement} contentDropdowContent
      */
-    handleKeyboardNavigation(event, input, contentDropdowContent) {
+    handleKeyboardNavigation(input, contentDropdowContent, event) {
         if (!input) return;
 
         const validkey = ['ArrowDown', 'ArrowUp', 'Enter'];
@@ -517,7 +523,12 @@ export class AddressFrom extends HTMLElement {
         input.setAttribute('type', 'text');
         input.setAttribute('placeholder', this._placeholder);
         button.appendChild(input);
-        input.disabled = this._type != 'TTP';
+        if (this.getAttribute('disable')) {
+            input.disabled = true;
+        }
+        else {
+            input.disabled = this._type != 'TTP';
+        }
 
         this._input = input;
 
@@ -525,13 +536,13 @@ export class AddressFrom extends HTMLElement {
         icon.classList.add('fa-solid', 'fa-angle-down');
         button.appendChild(icon);
 
-        const content = document.createElement('div');
-        content.classList.add('Address__dropdown-content');
-        shadow.appendChild(content);
+        this._contentDropdowContent = document.createElement('div');
+        this._contentDropdowContent.classList.add('Address__dropdown-content');
+        shadow.appendChild(this._contentDropdowContent);
 
-        button.addEventListener('click', this.showDropdown.bind(this, input, button, content));
+        button.addEventListener('click', this.showDropdown.bind(this, input, button, this._contentDropdowContent));
 
-        input.addEventListener('input', this.handleSearchInput.bind(this, input, content));
+        input.addEventListener('input', this.handleSearchInput.bind(this, input, this._contentDropdowContent));
 
         /**
          * - NOTE: Xử lý sự kiện khi người dùng nhấn các phím điều hướng
@@ -539,11 +550,28 @@ export class AddressFrom extends HTMLElement {
          * - NOTE: Điều này cho phép người dùng điều hướng giữa các mục trong
          *   dropdown và chọn mục bằng phím Enter.
          */
-        input.addEventListener('keydown', (event) => {
-            this.handleKeyboardNavigation(event, input, content);
-        });
+        input.addEventListener('keydown', this.handleKeyboardNavigation.bind(this, input, this._contentDropdowContent));
 
         this.update();
+
+        /**
+         * @this {AddressFrom}
+         * @param {MouseEvent} event 
+         * @returns {void}
+         */
+        function clickOutSide(event) {
+            const target = /** @type {HTMLElement} */ (event.target);
+
+            if (target.isSameNode(this)) return;
+
+            const isClickInsideDropdown =
+                button.contains(target) || button.isSameNode(target);
+
+            if (isClickInsideDropdown) return;
+            this.removeDropDow();
+        }
+
+        document.addEventListener('click', clickOutSide.bind(this));
     }
 
     checkValidity() {

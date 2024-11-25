@@ -341,7 +341,8 @@ function initializationSearch() {
     });
 
     document.querySelector('header div.center div.input_text')?.addEventListener('click', () => {
-        navigateToPage('search', { t: input?.value });
+        if (input?.value)
+            navigateToPage('search', { t: input?.value });
     });
 }
 
