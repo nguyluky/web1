@@ -30,6 +30,9 @@ export async function showUserAddressInfo(index = 0) {
         document.head.appendChild(style);
     }
     if (userInfo && userInfo?.length > 0) {
+
+        if (!userInfo[index]) index = 0;
+
         userName.innerHTML = userInfo[index].name;
         userTel.innerHTML = userInfo[index].phone_num;
         userAddress.innerHTML = `${userInfo[index].street}<br>${userInfo[index].address.replace(/ - /g, ', ')}`;
@@ -635,6 +638,8 @@ export function initChangeAddressEvent() {
             const index = /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index;
             showListShippingAddressPopup(Number(index), (i) => {
                 showUserAddressInfo(i);
+            }, () => {
+                showUserAddressInfo(Number(index));
             });
         });
 }
