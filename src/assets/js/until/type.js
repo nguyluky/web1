@@ -35,7 +35,7 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *
  * @typedef {{
  *     id: string;
- *     email: string;
+ *     email?: string;
  *     name: string;
  *     fullname: string;
  *     gender: 'nam' | 'nu' | 'khac' | String;
@@ -135,9 +135,6 @@ export function validateUserInfo(userInfo) {
     if (!userInfo.name)
         errors.push({ key: 'name', msg: 'Tên không được để trống' });
 
-    if (!userInfo.email)
-        errors.push({ key: 'email', msg: 'Email không được để trống' });
-
     if (!userInfo.passwd)
         errors.push({ key: 'passwd', msg: 'Mật khẩu không được để trống' });
 
@@ -150,7 +147,7 @@ export function validateUserInfo(userInfo) {
     if (userInfo.rule && !['admin', 'user'].includes(userInfo.rule))
         errors.push({ key: 'rule', msg: 'Quyền không hợp lệ' });
 
-    if (!validateEmail(userInfo.email))
+    if (userInfo.email && !validateEmail(userInfo.email))
         errors.push({ key: 'email', msg: 'Email không hợp lệ' });
 
     if (!validateNumberPhone(userInfo.phone_num))

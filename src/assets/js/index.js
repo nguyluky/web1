@@ -215,7 +215,7 @@ function initializeAccountPopup() {
                         data['#password'],
                         data['#input-name'],
                         phone_num,
-                        email,
+                        email ? email : undefined,
                     )
                     .then((e) => {
                         localStorage.setItem('user_id', e.id);

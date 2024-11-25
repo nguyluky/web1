@@ -320,7 +320,7 @@ class FakeDatabase {
      * @param {string} password
      * @param {string} display_name
      * @param {string} std
-     * @param {string} email
+     * @param {string | undefined} email Không được để email là string rỗng
      * @returns {Promise<UserInfo>}
      */
     async createUserInfo(password, display_name, std, email) {

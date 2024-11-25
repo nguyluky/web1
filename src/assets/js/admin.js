@@ -329,7 +329,7 @@ function setupMainButtonEvents() {
                         </div>
                         <div class="admin-info-row">
                             <div>Email: </div>
-                            <div>${info?.email === '' ? 'Unknown' : info?.email ?? 'Unknown'}</div>
+                            <div>${info?.email ? 'Unknown' : info?.email ?? 'Unknown'}</div>
                         </div>
                         <div class="admin-info-row">
                             <div>Số điện thoại: </div>
