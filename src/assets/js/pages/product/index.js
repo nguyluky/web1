@@ -312,7 +312,7 @@ function setEventListener(product_id) {
 
         if (!localStorage.getItem('user_id')) {
             toast({
-                title: 'Vui lòng đăng nhập để xem giỏ hàng',
+                title: 'Vui lòng đăng nhập để mua đồ',
                 type: 'error',
             });
             return;
