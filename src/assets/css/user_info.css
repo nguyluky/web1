@@ -404,8 +404,31 @@ label:has(#input-fullname) {
     font-weight: 500;
 }
 
+#save-pass-btn {
+    width: max-content;
+    background-color: #189eff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
 #save-info-btn:active {
     opacity: 0.8;
+}
+
+.change-password{
+    color: #189eff;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.change-password:hover{
+    text-decoration: underline;
 }
 
 .lmao {
@@ -419,6 +442,52 @@ label:has(#input-fullname) {
 .lmao:hover{
     text-decoration: underline;
 }
+
+.change-pass-header{
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.change-pass-container{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.input-password{
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #999;
+    width: 380px;
+}
+
+.pass-button-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+#cancle-pass-btn{
+    width: max-content;
+    background: 0;
+    color: #808089;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    border: 1px solid #999;
+}
+
+#cancle-pass-btn:hover{
+    background-color: #efefef;
+}
+
 @media screen and (max-width: 840px) {
     .package-category-header {
         font-size: 14px;
@@ -450,6 +519,18 @@ label:has(#input-fullname) {
     }
     #input-fullname{
         width: 85%;
+    }
+
+    .user-info {
+        font-size: 13px;
+    }
+
+    .lmao{
+        font-size: 13px;
+    }
+
+    .change-password{
+        font-size: 14px;
     }
 }
 
@@ -524,6 +605,19 @@ label:has(#input-fullname) {
 
     #input-fullname{
         width: 70%;
+    }
+
+    .change-pass-container{
+        width: 100%;
+    }
+    .input-password{
+        width: 290px;
+    }
+}
+
+@media screen and (max-width: 350px){
+    .input-password{
+        width: 260px;
     }
 }
 
