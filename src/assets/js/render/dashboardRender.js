@@ -1,21 +1,24 @@
 import fakeDatabase from '../db/fakeDBv1.js';
-import { dateToString } from '../until/format.js';
+import { dateToString, formatNumber } from '../until/format.js';
 
 let orders = [];
 let books = [];
 
 function formatLineChartData() {
     // tạo đường biểu đồ
-    function createListItem(item) {
+    function createListItem(item, begin) {
         return `
-      <div class="data-point" data-value="${item.value}" date-date=${item.date}></div>
+      <div class="data-point" data-value="${item.value}" data-date="${dateToString(new Date(begin.getTime()
+            + item.date * 24 * 60 * 60 * 1000))}"></div>
       <div class="line-segment" style="--hypotenuse: ${item.hypotenuse}; --angle:${item.angle};"></div>
       `;
     }
     // tạo popup cho từng điểm
     function getPointData(point) {
         const popup = document.createElement('div');
-        popup.innerHTML = point.getAttribute('data-value');
+        popup.innerHTML = `Ngày: ${(point.getAttribute('data-date')).slice(-5)}
+            <br>Thu: ${formatNumber(Number(point.getAttribute('data-value')))}`;
+        popup.style.cssText = 'text-wrap: nowrap;';
         return popup;
     }
     //  hover vào điểm
@@ -47,21 +50,21 @@ function formatLineChartData() {
     const to = new Date();
     let values = [];
     let tongthu = 0;
-    for (let i = 1; i <= 30; i++) {
+    for (let i = 0; i < 30; i++) {
         values.push({ date: i, value: 0 });
     }
     orders.forEach((e) => {
         if (
             e.state != 'huy' &&
-            from <= new Date(e.last_update) &&
-            new Date(e.last_update) <= to
+            from <= new Date(e.date) &&
+            new Date(e.date) <= to
         ) {
-            const date = Math.ceil(
-                (new Date(e.last_update).getTime() - from.getTime()) /
+            const date = Math.floor(
+                (new Date(e.date).getTime() - from.getTime()) /
                 (24 * 60 * 60 * 1000),
             );
             let index = values.findIndex((element) => element.date == date);
-            if (index) values[index].value += e.total;
+            if (index != -1) values[index].value += e.total;
             tongthu += e.total;
         }
     });
@@ -74,7 +77,7 @@ function formatLineChartData() {
     const pointSize = 16;
 
     const base = (widgetWidth - pointSize * 2) / (values.length - 1);
-    const topMostPoint = Math.ceil((Math.max(...values.map((e) => e.value))) / 100000) * 100000;
+    const topMostPoint = Math.max(50000, Math.ceil((Math.max(...values.map((e) => e.value))) / 100000) * 100000);
     let leftOffset = pointSize; //padding for left axis labels
     let nextPoint = 0;
     let rise = 0;
@@ -92,7 +95,7 @@ function formatLineChartData() {
             hypotenuse: 0,
             angle: 0,
             value: 0,
-            date: 0,
+            date: values[i].date,
         };
 
         currentValue.value = values[i].value;
@@ -127,7 +130,7 @@ function formatLineChartData() {
     cssValues.push(lastPoint);
     while (container.firstChild) container.removeChild(container.firstChild);
     cssValues.forEach((item) => {
-        let markup = createListItem(item);
+        let markup = createListItem(item, from);
         let listItem = document.createElement('div');
         listItem.style.cssText = `--x: ${item.left}px; --y: ${item.bottom}px`;
         listItem.innerHTML = markup;
@@ -142,22 +145,26 @@ function createOderInfoForUser(order) {
     const summary = document.createElement('summary');
     details.appendChild(summary);
     details.appendChild(document.createElement('hr'));
-    summary.innerHTML = `<div>Mã đơn: ${order.id}</div><div>Tổng đơn: ${order.total}</div>`;
+    summary.innerHTML = `<div><strong>Mã đơn: </strong>${order.id}</div><div><strong>Tổng đơn: </strong>${formatNumber(order.total)}</div>`;
     let head = document.createElement('div');
-    head.innerHTML = `<div>Mã sách</div><div>Số lượng</div><div>Thành tiền</div>`;
+    head.innerHTML = `<div><strong>Mã sách</strong></div><div><strong>Số lượng</strong></div><div><strong>Thành tiền</strong></div>`;
     details.appendChild(head);
     order.items.forEach((item) => {
         let product = document.createElement('div');
         product.innerHTML = `<div>${item.sach}</div><div>${item.quantity}</div><div>${item.total}</div>`;
         details.appendChild(product);
     });
+    details.appendChild(document.createElement('hr'));
+    const date = document.createElement('div');
+    date.innerHTML = `<strong>Ngày mua: </strong>${dateToString(new Date(order.date))}`;
+    details.appendChild(date);
     return details;
 }
 
 async function renderLeaderboard(from, to) {
     let array = [];
     const data = orders.filter((order) => {
-        const date = new Date(order.last_update);
+        const date = new Date(order.date);
         return (
             from.getTime() <= date.getTime() &&
             date.getTime() <= to.getTime() &&
@@ -240,7 +247,7 @@ function createARow(product, index) {
 }
 
 /**
- *
+ * 
  * @param {Date} from
  * @param {Date} to
  */
@@ -248,8 +255,7 @@ async function productRank(from, to) {
     let data = {};
     let array = [];
     orders.forEach((order) => {
-        // last_update là chỉ có admin dùng thôi
-        const date = new Date(order.last_update);
+        const date = new Date(order.date);
         if (
             from.getTime() <= date.getTime() &&
             date.getTime() <= to.getTime() &&
@@ -262,6 +268,7 @@ async function productRank(from, to) {
                         quantity: e.quantity,
                         user: order.user_id,
                         total: e.total,
+                        date: order.date,
                     });
                 } else
                     data[e.sach] = [
@@ -270,6 +277,7 @@ async function productRank(from, to) {
                             quantity: e.quantity,
                             user: order.user_id,
                             total: e.total,
+                            date: order.date,
                         },
                     ];
             });
@@ -334,14 +342,18 @@ async function createOderInfoForProduct(order) {
     const summary = document.createElement('summary');
     details.appendChild(summary);
     details.appendChild(document.createElement('hr'));
-    summary.innerHTML = `<div>Mã đơn: ${order.orderId}</div><div>Số lượng: ${order.quantity}</div>`;
+    summary.innerHTML = `<div><strong>Mã đơn: </strong>${order.orderId}</div><div><strong>Tổng tiền: </strong>${formatNumber(order.total)}</div>`;
     let user = await fakeDatabase.getUserInfoByUserId(order.user);
     let userInfo = document.createElement('div');
     userInfo.innerHTML = `<strong>Khách mua hàng:</strong><br>${user?.name}`;
     details.appendChild(userInfo);
     let total = document.createElement('div');
-    total.innerHTML = `<strong>Tổng tiền: </strong>${order.total}`;
+    total.innerHTML = `<strong>Số lượng: </strong>${order.quantity}`;
     details.appendChild(total);
+    details.appendChild(document.createElement('hr'));
+    const date = document.createElement('div');
+    date.innerHTML = `<strong>Ngày mua: </strong>${dateToString(new Date(order.date))}`;
+    details.appendChild(date);
     return details;
 }
 function renderByDateRange() {

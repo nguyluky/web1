@@ -490,14 +490,17 @@ async function initDeleteCartItem() {
  */
 export async function updateCartQuantity() {
     const user_id = localStorage.getItem('user_id');
-
-    if (!user_id) return;
-    const carts = await fakeDatabase.getCartByUserId(user_id);
-    console.log(carts);
     const cartQuantity = document.querySelector('.cart-count');
-    if (cartQuantity) {
-        cartQuantity.innerHTML = String(carts.length);
-    }
+    if (!cartQuantity)
+        return;
+
+    if (!user_id) {
+        cartQuantity.innerHTML = '0';
+        return;
+    };
+    const carts = await fakeDatabase.getCartByUserId(user_id);
+    cartQuantity.innerHTML = String(carts.length);
+
 }
 
 /**
