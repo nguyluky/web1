@@ -3,7 +3,7 @@ import userRender from './render/table/userTable.js';
 import cartRender from './render/table/cartTable.js';
 import sachRender from './render/table/sachTable.js';
 import orderRender from './render/table/orderTabel.js';
-import { showPopup, toast } from './render/popupRender.js';
+import { HandleClickOutSideBuilder, showPopup, toast } from './render/popupRender.js';
 import dashboardRender from './render/dashboardRender.js';
 import { tableEditOff, tableEditOn } from './render/table/customCell.js';
 
@@ -48,6 +48,9 @@ const btnSignOut = document.getElementById('sign-out');
 // eslint-disable-next-line jsdoc/no-undefined-types
 const tabElements = /** @type {NodeListOf<HTMLInputElement>} */ (
     document.getElementsByName('tab-selestion')
+);
+const btnAccount = /**@type {HTMLButtonElement} */ (
+    document.querySelector('button:has(.fa-circle-user)')
 );
 const loadingTable = document.getElementById('loading');
 
@@ -298,10 +301,75 @@ function setupMainButtonEvents() {
         location.href = '/admin/login.html';
     }
 
+    async function handleButtonAccount() {
+        const admin_id = window.localStorage.getItem('admin_id') || window.sessionStorage.getItem('admin_id');
+        if (!admin_id) return;
+        const info = await fakeDatabase.getUserInfoByUserId(admin_id);
+        const wrapper = document.getElementById('info-wrapper');
+        const popup = document.createElement('div');
+        popup.classList.add('popup');
+        wrapper?.appendChild(popup);
+        popup.innerHTML = `
+            <div class="popup-content">
+                <div class="popup-header">
+                    <h2>Thông tin tài khoản</h2>
+                    <button class="button_1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="popup-body">
+                    <div class="admin-info-container">
+                        <div class="admin-info-row">
+                            <div>Tên tài khoản: </div>
+                            <div>${info?.name}</div>
+                        </div>
+                        <div class="admin-info-row">
+                            <div>Họ và tên: </div>
+                            <div>${info?.fullname === '' ? 'Unknown' : info?.fullname ?? 'Unknown'}</div>
+                        </div>
+                        <div class="admin-info-row">
+                            <div>Email: </div>
+                            <div>${info?.email === '' ? 'Unknown' : info?.email ?? 'Unknown'}</div>
+                        </div>
+                        <div class="admin-info-row">
+                            <div>Số điện thoại: </div>
+                            <div>${info?.phone_num === '' ? 'Unknown' : info?.phone_num ?? 'Unknown'}</div>
+                        </div>
+                        <div class="admin-info-row">
+                            <div>Giới tính: </div>
+                            <div>${info?.gender === '' ? 'Unknown' : info?.gender ? info.gender.charAt(0).toUpperCase() + info.gender.slice(1) : 'Unknown'}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="popup-footer">
+                    <button class="button_1 btn-ouline-primary">Cancel</button>
+                </div>
+            </div>
+        
+        
+        `;
+
+        const btnClose = popup.querySelector('.popup-header button');
+        const btnCancel = popup.querySelector('.popup-footer button');
+        btnClose?.addEventListener('click', () => {
+            popup.remove();
+        });
+        btnCancel?.addEventListener('click', () => {
+            popup.remove();
+        });
+        wrapper?.addEventListener('click', (e) => {
+            const target = /**@type {HTMLElement} */ (e.target);
+            if (target.isSameNode(wrapper)) {
+                wrapper.innerHTML = '';
+            }
+        });
+    }
+
     btnDelete?.addEventListener('click', handleButtonDelete);
     btnSave?.addEventListener('click', handleButtonSave);
     btnAdd?.addEventListener('click', HandleButtonAdd);
     btnSignOut?.addEventListener('click', handleButtonSignOut);
+    btnAccount?.addEventListener('click', handleButtonAccount);
 }
 
 /** @param {PopStateEvent} event */
