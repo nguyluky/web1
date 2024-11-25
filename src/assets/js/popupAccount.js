@@ -71,13 +71,18 @@ export function showCreateAccount(modal) {
                                     />
                                 </div>
                                 <span class="form-error"></span>
-                                <div class="input-group">
+                                <div class="input-group" >
                                     <label for="password">Đặt mật khẩu</label>
-                                    <input
-                                        type="password"
-                                        id="input-password"
-                                        placeholder="Nhập 8 kí tự trở lên"
-                                    />
+                                    <div style="display: flex; justify-content: space-between">
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            placeholder="Nhập 8 kí tự trở lên"
+                                        />
+                                        <div id="show-hide">
+                                            <i class="fa-solid fa-eye" id="show-hide-icon" style="color: rgb(60, 131, 165);"></i>
+                                        </div>
+                                    </div>
                                 </div>
                                 <span class="form-error"></span>
                                 <input
@@ -119,12 +124,15 @@ export function showInputPassword(modal) {
                             <p></p>
                         </div>
                         <form actiọn="" class="input-auth-form">
-                            <div class="input-group">
+                            <div class="input-group" style="display: flex; justify-content: space-between">
                                 <input
                                     type="password"
-                                    id="input-password"
+                                    id="password"
                                     placeholder="Mật khẩu"
                                 />
+                                <div id="show-hide">
+                                    <i class="fa-solid fa-eye" id="show-hide-icon" style="color:rgb(60, 131, 165);"></i>
+                                </div>
                             </div>
                             <span class="form-error"></span>
 
