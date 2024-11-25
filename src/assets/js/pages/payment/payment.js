@@ -15,33 +15,37 @@ import { getSearchParam, navigateToPage } from "../../until/router.js";
 
 
 export async function getOrder() {
-    const fromCart = getSearchParam('carts');
-
     const a = [];
 
-    const cartItem = fromCart?.split(',').map(async e => {
-        const cart = await fakeDatabase.getCartById(e);
-        return {
-            sachId: cart?.sach || '',
-            quality: cart?.quantity || 0,
-            cardId: e
-        }
-    })
+    const fromCart = getSearchParam('carts');
+    if (fromCart) {
+        const cartItem = fromCart.split(',').map(async e => {
+            const cart = await fakeDatabase.getCartById(e);
+            return {
+                sachId: cart?.sach || '',
+                quality: cart?.quantity || 0,
+                cardId: e
+            }
+        })
 
-    if (cartItem)
-        a.push(... await Promise.all(cartItem))
+        if (cartItem)
+            a.push(... await Promise.all(cartItem))
+    }
 
     const payment = getSearchParam('payment') || '';
 
-    const paymentItems = payment.split(',').map(e => {
-        return {
-            sachId: e.split('-')[0],
-            quality: +e.split('-')[1],
-            cardId: undefined
-        }
-    })
+    if (payment) {
 
-    a.push(...paymentItems)
+        const paymentItems = payment.split(',').map(e => {
+            return {
+                sachId: e.split('-')[0],
+                quality: +e.split('-')[1],
+                cardId: undefined
+            }
+        })
+
+        a.push(...paymentItems)
+    }
 
     return a;
 }

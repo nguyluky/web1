@@ -275,7 +275,9 @@ export async function initializationPayment() {
     main.innerHTML = html;
 
     await rendeOrder();
-    console.log(getOrder());
+    getOrder().then(e => {
+        console.log(e)
+    })
     changeCart();
     closeDeal();
     addCreditCard();
