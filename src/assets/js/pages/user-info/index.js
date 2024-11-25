@@ -430,6 +430,13 @@ async function initializationArticle__AccountInfo() {
             save.style.display = 'block';
             const text = /**@type {HTMLElement}*/(/**@type {HTMLElement}*/(e.parentElement).querySelector('span'));
             text.setAttribute('contenteditable', 'true');
+            text.addEventListener('keydown', e => {
+                if (e.key === "Enter")
+                    e.preventDefault();
+                else
+                    if (e.key === " ")
+                        e.preventDefault();
+            });
             if (text.textContent?.includes('*'))
                 if (text.textContent?.includes('@')) text.textContent = '' + new_Info?.email;
                 else text.textContent = '' + new_Info?.phone_num;
@@ -478,7 +485,7 @@ async function initializationArticle__AccountInfo() {
             contact[1].textContent = new_Info.phone_num;
             flag = 0;
         } else {
-            if (!validateNumberPhone(String(contact[1].textContent)) && !contact[1].textContent?.includes('*')) {
+            if (!validateNumberPhone(String(contact[1].textContent)) && !contact[1].textContent?.includes('*') && changeInfo[1].textContent != 'Thêm mới') {
                 toast({
                     title: 'Số điện thoại không được lưu đúng cách',
                     message: 'Số điện thoại không đúng định dạng',
@@ -488,7 +495,7 @@ async function initializationArticle__AccountInfo() {
                 flag = 0;
             }
         }
-        if (!validateEmail(String(contact[0].textContent))) {
+        if (!validateEmail(String(contact[0].textContent)) && changeInfo[0].textContent != 'Thêm mới') {
             toast({
                 title: 'Email không được lưu đúng cách',
                 message: 'Email không đúng định dạng',
