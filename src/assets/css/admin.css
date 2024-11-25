@@ -109,6 +109,7 @@ footer.footer {
     gap: 4px;
     padding: 0 10px;
     width: 160px;
+    margin-top: 30px;
 }
 
 .left-sidebar__btn {
@@ -325,6 +326,22 @@ body {
     background: rgba(0, 0, 0, 0.2);
 }
 
+#info-wrapper:has(.popup) {
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#info-wrapper .popup-footer {
+    justify-content: center;
+}
 .popup {
     background: #fff;
     padding: 20px;
@@ -356,6 +373,25 @@ body {
     height: 35px;
 }
 
+.admin-info-container {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #0a68f4;
+}
+.admin-info-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+}
+.admin-info-row > div:first-child {
+    font-weight: 500;
+    width: 150px;
+}
 #submit-wrapper:has(#submit-popup) {
     height: 100%;
     width: 100%;

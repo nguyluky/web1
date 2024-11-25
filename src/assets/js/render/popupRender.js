@@ -16,7 +16,7 @@ function getPopupWrapper() {
  * @param {() => any} [onClose]
  * @returns {(this: HTMLElement, ev: MouseEvent) => any}
  */
-function HandleClickOutSideBuilder(popup, onClose) {
+export function HandleClickOutSideBuilder(popup, onClose) {
     /**
      *
      * @this {HTMLElement}

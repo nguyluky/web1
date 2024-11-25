@@ -430,6 +430,13 @@ async function initializationArticle__AccountInfo() {
             save.style.display = 'block';
             const text = /**@type {HTMLElement}*/(/**@type {HTMLElement}*/(e.parentElement).querySelector('span'));
             text.setAttribute('contenteditable', 'true');
+            text.addEventListener('keydown', e => {
+                if (e.key === "Enter")
+                    e.preventDefault();
+                else
+                    if (e.key === " ")
+                        e.preventDefault();
+            });
             if (text.textContent?.includes('*'))
                 if (text.textContent?.includes('@')) text.textContent = '' + new_Info?.email;
                 else text.textContent = '' + new_Info?.phone_num;
@@ -466,7 +473,8 @@ async function initializationArticle__AccountInfo() {
         const gender = /**@type {HTMLInputElement}*/ (document.querySelector('input[type="radio"]:checked'));
         const contact = /**@type {NodeListOf<HTMLElement>}*/(document.querySelectorAll('.user-info > span:not(.lmao)'));
         if (!new_Info || !fullname || !contact) return;
-        let flag = 1;
+        // kiểm tra thông tin nhập vào, cho cờ flag = 1 nếu thông tin hợp lệ
+        let flag = -1;
         const checkduplicate = await fakeDatabase.getUserInfoByPhoneNum(String(contact[1].textContent));
 
         if (checkduplicate && checkduplicate.id != user_id) {
@@ -475,29 +483,29 @@ async function initializationArticle__AccountInfo() {
                 message: 'Số điện thoại đã tồn tại',
                 type: 'error'
             });
-            contact[1].textContent = new_Info.phone_num;
             flag = 0;
         } else {
-            if (!validateNumberPhone(String(contact[1].textContent)) && !contact[1].textContent?.includes('*')) {
+            if (!validateNumberPhone(String(contact[1].textContent)) && !contact[1].textContent?.includes('*') && changeInfo[1].textContent != 'Thêm mới') {
                 toast({
                     title: 'Số điện thoại không được lưu đúng cách',
                     message: 'Số điện thoại không đúng định dạng',
                     type: 'error'
                 });
-                contact[1].textContent = new_Info.phone_num;
-                flag = 0;
+                flag = 1;
             }
         }
-        if (!validateEmail(String(contact[0].textContent))) {
+        if (!validateEmail(String(contact[0].textContent)) && !contact[0].textContent?.includes('*') && changeInfo[0].textContent != 'Thêm mới') {
             toast({
                 title: 'Email không được lưu đúng cách',
                 message: 'Email không đúng định dạng',
                 type: 'error'
             });
-            contact[0].textContent = new_Info.email;
             flag = 0;
         }
-
+        if (flag != -1) {
+            /**@type {HTMLElement} */ (document.querySelectorAll('.lmao')[flag]).click();
+            return;
+        }
         new_Info.fullname = fullname?.value;
         new_Info.gender = gender ? gender.value : '';
         new_Info.email = contact[0].textContent?.includes('*') ? new_Info.email : contact[0].textContent ?? '';
@@ -505,7 +513,7 @@ async function initializationArticle__AccountInfo() {
         console.log(new_Info);
         fakeDatabase.updateUserInfo(new_Info);
 
-        if (flag == 1) {
+        if (flag == -1) {
             toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
             contact[0].textContent = maskInfo(new_Info.email);
             contact[1].textContent = maskInfo(new_Info.phone_num);
