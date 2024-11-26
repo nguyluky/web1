@@ -37,6 +37,8 @@ export function showSignIn(modal) {
                     <img src="./assets/img/logov1.png" alt="" />
                 </div>
             </div>`;
+        const phone =  /** @type {HTMLInputElement} */(document.querySelector("#input-phone-email"))
+        phone?.focus();
         // inputFill();
     }
 }
@@ -101,6 +103,7 @@ export function showCreateAccount(modal) {
                 </div>
             </div>
         `;
+        /** @type {HTMLInputElement} */(document.querySelector('#input-name')).focus();
         inputFill();
     }
 }
@@ -152,6 +155,7 @@ export function showInputPassword(modal) {
                 </div>
             </div>
         `;
+        /** @type {HTMLInputElement} */(document.getElementById('password')).focus();
         inputFill();
     }
 }
