@@ -28,8 +28,8 @@ export function removeDiacritics(str) {
 }
 /**
  * 
- * @param {Number} num 1000000
- * @returns {String} '1.000.000'
+ * @param {number} num 1000000
+ * @returns {string} '1.000.000'
  */
 export function formatNumber(num) {
     return num.toLocaleString('vi-VN');

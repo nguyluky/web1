@@ -194,10 +194,10 @@ async function renderLeaderboard(from, to) {
         if (user) {
             e['name'] = user.name;
             name.textContent = user.name;
-            total.textContent = e.total;
+            total.textContent = formatNumber(e.total);
         } else {
-            name.textContent = 'Không có';
-            total.textContent = '0';
+            name.textContent = '';
+            total.textContent = '';
         }
     });
     const showOrder = document.querySelector('.info-order__user');
@@ -239,7 +239,7 @@ function createARow(product, index) {
         if (key != 'id') {
             const cell = document.createElement('div');
             cell.className = `rank-${key}`;
-            cell.innerHTML = `${product[key]}`;
+            cell.innerHTML = `${key == 'total' ? formatNumber(product[key]) : product[key]}`;
             row.appendChild(cell);
         }
     });
@@ -311,7 +311,7 @@ async function productRank(from, to) {
         chart?.appendChild(createARow(value, index));
     });
     const title = document.querySelector('.product-rank__title span');
-    if (title) title.innerHTML = String(sum) + ' VNĐ';
+    if (title) title.innerHTML = formatNumber(sum) + ' VNĐ';
     const showOrder = document.querySelector('.info-order__product');
     const name = document.querySelector('#product-name strong');
 

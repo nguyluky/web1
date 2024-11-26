@@ -2,7 +2,7 @@ import fakeDatabase from "../../db/fakeDBv1.js";
 import { showShippingFromeAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
 import { dateToString, removeDiacritics, text2htmlElement } from "../../until/format.js";
-import { addStyle, errorPage, navigateToPage, removeStyle } from "../../until/router.js";
+import { addStyle, errorPage, navigateToPage, removeStyle, urlIsPage } from "../../until/router.js";
 import { validateEmail, validateNumberPhone } from "../../until/validator.js";
 import { updateCartQuantity } from "../cart/cart.js";
 import urlConverter from "../../until/router.js";
@@ -463,12 +463,31 @@ function initializationAside(personal_info_data) {
     `;
 }
 
+function initializationArticle__Package_details() {
+    const { page, query } = urlConverter(location.hash);
+    const article = document.getElementById('article');
+    if (!article) return;
+
+    article.className = "order-details";
+    article.innerHTML = `
+        <div class="order-details__header">
+            <div>Trở lại</div>
+            <div>Ngày đặt: </div>
+            <div>Mã đơn hàng</div>
+            <div>Trạng thái</div>
+        </div>
+        <div class="order-details__content">
+            
+        </div>
+        <div class="order-details__footer">
+            
+        </div>`
+}
 /**
  * 
  * @returns {void}
  */
 function initializationArticle__OrderInfo() {
-    // const { page, query } = urlConverter(location.hash);
     const article = document.getElementById('article');
     if (!article) return;
 
@@ -771,7 +790,7 @@ export async function initializationUserInfoPage(params, query) {
 
 
 /**
- * @param {{[key: string]: string}} params 
+ * @param {{[key: string]: string | undefined}} params 
  * @param {URLSearchParams} query
  * @returns {Promise<void>}
  */
@@ -802,9 +821,21 @@ export async function updateUserInfoPage(params, query) {
                 break;
             }
         case 'purchase':
-            more_option.style.display = 'none';
-            allTabs[3].classList.add('selected');
-            initializationArticle__OrderInfo();
+            {
+                const info = params.info;
+                switch (info) {
+                    case undefined:
+                        more_option.style.display = 'none';
+                        allTabs[3].classList.add('selected');
+                        initializationArticle__OrderInfo();
+                        break;
+                    case 'details':
+                        initializationArticle__Package_details();
+                        break;
+                    default:
+                        errorPage(404);
+                }
+            }
             break;
         default:
             errorPage(404);
