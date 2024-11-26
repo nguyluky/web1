@@ -71,13 +71,19 @@ export function showCreateAccount(modal) {
                                     />
                                 </div>
                                 <span class="form-error"></span>
-                                <div class="input-group">
+                                <div class="input-group" >
                                     <label for="password">Đặt mật khẩu</label>
-                                    <input
-                                        type="password"
-                                        id="input-password"
-                                        placeholder="Nhập 8 kí tự trở lên"
-                                    />
+                                    <div style="display: flex; justify-content: space-between">
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            placeholder="Nhập 8 kí tự trở lên, tối đa 20 ký tự"
+                                            maxlength="20"
+                                        />
+                                        <div id="show-hide">
+                                            <i class="fa-solid fa-eye" id="show-hide-icon" style="color: rgb(60, 131, 165);"></i>
+                                        </div>
+                                    </div>
                                 </div>
                                 <span class="form-error"></span>
                                 <input
@@ -118,13 +124,17 @@ export function showInputPassword(modal) {
                             <p>Vui lòng nhập mật khẩu của số điện thoại</p>
                             <p></p>
                         </div>
-                        <form actiọn="" class="input-auth-form">
-                            <div class="input-group">
+                        <form action="" class="input-auth-form">
+                            <div class="input-group" style="display: flex; justify-content: space-between">
                                 <input
                                     type="password"
-                                    id="input-password"
+                                    id="password"
                                     placeholder="Mật khẩu"
+                                    maxlength="20"
                                 />
+                                <div id="show-hide">
+                                    <i class="fa-solid fa-eye" id="show-hide-icon" style="color:rgb(60, 131, 165);"></i>
+                                </div>
                             </div>
                             <span class="form-error"></span>
 
@@ -163,4 +173,14 @@ export function inputFill() {
             }
         });
     });
+
+    // kiểm tra input pass có dấu cách thì ignore
+    const input_password = document.getElementById('password');
+    if (input_password) {
+        input_password.addEventListener('keydown', e => {
+            if (e.key === " ") {
+                e.preventDefault();
+            }
+        });
+    }
 }

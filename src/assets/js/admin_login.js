@@ -9,7 +9,8 @@ await fakeDatabase.getAllUserInfo();
 const phone = /**@type {HTMLInputElement} */ (document.getElementById('input-phone'));
 const password = /**@type {HTMLInputElement} */ (document.getElementById('password'));
 // và không chuyển hướng
-document.getElementById('show-hide-icon')?.addEventListener('click', () => {
+
+export function showPass() {
     let e = /** @type {HTMLInputElement} */ (
         document.getElementById('password')
     );
@@ -23,7 +24,9 @@ document.getElementById('show-hide-icon')?.addEventListener('click', () => {
     e.type = 'password';
     icon?.classList.remove('fa-eye-slash');
     icon?.classList.add('fa-eye');
-});
+}
+
+document.getElementById('show-hide-icon')?.addEventListener('click', showPass);
 
 document.querySelector('form')?.addEventListener('submit', async (event) => {
     event.preventDefault();

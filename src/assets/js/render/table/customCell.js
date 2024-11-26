@@ -29,11 +29,14 @@ export function createTextTableCell(key, value, onchange, canEditable = true, pl
     td.setAttribute('key', key);
     td.setAttribute('ctype', 'text');
     td.setAttribute('default-value', value);
-
     if (placeholder) td.setAttribute('placeholder', placeholder);
 
     if (!canEditable) td.setAttribute('can-editable', 'false');
     else td.setAttribute('can-editable', 'true');
+
+    if (!value && placeholder) {
+        td.setAttribute('showPlaceholder', '')
+    }
 
     td.addEventListener('input', () => {
         onchange && onchange(td.textContent || '');
@@ -41,6 +44,13 @@ export function createTextTableCell(key, value, onchange, canEditable = true, pl
         if (td.textContent == td.getAttribute('default-value'))
             td.setAttribute('ischange', 'false');
         else td.setAttribute('ischange', 'true');
+
+        if (placeholder) {
+            if (td.textContent)
+                td.removeAttribute('showPlaceholder');
+            else
+                td.setAttribute('showPlaceholder', '');
+        }
     });
 
     return td;
@@ -326,6 +336,7 @@ customCells.push({
  * @param {string} value
  * @param {(nv: string) => any} onchange
  * @param {boolean} [canEditable=true]
+ * @param {string} [placeholder]
  * @returns {HTMLTableCellElement} td
  */
 export function createBlockTextTabelCell(
@@ -333,12 +344,14 @@ export function createBlockTextTabelCell(
     value,
     onchange,
     canEditable = true,
+    placeholder = '',
 ) {
     const td = document.createElement('td');
     td.setAttribute('contenteditable', 'false');
     td.setAttribute('key', key);
     td.setAttribute('ctype', 'block-text');
     td.setAttribute('default-value', value);
+    if (placeholder) td.setAttribute('placeholder', placeholder);
 
     if (!canEditable) td.setAttribute('can-editable', 'false');
     else td.setAttribute('can-editable', 'true');
@@ -347,12 +360,23 @@ export function createBlockTextTabelCell(
     details_wrapper.className = 'details-wrapper';
     details_wrapper.insertAdjacentHTML('beforeend', value);
 
+    if (!value && placeholder) {
+        td.setAttribute('showPlaceholder', '')
+    }
+
     details_wrapper.addEventListener('input', () => {
         onchange && onchange(details_wrapper.textContent || '');
 
         if (details_wrapper.textContent == td.getAttribute('default-value'))
             td.setAttribute('ischange', 'false');
         else td.setAttribute('ischange', 'true');
+
+        if (placeholder) {
+            if (details_wrapper.textContent)
+                td.removeAttribute('showPlaceholder');
+            else
+                td.setAttribute('showPlaceholder', '');
+        }
     });
 
     td.appendChild(details_wrapper);

@@ -19,6 +19,7 @@ import { initializationProductPage, removeProductPage, updateProductPage } from 
 import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
 import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
 import { toast } from './render/popupRender.js';
+import { showPass } from './admin_login.js';
 
 //#region khai bao page
 /**
@@ -139,10 +140,15 @@ function initializeAccountPopup() {
                         if (userInfo) {
                             showInputPassword(MODAL);
                             validatePassword(userInfo);
+                            // document.getElementById('show-hide-icon')?.addEventListener('click', showPass);
+
                         } else {
                             showCreateAccount(MODAL);
                             validateCreateNewAccount(data['#input-phone-email']);
+
+
                         }
+                        document.getElementById('show-hide-icon')?.addEventListener('click', showPass);
                         backSignIn();
                         // @ts-ignore
                         closeSignIn(MODAL);
@@ -160,8 +166,8 @@ function initializeAccountPopup() {
         validator({
             form: '.input-auth-form',
             rules: [
-                validator.isRequired('#input-password'),
-                validator.isCorrectPassword('#input-password', userInfo.passwd),
+                validator.isRequired('#password'),
+                validator.isCorrectPassword('#password', userInfo.passwd),
             ],
             onSubmit: () => {
                 localStorage.setItem('user_id', userInfo.id);
@@ -169,6 +175,11 @@ function initializeAccountPopup() {
                     localStorage.setItem('admin_id', userInfo.id);
                 }
                 MODAL?.classList.remove('show-modal');
+                if (MODAL) {
+                    // @ts-ignore
+                    MODAL.onclick = undefined;
+                    MODAL.innerHTML = '';
+                }
                 toast({ title: 'Đăng nhập thành công', type: 'success' })
                 showDropDown();
                 updateCartQuantity();
@@ -188,8 +199,8 @@ function initializeAccountPopup() {
             rules: [
                 validator.isRequired('#input-name'),
                 validator.checkName('#input-name'),
-                validator.isRequired('#input-password'),
-                validator.minLength('#input-password', 8),
+                validator.isRequired('#password'),
+                validator.minLength('#password', 8),
             ],
             onSubmit: (data) => {
                 let email = '',
@@ -201,14 +212,19 @@ function initializeAccountPopup() {
                 }
                 fakeDatabase
                     .createUserInfo(
-                        data['#input-password'],
+                        data['#password'],
                         data['#input-name'],
                         phone_num,
-                        email,
+                        email ? email : undefined,
                     )
                     .then((e) => {
                         localStorage.setItem('user_id', e.id);
                         MODAL?.classList.remove('show-modal');
+                        if (MODAL) {
+                            // @ts-ignore
+                            MODAL.onclick = undefined;
+                            MODAL.innerHTML = '';
+                        }
                         showDropDown();
                         toast({ title: 'Tạo tài khoản thành công', type: 'success' })
                     })
@@ -282,6 +298,13 @@ function initializeAccountPopup() {
         if (btnExit)
             btnExit.onclick = () => {
                 modal?.classList.remove('show-modal');
+
+                if (modal) {
+                    modal.innerHTML = '';
+                    // @ts-ignore
+                    modal.onclick = undefined
+                }
+
             };
         if (modal)
             // NOTE: không nên đổi thành addevntListener

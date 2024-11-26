@@ -249,6 +249,9 @@ function addUser() {
         status: 'active',
         datecreated: now,
         address: [],
+        fullname: '',
+        credits: [],
+        gender: ''
     };
 
     // Lưu người dùng mới vào cache
