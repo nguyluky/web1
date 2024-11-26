@@ -40,7 +40,7 @@ export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = 
             <i class="fa-solid fa-xmark"></i>
         </button>
         <div class="popup-header">
-            ${data ? '<h3>Thêm địa chỉ giao hàng mới</h3>' : '<h3>Cập nhật địa chỉ giao hàng</h3>'}
+            ${!data ? '<h3>Thêm địa chỉ giao hàng mới</h3>' : '<h3>Cập nhật địa chỉ giao hàng</h3>'}
             <!-- <div class="popup-mess">
                 Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao
                 hàng cùng phí đóng gói, vận chuyển một cách chính xác

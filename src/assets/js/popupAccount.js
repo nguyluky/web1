@@ -79,7 +79,8 @@ export function showCreateAccount(modal) {
                                         <input
                                             type="password"
                                             id="password"
-                                            placeholder="Nhập 8 kí tự trở lên"
+                                            placeholder="Nhập 8 kí tự trở lên, tối đa 20 ký tự"
+                                            maxlength="20"
                                         />
                                         <div id="show-hide">
                                             <i class="fa-solid fa-eye" id="show-hide-icon" style="color: rgb(60, 131, 165);"></i>
@@ -126,12 +127,13 @@ export function showInputPassword(modal) {
                             <p>Vui lòng nhập mật khẩu của số điện thoại</p>
                             <p></p>
                         </div>
-                        <form actiọn="" class="input-auth-form">
+                        <form action="" class="input-auth-form">
                             <div class="input-group" style="display: flex; justify-content: space-between">
                                 <input
                                     type="password"
                                     id="password"
                                     placeholder="Mật khẩu"
+                                    maxlength="20"
                                 />
                                 <div id="show-hide">
                                     <i class="fa-solid fa-eye" id="show-hide-icon" style="color:rgb(60, 131, 165);"></i>
@@ -175,4 +177,14 @@ export function inputFill() {
             }
         });
     });
+
+    // kiểm tra input pass có dấu cách thì ignore
+    const input_password = document.getElementById('password');
+    if (input_password) {
+        input_password.addEventListener('keydown', e => {
+            if (e.key === " ") {
+                e.preventDefault();
+            }
+        });
+    }
 }

@@ -318,7 +318,6 @@ function initializationAside() {
         return;
     }
     let priceGap = 10000;
-    // biếng JSDoc quá
 
     // khi nhập số tiền
     priceInput.forEach((input) => {
