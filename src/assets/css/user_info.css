@@ -64,6 +64,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    height: 30px;
 }
 
 .user-header {
@@ -259,7 +260,10 @@
 .package-details__total--number {
     color: #ff4141;
 }
-
+.package-details__footer {
+    display: flex;
+    justify-content: flex-end;
+}
 label:has(.btn-add-address) {
     background-color: #189eff;
     color: white;
@@ -374,7 +378,7 @@ label:has(#input-fullname) {
     background: #fff;
 }
 
-#input-fullname:focus{
+#input-fullname:focus {
     border: 2px solid #43b1fa;
 }
 
@@ -416,7 +420,7 @@ label:has(#input-fullname) {
     margin-left: 5px;
 }
 
-.lmao:hover{
+.lmao:hover {
     text-decoration: underline;
 }
 @media screen and (max-width: 840px) {
@@ -448,7 +452,7 @@ label:has(#input-fullname) {
     #save-info-btn {
         margin-left: 150px;
     }
-    #input-fullname{
+    #input-fullname {
         width: 85%;
     }
 }
@@ -522,7 +526,7 @@ label:has(#input-fullname) {
         margin: 0 auto;
     }
 
-    #input-fullname{
+    #input-fullname {
         width: 70%;
     }
 }
@@ -533,4 +537,12 @@ label:has(#input-fullname) {
     align-items: center;
     flex-direction: column;
     margin-bottom: 20px;
+}
+
+.button_1.huy {
+    background: #ff424e;
+    color: #fff;
+    padding: 5px 20px;
+    font-weight: 700;
+    font-size: 15px;
 }

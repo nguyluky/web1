@@ -24,7 +24,7 @@ const STATE_OPTION = [
     { title: 'Đã xác nhận', value: 'daxacnhan' },
     { title: 'Đang giao hàng', value: 'danggiaohang' },
     { title: 'Giao hàng thành công', value: 'giaohangthanhcong' },
-    { title: 'Hủy', value: 'Huy' },
+    { title: 'Hủy', value: 'huy' },
 ];
 
 const IS_PAY_OPTION = [

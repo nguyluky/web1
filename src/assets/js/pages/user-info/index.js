@@ -5,7 +5,7 @@ import { dateToString, removeDiacritics, text2htmlElement } from "../../until/fo
 import { addStyle, errorPage, navigateToPage, removeStyle } from "../../until/router.js";
 import { validateEmail, validateNumberPhone } from "../../until/validator.js";
 import { updateCartQuantity } from "../cart/cart.js";
-
+import urlConverter from "../../until/router.js";
 const status = {
     daxacnhan: {
         text: 'Đã xác nhận',
@@ -61,8 +61,18 @@ function createOrderContainer(order) {
             </div>
         </div>
         <div class="package-details__bottom"></div>
+        <div class="package-details__footer">
+            ${order.state == 'doixacnhan' ? '<button class="button_1 huy">Huỷ</button>' : ''}
+        </div>
         `;
     package_details.querySelector('.package-details__bottom')?.appendChild(all_items_detail);
+    package_details.querySelector('.huy')?.addEventListener('click', async () => {
+        order.state = 'huy';
+        fakeDatabase.updateOrder(order).then(() => {
+            renderOrder();
+            toast({ title: 'Thành công', message: 'Đã huỷ đơn hàng', type: 'success' });
+        });
+    });
     return package_details;
 }
 
@@ -135,10 +145,11 @@ function createAddressContainer(address, i) {
 
 /**
  * 
- * @param {string} option 
  * @returns {Promise<void>}
  */
-async function renderOrder(option = 'all') {
+async function renderOrder() {
+    const { page, query } = urlConverter(location.hash);
+    const option = query.get('state') ?? 'all';
     const user_id = /**@type {String} */(localStorage.getItem('user_id'));
 
     if (!user_id) {
@@ -348,7 +359,7 @@ function initializationArticle__OrderInfo() {
     // 'doixacnhan' | 'daxacnhan' | 'danggiaohang' | 'giaohangthanhcong' | 'huy'
     article.innerHTML = `
         <div class="package-category">
-            <div class = "package-category-header selected" data-state="all">Tất cả</div>
+            <div class = "package-category-header" data-state="all">Tất cả</div>
             <div class = "package-category-header" data-state="doixacnhan">Chờ xử lý</div>
             <div class = "package-category-header" data-state="daxacnhan">Đã xác nhận</div>
             <div class = "package-category-header" data-state="danggiaohang">Vận chuyển</div>
@@ -371,10 +382,11 @@ function initializationArticle__OrderInfo() {
     renderOrder();
     const package_catagory = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.package-category-header'));
     package_catagory.forEach(catagory => {
+        const { page, query } = urlConverter(location.hash);
+        if (catagory.dataset.state == (query.get('state') ?? 'all')) catagory.classList.add('selected');
         catagory.addEventListener('click', e => {
-            renderOrder(catagory.dataset.state);
-            package_catagory.forEach(e => { e.classList.remove('selected') });
-            catagory.classList.add('selected');
+            navigateToPage('./', { state: '' + catagory.dataset.state });
+            renderOrder();
         });
     });
     const search_input = /**@type {HTMLInputElement} */ (document.querySelector('.input-search input'));
