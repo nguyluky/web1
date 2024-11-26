@@ -294,6 +294,7 @@ async function renderChange_pass_form() {
                     class="input-password present"
                     placeholder="Nhập mật khẩu hiện tại"
                     maxlength="20"
+                    autocomplete="off"
                 />
             </div>
             <div class="input-group">
@@ -303,6 +304,7 @@ async function renderChange_pass_form() {
                     class="input-password new"
                     placeholder="Nhập 8 kí tự trở lên, tối đa 20 ký tự"
                     maxlength="20"
+                    autocomplete="off"
                 />
             </div>
             <div class="input-group">
@@ -312,6 +314,7 @@ async function renderChange_pass_form() {
                     class="input-password newdup"
                     placeholder="Nhập 8 kí tự trở lên, tối đa 20 ký tự"
                     maxlength="20"
+                    autocomplete="off"
                 />
             </div>
             <div class="pass-button-container">

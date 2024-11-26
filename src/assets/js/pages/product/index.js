@@ -290,10 +290,6 @@ function showImage(src) {
  * 
  */
 function setEventListener(product_id) {
-    const user_id = localStorage.getItem('user_id');
-    if (!user_id) {
-        return;
-    }
     const decrebtn = /**@type {HTMLElement}*/(document.querySelector('.dscr-quantity'));
     const increbtn = /**@type {HTMLElement}*/(document.querySelector('.inc-quantity'));
     let inputquantity = /**@type {HTMLInputElement}*/(document.querySelector('.quantity-num'));
@@ -337,6 +333,17 @@ function setEventListener(product_id) {
     // bấm mua ngay
     const buy_now = document.querySelector('.buy-now');
     buy_now?.addEventListener('click', async e => {
+
+        const user_id = localStorage.getItem('user_id');
+
+        if (!user_id) {
+            toast({
+                title: 'Vui lòng đăng nhập để mua đồ',
+                type: 'error',
+            });
+            return;
+        }
+
         const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
         if (userInfo?.address.length === 0) {
             showShippingFromeAddressPopup(async (address, bool) => {

@@ -621,6 +621,7 @@ export async function buyBooks() {
                 else
                     userInfo?.address.push(address);
                 await fakeDatabase.updateUserAddress(user_id, userInfo?.address);
+                showUserAddressInfo(0);
                 return;
             }, () => { });
             return;

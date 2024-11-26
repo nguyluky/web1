@@ -20,6 +20,11 @@
     margin-top: 5px;
     font-size: 22px;
     font-weight: bold;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .price-number {
     color: #ff4141;
@@ -73,8 +78,8 @@
     color: rgba(0, 96, 255, 1);
 }
 
-#add-to-cart-button:hover{
-    background-color:rgba(0, 96, 255, 1);
+#add-to-cart-button:hover {
+    background-color: rgba(0, 96, 255, 1);
     color: white;
 }
 
@@ -255,7 +260,7 @@
     cursor: pointer;
 }
 
-.product-category:hover{
+.product-category:hover {
     color: #189eff;
 }
 
@@ -270,7 +275,6 @@
 #popup-img > div > img {
     object-fit: contain;
 }
-
 
 /* responsive */
 
