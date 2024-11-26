@@ -1,5 +1,4 @@
 import fakeDatabase from "../db/fakeDBv1.js";
-import { showUserAddressInfo } from "../pages/cart/cart.js";
 import { text2htmlElement } from "../until/format.js";
 import { validateEmail, validateNumberPhone } from "../until/validator.js";
 import { AddressFrom } from "./address.js";
@@ -170,7 +169,6 @@ export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = 
         else {
             phone_num.setCustomValidity("");
         }
-
 
         const form = /**@type {HTMLFormElement} */ (element.querySelector('form'));
 

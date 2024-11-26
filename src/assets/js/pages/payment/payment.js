@@ -199,6 +199,7 @@ function validateCreditCard() {
             validator.isRequired('#input-cvv'),
             validator.checkCVV('#input-cvv'),
         ],
+        groudSelector: '.input-text',
         onSubmit: async (data) => {
             console.log(data);
             const user_id = localStorage.getItem('user_id');
@@ -420,7 +421,7 @@ export function showCreditForm() {
                     <div for="" class="input-title">Số thẻ</div>
                     <div class="input-text">
                         <input
-                            type="number"
+                            type="text"
                             placeholder="VD: 4123 4567 8901 2345"
                             id="input-creditID"
                         />
@@ -471,15 +472,16 @@ export function showCreditForm() {
                     </div>
                 </div>
                 <div class="btn-form">
-                    <button class="button_1" id="back-payment">
-                        Trở lại
-                    </button>
+                    
                     <input
                         type="submit"
                         value="Xác nhận"
                         class="button_1"
                         id="credit-btn"
                     />
+                    <button class="button_1" id="back-payment">
+                        Trở lại
+                    </button>
                 </div>
             </form>
         </div> 
@@ -570,6 +572,7 @@ async function showQR(option) {
     return new Promise((resolve) => {
         setTimeout(() => {
             modal.classList.remove('show-modal');
+            modal.innerHTML = '';
             resolve(option);
         }, 5000);
     });
