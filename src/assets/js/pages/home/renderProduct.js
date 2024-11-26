@@ -250,7 +250,7 @@ export function selectionConditional(categories, searchText = '', from = NaN, to
     }
     if (!isNaN(from) && !isNaN(to)) {
         data = data.filter((e) => {
-            return (e.base_price >= from && e.base_price <= to);
+            return (e.base_price * (1 - e.discount) >= from && e.base_price * (1 - e.discount) <= to);
         });
     }
     data = data.filter((e) => {

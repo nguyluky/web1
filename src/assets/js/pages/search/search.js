@@ -26,18 +26,16 @@ function searchFilter() {
 
     const mn = Number(/**@type {HTMLInputElement} */(document.querySelector('.input-min'))?.value);
     const mx = Number(/**@type {HTMLInputElement} */(document.querySelector('.input-max'))?.value);
+    const text = inputSearch?.value || '';
     navigateToPage('./', (query) => {
-
+        query.delete('p');
         if (categories.length > 0) {
             const a = categories.join(',');
-            if (query.get('cs') != a) {
-                query.set('cs', categories.join(','));
-                query.delete('p');
-            }
+            query.set('cs', categories.join(','));
         } else {
             query.delete('cs');
         }
-
+        query.set('t', text);
         query.set('mn', mn + '');
         query.set('mx', mx + '');
 

@@ -303,7 +303,9 @@ footer.footer .footer_wrapper .footer_box {
     :root {
         --width-header: 90vw;
     }
-
+    .popup-body:has(.select) {
+        max-height: none;
+    }
     footer.footer .footer_wrapper {
         flex-direction: column;
     }

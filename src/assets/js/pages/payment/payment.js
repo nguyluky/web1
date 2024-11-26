@@ -522,7 +522,6 @@ async function showQR(option) {
                     <img src=${img} alt="" />
                     Thanh toán bằng ví ${tmp}
                 </div>
-                <span id="change-payment-option">Đổi phương thức khác</span>
             </div>
             <div class="body-content">
                 <div class="left-payment-content">
