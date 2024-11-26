@@ -263,6 +263,19 @@
 .package-details__footer {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+}
+
+.show-more-order{
+    color: #189eff;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.show-more-order:hover{
+    text-decoration: underline;
 }
 label:has(.btn-add-address) {
     background-color: #189eff;
@@ -490,6 +503,10 @@ label:has(#input-fullname) {
 
 #cancle-pass-btn:hover {
     background-color: #efefef;
+}
+
+.package-details__general.hide{
+    display: none;
 }
 
 @media screen and (max-width: 840px) {

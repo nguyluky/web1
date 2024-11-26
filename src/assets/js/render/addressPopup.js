@@ -1,5 +1,4 @@
 import fakeDatabase from "../db/fakeDBv1.js";
-import { showUserAddressInfo } from "../pages/cart/cart.js";
 import { text2htmlElement } from "../until/format.js";
 import { validateEmail, validateNumberPhone } from "../until/validator.js";
 import { AddressFrom } from "./address.js";
@@ -161,26 +160,26 @@ export function showShippingFromeAddressPopup(onOk, onCancle, data, isDefault = 
         ev.stopPropagation();
         ev.stopImmediatePropagation();
 
-
-        const form = /**@type {HTMLFormElement} */ (element.querySelector('form'));
-
-        if (!form) { return; }
-
-        let isValid = Array.from(form.elements).some((el) => {
-            // @ts-ignore
-            return !el.reportValidity();
-        });
-
-        console.log(isValid);
+        let isValid = false;
 
         if (!validateNumberPhone(phone_num.value)) {
             phone_num.setCustomValidity("Số điện thoại không đúng định dạng");
-            phone_num.reportValidity();
             isValid = true;
         }
         else {
             phone_num.setCustomValidity("");
         }
+
+        const form = /**@type {HTMLFormElement} */ (element.querySelector('form'));
+
+        if (!form) { return; }
+
+        isValid = Array.from(form.elements).some((el) => {
+            // @ts-ignore
+            return !el.reportValidity();
+        });
+
+        console.log(isValid);
 
         if (isValid) {
             // nhập sai thì hiện popup error

@@ -75,6 +75,7 @@ export function getParent(element, selector) {
  *   test: (value: string) => string | undefined
  * }[],
  * onSubmit: (data: { [x: string]: string; }) => void
+ * groudSelector?: string
  * }} options 
  */
 export function validator(options) {
@@ -97,7 +98,9 @@ export function validator(options) {
      */
     function validate(inputElement, rule) {
         // const parentElement = inputElement.parentElement;
-        const parentElement = getParent(inputElement, '.input-group');
+        const parentElement = getParent(inputElement, options.groudSelector || '.input-group');
+        // const parentElement = inputElement.parentElement;
+
         if (!parentElement) {
             console.error('Không tìm thấy phần tử em. file validator.js');
             return false;
@@ -152,7 +155,7 @@ export function validator(options) {
 
             let inputElement = form.querySelector(rule.selector);
             if (!inputElement) {
-                alert('Không tìm thấy phần tử input. file validator.js:124');
+                console.error('Không tìm thấy phần tử input. file validator.js:124');
                 return;
             }
             const isValid = validate(/**@type {HTMLInputElement} */(inputElement), rule);
