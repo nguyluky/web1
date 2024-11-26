@@ -140,13 +140,9 @@ function initializeAccountPopup() {
                         if (userInfo) {
                             showInputPassword(MODAL);
                             validatePassword(userInfo);
-                            // document.getElementById('show-hide-icon')?.addEventListener('click', showPass);
-
                         } else {
                             showCreateAccount(MODAL);
                             validateCreateNewAccount(data['#input-phone-email']);
-
-
                         }
                         document.getElementById('show-hide-icon')?.addEventListener('click', showPass);
                         backSignIn();
