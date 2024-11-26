@@ -99,14 +99,13 @@ export async function createProduct(product) {
     productFooter.appendChild(addToCart);
 
     addToCart.addEventListener('click', () => {
-
         pushCartItemIntoCart(product.id);
     })
 
     productItem.addEventListener('click', (event) => {
         const target = /**@type {HTMLInputElement}*/(event.target);
         if (addToCart.isSameNode(target)) return;
-        location.hash = `#/product/${product.id}`;
+        navigateToPage(`product/${product.id}`);
     });
 
     return productItem;

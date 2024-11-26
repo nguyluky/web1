@@ -424,14 +424,14 @@ label:has(#input-fullname) {
     opacity: 0.8;
 }
 
-.change-password{
+.change-password {
     color: #189eff;
     cursor: pointer;
     font-weight: 500;
     font-size: 15px;
 }
 
-.change-password:hover{
+.change-password:hover {
     text-decoration: underline;
 }
 
@@ -447,7 +447,7 @@ label:has(#input-fullname) {
     text-decoration: underline;
 }
 
-.change-pass-header{
+.change-pass-header {
     font-size: 20px;
     font-weight: 600;
     display: flex;
@@ -455,7 +455,7 @@ label:has(#input-fullname) {
     margin-top: 10px;
 }
 
-.change-pass-container{
+.change-pass-container {
     display: flex;
     flex-direction: column;
     width: 400px;
@@ -463,19 +463,19 @@ label:has(#input-fullname) {
     margin-top: 10px;
 }
 
-.input-password{
+.input-password {
     padding: 10px;
     border-radius: 8px;
     border: 1px solid #999;
     width: 380px;
 }
 
-.pass-button-container{
+.pass-button-container {
     display: flex;
     justify-content: space-between;
 }
 
-#cancle-pass-btn{
+#cancle-pass-btn {
     width: max-content;
     background: 0;
     color: #808089;
@@ -488,7 +488,7 @@ label:has(#input-fullname) {
     border: 1px solid #999;
 }
 
-#cancle-pass-btn:hover{
+#cancle-pass-btn:hover {
     background-color: #efefef;
 }
 
@@ -529,11 +529,11 @@ label:has(#input-fullname) {
         font-size: 13px;
     }
 
-    .lmao{
+    .lmao {
         font-size: 13px;
     }
 
-    .change-password{
+    .change-password {
         font-size: 14px;
     }
 }
@@ -543,6 +543,10 @@ label:has(#input-fullname) {
         padding: 10px 15px;
         flex-direction: column;
         gap: 10px;
+    }
+
+    .user-personal {
+        height: max-content;
     }
 
     .user-personal-info {
@@ -611,16 +615,16 @@ label:has(#input-fullname) {
         width: 70%;
     }
 
-    .change-pass-container{
+    .change-pass-container {
         width: 100%;
     }
-    .input-password{
+    .input-password {
         width: 290px;
     }
 }
 
-@media screen and (max-width: 350px){
-    .input-password{
+@media screen and (max-width: 350px) {
+    .input-password {
         width: 260px;
     }
 }
