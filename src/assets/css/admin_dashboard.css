@@ -4,8 +4,7 @@
 .dashboard-wrapper {
     height: calc(100% - 20px);
     padding: 20px 20px 0 10px;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
     gap: 25px;
     overflow: auto;
     box-sizing: border-box;
@@ -315,8 +314,7 @@ details hr {
 
 @media screen and (max-width: 900px) {
     .dashboard-wrapper {
-        grid-template-columns: auto;
-        grid-template-rows: auto auto;
+        flex-direction: column;
     }
     .leaderboard-table {
         font-size: 16px;

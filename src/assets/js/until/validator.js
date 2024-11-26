@@ -14,7 +14,7 @@ export const validateEmail = (email) => {
  */
 export const validateNumberPhone = (numberPhone) => {
     const regex = /(84[3|5|7|8|9]|0[3|5|7|8|9])+([0-9]{8})\b/g;
-    return regex.test(numberPhone) ? true : false;
+    return /^\d+$/.test(numberPhone) && regex.test(numberPhone);
 };
 
 /**

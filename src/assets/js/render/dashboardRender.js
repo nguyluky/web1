@@ -306,7 +306,7 @@ async function productRank(from, to) {
     const chart = document.querySelector('.product-rank__body');
     while (chart?.firstChild) chart.removeChild(chart.firstChild);
     let sum = 0;
-    array.forEach((value, index) => {
+    (array.filter(e => e.quantity != 0)).forEach((value, index) => {
         sum += value.total;
         chart?.appendChild(createARow(value, index));
     });

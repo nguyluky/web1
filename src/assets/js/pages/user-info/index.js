@@ -676,12 +676,12 @@ async function initializationArticle__AccountInfo() {
         new_Info.email = contact[0].textContent?.includes('*') ? new_Info.email : contact[0].textContent ?? '';
         new_Info.phone_num = contact[1].textContent?.includes('*') ? new_Info.phone_num : contact[1].textContent ?? '';
         console.log(new_Info);
-        fakeDatabase.updateUserInfo(new_Info);
 
         if (flag == -1) {
             toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
             contact[0].textContent = maskInfo(new_Info.email);
             contact[1].textContent = maskInfo(new_Info.phone_num);
+            fakeDatabase.updateUserInfo(new_Info);
         }
 
         save.style.display = 'none';
