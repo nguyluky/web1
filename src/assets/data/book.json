@@ -67,9 +67,9 @@
         },
         {
             "id": "4",
-            "title": "Hàng ngàn slide, sách bài tập các môn kinh tế, quản lý...",
-            "details": "Pass tài liệu nè cả nhà ơiii\nKinh tế vi mô 10k slide+bt\nKinh tế vĩ mô 17k slide+bt\nLí thuyết tài chính tiền tệ 10k\nCombo sách toán cao cấp C1 35k \nXác suất thống kê 15k\nQuốc phòng I 10k\nQuốc phòng II 10k\nBộ sách tiếng anh I 50k (sách bài tập còn code)\nPháp luật đại cương + hỏi đáp 25k\nCNXHKH + hỏi đáp 45k tặng vở note câu hỏi của cô Oanh zơ tay là được cộng đỉm\nHỏi đáp triết học 10k\nKinh tế chính trị + slide + đề cương câu hỏi lí thuyết và bài tập 47k\nQuy hoạch tuyến tính 10k\nThị trường tài chính 17k\nNguyên lí thống kê kinh tế 17k\nKinh tế lượng 10k\nMột số quyển mình có note với giải bài tập bạn có thể tham khảo, tài liệu mình giữ rất kĩ nên đa số còn mới lắm, bạn yên tâm quẹo lựa nhen. Ngoài ra mình có tặng kèm slide marketing căn bản, quản trị học căn bản, PPNCKH ngành TCNH, TCC C1 cho ai cần nè😋\nSẵn tiện mình cũng tìm sách lí thuyết tài chính công như hình luôn nho",
-            "thumbnail": "10e98d84-ab78-5547-838e-b9dabacf15d3",
+            "title": "Tài liệu Chuyên đề Các bài thi quốc tế",
+            "details": "Tài liệu này được thiết kế dành riêng cho sinh viên và người học tiếng Anh, nhằm hỗ trợ:\nChuẩn bị tốt nhất cho các bài thi quốc tế như IELTS, TOEFL, TOEIC, và Cambridge Exams.\nCủng cố kiến thức chuyên sâu về ngữ pháp, từ vựng, phát âm và kỹ năng giao tiếp.\nNâng cao khả năng sử dụng tiếng Anh trong các tình huống học thuật và chuyên nghiệp.",
+            "thumbnail": "a9969dac-57c1-46ea-95c8-3c5a0eb8f777",
             "imgs": [],
             "base_price": 10000,
             "discount": 0.15,
@@ -360,6 +360,16 @@
             "base_price": 27000,
             "discount": 0.1,
             "category": ["gtcn", "tltks", "lvtn"]
+        },
+        {
+            "id": "27",
+            "title": "Giáo trình Đạo đức kinh doanh và văn hoá công ty",
+            "details": "Trong bối cảnh kinh tế toàn cầu hóa và sự cạnh tranh ngày càng khốc liệt, đạo đức kinh doanh và văn hóa công ty không chỉ là nền tảng để duy trì sự phát triển bền vững mà còn là chìa khóa để doanh nghiệp xây dựng uy tín và giá trị thương hiệu. Giáo trình này cung cấp kiến thức nền tảng và các ứng dụng thực tế giúp người học hiểu rõ mối quan hệ mật thiết giữa đạo đức, văn hóa và thành công lâu dài của doanh nghiệp.",
+            "thumbnail": "d5894d3c-c0ca-472c-b6cd-7e1c5e1f6725",
+            "imgs": [],
+            "base_price": 35000,
+            "discount": 0.1,
+            "category": ["gtcn", "tltks"]
         }
     ]
 }

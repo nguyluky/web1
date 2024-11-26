@@ -3,6 +3,7 @@
  * @typedef {{ [P in keyof Partial<T>]: string }} COLS
  */
 
+import { removeDiacritics } from '../../until/format.js';
 import { createTextTableCell, tableEditOn } from './customCell.js';
 
 /**
@@ -162,9 +163,8 @@ function searchList(values, cols) {
     let result = values.filter((e) => {
         return Object.keys(cols).some((key) => {
             if (e[key] === undefined) return false;
-            return String(e[key])
-                .toUpperCase()
-                .includes(valueSearchInput.toUpperCase());
+            return removeDiacritics(String(e[key]))
+                .includes(removeDiacritics(valueSearchInput));
         });
     });
 
