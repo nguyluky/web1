@@ -44,6 +44,12 @@ function createOrderContainer(order) {
     all_items_detail.className = "package-details__container";
     order.items.forEach(async item => {
         all_items_detail.appendChild(await createOrderItemElement(item));
+        if (order.items.length > 1) {
+            const all_detail = all_items_detail.querySelectorAll('.package-details__general');
+            for (let i = 1; i < all_detail.length; i++) {
+                all_detail[i].classList.add('hide');
+            }
+        }
     });
 
     package_details.innerHTML = `
@@ -62,17 +68,47 @@ function createOrderContainer(order) {
         </div>
         <div class="package-details__bottom"></div>
         <div class="package-details__footer">
+            ${order.items.length > 1 ? '<span class ="show-more-order">Xem thêm</span>' : ''}
             ${order.state == 'doixacnhan' ? '<button class="button_1 huy">Huỷ</button>' : ''}
         </div>
         `;
     package_details.querySelector('.package-details__bottom')?.appendChild(all_items_detail);
-    package_details.querySelector('.huy')?.addEventListener('click', async () => {
+
+    //khi bấm hủy
+    package_details.querySelector('.huy')?.addEventListener('click', () => {
         order.state = 'huy';
         fakeDatabase.updateOrder(order).then(() => {
             renderOrder();
             toast({ title: 'Thành công', message: 'Đã huỷ đơn hàng', type: 'success' });
         });
     });
+
+
+    const show_more = package_details.querySelector('.show-more-order');
+    show_more?.addEventListener('click', e => {
+        const hidden_details = package_details.querySelectorAll('.package-details__general');
+        if (show_more.textContent == 'Xem thêm') {// khi bấm xem thêm
+            for (let i = 1; i < hidden_details.length; i++) {
+                hidden_details[i].classList.remove('hide');
+                show_more.textContent = 'Ẩn đi';
+            }
+        }
+        else {// khi bấm Ẩn đi
+            for (let i = 1; i < hidden_details.length; i++) {
+                hidden_details[i].classList.add('hide');
+                show_more.textContent = 'Xem thêm';
+            }
+        }
+    });
+
+    // show_more?.addEventListener('click', e => {
+    //     const hidden_details = package_details.querySelectorAll('.hide');
+    //     hidden_details.forEach(hidden => {
+    //         hidden.classList.add('hide');
+    //         show_more.textContent = 'Xem thêm';
+    //     });
+    // });
+
     return package_details;
 }
 
