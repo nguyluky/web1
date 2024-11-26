@@ -64,6 +64,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    height: 30px;
 }
 
 .user-header {
@@ -259,7 +260,10 @@
 .package-details__total--number {
     color: #ff4141;
 }
-
+.package-details__footer {
+    display: flex;
+    justify-content: flex-end;
+}
 label:has(.btn-add-address) {
     background-color: #189eff;
     color: white;
@@ -374,7 +378,7 @@ label:has(#input-fullname) {
     background: #fff;
 }
 
-#input-fullname:focus{
+#input-fullname:focus {
     border: 2px solid #43b1fa;
 }
 
@@ -404,8 +408,31 @@ label:has(#input-fullname) {
     font-weight: 500;
 }
 
+#save-pass-btn {
+    width: max-content;
+    background-color: #189eff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+}
+
 #save-info-btn:active {
     opacity: 0.8;
+}
+
+.change-password{
+    color: #189eff;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.change-password:hover{
+    text-decoration: underline;
 }
 
 .lmao {
@@ -416,9 +443,55 @@ label:has(#input-fullname) {
     margin-left: 5px;
 }
 
-.lmao:hover{
+.lmao:hover {
     text-decoration: underline;
 }
+
+.change-pass-header{
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.change-pass-container{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.input-password{
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #999;
+    width: 380px;
+}
+
+.pass-button-container{
+    display: flex;
+    justify-content: space-between;
+}
+
+#cancle-pass-btn{
+    width: max-content;
+    background: 0;
+    color: #808089;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    border: 1px solid #999;
+}
+
+#cancle-pass-btn:hover{
+    background-color: #efefef;
+}
+
 @media screen and (max-width: 840px) {
     .package-category-header {
         font-size: 14px;
@@ -448,8 +521,20 @@ label:has(#input-fullname) {
     #save-info-btn {
         margin-left: 150px;
     }
-    #input-fullname{
+    #input-fullname {
         width: 85%;
+    }
+
+    .user-info {
+        font-size: 13px;
+    }
+
+    .lmao{
+        font-size: 13px;
+    }
+
+    .change-password{
+        font-size: 14px;
     }
 }
 
@@ -522,8 +607,21 @@ label:has(#input-fullname) {
         margin: 0 auto;
     }
 
-    #input-fullname{
+    #input-fullname {
         width: 70%;
+    }
+
+    .change-pass-container{
+        width: 100%;
+    }
+    .input-password{
+        width: 290px;
+    }
+}
+
+@media screen and (max-width: 350px){
+    .input-password{
+        width: 260px;
     }
 }
 
@@ -533,4 +631,12 @@ label:has(#input-fullname) {
     align-items: center;
     flex-direction: column;
     margin-bottom: 20px;
+}
+
+.button_1.huy {
+    background: #ff424e;
+    color: #fff;
+    padding: 5px 20px;
+    font-weight: 700;
+    font-size: 15px;
 }

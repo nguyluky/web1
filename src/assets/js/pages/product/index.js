@@ -1,4 +1,5 @@
 import fakeDatabase from '../../db/fakeDBv1.js';
+import { showShippingFromeAddressPopup } from '../../render/addressPopup.js';
 import { toast } from '../../render/popupRender.js';
 import { formatNumber, text2htmlElement } from '../../until/format.js';
 import { addStyle, errorPage, navigateToPage, removeStyle } from '../../until/router.js';
@@ -125,6 +126,12 @@ function shuffle(array) {
     }
 }
 
+
+/**
+ *
+ * @param {String} category_id
+ * @returns {Promise<HTMLDivElement>}
+ */
 async function createCategory(category_id) {
     const categories = await fakeDatabase.getAllCategory();
     const product_category = document.createElement('div');
@@ -192,6 +199,12 @@ function rendergeneralInfo(general_info) {
     return product_container;
 }
 
+
+/**
+ *
+ * @param {import('../../until/type.js').Sach} general_info
+ * @returns {Promise<String>}
+ */
 async function renderleftsection(general_info) {
 
     const thumbnail = await fakeDatabase.getImgById(String(general_info?.thumbnail));
@@ -230,6 +243,11 @@ async function renderleftsection(general_info) {
             </div>
     `;
 }
+/**
+ *
+ * @param {String} src
+ * 
+ */
 function showImage(src) {
     const wrapper = document.getElementById('popup-wrapper');
     const html = `<div class="popup" id="popup-img">
@@ -266,7 +284,16 @@ function showImage(src) {
     window.addEventListener('resize', () => changeSize());
 }
 
+/**
+ *
+ * @param {String} product_id
+ * 
+ */
 function setEventListener(product_id) {
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) {
+        return;
+    }
     const decrebtn = /**@type {HTMLElement}*/(document.querySelector('.dscr-quantity'));
     const increbtn = /**@type {HTMLElement}*/(document.querySelector('.inc-quantity'));
     let inputquantity = /**@type {HTMLInputElement}*/(document.querySelector('.quantity-num'));
@@ -307,9 +334,21 @@ function setEventListener(product_id) {
         });
     });
 
+    // bấm mua ngay
     const buy_now = document.querySelector('.buy-now');
-    buy_now?.addEventListener('click', e => {
-
+    buy_now?.addEventListener('click', async e => {
+        const userInfo = await fakeDatabase.getUserInfoByUserId(user_id);
+        if (userInfo?.address.length === 0) {
+            showShippingFromeAddressPopup(async (address, bool) => {
+                if (bool)
+                    userInfo?.address.unshift(address);
+                else
+                    userInfo?.address.push(address);
+                await fakeDatabase.updateUserAddress(user_id, userInfo?.address);
+                return;
+            }, () => { });
+            return;
+        }
         if (!localStorage.getItem('user_id')) {
             toast({
                 title: 'Vui lòng đăng nhập để mua đồ',
@@ -317,10 +356,7 @@ function setEventListener(product_id) {
             });
             return;
         }
-
-        // TODO: fuckk
         navigateToPage('payment', { payment: product_id + '-' + inputquantity.value });
-
     });
 
 }

@@ -5,7 +5,7 @@ import { dateToString, removeDiacritics, text2htmlElement } from "../../until/fo
 import { addStyle, errorPage, navigateToPage, removeStyle } from "../../until/router.js";
 import { validateEmail, validateNumberPhone } from "../../until/validator.js";
 import { updateCartQuantity } from "../cart/cart.js";
-
+import urlConverter from "../../until/router.js";
 const status = {
     daxacnhan: {
         text: 'Đã xác nhận',
@@ -61,8 +61,18 @@ function createOrderContainer(order) {
             </div>
         </div>
         <div class="package-details__bottom"></div>
+        <div class="package-details__footer">
+            ${order.state == 'doixacnhan' ? '<button class="button_1 huy">Huỷ</button>' : ''}
+        </div>
         `;
     package_details.querySelector('.package-details__bottom')?.appendChild(all_items_detail);
+    package_details.querySelector('.huy')?.addEventListener('click', async () => {
+        order.state = 'huy';
+        fakeDatabase.updateOrder(order).then(() => {
+            renderOrder();
+            toast({ title: 'Thành công', message: 'Đã huỷ đơn hàng', type: 'success' });
+        });
+    });
     return package_details;
 }
 
@@ -135,10 +145,11 @@ function createAddressContainer(address, i) {
 
 /**
  * 
- * @param {string} option 
  * @returns {Promise<void>}
  */
-async function renderOrder(option = 'all') {
+async function renderOrder() {
+    const { page, query } = urlConverter(location.hash);
+    const option = query.get('state') ?? 'all';
     const user_id = /**@type {String} */(localStorage.getItem('user_id'));
 
     if (!user_id) {
@@ -212,7 +223,13 @@ async function renderUserInfo(user_id) {
                 <span onfocus="document.execCommand('selectAll', false, null);">${maskInfo(personal_info_data?.phone_num)}</span>
                 <span class="lmao">${personal_info_data?.phone_num ? 'Thay đổi' : 'Thêm mới'}</span>
             </div>
-        </div>       
+        </div>   
+        <div class="user-personal">
+            <div class="user-header">Mật khẩu:</div>
+            <div class="user-info">
+                <span class="change-password">Đổi mật khẩu</span>
+            </div>
+        </div>    
         <div class="user-personal">
             <div class="user-header">Giới tính:</div>
             <div class="user-info">
@@ -261,6 +278,114 @@ function maskInfo(input) {
         }
     }
     return "";
+}
+
+async function renderChange_pass_form() {
+    const user_id = localStorage.getItem('user_id');
+    if (!user_id) return;
+    const parent = /**@type {HTMLElement}*/(document.querySelector('.user-personal-info'));
+    parent.innerHTML = `
+        <div class="change-pass-header"><div>Đổi mật khẩu</div></div>
+        <div class="change-pass-container"> 
+            <div class="input-group">
+                <label for="password">Mật khẩu hiện tại</label>
+                <input
+                    type="password"
+                    class="input-password present"
+                    placeholder="Nhập mật khẩu hiện tại"
+                    maxlength="20"
+                />
+            </div>
+            <div class="input-group">
+                <label for="password">Mật khẩu mới</label>
+                <input
+                    type="password"
+                    class="input-password new"
+                    placeholder="Nhập 8 kí tự trở lên, tối đa 20 ký tự"
+                    maxlength="20"
+                />
+            </div>
+            <div class="input-group">
+                <label for="password">Nhập lại mật khẩu mới</label>
+                <input
+                    type="password"
+                    class="input-password newdup"
+                    placeholder="Nhập 8 kí tự trở lên, tối đa 20 ký tự"
+                    maxlength="20"
+                />
+            </div>
+            <div class="pass-button-container">
+                <div id="save-pass-btn">Lưu</div>
+                <div id="cancle-pass-btn">Hủy</div>
+            </div>
+        </div>
+    `;
+    // khi bấm hủy
+    const cancle_change_pass = document.getElementById('cancle-pass-btn');
+    cancle_change_pass?.addEventListener('click', e => {
+        initializationArticle__AccountInfo();
+    })
+
+
+    const save_change_pass = document.getElementById('save-pass-btn');
+    const input_passwords = /**@type {NodeListOf<HTMLInputElement>}*/(document.querySelectorAll('.input-password'));
+    const user = await fakeDatabase.getUserInfoByUserId(user_id);
+
+    // kiểm tra input pass có dấu cách thì ignore
+    input_passwords.forEach(input => {
+        input.addEventListener('keydown', e => {
+            if (e.key === " ")
+                e.preventDefault();
+        });
+    });
+
+    //khi bấm lưu đổi mật khẩu
+    save_change_pass?.addEventListener('click', e => {
+        console.log(user?.passwd);
+        let flag = 1;
+        for (let input of input_passwords) {
+            if (input.value === '') {
+                toast({
+                    title: 'Lỗi',
+                    message: 'Bạn chưa điền đủ thông tin',
+                    type: 'error'
+                });
+                flag = 0;
+                break;
+            }
+        }
+        if (flag == 1)
+            if (input_passwords[0].value === user?.passwd && input_passwords[0].value !== '') {
+                if (input_passwords[1].value.length >= 8) {
+                    if (input_passwords[1].value === input_passwords[2].value && input_passwords[1].value !== '') {
+                        user.passwd = input_passwords[1].value;
+                        fakeDatabase.updateUserInfo(user);
+                        toast({ title: 'Thành công', message: 'Cập nhật thông tin thành công', type: 'success' });
+                        initializationArticle__AccountInfo();
+                    } else {
+                        toast({
+                            title: 'Lỗi',
+                            message: 'Mật khẩu nhập lại không khớp với mật khẩu mới',
+                            type: 'error'
+                        });
+                    }
+                } else {
+                    toast({
+                        title: 'Lỗi',
+                        message: 'Mật khẩu mới phải dài ít nhất 8 ký tự',
+                        type: 'error'
+                    });
+                }
+            } else {
+                if (input_passwords[0].value != '') {
+                    toast({
+                        title: 'Lỗi',
+                        message: 'Mật khẩu hiện tại không khớp',
+                        type: 'error'
+                    });
+                }
+            }
+    });
 }
 
 async function renderAddressInfo(address_data) {
@@ -348,7 +473,7 @@ function initializationArticle__OrderInfo() {
     // 'doixacnhan' | 'daxacnhan' | 'danggiaohang' | 'giaohangthanhcong' | 'huy'
     article.innerHTML = `
         <div class="package-category">
-            <div class = "package-category-header selected" data-state="all">Tất cả</div>
+            <div class = "package-category-header" data-state="all">Tất cả</div>
             <div class = "package-category-header" data-state="doixacnhan">Chờ xử lý</div>
             <div class = "package-category-header" data-state="daxacnhan">Đã xác nhận</div>
             <div class = "package-category-header" data-state="danggiaohang">Vận chuyển</div>
@@ -371,10 +496,11 @@ function initializationArticle__OrderInfo() {
     renderOrder();
     const package_catagory = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.package-category-header'));
     package_catagory.forEach(catagory => {
+        const { page, query } = urlConverter(location.hash);
+        if (catagory.dataset.state == (query.get('state') ?? 'all')) catagory.classList.add('selected');
         catagory.addEventListener('click', e => {
-            renderOrder(catagory.dataset.state);
-            package_catagory.forEach(e => { e.classList.remove('selected') });
-            catagory.classList.add('selected');
+            navigateToPage('./', { state: '' + catagory.dataset.state });
+            renderOrder();
         });
     });
     const search_input = /**@type {HTMLInputElement} */ (document.querySelector('.input-search input'));
@@ -520,6 +646,12 @@ async function initializationArticle__AccountInfo() {
         }
 
         save.style.display = 'none';
+    });
+
+    // khi đổi mật khẩu
+    const change_pass = document.querySelector('.change-password');
+    change_pass?.addEventListener('click', e => {
+        renderChange_pass_form();
     });
 
 }

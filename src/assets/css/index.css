@@ -327,6 +327,9 @@ aside.aside {
         padding: 0px 10px;
     }
 
+    .catergory__row:first-child {
+        padding-left: 0px;
+    }
     .catergory__row--sub {
         padding-left: 0px;
         width: 100%;
@@ -422,5 +425,9 @@ aside.aside {
 @media screen and (max-width: 350px) {
     :root {
         --cart-width: 125px;
+    }
+
+    article.article {
+        padding: 20px 10px;
     }
 }

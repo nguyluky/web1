@@ -267,6 +267,7 @@ main.main {
     min-width: 400px;
     max-width: 450px;
     border-left: 4px solid;
+    box-sizing: border-box;
     box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
     transition: all linear 0.3s;
 }
@@ -400,8 +401,18 @@ main.main {
     }
 
     #toast {
-        left: 0px;
+        left: 10px;
         top: 50px;
+    }
+
+    #toast .toast {
+        min-width: 300px;
+        padding: 10px 0;
+    }
+    .toast__icon,
+    .toast__close {
+        padding: 0 10px;
+        font-size: 18px;
     }
 
     .toast--error,
