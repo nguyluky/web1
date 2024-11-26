@@ -281,7 +281,8 @@ async function renderChange_pass_form() {
                 <input
                     type="password"
                     class="input-password present"
-                    placeholder="Nhập 8 kí tự trở lên"
+                    placeholder="Nhập mật khẩu hiện tại"
+                    maxlength="20"
                 />
             </div>
             <div class="input-group">
@@ -314,10 +315,20 @@ async function renderChange_pass_form() {
         initializationArticle__AccountInfo();
     })
 
-    //khi bấm lưu đổi mật khẩu
+
     const save_change_pass = document.getElementById('save-pass-btn');
     const input_passwords = /**@type {NodeListOf<HTMLInputElement>}*/(document.querySelectorAll('.input-password'));
     const user = await fakeDatabase.getUserInfoByUserId(user_id);
+
+    // kiểm tra input pass có dấu cách thì ignore
+    input_passwords.forEach(input => {
+        input.addEventListener('keydown', e => {
+            if (e.key === " ")
+                e.preventDefault();
+        });
+    });
+
+    //khi bấm lưu đổi mật khẩu
     save_change_pass?.addEventListener('click', e => {
         console.log(user?.passwd);
         let flag = 1;
