@@ -29,6 +29,11 @@ export function isDate(value) {
     return regex.test(value) ? true : false;
 }
 
+/**
+ * 
+ * @param {string} value 
+ * @returns {'Visa' | 'MasterCard' | 'JCB' | false}
+ */
 export function isCreditCard(value) {
     const regexVisa = /^4[0-9]{12}(?:[0-9]{3})?$/;
     const regexMC = /^(5[1-5][0-9]{14}|2(22[1-9][0-9]{12}|2[3-9][0-9]{13}|[3-6][0-9]{14}|7[0-1][0-9]{13}|720[0-9]{12}))$/;

@@ -268,6 +268,11 @@ async function saveBook() {
 
     cacheSave = {};
     cacheAdd = [];
+
+    const row = document.querySelector('tr[isaddcache=true]')
+    if (row) {
+        row.removeAttribute('isaddcache');
+    }
 }
 
 function removeAllChange() {
