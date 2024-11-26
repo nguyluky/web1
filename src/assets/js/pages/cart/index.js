@@ -47,7 +47,7 @@ const html = `
             <div class="coupon-header">
                 <div class="coupon-header__title">Khuyến mãi</div>
                 <div class="coupon-header__usage">
-                    <span>Có thể chọn 2</span>
+                    <span>Hiện không có khuyến mãi nào</span>
                 </div>
             </div>
             <div class="coupon-list"></div>
