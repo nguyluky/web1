@@ -6,6 +6,7 @@ import { toast } from "../../render/popupRender.js";
 import { formatNumber } from "../../until/format.js";
 import { validator, isCreditCard, getParent } from "../../until/validator.js";
 import urlConverter, { getSearchParam, navigateToPage } from "../../until/router.js";
+import { generatorQr } from "../../until/Qr.js";
 
 
 /**
@@ -162,12 +163,10 @@ export function closeDeal() {
     purchaseBtn?.addEventListener('click', async () => {
         const selectedPaymentOption = document.querySelector('input[name="payment-option"]:checked')
         if (selectedPaymentOption) {
-            if (selectedPaymentOption.id === 'cash-option') {
-                console.log('hihi')
-                console.log('haha')
+            if (selectedPaymentOption.id === 'cod') {
                 await pushOrder(selectedPaymentOption.id);
             }
-            else if (selectedPaymentOption.id === 'creditCard-option') {
+            else if (selectedPaymentOption.id === 'credit') {
                 const checkCredit = document.querySelector('input[name="check-credit"]:checked');
                 if (!checkCredit) {
                     showCreditForm();
@@ -179,7 +178,7 @@ export function closeDeal() {
                 }
             }
             else {
-                showQR(selectedPaymentOption.id).then(pushOrder);
+                showQR(selectedPaymentOption.id).then(() => pushOrder(selectedPaymentOption.id));
             }
         }
     })
@@ -358,7 +357,7 @@ async function pushOrder(option) {
     if (!orders)
         return;
 
-    const is_pay = option === 'cash-option' ? false : true;
+    const payment = option ?? 'cod';
     for (const order of orders) {
         const book = await fakeDatabase.getSachById(order.sachId);
         if (!book)
@@ -379,7 +378,7 @@ async function pushOrder(option) {
         date: new Date(),
         state: 'doixacnhan',
         last_update: new Date(),
-        is_pay,
+        payment_method: payment,
         total,
         address: {
             name: address.name,
@@ -492,7 +491,7 @@ export function showCreditForm() {
 
 async function showQR(option) {
     console.log('success');
-    let price = 0;
+    let price = 10000;
     const orders = await getOrder();
     if (!orders)
         return;
@@ -508,7 +507,7 @@ async function showQR(option) {
     modal.classList.add('show-modal');
 
     let tmp, img;
-    if (option === 'momo-option') {
+    if (option === 'momo') {
         tmp = 'MoMo';
         img = './assets/img/momo.jpg'
     }
@@ -529,7 +528,7 @@ async function showQR(option) {
             <div class="body-content">
                 <div class="left-payment-content">
                     <div id="qr-img">
-                        <img src="./assets/img/image.png" alt="" />
+                        <img src="${generatorQr(price)}" alt="" />
                         <div class="prices__item">
                             <div class="prices__text">Tổng tiền</div>
                             <div class="prices__value" id="payment-amount">

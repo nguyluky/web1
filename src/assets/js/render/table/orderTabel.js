@@ -14,7 +14,7 @@ const cols = {
     state: 'State',
     date: 'Date',
     last_update: 'Last Update',
-    is_pay: 'Pay',
+    payment_method: 'Payment',
     total: 'Total',
     address: 'Địa chỉ',
 };
@@ -27,9 +27,11 @@ const STATE_OPTION = [
     { title: 'Hủy', value: 'huy' },
 ];
 
-const IS_PAY_OPTION = [
-    { title: 'Thành công', value: 'true' },
-    { title: 'Chưa thanh toán', value: 'false' },
+const PAYMENT_METHOD_OPTION = [
+    { title: 'Tiền mặt', value: 'cod' },
+    { title: 'Momo', value: 'momo' },
+    { title: 'ZaloPay', value: 'zalopay' },
+    { title: 'Credit card', value: 'credit' },
 ];
 
 /** @type {{ [key: string]: Order }} */
@@ -69,8 +71,8 @@ function renderRow(row, value, onchange) {
             case 'last_update':
                 appendDateCell(row, key, value, onchange);
                 break;
-            case 'is_pay':
-                appendIsPayCell(row, value, onchange);
+            case 'payment_method':
+                appendPaymentMethodCell(row, value, onchange);
                 break;
             case 'total':
                 appendTotalCell(row, value, onchange);
@@ -90,7 +92,7 @@ function renderRow(row, value, onchange) {
         }
     });
 
-    row.addEventListener('click', () => toggleDropdown(row, value));
+    row.addEventListener('click', () => { });
 }
 
 /**
@@ -153,12 +155,12 @@ function appendDateCell(row, key, value, onchange) {
  * @param {Order} value
  * @param {import('./baseRender.js').OnChange<Order>} [onchange]
  */
-function appendIsPayCell(row, value, onchange) {
+function appendPaymentMethodCell(row, value, onchange) {
     const option = createOptionTabelCell(
-        'is_pay',
-        value.is_pay ? 'true' : 'false',
-        IS_PAY_OPTION,
-        (nv) => onchange && onchange(value, 'is_pay', nv),
+        'payment_method',
+        value.payment_method,
+        PAYMENT_METHOD_OPTION,
+        (nv) => onchange && onchange(value, 'payment_method', nv),
     );
     row.appendChild(option);
 }
@@ -171,7 +173,7 @@ function appendIsPayCell(row, value, onchange) {
 function appendTotalCell(row, value, onchange) {
     const to = createNumberTableCell(
         'total',
-        value.total,
+        value.total + 10000,
         (nv) => onchange && onchange(value, 'total', nv),
         false,
     );
@@ -190,101 +192,6 @@ function appendDefaultCell(row, key, value, onchange) {
         onchange && onchange(value, key, nv);
     });
     row.appendChild(col);
-}
-
-/**
- * @param {HTMLTableRowElement} row
- * @param {Order} value
- */
-function toggleDropdown(row, value) {
-    if (row.querySelector('td[contenteditable = "true"]')) return;
-
-    /**
-     * @param {MouseEvent} event
-     * @returns {void}
-     */
-    function handleClickOutside(event) {
-        const target = /** @type {HTMLElement} */ (event.target);
-        if (target.isSameNode(row)) return;
-        if (row.nextElementSibling?.contains(target)) return;
-        if (row.contains(target)) return;
-
-        if (row.nextElementSibling) {
-            row.removeAttribute('dropdown');
-            row.nextElementSibling.remove();
-            document.removeEventListener('click', handleClickOutside);
-        }
-    }
-
-    if (!row.getAttribute('dropdown')) {
-        row.setAttribute('dropdown', 'true');
-
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = Object.keys(cols).length + 1;
-
-        const title = document.createElement('div');
-        title.style.display = 'flex';
-        title.innerHTML = `
-            <div style="width: 20%; text-align: center;">STT</div>
-            <div style="width: 40%;">Tên</div>
-            <div style="width: 20%; text-align: center;">số lượng</div>
-            <div style="width: 20%; text-align: center;">Tiền</div>
-        `;
-
-        td.appendChild(title);
-
-        value.items.forEach((e, index) => {
-            const div = document.createElement('div');
-            div.style.display = 'flex';
-
-            const stt = document.createElement('div');
-            stt.textContent = index + '';
-            stt.style.width = '20%';
-            stt.style.textAlign = 'center';
-            div.appendChild(stt);
-
-            const sach = document.createElement('div');
-            sach.style.width = '40%';
-            sach.textContent = e.sach;
-
-            const quantity = document.createElement('div');
-            quantity.style.width = '20%';
-            quantity.style.textAlign = 'center';
-            quantity.textContent = e.quantity + '';
-
-            const donqia = document.createElement('div');
-            donqia.textContent = '';
-            donqia.style.width = '20%';
-            donqia.style.textAlign = 'center';
-
-            fakeDatabase.getSachById(e.sach).then((sach_) => {
-                sach.textContent = sach_?.title || '';
-                donqia.textContent = sach_?.base_price + '';
-            });
-
-            div.appendChild(sach);
-            div.appendChild(quantity);
-            div.appendChild(donqia);
-
-            td.appendChild(div);
-        });
-
-        tr.appendChild(td);
-
-        if (row.nextElementSibling) {
-            row.parentElement?.insertBefore(tr, row.nextElementSibling);
-        } else {
-            row.parentElement?.appendChild(tr);
-        }
-        document.addEventListener('click', handleClickOutside);
-    } else {
-        if (row.nextElementSibling) {
-            row.removeAttribute('dropdown');
-            row.nextElementSibling.remove();
-            document.removeEventListener('click', handleClickOutside);
-        }
-    }
 }
 
 /** @param {Order[]} list */
@@ -451,7 +358,7 @@ function createHeaderPopupWrapper(key) {
     const title = document.createElement('SPAN');
     headerPopupWrapper.appendChild(title);
     title.className = 'custom-header-title';
-    title.textContent = key;
+    title.textContent = cols[key];
 
     const iconWrapper = document.createElement('SPAN');
     iconWrapper.className = 'custom-header-icon-wrapper';
@@ -648,7 +555,7 @@ function createFilterOptions(key) {
         });
     }
 
-    if (key == 'is_pay') {
+    if (key == 'payment_method') {
         optionsFilter.unshift({
             title: 'option',
             body: () => {
@@ -656,7 +563,7 @@ function createFilterOptions(key) {
                 div.style.display = 'flex';
                 div.style.flexDirection = 'column';
 
-                IS_PAY_OPTION.forEach((e) => {
+                PAYMENT_METHOD_OPTION.forEach((e) => {
                     const div_ = document.createElement('label');
                     div_.className = 'option-filter';
 

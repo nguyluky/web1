@@ -603,7 +603,7 @@ async function initializationArticle__Package_details() {
                 </div>
                 <div> 
                     <div>Phương thức thanh toán</div>
-                    <div>Chưa có dữ liệu</div>
+                    <div>${order.payment_method}</div>
                 </div>
             </div>
         </div>
