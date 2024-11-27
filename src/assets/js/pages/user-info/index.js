@@ -7,13 +7,13 @@ import { validateEmail, validateNumberPhone } from "../../until/validator.js";
 import { updateCartQuantity } from "../cart/cart.js";
 import urlConverter from "../../until/router.js";
 const status = {
-    daxacnhan: {
-        text: 'Đã xác nhận',
-        color: 'rgba(219, 198, 38, 1)'
-    },
     doixacnhan: {
         text: 'Chờ xử lý',
         color: 'rgba(208, 128, 8, 1)'
+    },
+    daxacnhan: {
+        text: 'Đã xác nhận',
+        color: 'rgba(219, 198, 38, 1)'
     },
     danggiaohang: {
         text: 'Đang vận chuyển',
@@ -503,6 +503,7 @@ function initializationAside(personal_info_data) {
 }
 
 async function initializationArticle__Package_details() {
+    window.scrollTo(0, 0);
     const { page, query } = urlConverter(location.hash);
     const order_id = query.get('id');
     if (!order_id) return;
@@ -510,7 +511,10 @@ async function initializationArticle__Package_details() {
     if (!order) return;
     const article = document.getElementById('article');
     if (!article) return;
-
+    let i = 0;
+    Object.keys(status).forEach((key, index) => {
+        if (key === order.state) i = index;
+    });
     article.className = "order-details";
     article.innerHTML = `
         <div class="order-details__header">
@@ -522,42 +526,49 @@ async function initializationArticle__Package_details() {
             <div>MÃ ĐƠN HÀNG: ${order.id.toUpperCase()}</div>
             <div>${status[order.state].text.toUpperCase()}</div>
         </div>
-
         <div class="order-details__stepper">
             <div class="stepper">
                 <div class="stepper__step">
                     <div class="stepper__step--icon">
-                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                        <i class="fa-sharp fa-solid fa-circle"></i>
                     </div>
                     <div class="stepper__step--text">Đang xử lý</div>
                 </div>
-                <div class="stepper__step">
+                ${order.state != 'huy' ?
+            `<div class="stepper__step">
                     <div class="stepper__step--icon">
-                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                        <i class="fa-sharp fa-solid fa-circle"></i>
                     </div>
                     <div class="stepper__step--text">Đã xác nhận</div>
                 </div>
                 <div class="stepper__step">
                     <div class="stepper__step--icon">
-                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                        <i class="fa-sharp fa-solid fa-circle"></i>
                     </div>
                     <div class="stepper__step--text">Đang vận chuyển</div>
                 </div>
                 <div class="stepper__step">
                     <div class="stepper__step--icon">
-                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                        <i class="fa-sharp fa-solid fa-circle"></i>
                     </div>
                     <div class="stepper__step--text">Đã nhận được hàng</div>
                 </div>
                 <div class="stepper__step">
                     <div class="stepper__step--icon">
-                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                        <i class="fa-shard fa-solid fa-circle"></i>
                     </div>
                     <div class="stepper__step--text">Đơn hàng đã hoàn thành</div>
+                </div>` : `
+                <div class="stepper__step">
+                    <div class="stepper__step--icon">
+                        <i class="fa-sharp fa-solid fa-circle-xmark" style="color: #ff424e"></i>
+                    </div>
+                    <div class="stepper__step--text">Đơn hàng đã bị huỷ</div>
                 </div>
+                `}
                 <div class="stepper__line">
                     <div class="stepper__line--background"></div>
-                    <div class="stepper__line--foreground"></div>
+                    <div class="stepper__line--foreground" style="width: ${order.state != 'huy' ? (25 * (i == 3 ? 4 : i)) : 0}%"></div>
                 </div>
             </div>
         </div>
@@ -601,6 +612,14 @@ async function initializationArticle__Package_details() {
                 Sản phẩm
             </div>
         </div>`
+    const icons = /**@type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('.fa-circle'));
+    icons.forEach((icon, index) => {
+        if (index <= i) {
+            icon.classList.remove('fa-circle');
+            icon.classList.add('fa-circle-check');
+            icon.style.color = 'rgb(45, 194, 88)';
+        }
+    })
     const footer = document.querySelector('.order-details__footer');
     if (!footer) return;
     order.items.forEach(async item => {

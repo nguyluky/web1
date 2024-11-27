@@ -537,9 +537,10 @@ label:has(#input-fullname) {
 }
 .stepper {
     width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    justify-items: center;
     position: relative;
 }
 .stepper__step {
@@ -547,11 +548,14 @@ label:has(#input-fullname) {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 15%;
+    width: 100%;
     z-index: 1;
 }
+.stepper__step:has(.fa-circle-xmark) {
+    grid-column: 3;
+}
 .stepper__step--icon {
-    color: rgb(45, 194, 88);
+    color: #aaa;
     font-size: 30px;
     background-color: #fff;
     width: 30px;
@@ -566,6 +570,10 @@ label:has(#input-fullname) {
     top: 15px;
     left: 50%;
     transform: translateX(-50%);
+}
+.stepper:has(.fa-circle-xmark) .stepper__line {
+    width: 42.5%;
+    transform: translateX(-100%);
 }
 .stepper__line > div {
     width: 100%;
