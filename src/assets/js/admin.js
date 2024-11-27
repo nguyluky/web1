@@ -306,6 +306,7 @@ function setupMainButtonEvents() {
         if (!admin_id) return;
         const info = await fakeDatabase.getUserInfoByUserId(admin_id);
         const wrapper = document.getElementById('info-wrapper');
+        if (wrapper?.querySelector('.popup')) return;
         const popup = document.createElement('div');
         popup.classList.add('popup');
         wrapper?.appendChild(popup);

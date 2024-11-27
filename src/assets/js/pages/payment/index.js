@@ -58,7 +58,7 @@ const html = `
                             <input
                                 type="radio"
                                 name="payment-option"
-                                id="cash-option"
+                                id="cod"
                                 checked
                             />
                             <span class="payment-text">
@@ -79,7 +79,7 @@ const html = `
                             <input
                                 type="radio"
                                 name="payment-option"
-                                id="momo-option"
+                                id="momo"
                             />
                             <span class="payment-text">
                                 <img
@@ -98,7 +98,7 @@ const html = `
                             <input
                                 type="radio"
                                 name="payment-option"
-                                id="zaloPay-option"
+                                id="zalopay"
                             />
                             <span class="payment-text">
                                 <img
@@ -117,7 +117,7 @@ const html = `
                             <input
                                 type="radio"
                                 name="payment-option"
-                                id="creditCard-option"
+                                id="credit"
                             />
                             <span class="payment-text">
                                 <img

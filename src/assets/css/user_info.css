@@ -678,6 +678,11 @@ label:has(#input-fullname) {
     font-size: 18px;
     font-weight: 600
 }
+
+.ord-detail__method{
+    text-align: end;
+    font-size: 15px;
+}
 @media screen and (max-width: 840px) {
     .package-category-header {
         font-size: 14px;
@@ -836,6 +841,9 @@ label:has(#input-fullname) {
         font-size: 12px;
     }
     .package-details__info{
+        font-size: 14px;
+    }
+    .ord-detail__method{
         font-size: 14px;
     }
 }

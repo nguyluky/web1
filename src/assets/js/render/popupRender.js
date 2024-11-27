@@ -46,7 +46,7 @@ export function HandleClickOutSideBuilder(popup, onClose) {
  */
 export function showPopup(title, context, onOk, onCancel, onClose) {
     const parder = getPopupWrapper();
-
+    if (parder.querySelector('.popup')) return;
     const onCloseDeclaration = () => {
         parder.innerHTML = '';
         if (onClose) onClose();

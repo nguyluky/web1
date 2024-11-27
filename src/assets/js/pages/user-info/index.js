@@ -29,7 +29,7 @@ const status = {
     }
 }
 
-const metod = {
+const method = {
     cod: 'Thanh toán tiền mặt',
     momo: 'Ví Momo',
     zalopay: 'Ví ZaloPay',
@@ -508,7 +508,7 @@ function initializationAside(personal_info_data) {
 }
 
 async function initializationArticle__Package_details() {
-    window.scrollTo(0, 0);
+    globalThis.scrollTo({ top: 0, behavior: "smooth" });
     const { page, query } = urlConverter(location.hash);
     const order_id = query.get('id');
     if (!order_id) return;
@@ -521,7 +521,7 @@ async function initializationArticle__Package_details() {
         if (key === order.state) i = index;
     });
 
-    console.log(i);
+    console.log(order.payment_method);
 
     article.className = "order-details";
     article.innerHTML = `
@@ -601,7 +601,7 @@ async function initializationArticle__Package_details() {
                 </div>
                 <div> 
                     <div>Phương thức thanh toán</div>
-                    <div></div>
+                    <div class="ord-detail__method">${method[order.payment_method]}</div>
                 </div>
             </div>
         </div>

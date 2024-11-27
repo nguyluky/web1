@@ -18,7 +18,7 @@
             "date": "2024-07-25T10:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-25T12:00:00Z",
-            "is_pay": true,
+            "payment_method": "momo",
             "total": 78500,
             "address": {
                 "name": "Jeffrey Powers",
@@ -41,7 +41,7 @@
             "date": "2024-04-25T11:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-25T13:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 75000,
             "address": {
                 "name": "Ethan Kelly",
@@ -64,7 +64,7 @@
             "date": "2024-11-25T12:00:00Z",
             "state": "giaohangthanhcong",
             "last_update": "2024-10-25T14:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 8500,
             "address": {
                 "name": "Andrew Klein",
@@ -87,7 +87,7 @@
             "date": "2024-08-25T13:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-25T15:00:00Z",
-            "is_pay": false,
+            "payment_method": "credit",
             "total": 17000,
             "address": {
                 "name": "Floyd Rodriguez",
@@ -110,7 +110,7 @@
             "date": "2024-06-25T14:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-25T16:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 25500,
             "address": {
                 "name": "Mark Meyer",
@@ -133,7 +133,7 @@
             "date": "2024-02-25T15:00:00Z",
             "state": "giaohangthanhcong",
             "last_update": "2024-10-25T17:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 8500,
             "address": {
                 "name": "Tom Harris",
@@ -156,7 +156,7 @@
             "date": "2024-03-25T16:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-25T18:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 17000,
             "address": {
                 "name": "Alex Watson",
@@ -179,7 +179,7 @@
             "date": "2024-12-25T17:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-25T19:00:00Z",
-            "is_pay": false,
+            "payment_method": "momo",
             "total": 8500,
             "address": {
                 "name": "Noah Wood",
@@ -202,7 +202,7 @@
             "date": "2024-02-25T18:00:00Z",
             "state": "giaohangthanhcong",
             "last_update": "2024-10-25T20:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 63750,
             "address": {
                 "name": "Catherine Freeman",
@@ -225,7 +225,7 @@
             "date": "2024-11-25T19:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-25T21:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 42500,
             "address": {
                 "name": "Elizabeth Myers",
@@ -248,7 +248,7 @@
             "date": "2024-06-25T20:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-25T22:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 24000,
             "address": {
                 "name": "Nora Hale",
@@ -271,7 +271,7 @@
             "date": "2024-04-25T21:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-25T23:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 63000,
             "address": {
                 "name": "Isaiah Steele",
@@ -294,7 +294,7 @@
             "date": "2024-09-25T22:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-26T00:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 15000,
             "address": {
                 "name": "Owen Ramsey",
@@ -317,7 +317,7 @@
             "date": "2024-09-25T23:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-26T01:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 21000,
             "address": {
                 "name": "Daisy Warner",
@@ -340,7 +340,7 @@
             "date": "2024-12-26T00:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-26T02:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 25500,
             "address": {
                 "name": "Michael Cox",
@@ -363,7 +363,7 @@
             "date": "2024-01-26T01:00:00Z",
             "state": "giaohangthanhcong",
             "last_update": "2024-10-26T03:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 27000,
             "address": {
                 "name": "Kevin Johnston",
@@ -386,7 +386,7 @@
             "date": "2024-04-26T02:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-26T04:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 44800,
             "address": {
                 "name": "Anthony Newman",
@@ -409,7 +409,7 @@
             "date": "2024-11-26T03:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-26T05:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 35000,
             "address": {
                 "name": "Emma Steele",
@@ -432,7 +432,7 @@
             "date": "2024-08-26T04:00:00Z",
             "state": "giaohangthanhcong",
             "last_update": "2024-10-26T06:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 76500,
             "address": {
                 "name": "Allie Stanley",
@@ -455,7 +455,7 @@
             "date": "2024-08-26T05:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-26T07:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 59400,
             "address": {
                 "name": "Mathilda Cooper",
@@ -478,7 +478,7 @@
             "date": "2024-01-26T06:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-26T08:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 24000,
             "address": {
                 "name": "Clayton McCarthy",
@@ -501,7 +501,7 @@
             "date": "2024-08-26T07:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-26T09:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 42500,
             "address": {
                 "name": "Hunter Montgomery",
@@ -524,7 +524,7 @@
             "date": "2024-06-26T08:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-26T10:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 24300,
             "address": {
                 "name": "Wayne Schwartz",
@@ -547,7 +547,7 @@
             "date": "2024-10-26T09:00:00Z",
             "state": "daxacnhan",
             "last_update": "2024-10-26T11:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 48000,
             "address": {
                 "name": "Randall Goodman",
@@ -570,7 +570,7 @@
             "date": "2024-07-26T10:00:00Z",
             "state": "doixacnhan",
             "last_update": "2024-10-26T12:00:00Z",
-            "is_pay": true,
+            "payment_method": "zalopay",
             "total": 72900,
             "address": {
                 "name": "Edwin Holmes",
@@ -593,7 +593,7 @@
             "date": "2024-08-26T11:00:00Z",
             "state": "giaohangthanhcong",
             "last_update": "2024-10-26T13:00:00Z",
-            "is_pay": false,
+            "payment_method": "cod",
             "total": 27000,
             "address": {
                 "name": "Hattie Holt",

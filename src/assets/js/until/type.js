@@ -105,7 +105,7 @@ import { validateEmail, validateNumberPhone } from './validator.js';
  *     date: Date;
  *     state: 'doixacnhan' | 'daxacnhan' | 'danggiaohang' | 'giaohangthanhcong' | 'huy';
  *     last_update: Date;
- *     is_pay: boolean;
+ *     payment_method: 'cod' | 'credit' | 'momo' | 'zalopay';
  *     total: number;
  *     address: UserAddress;
  * }} Order

@@ -146,3 +146,4 @@ export function createImgPreviewPopup(
  *
  */
 export function createCategoryPopup() { }
+export function createOrderPopup() { }
