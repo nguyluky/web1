@@ -29,6 +29,20 @@ const status = {
     }
 }
 
+const metod = {
+    cod: 'Thanh toán tiền mặt',
+    momo: 'Ví Momo',
+    zalopay: 'Ví ZaloPay',
+    credit: 'Thẻ tín dụng/Ghi nợ'
+}
+
+const stepper_length = {
+    0: 0,
+    1: 35,
+    2: 65,
+    3: 100
+}
+
 
 /**
  * 
@@ -62,7 +76,7 @@ function createOrderContainer(order) {
             <div class="package-details__total">
                 <div class="package-details__total--header">Tổng tiền:</div>
                 <span class="package-details__total--number">
-                    ${order.total} ₫
+                    ${formatNumber(order.total + 10000)} ₫
                 </span>
             </div>
         </div>
@@ -103,15 +117,6 @@ function createOrderContainer(order) {
             }
         }
     });
-
-    // show_more?.addEventListener('click', e => {
-    //     const hidden_details = package_details.querySelectorAll('.hide');
-    //     hidden_details.forEach(hidden => {
-    //         hidden.classList.add('hide');
-    //         show_more.textContent = 'Xem thêm';
-    //     });
-    // });
-
     return package_details;
 }
 
@@ -143,7 +148,7 @@ async function createOrderItemElement(item) {
         </div>
         <div class="package-details__price">
             <span class="package-details__total--number">
-                ${item.total} <sup>₫</sup>
+                ${formatNumber(item.total)} <sup>₫</sup>
             </span>
         </div>`;
     return item_detail;
@@ -515,19 +520,22 @@ async function initializationArticle__Package_details() {
     Object.keys(status).forEach((key, index) => {
         if (key === order.state) i = index;
     });
+
+    console.log(i);
+
     article.className = "order-details";
     article.innerHTML = `
         <div class="order-details__header">
-            <div onclick="window.history.back();">
+            <div class="details__header--turnback" onclick="window.history.back();">
                 <i class="fa-solid fa-chevron-left"></i>
                 Trở lại
             </div>
             <div>Ngày đặt: ${dateToString(order.date, 'vi-VN')}</div>
             <div>MÃ ĐƠN HÀNG: ${order.id.toUpperCase()}</div>
-            <div>${status[order.state].text.toUpperCase()}</div>
+            <div style = "color: ${status[order.state].color}">${status[order.state].text.toUpperCase()}</div>
         </div>
         <div class="order-details__stepper">
-            <div class="stepper">
+            <div class="stepper ${order.state != 'huy' ? 'grid' : 'flex'}">
                 <div class="stepper__step">
                     <div class="stepper__step--icon">
                         <i class="fa-sharp fa-solid fa-circle"></i>
@@ -551,13 +559,7 @@ async function initializationArticle__Package_details() {
                     <div class="stepper__step--icon">
                         <i class="fa-sharp fa-solid fa-circle"></i>
                     </div>
-                    <div class="stepper__step--text">Đã nhận được hàng</div>
-                </div>
-                <div class="stepper__step">
-                    <div class="stepper__step--icon">
-                        <i class="fa-shard fa-solid fa-circle"></i>
-                    </div>
-                    <div class="stepper__step--text">Đơn hàng đã hoàn thành</div>
+                    <div class="stepper__step--text">Đã giao hàng</div>
                 </div>` : `
                 <div class="stepper__step">
                     <div class="stepper__step--icon">
@@ -568,7 +570,7 @@ async function initializationArticle__Package_details() {
                 `}
                 <div class="stepper__line">
                     <div class="stepper__line--background"></div>
-                    <div class="stepper__line--foreground" style="width: ${order.state != 'huy' ? (25 * (i == 3 ? 4 : i)) : 0}%"></div>
+                    <div class="stepper__line--foreground" style="width: ${order.state != 'huy' ? stepper_length[i] : 0}%"></div>
                 </div>
             </div>
         </div>
@@ -587,23 +589,19 @@ async function initializationArticle__Package_details() {
             <div class="order-details__price">
                 <div>
                     <div>Tổng tiền hàng</div>
-                    <div><sup>₫</sup>${formatNumber(order.total)}</div>
+                    <div class ="ord-detail__price">${formatNumber(order.total)}<sup>₫</sup></div>
                 </div>
                 <div>
                     <div>Phí vận chuyển</div>
-                    <div><sup>₫</sup>${formatNumber(10000)}</div>
-                </div>
-                <div>
-                    <div>Giảm giá</div>
-                    <div>-<sup>₫</sup>0</div>
+                    <div class ="ord-detail__price">${formatNumber(10000)}<sup>₫</sup></div>
                 </div>
                 <div>
                     <div>Thành tiền</div>
-                    <div><sup>₫</sup>${formatNumber(order.total + 10000)}</div>
+                    <div class ="ord-detail__important-price">${formatNumber(order.total + 10000)}<sup>₫</sup></div>
                 </div>
                 <div> 
                     <div>Phương thức thanh toán</div>
-                    <div>Chưa có dữ liệu</div>
+                    <div></div>
                 </div>
             </div>
         </div>
