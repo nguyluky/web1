@@ -5,7 +5,7 @@ import uuidv from "../../until/uuid.js";
 import { toast } from "../../render/popupRender.js";
 import { formatNumber } from "../../until/format.js";
 import { validator, isCreditCard, getParent } from "../../until/validator.js";
-import { getSearchParam, navigateToPage } from "../../until/router.js";
+import urlConverter, { getSearchParam, navigateToPage } from "../../until/router.js";
 
 
 /**
@@ -370,6 +370,8 @@ async function pushOrder(option) {
         if (order.cardId)
             await fakeDatabase.deleteCartById(order.cardId);
     }
+    const { page, query } = urlConverter(location.hash);
+    const address = userInfo.address[query.get('a') || 0];
     const data = {
         id: uuidv(10),
         user_id: user_id,
@@ -380,11 +382,10 @@ async function pushOrder(option) {
         is_pay,
         total,
         address: {
-            name: userInfo.name,
-            phone_num: userInfo.phone_num,
-            email: userInfo.email,
-            street: userInfo.address[0].street,
-            address: userInfo.address[0].address
+            name: address.name,
+            phone_num: address.phone_num,
+            street: address.street,
+            address: address.address
         }
     };
 

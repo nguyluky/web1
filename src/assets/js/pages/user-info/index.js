@@ -1,7 +1,7 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { showShippingFromeAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
-import { dateToString, removeDiacritics, text2htmlElement } from "../../until/format.js";
+import { dateToString, formatNumber, removeDiacritics, text2htmlElement } from "../../until/format.js";
 import { addStyle, errorPage, navigateToPage, removeStyle, urlIsPage } from "../../until/router.js";
 import { validateEmail, validateNumberPhone } from "../../until/validator.js";
 import { updateCartQuantity } from "../cart/cart.js";
@@ -74,6 +74,9 @@ function createOrderContainer(order) {
         `;
     package_details.querySelector('.package-details__bottom')?.appendChild(all_items_detail);
 
+    all_items_detail.addEventListener('click', e => {
+        navigateToPage('user/purchase/order', { id: order.id });
+    });
     //khi bấm hủy
     package_details.querySelector('.huy')?.addEventListener('click', () => {
         order.state = 'huy';
@@ -499,25 +502,110 @@ function initializationAside(personal_info_data) {
     `;
 }
 
-function initializationArticle__Package_details() {
+async function initializationArticle__Package_details() {
     const { page, query } = urlConverter(location.hash);
+    const order_id = query.get('id');
+    if (!order_id) return;
+    const order = await fakeDatabase.getOrderById(order_id);
+    if (!order) return;
     const article = document.getElementById('article');
     if (!article) return;
 
     article.className = "order-details";
     article.innerHTML = `
         <div class="order-details__header">
-            <div>Trở lại</div>
-            <div>Ngày đặt: </div>
-            <div>Mã đơn hàng</div>
-            <div>Trạng thái</div>
+            <div onclick="window.history.back();">
+                <i class="fa-solid fa-chevron-left"></i>
+                Trở lại
+            </div>
+            <div>Ngày đặt: ${dateToString(order.date, 'vi-VN')}</div>
+            <div>MÃ ĐƠN HÀNG: ${order.id.toUpperCase()}</div>
+            <div>${status[order.state].text.toUpperCase()}</div>
+        </div>
+
+        <div class="order-details__stepper">
+            <div class="stepper">
+                <div class="stepper__step">
+                    <div class="stepper__step--icon">
+                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="stepper__step--text">Đang xử lý</div>
+                </div>
+                <div class="stepper__step">
+                    <div class="stepper__step--icon">
+                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="stepper__step--text">Đã xác nhận</div>
+                </div>
+                <div class="stepper__step">
+                    <div class="stepper__step--icon">
+                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="stepper__step--text">Đang vận chuyển</div>
+                </div>
+                <div class="stepper__step">
+                    <div class="stepper__step--icon">
+                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="stepper__step--text">Đã nhận được hàng</div>
+                </div>
+                <div class="stepper__step">
+                    <div class="stepper__step--icon">
+                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="stepper__step--text">Đơn hàng đã hoàn thành</div>
+                </div>
+                <div class="stepper__line">
+                    <div class="stepper__line--background"></div>
+                    <div class="stepper__line--foreground"></div>
+                </div>
+            </div>
         </div>
         <div class="order-details__content">
-            
+            <div class="order-details__address">
+                <div class="order-details__address--header">Địa chỉ nhận hàng</div>
+                <div class="order-details__address--content">
+                    <div class="address--content__name">${order.address.name}</div>
+                    <div>
+                        <span>${order.address.phone_num}</span>
+                        <br>
+                        <span>${order.address.street}, ${order.address.address.replaceAll(/ - /g, ', ')}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="order-details__price">
+                <div>
+                    <div>Tổng tiền hàng</div>
+                    <div><sup>₫</sup>${formatNumber(order.total)}</div>
+                </div>
+                <div>
+                    <div>Phí vận chuyển</div>
+                    <div><sup>₫</sup>${formatNumber(10000)}</div>
+                </div>
+                <div>
+                    <div>Giảm giá</div>
+                    <div>-<sup>₫</sup>0</div>
+                </div>
+                <div>
+                    <div>Thành tiền</div>
+                    <div><sup>₫</sup>${formatNumber(order.total + 10000)}</div>
+                </div>
+                <div> 
+                    <div>Phương thức thanh toán</div>
+                    <div>Chưa có dữ liệu</div>
+                </div>
+            </div>
         </div>
         <div class="order-details__footer">
-            
+            <div class="order-details__footer--title">
+                Sản phẩm
+            </div>
         </div>`
+    const footer = document.querySelector('.order-details__footer');
+    if (!footer) return;
+    order.items.forEach(async item => {
+        footer.appendChild(await createOrderItemElement(item));
+    });
 }
 /**
  * 
@@ -858,14 +946,14 @@ export async function updateUserInfoPage(params, query) {
             }
         case 'purchase':
             {
+                more_option.style.display = 'none';
+                allTabs[3].classList.add('selected');
                 const info = params.info;
                 switch (info) {
                     case undefined:
-                        more_option.style.display = 'none';
-                        allTabs[3].classList.add('selected');
                         initializationArticle__OrderInfo();
                         break;
-                    case 'details':
+                    case 'order':
                         initializationArticle__Package_details();
                         break;
                     default:

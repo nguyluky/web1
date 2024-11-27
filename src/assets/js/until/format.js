@@ -1,13 +1,14 @@
 /**
  * @param {Date} date
- * @returns {String} 'yyyy/mm/dd'
+ * @param {String} language 'en-CA' -> 'yyyy-mm-dd' | 'vi-VN' -> 'dd-mm-yyyy'
+ * @returns {String} 'yyyy-mm-dd'
  */
-export function dateToString(date) {
-    return date.toLocaleDateString('en-CA', {
+export function dateToString(date, language = 'en-CA') {
+    return date.toLocaleDateString(language, {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
-    });
+    }).replace(/\//g, '-');
 }
 
 /**
