@@ -1,3 +1,6 @@
+import fakeDatabase from "../db/fakeDBv1.js";
+import { dateToString, formatNumber } from "../until/format.js";
+
 /**
  * @param {string} title
  * @param {string | HTMLElement} context
@@ -32,7 +35,7 @@ export function createPopupBase(title, context, onOk, onCancel, onClose) {
 
     // Create the context
     const popupContext = document.createElement('div');
-    popupContext.className = 'pupop-context';
+    popupContext.className = 'popup-context';
     if (typeof context === 'string') popupContext.textContent = context;
     else popupContext.appendChild(context);
     popup.appendChild(popupContext);
@@ -146,4 +149,94 @@ export function createImgPreviewPopup(
  *
  */
 export function createCategoryPopup() { }
-export function createOrderPopup() { }
+/**
+ * 
+ * @param {import("../until/type").Order | undefined} order
+ */
+export function createOrderPopup(order) {
+    console.log('order popup', order?.id);
+    const container = document.createElement('div');
+    container.className = 'order-info-container';
+
+    if (!order) {
+        container.textContent = 'Không tìm thấy đơn hàng';
+        return container;
+    }
+    const header = document.createElement('div');
+    header.className = 'order-info-header';
+    container.appendChild(header);
+
+    const top = document.createElement('div');
+    top.className = 'order-info-header__top';
+    header.appendChild(top);
+    top.innerHTML = `
+        <div>
+            <span>Mã KH: </span>
+            <span>${order.user_id}</span>
+        </div>
+        <div>
+            <span>Ngày đặt: </span>
+            <span>${dateToString(order.date, 'vi-VN', true)}</span>
+        </div>`
+
+    const bottom = document.createElement('div');
+    bottom.className = 'order-info-header__bottom';
+    header.appendChild(bottom);
+    const address = order?.address;
+    bottom.innerHTML = `
+        <span>Giao đến: </span>
+        <div>
+            <span>${address.name}</span>
+            <div>
+                <span>${address.street}</span>
+                <br/>
+                <span>${address.address.replaceAll(/ - /g, ", ")}</span>
+            </div>
+        </div>`
+
+    const body = document.createElement('div');
+    body.className = 'order-info-body';
+    container.appendChild(body);
+
+    const bill_header = document.createElement('div');
+    bill_header.className = 'bill__header';
+    body.appendChild(bill_header);
+    bill_header.innerHTML = `
+        <div><b>SL</b></div>
+        <div><b>Giá bán</b></div>
+        <div><b>T.Tiền</b></div>`
+
+    const bill_body = document.createElement('div');
+    bill_body.className = 'bill__body';
+    body.appendChild(bill_body);
+
+    order.items.forEach(async (product) => {
+        const book = await fakeDatabase.getSachById(product.sach);
+        if (!book) return;
+        const item = document.createElement('div');
+        item.className = 'bill__item';
+        bill_body.appendChild(item);
+        item.innerHTML = `
+            <div>${book.title}</div>
+            <div>
+                <div>${product.quantity}</div>
+                <div>${formatNumber(book.base_price * (1 - book.discount))}</div>
+                <div>${formatNumber(product.total)}</div>
+            </div>`
+    });
+
+    const bill_footer = document.createElement('div');
+    bill_footer.className = 'bill__footer';
+    body.appendChild(bill_footer);
+    bill_footer.innerHTML = `
+        <div>
+            <span><b>Phí vận chuyển:</b></span>
+            <span>${formatNumber(10000)}<sup>đ</sup></span>
+        </div>
+        <div>
+            <span><b>Tổng cộng:</b> </span>
+            <span>${formatNumber(order.total + 10000)}<sup>đ</sup></span>
+        </div>`
+
+    return container;
+}

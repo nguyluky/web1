@@ -311,7 +311,7 @@ function setupMainButtonEvents() {
         popup.classList.add('popup');
         wrapper?.appendChild(popup);
         popup.innerHTML = `
-            <div class="popup-content">
+            <div class="popup-context">
                 <div class="popup-header">
                     <h2>Thông tin tài khoản</h2>
                     <button class="button_1">

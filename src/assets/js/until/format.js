@@ -1,13 +1,16 @@
 /**
  * @param {Date} date
  * @param {String} language 'en-CA' -> 'yyyy-mm-dd' | 'vi-VN' -> 'dd-mm-yyyy'
+ * @param {Boolean} addTime true -> 'yyyy-mm-dd hh:mm'
  * @returns {String} 'yyyy-mm-dd'
  */
-export function dateToString(date, language = 'en-CA') {
+export function dateToString(date, language = 'en-CA', addTime = false) {
     return date.toLocaleDateString(language, {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
+        hour: addTime ? '2-digit' : undefined,
+        minute: addTime ? '2-digit' : undefined,
     }).replace(/\//g, '-');
 }
 

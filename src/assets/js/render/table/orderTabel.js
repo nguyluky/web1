@@ -1,6 +1,8 @@
 /** @typedef {import('../../until/type').Order} Order */
 
 import fakeDatabase from '../../db/fakeDBv1.js';
+import { createOrderPopup } from '../popupFactory.js';
+import { showOrderPopup } from '../popupRender.js';
 import { renderTable, searchList, tableClearErrorKey } from './baseRender.js';
 import {
     createOptionTabelCell,
@@ -92,7 +94,7 @@ function renderRow(row, value, onchange) {
         }
     });
 
-    row.addEventListener('click', () => { });
+    row.addEventListener('click', () => { showOrderPopup(value) });
 }
 
 /**

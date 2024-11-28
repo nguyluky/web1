@@ -1,10 +1,11 @@
-import { createImgPreviewPopup, createPopupBase } from './popupFactory.js';
+import fakeDatabase from '../db/fakeDBv1.js';
+import { createImgPreviewPopup, createOrderPopup, createPopupBase } from './popupFactory.js';
 
-function getPopupWrapper() {
-    let parder = document.getElementById('popup-wrapper');
+function getPopupWrapper(id = 'popup-wrapper') {
+    let parder = document.getElementById(id);
     if (!parder) {
         parder = document.createElement('div');
-        parder.id = 'popup-wrapper';
+        parder.id = id;
         document.body.appendChild(parder);
     }
     return parder;
@@ -180,4 +181,31 @@ export function toast({
                   `;
         main.appendChild(toast);
     }
+}
+/**
+ * 
+ * @param {string | import('../until/type.js').Order} order 
+ */
+export async function showOrderPopup(order) {
+    let order_;
+    if (typeof order === 'string') {
+        order_ = await fakeDatabase.getOrderById(order);
+    } else {
+        order_ = order;
+    }
+
+    const parder = getPopupWrapper('info-wrapper')
+    if (parder.querySelector('.popup')) return;
+    const popup = createPopupBase(
+        `Đơn hàng #${order_?.id.toUpperCase()}`,
+        createOrderPopup(order_),
+        undefined,
+        undefined,
+        () => { parder.innerHTML = '' });
+    parder?.appendChild(popup);
+
+    parder?.addEventListener(
+        'click',
+        HandleClickOutSideBuilder(popup, () => { parder.innerHTML = '' })
+    );
 }
