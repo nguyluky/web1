@@ -724,7 +724,11 @@ body {
     align-items: center;
     margin-top: 10px;
 }
-
+.order-info-header__top,
+.order-info-header__bottom > span {
+    font-size: 18px;
+    font-weight: 500;
+}
 .bill__header,
 .bill__item > div:last-child {
     display: grid;
@@ -761,12 +765,18 @@ body {
 
 .bill__footer > div {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    justify-items: end;
+    grid-template-columns: auto auto;
+}
+.bill__footer > div > span:last-child {
+    justify-self: end;
 }
 #info-wrapper .popup {
     min-width: 450px;
 }
 #info-wrapper .popup-context {
     padding: 0;
+}
+#info-wrapper h1 {
+    font-size: 24px;
+    margin: 0;
 }

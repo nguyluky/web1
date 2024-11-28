@@ -1,5 +1,5 @@
 import fakeDatabase from '../db/fakeDBv1.js';
-import { createImgPreviewPopup, createOrderPopup, createPopupBase } from './popupFactory.js';
+import { createImgPreviewPopup, createOrderIdList, createOrderPopup, createPopupBase } from './popupFactory.js';
 
 function getPopupWrapper(id = 'popup-wrapper') {
     let parder = document.getElementById(id);
@@ -25,9 +25,6 @@ export function HandleClickOutSideBuilder(popup, onClose) {
      */
     function handleClickOutSide(event) {
         const target = /** @type {HTMLElement} */ (event.target);
-
-        console.log('click');
-
         if (target.isSameNode(popup) || !target.contains(popup)) return;
         target?.removeEventListener('click', handleClickOutSide);
         this.innerHTML = '';
@@ -193,19 +190,41 @@ export async function showOrderPopup(order) {
     } else {
         order_ = order;
     }
-
     const parder = getPopupWrapper('info-wrapper')
-    if (parder.querySelector('.popup')) return;
     const popup = createPopupBase(
         `Đơn hàng #${order_?.id.toUpperCase()}`,
         createOrderPopup(order_),
         undefined,
         undefined,
-        () => { parder.innerHTML = '' });
-    parder?.appendChild(popup);
+        () => { parder.removeChild(popup) });
+    parder.appendChild(popup);
 
-    parder?.addEventListener(
+    parder.addEventListener(
         'click',
-        HandleClickOutSideBuilder(popup, () => { parder.innerHTML = '' })
+        (event) => {
+            const target = /** @type {HTMLElement} */ (event.target);
+            if (target.isSameNode(popup) || !target.contains(popup)) return;
+            parder.removeChild(popup);
+        }
+    );
+}
+
+export function showOrderIdList(orders, name, forUser = true) {
+    const parder = getPopupWrapper('info-wrapper')
+    const popup = createPopupBase(
+        'Danh sách mã đơn',
+        createOrderIdList(orders, name, forUser),
+        undefined,
+        undefined,
+        () => { parder.innerHTML = '' });
+    parder.appendChild(popup);
+
+    parder.addEventListener(
+        'click',
+        (event) => {
+            const target = /** @type {HTMLElement} */ (event.target);
+            if (target.isSameNode(popup) || !target.contains(popup) || parder.childNodes.length !== 1) return;
+            parder.removeChild(popup);
+        }
     );
 }

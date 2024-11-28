@@ -1,5 +1,6 @@
 import fakeDatabase from '../db/fakeDBv1.js';
 import { dateToString, formatNumber } from '../until/format.js';
+import { showOrderIdList } from './popupRender.js';
 
 let orders = [];
 let books = [];
@@ -139,28 +140,6 @@ function formatLineChartData() {
     hoverPoint();
 }
 
-/**@param {import('../until/type.js').Order} order */
-function createOderInfoForUser(order) {
-    const details = document.createElement('details');
-    const summary = document.createElement('summary');
-    details.appendChild(summary);
-    details.appendChild(document.createElement('hr'));
-    summary.innerHTML = `<div><strong>Mã đơn: </strong>${order.id}</div><div><strong>Tổng đơn: </strong>${formatNumber(order.total)}</div>`;
-    let head = document.createElement('div');
-    head.innerHTML = `<div><strong>Mã sách</strong></div><div><strong>Số lượng</strong></div><div><strong>Thành tiền</strong></div>`;
-    details.appendChild(head);
-    order.items.forEach((item) => {
-        let product = document.createElement('div');
-        product.innerHTML = `<div>${item.sach}</div><div>${item.quantity}</div><div>${item.total}</div>`;
-        details.appendChild(product);
-    });
-    details.appendChild(document.createElement('hr'));
-    const date = document.createElement('div');
-    date.innerHTML = `<strong>Ngày mua: </strong>${dateToString(new Date(order.date))}`;
-    details.appendChild(date);
-    return details;
-}
-
 async function renderLeaderboard(from, to) {
     let array = [];
     const data = orders.filter((order) => {
@@ -179,47 +158,33 @@ async function renderLeaderboard(from, to) {
         } else array.push({ id: e.user_id, total: e.total, order: [e.id] });
     });
     array = array.sort((a, b) => b.total - a.total).slice(0, 5);
-    while (array.length < 5) array.push({ id: '' });
     console.log(array);
     array.forEach(async (e, i) => {
         console.log('leader');
         const user = await fakeDatabase.getUserInfoByUserId(e.id);
-        const name = document.querySelector(
+        const id = document.querySelector(
             `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(2)`,
         );
-        const total = document.querySelector(
+        const name = document.querySelector(
             `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(3)`,
         );
-        if (!name || !total) return;
+        const total = document.querySelector(
+            `.leaderboard-body > div:nth-child(${i + 1}) > div:nth-child(4)`,
+        );
+        console.log(id, name, total);
+        if (!id || !name || !total) return;
         if (user) {
             e['name'] = user.name;
+            id.textContent = user.id;
             name.textContent = user.name;
             total.textContent = formatNumber(e.total);
-        } else {
-            name.textContent = '';
-            total.textContent = '';
         }
     });
-    const showOrder = document.querySelector('.info-order__user');
-    const name = document.querySelector('#user-name strong');
     document.querySelectorAll('.leaderboard-body > div').forEach((e, i) => {
+        if (!array[i]) return;
         e.addEventListener('click', (event) => {
             event.stopImmediatePropagation();
-            console.log(Math.random());
-            console.log(array[i].order);
-            if (name)
-                name.innerHTML = array[i].name;
-            while (
-                showOrder &&
-                showOrder.children.length > 1 &&
-                showOrder.lastChild
-            )
-                showOrder.removeChild(showOrder.lastChild);
-            array[i].order.forEach(async (id) => {
-                let orderData = await fakeDatabase.getOrderById(id);
-                if (!orderData) return;
-                showOrder?.appendChild(createOderInfoForUser(orderData));
-            });
+            showOrderIdList(array[i].order, array[i].name, true);
         });
     });
 }
@@ -263,41 +228,30 @@ async function productRank(from, to) {
         ) {
             order.items.forEach((e) => {
                 if (data[e.sach]) {
-                    data[e.sach].push({
-                        orderId: order.id,
+                    data[e.sach].orderId.push(order.id);
+                    data[e.sach].quantity += e.quantity;
+                    data[e.sach].total += e.total;
+                }
+                else
+                    data[e.sach] =
+                    {
+                        orderId: [order.id],
                         quantity: e.quantity,
-                        user: order.user_id,
                         total: e.total,
-                        date: order.date,
-                    });
-                } else
-                    data[e.sach] = [
-                        {
-                            orderId: order.id,
-                            quantity: e.quantity,
-                            user: order.user_id,
-                            total: e.total,
-                            date: order.date,
-                        },
-                    ];
+                    }
             });
         }
     });
     books.forEach((e) => {
-        let quantity = 0;
-        let total = 0;
         if (data[e.id]) {
-            data[e.id].forEach((x) => {
-                quantity += x.quantity;
-                total += x.total;
+            array.push({
+                id: e.id,
+                name: e.title,
+                quantity: data[e.id].quantity,
+                total: data[e.id].total,
             });
         }
-        array.push({
-            id: e.id,
-            name: e.title,
-            quantity: quantity,
-            total: total,
-        });
+
     });
     array.sort((a, b) => {
         if (a.quantity != b.quantity) return b.quantity - a.quantity;
@@ -306,56 +260,19 @@ async function productRank(from, to) {
     const chart = document.querySelector('.product-rank__body');
     while (chart?.firstChild) chart.removeChild(chart.firstChild);
     let sum = 0;
-    (array.filter(e => e.quantity != 0)).forEach((value, index) => {
+    array.forEach((value, index) => {
         sum += value.total;
         chart?.appendChild(createARow(value, index));
     });
     const title = document.querySelector('.product-rank__title span');
     if (title) title.innerHTML = formatNumber(sum) + ' VNĐ';
-    const showOrder = document.querySelector('.info-order__product');
-    const name = document.querySelector('#product-name strong');
-
     document.querySelectorAll('.rank-body-row').forEach((row, i) => {
         row.addEventListener('click', () => {
-            const top = /**@type {HTMLElement} */ (showOrder).offsetTop - 70;
-            document.querySelector('.dashboard-wrapper')?.scrollTo({
-                top: top,
-                behavior: 'smooth',
-            });
-            if (name)
-                name.innerHTML = "" + row.querySelector('.rank-name')?.innerHTML;
-            while (
-                showOrder &&
-                showOrder.children.length > 1 &&
-                showOrder.lastChild
-            )
-                showOrder.removeChild(showOrder.lastChild);
-            if (data[array[i].id])
-                data[array[i].id].forEach(async (e) => {
-                    showOrder?.appendChild(await createOderInfoForProduct(e));
-                });
+            showOrderIdList(data[array[i].id].orderId, array[i].name, false);
         });
     });
 }
-async function createOderInfoForProduct(order) {
-    const details = document.createElement('details');
-    const summary = document.createElement('summary');
-    details.appendChild(summary);
-    details.appendChild(document.createElement('hr'));
-    summary.innerHTML = `<div><strong>Mã đơn: </strong>${order.orderId}</div><div><strong>Tổng tiền: </strong>${formatNumber(order.total)}</div>`;
-    let user = await fakeDatabase.getUserInfoByUserId(order.user);
-    let userInfo = document.createElement('div');
-    userInfo.innerHTML = `<strong>Khách mua hàng:</strong><br>${user?.name}`;
-    details.appendChild(userInfo);
-    let total = document.createElement('div');
-    total.innerHTML = `<strong>Số lượng: </strong>${order.quantity}`;
-    details.appendChild(total);
-    details.appendChild(document.createElement('hr'));
-    const date = document.createElement('div');
-    date.innerHTML = `<strong>Ngày mua: </strong>${dateToString(new Date(order.date))}`;
-    details.appendChild(date);
-    return details;
-}
+
 function renderByDateRange() {
     const chooseDate = document.querySelector('.choose-date');
     const from = /**@type {HTMLInputElement} */ (
