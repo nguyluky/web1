@@ -1,4 +1,5 @@
 import fakeDatabase from "../db/fakeDBv1.js";
+import { method } from "../pages/user-info/index.js";
 import { dateToString, formatNumber } from "../until/format.js";
 import { showOrderPopup } from "./popupRender.js";
 
@@ -187,7 +188,7 @@ export function createOrderPopup(order) {
     bottom.innerHTML = `
         <span>Giao đến: </span>
         <div>
-            <span>${address.name}</span>
+            <span><b>${address.name}</b> ${address.phone_num.slice(1)}</span>
             <div>
                 <span>${address.street}</span>
                 <br/>
@@ -210,7 +211,6 @@ export function createOrderPopup(order) {
     const bill_body = document.createElement('div');
     bill_body.className = 'bill__body';
     body.appendChild(bill_body);
-
     order.items.forEach(async (product) => {
         const book = await fakeDatabase.getSachById(product.sach);
         if (!book) return;
@@ -225,19 +225,32 @@ export function createOrderPopup(order) {
                 <div>${formatNumber(product.total)}</div>
             </div>`
     });
-
+    const bill_total = document.createElement('div');
+    bill_total.className = 'bill__total';
+    body.appendChild(bill_total);
+    bill_total.innerHTML = `
+        <div>
+            <span>Tổng cộng:</span>
+            <span>${formatNumber(order.total)}</span>
+        </div>
+        <div>
+            <span>Phí vận chuyển:</span>
+            <span>${formatNumber(10000)}</span>
+        </div>`
     const bill_footer = document.createElement('div');
     bill_footer.className = 'bill__footer';
     body.appendChild(bill_footer);
+
     bill_footer.innerHTML = `
         <div>
-            <span><b>Phí vận chuyển:</b></span>
-            <span>${formatNumber(10000)}<sup>đ</sup></span>
+            <span><b>Phải thanh toán:</b></span>
+            <span><b>${formatNumber(order.total + 10000)}<sup>đ</sup></b></span>
         </div>
         <div>
-            <span><b>Tổng cộng:</b> </span>
-            <span>${formatNumber(order.total + 10000)}<sup>đ</sup></span>
-        </div>`
+            <span>Phương thức thanh toán:</span>
+            <span>${method[order.payment_method]}</span>
+        </div>
+        `
 
     return container;
 }

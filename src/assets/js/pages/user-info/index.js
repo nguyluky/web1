@@ -29,7 +29,7 @@ const status = {
     }
 }
 
-const method = {
+export const method = {
     cod: 'Thanh toán tiền mặt',
     momo: 'Ví Momo',
     zalopay: 'Ví ZaloPay',

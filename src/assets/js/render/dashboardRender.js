@@ -2,8 +2,12 @@ import fakeDatabase from '../db/fakeDBv1.js';
 import { dateToString, formatNumber } from '../until/format.js';
 import { showOrderIdList } from './popupRender.js';
 
-let orders = [];
-let books = [];
+/**@typedef {import('../until/type.js').Order} Order*/
+/**@typedef {import('../until/type.js').Sach} Sach*/
+
+
+let orders = /**@type {Order[]} */([]);
+let books = /**@type {Sach[]} */([]);
 
 function formatLineChartData() {
     // tạo đường biểu đồ
@@ -257,8 +261,34 @@ async function productRank(from, to) {
         if (a.quantity != b.quantity) return b.quantity - a.quantity;
         return b.total - a.total;
     });
+    const topSell = /**@type {NodeListOf<HTMLElement>} */(document.querySelectorAll('.top-seller'));
+    topSell.forEach(async (e, i) => {
+        // get data
+        e.style.background = `${i == 0 ? '#53b3f9' : '#ff6666'}`;
+        const index = (i == 0 ? 0 : array.length - 1);
+        const book = books.find((book) => book.id == array[index].id);
+        if (!book) return;
+        // render
+        const content = (e.querySelector('.top-seller__content'));
+        const imgWrapper = document.createElement('div');
+        imgWrapper.className = 'top-seller__img';
+        content?.appendChild(imgWrapper);
+
+        const info = document.createElement('div');
+        info.className = 'top-seller__info';
+        info.innerHTML = `
+            <div class="top-seller__name">${book.title}</div>
+            <div class="top-seller__quantity">Đã bán: ${array[index].quantity}</div>
+            <div class="top-seller__total">Tổng thu: ${formatNumber(array[index].total)} VNĐ</div>`;
+
+        content?.appendChild(info);
+        const img = document.createElement('img');
+        img.src = (await fakeDatabase.getImgById(book.thumbnail)).data;
+        imgWrapper.appendChild(img);
+    })
     const chart = document.querySelector('.product-rank__body');
-    while (chart?.firstChild) chart.removeChild(chart.firstChild);
+    if (!chart) return;
+    chart.innerHTML = '';
     let sum = 0;
     array.forEach((value, index) => {
         sum += value.total;

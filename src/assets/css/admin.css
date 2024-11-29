@@ -726,8 +726,10 @@ body {
 }
 .order-info-header__top,
 .order-info-header__bottom > span {
-    font-size: 18px;
     font-weight: 500;
+}
+.order-info-header__bottom > div {
+    font-size: 14px;
 }
 .bill__header,
 .bill__item > div:last-child {
@@ -736,10 +738,14 @@ body {
     justify-items: end;
 }
 .bill__header,
-.bill__footer {
+.bill__footer,
+.bill__total {
     margin-top: 10px;
     border-top: 1px solid #ddd;
-    padding: 10px 0;
+    padding: 10px 0 0;
+}
+.bill__header {
+    margin-bottom: 10px;
 }
 .bill__footer {
     margin-bottom: 20px;
@@ -762,13 +768,23 @@ body {
     text-transform: uppercase;
     font-weight: 300;
 }
-
-.bill__footer > div {
+.bill__footer,
+.bill__total {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.bill__footer > div,
+.bill__total > div {
     display: grid;
     grid-template-columns: auto auto;
 }
-.bill__footer > div > span:last-child {
+.bill__footer > div > span:last-child,
+.bill__total > div > span:last-child {
     justify-self: end;
+}
+.bill__footer > div:first-child {
+    font-size: 18px;
 }
 #info-wrapper .popup {
     min-width: 450px;

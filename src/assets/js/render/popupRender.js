@@ -190,6 +190,8 @@ export async function showOrderPopup(order) {
     } else {
         order_ = order;
     }
+    const btnSave = document.getElementById('save-btn');
+    if (btnSave && btnSave.classList.contains('canedit')) return;
     const parder = getPopupWrapper('info-wrapper')
     const popup = createPopupBase(
         `Đơn hàng #${order_?.id.toUpperCase()}`,
