@@ -6,28 +6,28 @@ import { formatNumber } from '../../until/format.js';
 import { showListShippingAddressPopup, showShippingFromeAddressPopup } from '../../render/addressPopup.js';
 
 /**
- * 
+ * @param {?} doc
  * @param {number} index 
  * @returns 
  */
-export async function showUserAddressInfo(index = 0) {
+export async function showUserAddressInfo(doc = document, index = 0) {
     const user_id = localStorage.getItem("user_id");
 
     if (!user_id) {
         return;
     }
-    document.querySelector('.info-content')?.setAttribute('data-index', index + '');
+    doc.querySelector('.info-content')?.setAttribute('data-index', index + '');
     const userInfo = (await fakeDatabase.getUserInfoByUserId(user_id))?.address;
-    const userName = document.querySelector('.contact-info__name');
-    const userTel = document.querySelector('.contact-info__phone-num');
-    const userAddress = document.querySelector('.address-info');
+    const userName = doc.querySelector('.contact-info__name');
+    const userTel = doc.querySelector('.contact-info__phone-num');
+    const userAddress = doc.querySelector('.address-info');
     if (!userName || !userTel || !userAddress) return;
 
     let style = document.getElementById('no-info');
     if (!style) {
         style = document.createElement('style');
         style.id = 'no-info';
-        document.head.appendChild(style);
+        doc.head.appendChild(style);
     }
     if (userInfo && userInfo?.length > 0) {
 
@@ -621,7 +621,7 @@ export async function buyBooks() {
                 else
                     userInfo?.address.push(address);
                 await fakeDatabase.updateUserAddress(user_id, userInfo?.address);
-                showUserAddressInfo(0);
+                showUserAddressInfo(undefined, 0);
                 return;
             }, () => { });
             return;
@@ -641,9 +641,9 @@ export function initChangeAddressEvent() {
             ev.stopPropagation();
             const index = /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index;
             showListShippingAddressPopup(Number(index), (i) => {
-                showUserAddressInfo(i);
+                showUserAddressInfo(undefined, i);
             }, () => {
-                showUserAddressInfo(Number(index));
+                showUserAddressInfo(undefined, Number(index));
             });
         });
 }
