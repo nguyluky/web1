@@ -267,7 +267,7 @@ function getPaymentMethod(selectedPaymentOption) {
         return;
     let html = ''
     if (selectedPaymentOption.id === 'cod') {
-        html = 'cod';
+        html = 'Tiền mặt';
     }
     else if (selectedPaymentOption.id === 'momo') {
         html = 'Momo';

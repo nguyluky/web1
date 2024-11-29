@@ -270,6 +270,8 @@ async function productRank(from, to) {
         if (!book) return;
         // render
         const content = (e.querySelector('.top-seller__content'));
+        if (!content) return;
+        content.innerHTML = '';
         const imgWrapper = document.createElement('div');
         imgWrapper.className = 'top-seller__img';
         content?.appendChild(imgWrapper);

@@ -188,7 +188,7 @@ export function createOrderPopup(order) {
     bottom.innerHTML = `
         <span>Giao đến: </span>
         <div>
-            <span><b>${address.name}</b> ${address.phone_num.slice(1)}</span>
+            <span><b>${address.name}</b> ${address.phone_num}</span>
             <div>
                 <span>${address.street}</span>
                 <br/>
