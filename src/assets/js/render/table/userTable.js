@@ -28,6 +28,7 @@ const cols = {
     email: 'Email',
     phone_num: 'Phone',
     status: 'Status',
+    rule: 'Role',
 };
 
 /**
@@ -174,7 +175,21 @@ function renderRow(row, value, onchange) {
                         onchange && onchange(value, 'status', va);
                     },
                 );
-
+                row.appendChild(optionCell);
+                break;
+            }
+            case 'rule': {
+                const optionCell = createOptionTabelCell(
+                    'rule',
+                    value.rule,
+                    [
+                        { title: 'User', value: 'user' },
+                        { title: 'Admin', value: 'admin' },
+                    ],
+                    (va) => {
+                        onchange && onchange(value, 'rule', va);
+                    },
+                );
                 row.appendChild(optionCell);
                 break;
             }

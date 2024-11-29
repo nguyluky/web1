@@ -1,5 +1,6 @@
 import fakeDatabase from "../db/fakeDBv1.js";
 import { dateToString, formatNumber } from "../until/format.js";
+import { showOrderPopup } from "./popupRender.js";
 
 /**
  * @param {string} title
@@ -19,7 +20,7 @@ export function createPopupBase(title, context, onOk, onCancel, onClose) {
     popupHeader.className = 'popup-header';
 
     const title_ = document.createElement('h1');
-    title_.textContent = title;
+    title_.innerHTML = title;
 
     const xMark = document.createElement('button');
     xMark.className = 'button_1';
@@ -238,5 +239,34 @@ export function createOrderPopup(order) {
             <span>${formatNumber(order.total + 10000)}<sup>đ</sup></span>
         </div>`
 
+    return container;
+}
+/**
+ * Tạo danh sách các mã đơn của khách hàng hoặc của sách
+ * @param {string[]} orders danh sách mã đơn hàng
+ * @returns {HTMLElement | string} 
+ */
+export function createOrderIdList(orders, name, forUser = true) {
+    if (!orders) {
+        return 'Không tìm thấy đơn hàng';
+    }
+    const container = document.createElement('div');
+    container.className = 'order-list';
+    container.innerHTML = `
+        <div class="order-list__header">${forUser ? 'Khách hàng' : 'Sản phẩm'} ${name}</div>
+        <div class="order-list__manual">Vui lòng chọn mã đơn để xem chi tiết đơn hàng</div>
+        `;
+    orders.forEach((order) => {
+        const item = document.createElement('div');
+        item.className = 'order-list__item';
+        item.textContent = 'MÃ ĐƠN: ' + order;
+        container.appendChild(item);
+        item.addEventListener('click', () => {
+            const popup = container.parentElement?.parentElement;
+            if (!popup) return;
+            popup.style.cssText = 'position: absolute; z-index: -1;';
+            showOrderPopup(order);
+        })
+    });
     return container;
 }
