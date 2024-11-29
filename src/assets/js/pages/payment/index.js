@@ -1,5 +1,5 @@
 import { addStyle, navigateToPage, removeStyle } from "../../until/router.js";
-import { getOrder, rendeOrder, changeCart, closeDeal, showCreditCard, closeCreditForm, addCreditCard } from "./payment.js";
+import { getOrder, rendeOrder, changeCart, closeDeal, showCreditCard, closeCreditForm, addCreditCard, showConfirmForm } from "./payment.js";
 // import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
 
 const html = `
@@ -31,8 +31,7 @@ const html = `
                                 width="24px"
                             />
                             <span
-                                ></span
-                            >
+                                ></span>
                         </div>
                         <div id="total-ship-quantity"></div>
                     </div>
@@ -40,7 +39,6 @@ const html = `
 
                 <div class="order-col order-grid">
                     <div>Sản phẩm</div>
-
                     <div>Số lượng</div>
                     <div>Thành tiền</div>
                 </div>
@@ -279,9 +277,10 @@ export async function initializationPayment() {
         console.log(e)
     })
     changeCart();
-    closeDeal();
+    showConfirmForm();
     addCreditCard();
-    showCreditCard();
+    // showCreditCard();
+
 }
 
 export async function updatePayment() {
