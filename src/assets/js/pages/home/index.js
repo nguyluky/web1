@@ -255,9 +255,12 @@ export async function updateHomePage(params, query) {
     const page_num = query.get('p') || '';
 
     selectionConditional(category === '' ? undefined : [category]);
-    const cate = /**@type {HTMLElement} */ (category ? document.querySelector(`.catergory__row--sub-header[data-value="${category}"]`) : null);
-    cate.parentElement?.classList.add('show');
-    cate.click();
+
+    if (category) {
+        const cate = /**@type {HTMLElement} */ (category ? document.querySelector(`.catergory__row--sub-header[data-value="${category}"]`) : null);
+        cate.parentElement?.classList.add('show');
+        cate.click();
+    }
     createPagination();
     setupPaginationListeners();
     if (page_num) {

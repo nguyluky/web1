@@ -249,7 +249,7 @@ async function renderUserInfo(user_id) {
             <div class="user-header">Họ và tên:</div>
             <div class="user-info">
                 <label>
-                    <input id="input-fullname" type="text" value="${personal_info_data?.fullname ?? ''}">
+                    <input id="input-fullname" type="text" placeholder="Nhập họ và tên" value="${personal_info_data?.fullname ?? ''}">
                 </label>
             </div>
         </div>
