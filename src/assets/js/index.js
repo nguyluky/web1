@@ -99,7 +99,6 @@ const MODAL = document.querySelector('.js-modal');
 
 // #endregion
 
-
 /** Sử lý login và nhữ tư tự như vậy */
 function initializeAccountPopup() {
     if (
@@ -235,6 +234,16 @@ function initializeAccountPopup() {
      * thêm dropdown cho nút đăng nhập
      */
     function showDropDown() {
+        const userName = BUTTON_ACCOUNT?.querySelector('span');
+        const user_id = localStorage.getItem('user_id')
+        if (!user_id || !userName) return;
+        fakeDatabase.getUserInfoByUserId(user_id)
+            .then(userInfo => {
+                userName.innerHTML = userInfo?.name || '';
+            })
+            .catch(() => { })
+
+
         const dropDown = document.createElement('div');
         dropDown?.classList.add(
             'dropdown-btn-content',
@@ -268,8 +277,10 @@ function initializeAccountPopup() {
             sessionStorage.removeItem('admin_id');
             navigateToPage('home')
             toast({ title: 'Đăng xuất thành công', type: 'success' })
+            userName.innerHTML = 'Tài khoản';
             updateCartQuantity();
             dropDown.remove();
+
         }
 
         dropDown.appendChild(p1);
