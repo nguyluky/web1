@@ -637,7 +637,7 @@ export function showCreditForm() {
                         id="credit-btn"
                     />
                     <button class="button_1 js-back-payment" 
-                    id="back-payment" type="button"\>
+                    id="back-payment" type="button"/>
                         Trở lại
                     </button>
                 </div>

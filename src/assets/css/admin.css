@@ -212,7 +212,7 @@ footer.footer {
 th {
     white-space: nowrap;
     background: #0a68f4;
-    z-index: 1;
+    z-index: 2;
     color: #ffffff;
     font-size: 15px;
 }
@@ -279,6 +279,7 @@ th {
 
 th {
     position: sticky;
+    z-index: 2;
 }
 
 body {
@@ -641,7 +642,8 @@ body {
         position: absolute;
         height: auto;
         z-index: 50;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        box-shadow:
+            0 4px 8px 0 rgba(0, 0, 0, 0.2),
             0 6px 20px 0 rgba(0, 0, 0, 0.19);
         border-radius: 0;
         padding: 0;
@@ -754,7 +756,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    overflow: scroll;
+    overflow-y: scroll;
     max-height: 250px;
 }
 

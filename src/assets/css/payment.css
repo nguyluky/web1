@@ -388,7 +388,7 @@
 }
 
 .bill-content {
-    width: 450px;
+    width: 600px;
     background-color: #f8f8f8f8;
     padding: 16px;
 }
@@ -546,10 +546,10 @@
         grid-area: 1 / 3;
     }
 
-    .bill-col .cart-item-quantity.bill-col2{
+    .bill-col .cart-item-quantity.bill-col2 {
         grid-area: 1 / 2;
     }
-    .bill-col .cart-item-amount.bill-col2{
+    .bill-col .cart-item-amount.bill-col2 {
         grid-area: 1 / 3;
     }
 }
@@ -600,17 +600,18 @@
         max-height: 200px;
     }
 
-    .contact-info{
+    .contact-info {
         flex-direction: column;
         gap: 5px;
     }
 
-    .contact-info__name::after{
+    .contact-info__name::after {
         display: none;
     }
 
-    .payment-method, .address-info, .contact-info__name{
+    .payment-method,
+    .address-info,
+    .contact-info__name {
         margin-top: 10px;
     }
-    
 }

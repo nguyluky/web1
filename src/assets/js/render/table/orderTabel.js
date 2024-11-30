@@ -163,6 +163,7 @@ function appendPaymentMethodCell(row, value, onchange) {
         value.payment_method,
         PAYMENT_METHOD_OPTION,
         (nv) => onchange && onchange(value, 'payment_method', nv),
+        false
     );
     row.appendChild(option);
 }
