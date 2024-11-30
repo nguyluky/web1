@@ -527,6 +527,12 @@ function setupSiderBar() {
 function checkLogin() {
     if (!window.localStorage.getItem('admin_id') && !window.sessionStorage.getItem('admin_id')) {
         location.href = '/admin/login.html';
+    } else {
+        const admin_id = String(window.localStorage.getItem('admin_id') || window.sessionStorage.getItem('admin_id'));
+        fakeDatabase.getUserInfoByUserId(admin_id).then((info) => {
+            const admin_name = document.querySelector('.right span');
+            if (admin_name) admin_name.innerHTML = '' + info?.name;
+        });
     }
 }
 

@@ -401,9 +401,9 @@ export async function updateSearchPage(page, query) {
     const from = NaN || Number(query.get('mn'));
     const to = Number(query.get('mx')) || NaN;
     const searchFor = document.querySelector('.article-header span span');
-    if (searchFor) searchFor.textContent = t;
     updateFilter(cs);
-    selectionConditional(cs, t, from, to);
+    const count = selectionConditional(cs, t, from, to);
+    if (searchFor) searchFor.textContent = t + ' (' + count + ' sản phẩm)';
     createPagination();
     setupPaginationListeners();
     if (p) {

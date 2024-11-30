@@ -10,6 +10,9 @@
     display: none;
 }
 
+#filter-btn {
+    cursor: pointer;
+}
 #filter-btn:hover {
     color: #0a68f4;
 }
@@ -136,7 +139,7 @@ input[type='range']::-moz-range-thumb {
 }
 
 @media screen and (max-width: 500px) {
-    .filter-header{
+    .filter-header {
         font-size: 16px;
         margin: 0px;
         margin-bottom: 10px;
