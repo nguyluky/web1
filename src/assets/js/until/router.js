@@ -256,6 +256,27 @@ export async function initializeUrlHandling(pages) {
             </div>`
     }
 
+    /**
+     * Xóa popup khi chuyển trang
+     */
+    function removePopup() {
+        const popup = document.getElementById('popup-wrapper');
+        if (popup) {
+            popup.innerHTML = '';
+        }
+
+        const modalJsModal = document.querySelector('.modal.js-modal')
+        if (modalJsModal) {
+            modalJsModal.innerHTML = '';
+            modalJsModal.classList.remove('show-modal');
+        }
+
+        const filterPopup = document.querySelector('.filter-popup');
+        if (filterPopup) {
+            filterPopup.innerHTML = '';
+        }
+    }
+
     /** Khi hash thai đổi */
     async function handleHashChange() {
         let { page: urlPath, query } = urlConverter(location.hash);
@@ -273,6 +294,7 @@ export async function initializeUrlHandling(pages) {
             if (path != oldPathPage) {
                 console.log('remove page:', oldPathPage);
                 await pageObject[oldPathPage]?.remove(param, query);
+                removePopup();
                 showLoading();
                 console.log('init page:', path);
                 await page.init(param, query);

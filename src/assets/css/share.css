@@ -253,8 +253,8 @@ main.main {
 
 #toast {
     position: fixed;
-    bottom: 32px;
-    left: 32px;
+    top: 65px;
+    right: 20px;
     z-index: 999999;
 }
 
