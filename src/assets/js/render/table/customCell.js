@@ -304,8 +304,6 @@ export function createOptionTabelCell(
  * @param {HTMLTableCellElement} td
  */
 function optionTableCellEditOff(td) {
-    if (td.getAttribute('can-editable') == 'false') return;
-
     const select = td.querySelector('select');
     if (!select) return;
     select.disabled = true;
@@ -318,6 +316,7 @@ function optionTableCellEditOff(td) {
  * @param {HTMLTableCellElement} td
  */
 function optionTableCellEditOn(td) {
+    if (td.getAttribute('can-editable') == 'false') return;
     const select = td.querySelector('select');
     if (!select) return;
     select.disabled = false;

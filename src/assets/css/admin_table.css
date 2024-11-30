@@ -148,6 +148,8 @@ tr:has(td[error]) {
 }
 
 #content_table tr[isAddCache='true'] [showPlaceholder]::before {
+    box-sizing: border-box;
+    padding: 5px;
     top: 0;
     left: 0;
     position: absolute;
