@@ -120,17 +120,12 @@ export async function displayProducts() {
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.product-container')
     );
-    const header = /**@type {HTMLElement}*/ (
-        document.querySelector('.article-header')
-    );
     productlist.innerHTML = '';
     if (data.length == 0) {
-        header.style.display = 'none';
         noProduct.style.display = '';
         return;
     }
     noProduct.style.display = 'none';
-    header.style.display = '';
     const start = (Current_Page - 1) * Products_Per_page;
     const end = start + Products_Per_page;
     const Products_To_Display = data.slice(start, end);
@@ -257,4 +252,5 @@ export function selectionConditional(categories, searchText = '', from = NaN, to
     });
     totalPages = Math.ceil(data.length / Products_Per_page);
     Current_Page = 1;
+    return data.length;
 }

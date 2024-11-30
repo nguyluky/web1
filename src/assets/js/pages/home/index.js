@@ -6,6 +6,7 @@ import {
     updatePagination,
 } from './renderProduct.js';
 import { navigateToPage } from '../../until/router.js';
+import fakeDatabase from '../../db/fakeDBv1.js';
 
 /**
  *
@@ -86,7 +87,7 @@ function initializationAside() {
                     </li>
                     <li
                         class="catergory__row--sub-header"
-                        data-value="bgpdf"
+                        data-value="bgPDF"
                     >
                         <span>PDF</span>
                     </li>
@@ -255,13 +256,20 @@ export async function updateHomePage(params, query) {
 
     selectionConditional(category === '' ? undefined : [category]);
 
+    if (category) {
+        const cate = /**@type {HTMLElement} */ (category ? document.querySelector(`.catergory__row--sub-header[data-value="${category}"]`) : null);
+        cate.parentElement?.classList.add('show');
+        cate.click();
+    }
     createPagination();
     setupPaginationListeners();
     if (page_num) {
         updatePagination(+page_num);
     }
 
-    displayProducts().then(() => {
-        // initAddToCartOnButton();
+    displayProducts().then(async () => {
+        const headerText = document.querySelector('.article-header span');
+        if (headerText) headerText.textContent = category ?
+            `Danh mục tài liệu: ${(await fakeDatabase.getCategoryById(category))?.name}` : 'Danh sách tài liệu';
     });
 }
