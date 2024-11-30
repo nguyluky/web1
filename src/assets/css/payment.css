@@ -489,7 +489,12 @@
     padding: 10px;
     background-color: white;
     color: gray;
+    border-radius: 8px;
     margin-right: 10px;
+    cursor: pointer;
+}
+#back__payment:hover{
+    background-color: rgb(233, 233, 233);
 }
 
 .bill-product .cart-item-amount {

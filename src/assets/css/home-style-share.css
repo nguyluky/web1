@@ -460,6 +460,7 @@ article.article.page-not-found {
     gap: 20px;
     font-size: 13px;
     line-height: 19px;
+    cursor: pointer;
 }
 
 .shipping-info__item.sladd {

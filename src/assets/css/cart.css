@@ -234,6 +234,7 @@ input[type='checkbox'] {
     color: rgb(39, 39, 42);
     font-weight: 400;
     margin-bottom: 7px;
+    cursor: pointer;
 }
 .book-info {
     height: 100%;
