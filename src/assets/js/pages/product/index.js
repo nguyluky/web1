@@ -352,6 +352,7 @@ function setEventListener(product_id) {
                 else
                     userInfo?.address.push(address);
                 await fakeDatabase.updateUserAddress(user_id, userInfo?.address);
+                navigateToPage('payment', { payment: product_id + '-' + inputquantity.value });
                 return;
             }, () => { });
             return;

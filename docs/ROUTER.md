@@ -82,3 +82,74 @@ A type representing a page object.
     - `update` (function): A function to update the page.
     - `remove` (function): A function to remove the page.
     - `title` (string | function, optional): The title of the page or a function to generate the title.
+
+
+## Examples
+
+### Example 1: Basic URL Conversion
+
+```javascript
+const url = '/home?user=123';
+const result = urlConverter(url);
+console.log(result);
+// Output: { pagePath: '/home', queryParams: { user: '123' } }
+```
+
+### Example 2: Checking URL Path
+
+```javascript
+const path = '/user/123';
+const format = '/user/:id';
+const result = urlIsPage(path, format);
+console.log(result);
+// Output: { id: '123' }
+```
+
+### Example 3: Navigating to a Page
+
+```javascript
+navigateToPage('/profile', { user: '123' });
+// Navigates to /profile?user=123
+```
+
+### Example 4: Adding and Removing Styles
+
+```javascript
+const styleUrl = 'https://example.com/styles.css';
+addStyle(styleUrl);
+// Adds the CSS style to the document
+
+removeStyle(styleUrl);
+// Removes the CSS style from the document
+```
+
+### Example 5: Initializing URL Handling
+
+```javascript
+const pages = [
+    {
+        pagePath: '/home',
+        init: () => console.log('Home page initialized'),
+        update: () => console.log('Home page updated'),
+        remove: () => console.log('Home page removed'),
+        title: 'Home'
+    },
+    {
+        pagePath: '/profile',
+        init: () => console.log('Profile page initialized'),
+        update: () => console.log('Profile page updated'),
+        remove: () => console.log('Profile page removed'),
+        title: 'Profile'
+    }
+];
+
+initializeUrlHandling(pages);
+// Sets up URL handling for the application
+```
+
+### Example 6: Displaying an Error Page
+
+```javascript
+errorPage(404, 'Page not found');
+// Displays a 404 error page with the message 'Page not found'
+```
