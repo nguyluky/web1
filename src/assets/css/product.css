@@ -277,6 +277,15 @@
     object-fit: contain;
 }
 
+.no-other-product{
+    display: flex;
+    justify-content: center;
+}
+
+.no-other-product > img {
+    width: 60%;
+}
+
 /* responsive */
 
 @media screen and (max-width: 1220px) {
@@ -286,6 +295,9 @@
 
     .products {
         gap: 15px 15px;
+    }
+    .no-other-product > img {
+        width: 100%;
     }
 }
 @media screen and (max-width: 1030px) {
@@ -341,5 +353,8 @@
     .product-price-detail {
         gap: 12px;
         width: 100%;
+    }
+    .no-other-product > img {
+        width: 110%;
     }
 }
