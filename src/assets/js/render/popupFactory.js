@@ -1,6 +1,6 @@
 import fakeDatabase from "../db/fakeDBv1.js";
 import { method, status } from "../pages/user-info/index.js";
-import { dateToString, formatNumber } from "../until/format.js";
+import { dateToString, formatAddress, formatNumber } from "../until/format.js";
 import { showOrderPopup } from "./popupRender.js";
 
 /**
@@ -148,11 +148,7 @@ export function createImgPreviewPopup(
 }
 
 /**
- *
- */
-export function createCategoryPopup() { }
-/**
- * 
+ * Tạo popup hiển thị thông tin đơn hàng gồm thông tin khách hàng, thông tin đơn hàng và danh sách sản phẩm
  * @param {import("../until/type").Order | undefined} order
  */
 export function createOrderPopup(order) {
@@ -173,12 +169,18 @@ export function createOrderPopup(order) {
     header.appendChild(top);
     top.innerHTML = `
         <div>
-            <span>Mã KH: </span>
-            <span>${order.user_id}</span>
+            <div>
+                <span>Mã KH: </span>
+                <span>${order.user_id}</span>
+            </div>
+            <div>
+                <span>Ngày đặt: </span>
+                <span>${dateToString(order.date, 'vi-VN', true)}</span>
+            </div>
         </div>
         <div>
-            <span>Ngày đặt: </span>
-            <span>${dateToString(order.date, 'vi-VN', true)}</span>
+            <span>Trạng thái:</span>
+            <span>${status[order.state].text}</span>
         </div>`
 
     const bottom = document.createElement('div');
@@ -192,7 +194,7 @@ export function createOrderPopup(order) {
             <div>
                 <span>${address.street}</span>
                 <br/>
-                <span>${address.address.replaceAll(/ - /g, ", ")}</span>
+                <span>${formatAddress(address.address)}</span>
             </div>
         </div>`
 
@@ -249,12 +251,7 @@ export function createOrderPopup(order) {
         <div>
             <span>Phương thức thanh toán:</span>
             <span>${method[order.payment_method]}</span>
-        </div>
-        <div>
-            <span>Trạng thái:</span>
-            <span>${status[order.state].text}</span>
-        </div>
-        `
+        </div>`
 
     return container;
 }

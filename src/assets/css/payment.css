@@ -431,12 +431,6 @@
     font-weight: 500;
 }
 
-.payment-method {
-    color: gray;
-    font-size: 14px;
-    font-weight: 400;
-}
-
 .bill-product {
     margin-top: 10px;
     background-color: white;
@@ -493,7 +487,7 @@
     margin-right: 10px;
     cursor: pointer;
 }
-#back__payment:hover{
+#back__payment:hover {
     background-color: rgb(233, 233, 233);
 }
 
@@ -502,13 +496,17 @@
     font-weight: 400;
 }
 
+.total-bill > .price-value:nth-child(2) {
+    font-size: 14px;
+}
 .price__total {
     color: red;
-    font-size: 14px;
     font-weight: 600;
 }
-
-.price-value {
+.payment-method {
+    font-size: 14px;
+}
+.total-bill > div {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
