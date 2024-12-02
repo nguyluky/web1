@@ -31,7 +31,7 @@ const PAGES = [
         init: initializationHomePage,
         update: updateHomePage,
         remove: async () => { },
-        title: 'Home | WebSellBooks',
+        title: 'Home | WeSellBooks',
     },
     {
         pagePath: 'search',
@@ -39,7 +39,7 @@ const PAGES = [
         update: updateSearchPage,
         remove: removeSearchBar,
         title: (p, q) => {
-            return `Tìm kiếm: ${q.get('t')} | WebSellBooks`
+            return `Tìm kiếm: ${q.get('t')} | WeSellBooks`
         },
     },
     {
@@ -53,16 +53,16 @@ const PAGES = [
                 case 'account':
                     switch (param.info) {
                         case 'profile':
-                            return 'Hồ sơ tài khoản | We sell books';
+                            return 'Hồ sơ tài khoản | WeSellBooks';
                         case 'address':
-                            return 'Địa chỉ giao hàng | We sell books';
+                            return 'Địa chỉ giao hàng | WeSellBooks';
                         default:
-                            return '404 | We sell books';
+                            return '404 | WeSellBooks';
                     }
                 case 'purchase':
-                    return 'Đơn hàng của tôi | We sell books';
+                    return 'Đơn hàng của tôi | WeSellBooks';
                 default:
-                    return '404 | We sell books';
+                    return '404 | WeSellBooks';
             }
         }
     },
@@ -72,7 +72,7 @@ const PAGES = [
         update: updateProductPage,
         remove: removeProductPage,
         title: (param) => {
-            return `Sản phẩm ${param.id} | WebSellBooks`
+            return `Sản phẩm ${param.id} | WeSellBooks`
         }
     },
     {
@@ -80,14 +80,14 @@ const PAGES = [
         init: initializationCart,
         update: updateCart,
         remove: removeCart,
-        title: 'Giỏ hàng | WebSellBooks'
+        title: 'Giỏ hàng | WeSellBooks'
     },
     {
         pagePath: 'payment',
         init: initializationPayment,
         update: updatePayment,
         remove: removePayment,
-        title: 'Thanh toán | WebSellBooks',
+        title: 'Thanh toán | WeSellBooks',
     }
 ]
 
@@ -166,9 +166,6 @@ function initializeAccountPopup() {
             ],
             onSubmit: () => {
                 localStorage.setItem('user_id', userInfo.id);
-                if (userInfo.rule === 'admin') {
-                    localStorage.setItem('admin_id', userInfo.id);
-                }
                 MODAL?.classList.remove('show-modal');
                 if (MODAL) {
                     // @ts-ignore
@@ -263,18 +260,10 @@ function initializeAccountPopup() {
         }
 
         const p3 = document.createElement('p');
-        p3.textContent = 'Chuyển đến admin';
-        p3.onclick = () => {
-            location.href = '/admin/index.html';
-        }
-
-        const p4 = document.createElement('p');
-        p4.textContent = 'Đăng xuất';
-        p4.onclick = (event) => {
+        p3.textContent = 'Đăng xuất';
+        p3.onclick = (event) => {
             event.stopPropagation();
             localStorage.removeItem('user_id');
-            localStorage.removeItem('admin_id');
-            sessionStorage.removeItem('admin_id');
             navigateToPage('home')
             toast({ title: 'Đăng xuất thành công', type: 'success' })
             userName.innerHTML = 'Tài khoản';
@@ -285,10 +274,7 @@ function initializeAccountPopup() {
 
         dropDown.appendChild(p1);
         dropDown.appendChild(p2);
-        if (localStorage.getItem('admin_id')) {
-            dropDown.appendChild(p3);
-        }
-        dropDown.appendChild(p4);
+        dropDown.appendChild(p3);
 
         BUTTON_ACCOUNT?.appendChild(dropDown);
     }

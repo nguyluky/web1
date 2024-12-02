@@ -1,5 +1,5 @@
 import fakeDatabase from "../db/fakeDBv1.js";
-import { method } from "../pages/user-info/index.js";
+import { method, status } from "../pages/user-info/index.js";
 import { dateToString, formatNumber } from "../until/format.js";
 import { showOrderPopup } from "./popupRender.js";
 
@@ -249,6 +249,10 @@ export function createOrderPopup(order) {
         <div>
             <span>Phương thức thanh toán:</span>
             <span>${method[order.payment_method]}</span>
+        </div>
+        <div>
+            <span>Trạng thái:</span>
+            <span>${status[order.state].text}</span>
         </div>
         `
 

@@ -2,7 +2,7 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import uuidv from '../../until/uuid.js';
 import { toast } from '../../render/popupRender.js';
 import { navigateToPage } from '../../until/router.js';
-import { formatNumber } from '../../until/format.js';
+import { formatAddress, formatNumber } from '../../until/format.js';
 import { showListShippingAddressPopup, showShippingFromeAddressPopup } from '../../render/addressPopup.js';
 
 /**
@@ -35,7 +35,7 @@ export async function showUserAddressInfo(doc = document, index = 0) {
 
         userName.innerHTML = userInfo[index].name;
         userTel.innerHTML = userInfo[index].phone_num;
-        userAddress.innerHTML = `${userInfo[index].street}<br>${userInfo[index].address.replace(/ - /g, ', ')}`;
+        userAddress.innerHTML = `${userInfo[index].street}<br>${formatAddress(userInfo[index].address)}`;
         style.innerHTML = `.contact-info__name::after {content: ''}`;
     } else {
         userName.innerHTML = 'Chưa có thông tin giao hàng';

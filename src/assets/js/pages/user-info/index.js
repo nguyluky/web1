@@ -1,12 +1,12 @@
 import fakeDatabase from "../../db/fakeDBv1.js";
 import { showShippingFromeAddressPopup } from "../../render/addressPopup.js";
 import { toast } from "../../render/popupRender.js";
-import { dateToString, formatNumber, removeDiacritics, text2htmlElement } from "../../until/format.js";
+import { dateToString, formatAddress, formatNumber, removeDiacritics, text2htmlElement } from "../../until/format.js";
 import { addStyle, errorPage, navigateToPage, removeStyle, urlIsPage } from "../../until/router.js";
 import { validateEmail, validateNumberPhone } from "../../until/validator.js";
 import { updateCartQuantity } from "../cart/cart.js";
 import urlConverter from "../../until/router.js";
-const status = {
+export const status = {
     doixacnhan: {
         text: 'Chờ xử lý',
         color: 'rgba(208, 128, 8, 1)'
@@ -178,7 +178,7 @@ function createAddressContainer(address, i) {
         <div class="user-address__address">
             <div>
                 <div class="user-address__street">${address.street}</div>
-                <div class="user-address__details">${address.address.replaceAll(/ - /g, ', ')}</div>
+                <div class="user-address__details">${formatAddress(address.address)}</div>
             </div>
             <button class="set-default-btn ${i == 0 ? 'disable' : ''}">Thiết lập mặc định</button>
         </div>
@@ -582,7 +582,7 @@ async function initializationArticle__Package_details() {
                     <div>
                         <span>${order.address.phone_num}</span>
                         <br>
-                        <span>${order.address.street}, ${order.address.address.replaceAll(/ - /g, ', ')}</span>
+                        <span>${order.address.street}, ${formatAddress(order.address.address)}</span>
                     </div>
                 </div>
             </div>
