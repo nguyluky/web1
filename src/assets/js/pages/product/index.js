@@ -53,6 +53,9 @@ export async function initializationProductPage(params, query) {
                 <div class="products-header">Sản phẩm tương tự</div>
                 <div class="products">
                 </div>
+                <div class="no-other-product" style="display: none;">
+                    <img src="./assets/img/empty-product.png">
+                </div>
             </div>
     </div>
     `;
@@ -424,12 +427,6 @@ async function createProduct(product) {
     regularPrice.innerHTML = `${String(formatNumber(product.base_price))} <sup>₫</sup>`;
     productPrice.appendChild(regularPrice);
 
-    // productItem.addEventListener('click', (event) => {
-    //     const target = /**@type {HTMLInputElement}*/(event.target);
-    //     //if (addToCart.isSameNode(target)) return;
-    //     location.hash = `#/product/${product.id}`;
-    // });
-
     productItem.addEventListener('click', e => {
         navigateToPage(`product/${product.id}`)
     });
@@ -438,16 +435,19 @@ async function createProduct(product) {
 }
 
 async function displayProducts() {
-    //const noProduct = /**@type {HTMLElement}*/ (document.querySelector('.no-product'));
+    const noProduct = /**@type {HTMLElement}*/ (document.querySelector('.no-other-product'));
 
     const productlist = /**@type {HTMLElement}*/ (
         document.querySelector('.products')
     );
-    const header = /**@type {HTMLElement}*/ (
-        document.querySelector('.products-header')
-    );
     productlist.innerHTML = '';
-    header.style.display = '';
+    let i = 0;
+    if (i == 0) {
+        noProduct.style.display = '';
+        return;
+    }
+    noProduct.style.display = 'none';
+    productlist.innerHTML = '';
     const start = (Current_Page - 1) * Products_Per_page;
     const end = start + Products_Per_page;
     const Products_To_Display = SPtt.slice(start, end);
