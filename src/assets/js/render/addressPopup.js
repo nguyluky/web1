@@ -1,5 +1,5 @@
 import fakeDatabase from "../db/fakeDBv1.js";
-import { text2htmlElement } from "../until/format.js";
+import { formatAddress, text2htmlElement } from "../until/format.js";
 import { validateEmail, validateNumberPhone } from "../until/validator.js";
 import { AddressFrom } from "./address.js";
 
@@ -225,7 +225,7 @@ export function createAddressItem(address, i = NaN, sl = false) {
                 <span>${address.name}</span><span>${i == 0 ? 'Địa chỉ mặc định' : ''}</span>
             </div>
             <div class="address">
-                <span>Địa chỉ: </span>${address.street}, ${address.address.replace(/ - /g, ', ')}
+                <span>Địa chỉ: </span>${address.street}, ${formatAddress(address.address)}
             </div>
             <div class="phone">
                 <span>Điện thoại: </span>${address.phone_num}

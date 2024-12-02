@@ -57,3 +57,7 @@ export function text2htmlElement(text) {
     }
     return /** @type {HTMLElement} */ (template.content.firstChild);
 }
+
+export function formatAddress(address) {
+    return (address.split(' - ')).reverse().join(', ');
+}

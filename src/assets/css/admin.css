@@ -323,7 +323,7 @@ body {
 }
 
 #info-wrapper:has(.popup) {
-    z-index: 1;
+    z-index: 100;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -642,8 +642,7 @@ body {
         position: absolute;
         height: auto;
         z-index: 50;
-        box-shadow:
-            0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
             0 6px 20px 0 rgba(0, 0, 0, 0.19);
         border-radius: 0;
         padding: 0;
@@ -719,12 +718,14 @@ body {
         display: none;
     }
 }
-
 .order-info-header__top {
+    margin-top: 10px;
+}
+
+.order-info-header__top > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
 }
 .order-info-header__top,
 .order-info-header__bottom > span {
@@ -768,7 +769,7 @@ body {
 }
 
 .bill__item > div:first-child {
-    width: 40%;
+    width: 50%;
     text-transform: uppercase;
     font-weight: 300;
 }

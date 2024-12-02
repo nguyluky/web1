@@ -262,7 +262,7 @@ export function showConfirmForm() {
 }
 
 function getPaymentMethod(selectedPaymentOption) {
-    const paymentMethod = document.querySelector('.payment-method');
+    const paymentMethod = document.querySelector('.payment-method div:last-child');
     if (!selectedPaymentOption || !paymentMethod)
         return;
     let html = ''
@@ -278,7 +278,7 @@ function getPaymentMethod(selectedPaymentOption) {
     else {
         html = 'Thẻ tín dụng'
     }
-    paymentMethod.innerHTML = `Phương thức thanh toán: ${html}`;
+    paymentMethod.innerHTML = html;
     return selectedPaymentOption.id;
 }
 
@@ -297,9 +297,6 @@ function createConfirmForm() {
                         <div class = "contact-info">
                             <div class="contact-info__name" ></div>
                             <div class="contact-info__phone-num"></div>   
-                        </div>
-                        <div class="payment-method">
-                           
                         </div>
                         <div class="address-info"></div>                                            
                     </div>
@@ -323,6 +320,10 @@ function createConfirmForm() {
                         <div class="price-value">
                             <div>Tổng tiền:</div>
                             <div class="price__total"><sup>₫</sup></div>
+                        </div>
+                        <div class="payment-method">
+                            <div>Phương thức thanh toán:</div>
+                            <div></div>
                         </div>
                     </div>
                 </div>
