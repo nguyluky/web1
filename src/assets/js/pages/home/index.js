@@ -270,7 +270,7 @@ export async function updateHomePage(params, query) {
     if (category) {
         const cate = /**@type {HTMLElement} */ (category ? document.querySelector(`.catergory__row--sub-header[data-value="${category}"]`) : null);
         cate.parentElement?.classList.add('show');
-        cate.click();
+        cate.setAttribute('selected', 'true');
     }
     createPagination();
     setupPaginationListeners();
