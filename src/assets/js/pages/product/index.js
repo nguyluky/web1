@@ -3,8 +3,7 @@ import { showShippingFromeAddressPopup } from '../../render/addressPopup.js';
 import { toast } from '../../render/popupRender.js';
 import { formatNumber, text2htmlElement } from '../../until/format.js';
 import { addStyle, errorPage, navigateToPage, removeStyle } from '../../until/router.js';
-import uuidv from '../../until/uuid.js';
-import { buyBooks, pushCartItemIntoCart, updateCartQuantity } from '../cart/cart.js';
+import { pushCartItemIntoCart } from '../cart/cart.js';
 
 let SPtt = [];
 let Current_Page = 1;

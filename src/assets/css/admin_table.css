@@ -46,8 +46,12 @@ td[contenteditable='true']
     border-radius: 3px;
 } */
 
-td[contenteditable='true'] {
-    color: #323232;
+td * {
+    color: gray;
+}
+
+td[is-edit='true'] {
+    color: #0c0c0c;
 }
 
 .img-wrapper {
@@ -97,6 +101,10 @@ td > select {
     background: none;
     font-size: inherit;
     appearance: none;
+}
+
+td[is-edit='true'] > select {
+    appearance: revert;
 }
 
 .tag-ele.add .tag-popup {

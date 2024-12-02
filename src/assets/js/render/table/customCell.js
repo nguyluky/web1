@@ -62,6 +62,7 @@ export function createTextTableCell(key, value, onchange, canEditable = true, pl
 function textTableCellEditOn(td) {
     if (td.getAttribute('can-editable') == 'false') return;
     td.setAttribute('contenteditable', 'true');
+    td.setAttribute('is-edit', 'true');
 }
 
 /**
@@ -71,6 +72,7 @@ function textTableCellEditOff(td) {
     td.setAttribute('contenteditable', 'false');
     td.setAttribute('default-value', td.textContent || '');
     td.setAttribute('ischange', 'false');
+    td.setAttribute('is-edit', 'false');
 }
 
 customCells.push({
@@ -146,6 +148,8 @@ export function createDateTimeTableCell(
  */
 function dateTimeTableCellEditOn(td) {
     if (td.getAttribute('can-editable') == 'false') return;
+    td.setAttribute('is-edit', 'true');
+
 
     const input = td.querySelector('input');
     if (!input) return;
@@ -164,7 +168,7 @@ function dateTimeTableCellEditOff(td) {
     const date = new Date(input.value);
     td.setAttribute('default-value', String(date));
     td.setAttribute('ischange', 'false');
-
+    td.setAttribute('is-edit', 'false');
     input.disabled = true;
 }
 
@@ -221,6 +225,7 @@ function numberTableCellEditOn(td) {
     if (td.getAttribute('can-editable') == 'false') return;
 
     td.setAttribute('contenteditable', 'true');
+    td.setAttribute('is-edit', 'true');
 }
 
 /**
@@ -231,6 +236,7 @@ function numberTableCellEditOff(td) {
 
     td.setAttribute('default-value', td.textContent || '');
     td.setAttribute('ischange', 'false');
+    td.setAttribute('is-edit', 'false');
 }
 
 customCells.push({
@@ -310,6 +316,7 @@ function optionTableCellEditOff(td) {
 
     td.setAttribute('default-value', select.value);
     td.setAttribute('ischange', 'false');
+    td.setAttribute('is-edit', 'false');
 }
 /**
  *
@@ -320,6 +327,7 @@ function optionTableCellEditOn(td) {
     const select = td.querySelector('select');
     if (!select) return;
     select.disabled = false;
+    td.setAttribute('is-edit', 'true');
 }
 
 customCells.push({
@@ -391,6 +399,7 @@ function blockTextTableCellEditOn(td) {
     const block = td.querySelector('div');
     if (!block) return;
     block.setAttribute('contenteditable', 'true');
+    td.setAttribute('is-edit', 'true');
 }
 
 /**
@@ -403,6 +412,7 @@ function blockTextTableCellEditOff(td) {
 
     td.setAttribute('default-value', block.textContent || '');
     td.setAttribute('ischange', 'false');
+    td.setAttribute('is-edit', 'false');
 }
 
 customCells.push({
@@ -578,6 +588,7 @@ function TagInputCellOn(td) {
 
     const container = td.querySelector('.tag-container');
     container?.classList.add('on');
+    td.setAttribute('is-edit', 'true');
 }
 
 /**
@@ -594,6 +605,7 @@ function TagInputCellOff(td) {
 
     td.setAttribute('default-value', tag.sort().join(','));
     td.setAttribute('ischange', 'false');
+    td.setAttribute('is-edit', 'false');
 }
 
 customCells.push({
@@ -654,6 +666,7 @@ export function createThumbnailCell(key, base64, onchange, canEditable = true) {
 function thumbnailCellEditOn(td) {
     if (td.getAttribute('can-editable') == 'false') return;
     td.setAttribute('contenteditable', 'true');
+    td.setAttribute('is-edit', 'true');
 }
 
 /**
@@ -661,6 +674,7 @@ function thumbnailCellEditOn(td) {
  */
 function thumbnailCellEditOff(td) {
     td.setAttribute('contenteditable', 'false');
+    td.setAttribute('is-edit', 'false');
 }
 
 customCells.push({

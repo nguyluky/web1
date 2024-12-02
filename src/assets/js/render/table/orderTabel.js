@@ -9,10 +9,12 @@ import {
     createNumberTableCell,
     createDateTimeTableCell,
     createTextTableCell,
+    createBlockTextTabelCell,
 } from './customCell.js';
 
 const cols = {
     user_id: 'User id',
+    items: "Items",
     state: 'State',
     date: 'Date',
     last_update: 'Last Update',
@@ -79,6 +81,26 @@ function renderRow(row, value, onchange) {
             case 'total':
                 appendTotalCell(row, value, onchange);
                 break;
+            case 'items': {
+
+                let a = value.items.map(async e => {
+                    const sach = await fakeDatabase.getSachById(e.sach)
+                    return e.quantity + 'x' + sach?.title;
+                })
+
+
+                const it = createTextTableCell('items', '', () => { }, false);
+
+                Promise.all(a).then(e => {
+
+                    it.setAttribute('setAttribute', e.join(','))
+                    it.textContent = e.join(',');
+                }
+                )
+
+                row.appendChild(it);
+                break;
+            }
             case 'address': {
                 const col = createTextTableCell(key, value[key].address, (nv) => {
                     // @ts-ignore

@@ -10,6 +10,10 @@ const phone = /**@type {HTMLInputElement} */ (document.getElementById('input-pho
 const password = /**@type {HTMLInputElement} */ (document.getElementById('password'));
 // và không chuyển hướng
 
+/**
+ * có nhất thiệt là phải để ngoài hàm diên không vậy
+ * @returns {void}
+ */
 export function showPass() {
     let e = /** @type {HTMLInputElement} */ (
         document.getElementById('password')
@@ -49,7 +53,6 @@ document.querySelector('form')?.addEventListener('submit', async (event) => {
     if (rmb_btn.checked) {
         //NOTE: nếu đăng nhập bằng thì tài khoản hiện tại của user cũng cập nhật luân
         localStorage.setItem('admin_id', admin.id);
-        localStorage.setItem('user_id', admin.id);
     }
     else sessionStorage.setItem('admin_id', admin.id);
     location.href = '/admin/index.html';

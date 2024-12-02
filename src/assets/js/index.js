@@ -1,25 +1,25 @@
+import { showPass } from './admin_login.js';
 import fakeDatabase from './db/fakeDBv1.js';
+import { updateCartQuantity } from './pages/cart/cart.js';
+import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
+import { initializationHomePage, updateHomePage } from './pages/home/index.js';
+import { initializationPayment, removePayment, updatePayment } from './pages/payment/index.js';
+import { initializationProductPage, removeProductPage, updateProductPage } from './pages/product/index.js';
+import {
+    initializationSearchPage,
+    removeSearchBar,
+    updateSearchPage,
+} from './pages/search/search.js';
+import { initializationUserInfoPage, removeUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
 import {
     inputFill,
     showCreateAccount,
     showInputPassword,
     showSignIn,
 } from './popupAccount.js';
-import { validateEmail, validator } from './until/validator.js';
-import { initializationHomePage, updateHomePage } from './pages/home/index.js';
-import { initializeUrlHandling, navigateToPage } from './until/router.js';
-import {
-    initializationSearchPage,
-    removeSearchBar,
-    updateSearchPage,
-} from './pages/search/search.js';
-import { updateCartQuantity } from './pages/cart/cart.js';
-import { initializationUserInfoPage, removeUserInfoPage, updateUserInfoPage } from './pages/user-info/index.js';
-import { initializationProductPage, removeProductPage, updateProductPage } from './pages/product/index.js';
-import { initializationCart, removeCart, updateCart } from './pages/cart/index.js';
-import { initializationPayment, updatePayment, removePayment } from './pages/payment/index.js';
 import { toast } from './render/popupRender.js';
-import { showPass } from './admin_login.js';
+import { initializeUrlHandling, navigateToPage } from './until/router.js';
+import { validateEmail, validator } from './until/validator.js';
 
 //#region khai bao page
 /**
@@ -166,9 +166,6 @@ function initializeAccountPopup() {
             ],
             onSubmit: () => {
                 localStorage.setItem('user_id', userInfo.id);
-                if (userInfo.rule === 'admin') {
-                    localStorage.setItem('admin_id', userInfo.id);
-                }
                 MODAL?.classList.remove('show-modal');
                 if (MODAL) {
                     // @ts-ignore
@@ -273,8 +270,6 @@ function initializeAccountPopup() {
         p4.onclick = (event) => {
             event.stopPropagation();
             localStorage.removeItem('user_id');
-            localStorage.removeItem('admin_id');
-            sessionStorage.removeItem('admin_id');
             navigateToPage('home')
             toast({ title: 'Đăng xuất thành công', type: 'success' })
             userName.innerHTML = 'Tài khoản';
@@ -379,8 +374,6 @@ function initializationSearch() {
             navigateToPage('search', { t: input?.value });
     });
 }
-
-
 
 /** Main */
 function main() {

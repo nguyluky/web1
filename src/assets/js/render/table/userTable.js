@@ -2,21 +2,17 @@ import fakeDatabase from '../../db/fakeDBv1.js';
 import { validateUserInfo } from '../../until/type.js';
 import uuidv from '../../until/uuid.js';
 import {
-    searchList,
-    renderTable,
-    renderDefaultRow,
-    tableShowErrorKey,
-    tableClearErrorKey,
+    createRow,
     defaultAddRow,
     defaultRemoveAddRow,
     getAllRowsSeletion,
     removeRowById,
-    createCheckBox,
-    createRow,
+    renderTable,
+    searchList,
+    tableClearErrorKey,
+    tableShowErrorKey
 } from './baseRender.js';
-import { createOptionTabelCell } from './customCell.js';
-import { createNumberTableCell } from './customCell.js';
-import { createTextTableCell } from './customCell.js';
+import { createOptionTabelCell, createTextTableCell } from './customCell.js';
 
 /** @typedef {import('../../until/type.js').UserInfo} UserInfo */
 
