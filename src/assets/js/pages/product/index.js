@@ -6,9 +6,6 @@ import { addStyle, errorPage, navigateToPage, removeStyle } from '../../until/ro
 import { pushCartItemIntoCart } from '../cart/cart.js';
 
 let SPtt = [];
-let Current_Page = 1;
-let Products_Per_page = 4;
-
 let Product_Data = [];
 
 /**
@@ -446,9 +443,7 @@ async function displayProducts() {
     }
     noProduct.style.display = 'none';
     productlist.innerHTML = '';
-    const start = (Current_Page - 1) * Products_Per_page;
-    const end = start + Products_Per_page;
-    const Products_To_Display = SPtt.slice(start, end);
+    const Products_To_Display = SPtt.slice(0, 4);
 
     for (const product of Products_To_Display) {
         const productItem = await createProduct(product);
