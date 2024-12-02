@@ -441,8 +441,7 @@ async function displayProducts() {
         document.querySelector('.products')
     );
     productlist.innerHTML = '';
-    let i = 0;
-    if (i == 0) {
+    if (SPtt.length == 0) {
         noProduct.style.display = '';
         return;
     }
