@@ -6,6 +6,7 @@ const Product_Data = await fakeDatabase.getAllBooks();
 let data = Product_Data;
 let Current_Page = 1;
 let Products_Per_page = 8;
+const maxpages = 5;
 let totalPages = Math.ceil(Product_Data.length / Products_Per_page);
 
 /**
@@ -31,7 +32,8 @@ export function createPagination() {
         document.querySelector('.pagination__page')
     );
     paginationPage.innerHTML = ``;
-    for (let i = 1; i <= (totalPages < 5 ? totalPages : 5); i++) {
+    const displayPages = (totalPages < maxpages ? totalPages : maxpages)
+    for (let i = 1; i <= displayPages; i++) {
         paginationPage.innerHTML += `<button class="pagination__btns page ${i == 1 ? 'active-page' : ''
             }">${i}</button>`;
     }
@@ -144,9 +146,11 @@ export function updatePagination(page) {
     if (totalPages < 2) return;
     Current_Page = page;
     let firstPage = 1;
-    if (totalPages > 5) {
-        if (Current_Page > totalPages - 2) firstPage = totalPages - 4;
-        else if (Current_Page > 3) firstPage = Current_Page - 2;
+    if (totalPages > maxpages) {
+        const paddingLeft = Math.floor(maxpages / 2);
+        const paddingRight = Math.ceil(maxpages / 2);
+        if (Current_Page > totalPages - paddingLeft) firstPage = totalPages - (maxpages - 1);
+        else if (Current_Page > paddingRight) firstPage = Current_Page - paddingLeft;
     }
     const getAllPage = document.querySelectorAll('.pagination__btns.page');
     const getAllArrow = document.querySelectorAll('.pagination__btns.arrows');
