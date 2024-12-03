@@ -424,7 +424,15 @@ function createHeaderPopupWrapper(key) {
     return headerPopupWrapper;
 }
 
-/** @param {string} key */
+/**
+ *  @param {string} key
+ *  @returns {{
+*     title: string;
+*     body: () => HTMLElement;
+*     onOk: (element: HTMLElement | null) => any;
+*     onCancel: (element: HTMLElement | null) => any;
+ * }[]}
+ */
 function createFilterOptions(key) {
     /**
      * @type {{
@@ -495,7 +503,9 @@ function createFilterOptions(key) {
                 );
 
                 const d1 = new Date(inputs[0].value).getTime();
-                const d2 = new Date(inputs[1].value).getTime();
+                let d2_ = new Date(inputs[1].value)
+                d2_.setDate(d2_.getDate() + 1);
+                const d2 = d2_.getTime();
 
                 advancedSearch(undefined, (v) => {
                     const td = v.querySelector('td[key=' + key + ']');
