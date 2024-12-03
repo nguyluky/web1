@@ -36,7 +36,7 @@ export function removeDiacritics(str) {
  * @returns {string} '1.000.000'
  */
 export function formatNumber(num) {
-    return num.toLocaleString('vi-VN');
+    return Math.round(num).toLocaleString('vi-VN');
 }
 
 /**

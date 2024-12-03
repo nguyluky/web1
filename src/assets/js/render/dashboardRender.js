@@ -195,7 +195,7 @@ async function renderLeaderboard(from, to) {
 
 /**
  *
- * @param {{name: String; quantity: Number; total: Number}} product
+ * @param {{id: String; name: String; quantity: Number; total: Number}} product
  * @param {Number} index
  */
 function createARow(product, index) {
@@ -208,7 +208,18 @@ function createARow(product, index) {
         if (key != 'id') {
             const cell = document.createElement('div');
             cell.className = `rank-${key}`;
-            cell.innerHTML = `${key == 'total' ? formatNumber(product[key]) : product[key]}`;
+            switch (key) {
+                case 'name':
+                    cell.innerHTML = `[${product.id}] ` + product[key];
+                    break;
+                case 'total':
+                    cell.innerHTML = formatNumber(product['total']);
+                    break;
+                default:
+                    cell.innerHTML = product[key];
+                    break;
+            }
+
             row.appendChild(cell);
         }
     });

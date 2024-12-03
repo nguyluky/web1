@@ -6,7 +6,10 @@ import { toast } from "../../render/popupRender.js";
 import { formatNumber } from "../../until/format.js";
 import { validator, isCreditCard, getParent } from "../../until/validator.js";
 import urlConverter, { getSearchParam, navigateToPage } from "../../until/router.js";
+import { showListShippingAddressPopup } from "../../render/addressPopup.js";
 
+
+let indexAddress = 0;
 
 /**
  * 
@@ -225,7 +228,6 @@ export function showConfirmForm() {
         if (!totalBill || !orderItems)
             return;
 
-        const indexAddress = +(getSearchParam('a') || '0');
         showUserAddressInfo(addressContent, indexAddress);
 
         let totalPrice = 10000;
@@ -753,6 +755,25 @@ export function changeCart() {
 
 
 
+
+/**
+ * 
+ */
+export function initChangeAddressEvent() {
+    document.getElementById('change-address-btn')
+        ?.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const index = /**@type {HTMLElement} */ (document.querySelector('.info-content'))?.dataset.index;
+            showListShippingAddressPopup(Number(index), (i) => {
+                showUserAddressInfo(undefined, i);
+                indexAddress = i;
+            }, () => {
+                showUserAddressInfo(undefined, Number(index));
+                indexAddress = Number(index);
+            });
+        });
+}
 
 
 

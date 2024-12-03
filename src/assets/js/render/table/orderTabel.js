@@ -502,9 +502,16 @@ function createFilterOptions(key) {
                     element.querySelectorAll('.date-range-input')
                 );
 
-                const d1 = new Date(inputs[0].value).getTime();
+                const d1_ = new Date(inputs[0].value)
+                d1_.setHours(0);
+                d1_.setMinutes(0);
+                d1_.setSeconds(0);
+                const d1 = d1_.getTime();
                 let d2_ = new Date(inputs[1].value)
                 d2_.setDate(d2_.getDate() + 1);
+                d2_.setHours(0);
+                d2_.setMinutes(0);
+                d2_.setSeconds(0);
                 const d2 = d2_.getTime();
 
                 advancedSearch(undefined, (v) => {
@@ -779,7 +786,11 @@ function createFilterOptions(key) {
                     'i',
                 );
 
-                advancedSearch(undefined, (v) => {
+                advancedSearch((a, b) => {
+                    const a1 = a.querySelector('td[key=address]')?.textContent || '';
+                    const b1 = b.querySelector('td[key=address]')?.textContent || '';
+                    return a1.localeCompare(b1);
+                }, (v) => {
                     const td = v.querySelector('td[key=' + key + ']');
                     const text = td?.textContent || '';
                     return regex.test(text);

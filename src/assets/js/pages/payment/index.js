@@ -1,5 +1,7 @@
+import { showListShippingAddressPopup } from "../../render/addressPopup.js";
 import { addStyle, navigateToPage, removeStyle } from "../../until/router.js";
-import { getOrder, rendeOrder, changeCart, closeDeal, showCreditCard, closeCreditForm, addCreditCard, showConfirmForm } from "./payment.js";
+import { showUserAddressInfo } from "../cart/cart.js";
+import { getOrder, rendeOrder, changeCart, closeDeal, showCreditCard, closeCreditForm, addCreditCard, showConfirmForm, initChangeAddressEvent } from "./payment.js";
 // import { getOrder, rendeOrder, changeCart, closeDeal } from "./payment.js";
 
 const html = `
@@ -165,6 +167,7 @@ const html = `
         <div class="right info-user card">
             <div class="info-header">
                 <span>Giao tới</span>
+                <button id="change-address-btn">Thay đổi</button>
             </div>
             <div class="info-content">
                 <div class="contact-info">
@@ -279,6 +282,7 @@ export async function initializationPayment() {
     changeCart();
     showConfirmForm();
     addCreditCard();
+    initChangeAddressEvent();
     // showCreditCard();
 
 }
