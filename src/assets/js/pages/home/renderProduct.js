@@ -62,7 +62,7 @@ export async function createProduct(product) {
 
     const imgTag = document.createElement('img');
     imgTag.src = source;
-    imgTag.alt = '';
+    imgTag.alt = product.title;
     productImg.appendChild(imgTag);
 
     const productTitle = document.createElement('div');
