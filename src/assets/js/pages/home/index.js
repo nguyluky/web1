@@ -256,10 +256,21 @@ export async function updateHomePage(params, query) {
 
     selectionConditional(category === '' ? undefined : [category]);
 
+    const catergory_row = document.querySelectorAll('.catergory__row--sub');
+    console.log(catergory_row)
+    catergory_row.forEach(e => e.classList.remove('show'))
+
+
+    const sub_header = document.querySelectorAll('.catergory__row--sub-header');
+    sub_header.forEach((sub) => {
+        sub_header.forEach((e) => e.removeAttribute('selected'));
+
+    });
+
     if (category) {
         const cate = /**@type {HTMLElement} */ (category ? document.querySelector(`.catergory__row--sub-header[data-value="${category}"]`) : null);
         cate.parentElement?.classList.add('show');
-        cate.click();
+        cate.setAttribute('selected', 'true');
     }
     createPagination();
     setupPaginationListeners();

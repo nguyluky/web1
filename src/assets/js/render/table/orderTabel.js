@@ -9,10 +9,12 @@ import {
     createNumberTableCell,
     createDateTimeTableCell,
     createTextTableCell,
+    createBlockTextTabelCell,
 } from './customCell.js';
 
 const cols = {
     user_id: 'User id',
+    items: "Items",
     state: 'State',
     date: 'Date',
     last_update: 'Last Update',
@@ -79,6 +81,26 @@ function renderRow(row, value, onchange) {
             case 'total':
                 appendTotalCell(row, value, onchange);
                 break;
+            case 'items': {
+
+                let a = value.items.map(async e => {
+                    const sach = await fakeDatabase.getSachById(e.sach)
+                    return e.quantity + 'x' + sach?.title;
+                })
+
+
+                const it = createTextTableCell('items', '', () => { }, false);
+
+                Promise.all(a).then(e => {
+
+                    it.setAttribute('setAttribute', e.join(','))
+                    it.textContent = e.join(',');
+                }
+                )
+
+                row.appendChild(it);
+                break;
+            }
             case 'address': {
                 const col = createTextTableCell(key, value[key].address, (nv) => {
                     // @ts-ignore
@@ -402,7 +424,15 @@ function createHeaderPopupWrapper(key) {
     return headerPopupWrapper;
 }
 
-/** @param {string} key */
+/**
+ *  @param {string} key
+ *  @returns {{
+*     title: string;
+*     body: () => HTMLElement;
+*     onOk: (element: HTMLElement | null) => any;
+*     onCancel: (element: HTMLElement | null) => any;
+ * }[]}
+ */
 function createFilterOptions(key) {
     /**
      * @type {{
@@ -473,7 +503,9 @@ function createFilterOptions(key) {
                 );
 
                 const d1 = new Date(inputs[0].value).getTime();
-                const d2 = new Date(inputs[1].value).getTime();
+                let d2_ = new Date(inputs[1].value)
+                d2_.setDate(d2_.getDate() + 1);
+                const d2 = d2_.getTime();
 
                 advancedSearch(undefined, (v) => {
                     const td = v.querySelector('td[key=' + key + ']');
