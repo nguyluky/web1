@@ -8,8 +8,9 @@ web pass sách
 - `3123410210` Lê Thị Trúc Ly
 - `3120410345` Nguyễn Trọng Nghĩa
 
-# Tài khoản người dùng xem ở file 
-`xem ở file` [user.json](./src/assets/data/user.json)
+# Tài khoản người dùng: 
+- `xem ở file` [user.json](./src/assets/data/user.json)
+- đăng nhập bằng số điện thoại và mật khẩu 
 
 # Yêu cầu 
 
