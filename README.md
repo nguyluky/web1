@@ -3,7 +3,7 @@ web pass sách
 
 # Thành viên (nhóm 16):
 - `3123410349` Nguyễn Bá Thiên
-- `3123560027` Nguyễn Khắc Hiêu
+- `3123560027` Nguyễn Khắc Hiếu
 - `3123410413` Phạm Văn Tuấn
 - `3123410210` Lê Thị Trúc Ly
 - `3120410345` Nguyễn Trọng Nghĩa
