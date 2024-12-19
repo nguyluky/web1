@@ -1,10 +1,19 @@
-# đồ án web 1
-
+# Đồ án web 1
 web pass sách
+
+# Thành viên (nhóm 16):
+- `3123410349` Nguyễn Bá Thiên
+- `3123560027` Nguyễn Khắc Hiêu
+- `3123410413` Phạm Văn Tuấn
+- `3123410210` Lê Thị Trúc Ly
+- `3120410345` Nguyễn Trọng Nghĩa
+
+# Tài khoản người dùng xem ở file 
+`xem ở file` [user.json](./src/assets/data/user.json)
 
 # Yêu cầu 
 
-vscode extenstion:
+# vscode extenstion:
 - `live preview` tạo server web ảo
 - `eslint` check err read time cho js
 - `auto rename tag` tự động đổi tên thẻ
